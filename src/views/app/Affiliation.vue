@@ -30,7 +30,7 @@
 
 
           <small>
-            Total: <span class="_strong">${{ affiliation.price }}</span>
+            Total: <span class="_strong">S/. {{ affiliation.price }}</span>
           </small> <br><br>
 
           <small class="success">pendiente de aprovación</small>
@@ -63,7 +63,7 @@
             <article class="product" v-for="(product, i) in products" v-if="product.type == category" @click="touch(i)">
               <small>
                 <p>{{ product.name }}</p>
-                <span>$ {{ product.price }}</span>
+                <span>S/. {{ product.price }}</span>
               </small>
 
               <div class="control">
@@ -82,7 +82,7 @@
           </small> <br>
 
           <small>
-            Total: <span class="_strong">${{ price }} - {{ final_plan_name }}</span>
+            Total: <span class="_strong">S/. {{ price }} - {{ final_plan_name }}</span>
           </small> <br><br>
 
           <i class="icon fa-solid fa-briefcase"></i>
@@ -105,15 +105,15 @@
 
           <div v-if="!check">
             <div v-if="plan == 'default'">
-              <small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Saldo disponible: ${{ balance }}</small> <br>
-              <small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Ganancias: ${{ selec_plan.pay }}</small> <br>
-              <small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Restan: ${{ remaining }}</small>
+              <small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Saldo disponible: S/. {{ balance }}</small> <br>
+              <small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Ganancias: S/. {{ selec_plan.pay }}</small> <br>
+              <small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Restan: S/. {{ remaining }}</small>
             </div>
 
             <div v-else>
-              <small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Saldo no disponible: ${{ _balance }}</small> <br>
-              <small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Saldo disponible: ${{ balance }}</small> <br>
-              <small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;restan: ${{ remaining }}</small>
+              <small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Saldo no disponible: S/. {{ _balance }}</small> <br>
+              <small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Saldo disponible: S/. {{ balance }}</small> <br>
+              <small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;restan: S/. {{ remaining }}</small>
             </div>
           </div>
 
