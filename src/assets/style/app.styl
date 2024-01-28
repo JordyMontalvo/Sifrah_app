@@ -1,0 +1,258 @@
+.app
+  min-height 100vh
+  _grid()
+  >header
+    _flex()
+    // background c-blue
+    // background c-main-red
+    // background c-red
+    background c-main-light-green
+    color white
+    padding 16px
+    &.silver
+      background linear-gradient(-225deg, #77FFD2 0%, #6297DB 48%, #1EECFF 100%)
+    &.gold
+      background linear-gradient(to right, #BF953F, #fff380, #B38728, #fff480, #AA771C)
+  >section
+    display flex
+    overflow hidden
+    // layout
+    .menu
+    .content
+      transition all .5s
+    .menu
+      min-width 40%
+      transform translate(-100%, 0)
+    .content
+      min-width 100%
+      transform translate(-40%, 0)
+      overflow hidden
+      position relative
+    &.open
+      .menu
+      .content
+        transform translate(0, 0)
+    // style
+    .content
+      background c-ligh-gray
+      >header
+        padding 8px 16px
+        background white
+        display flex
+        align-items center
+        justify-content space-between
+        .social
+          font-size 20px
+          margin-left 20px
+          a
+            padding 8px
+      >section
+        padding 8px 16px
+        padding-bottom 72px
+
+  footer
+    position fixed
+    bottom 0
+    width 100%
+
+    display: flex;
+    justify-content: space-around;
+    border-top: solid 1px;
+    background white
+
+    a
+      text-align center
+      // color c-main-light-green
+      color c-main-light-purple
+      font-size 12px
+      padding 10px
+    i
+      display block
+      font-size 16px
+
+    @media (min-width: d-break)
+      display none
+
+
+@media (min-width: d-break)
+  .app
+    >header
+      // padding 16px 40px
+      padding 12px 40px
+    >section
+      .menu
+      .content
+        min-width auto
+        transform none
+      .content
+        flex 1
+        // >header
+        //   padding 4px 16px
+        >section
+          padding 8px 32px
+
+
+.menu
+  // background c-dark-blue
+  background c-main-purple
+  a
+    display block
+    color white
+    font-size 12px
+    padding 16px 16px
+    cursor pointer
+    i
+      // width 15px
+      width 13.5px
+      text-align center
+      margin-right 4px
+    &.router-link-active
+      background c-semi-dark-blue
+    &.disabled
+      color c-gray
+
+@media (min-width: d-break)
+  .menu
+    a
+      padding-right 40px
+
+
+.sub-menu
+  display none
+  a
+    font-size 10px
+    padding 12px
+    padding-left 32px
+    i
+      width 12.5px
+  &.active
+    display block
+
+
+// Dashboard
+.boxes
+  display grid
+  grid-template-columns 1fr 1fr
+  column-gap 16px
+  row-gap 24px
+  margin 8px 0
+
+  .box
+    box-shadow 0px 4px 4px 0px rgba(black, 0.25)
+    color white
+    padding 16px
+    display flex
+    i
+      font-size 24px
+      margin-top 4px
+      margin-right 8px
+    p
+      font-size 18px
+      font-weight bold
+    span
+      font-size 12px
+
+    &.blue
+      background c-blue
+    &.yellow
+      background c-yellow
+    &.red
+      background c-red
+    &.green
+      background c-green
+    &.orange
+      background c-orange
+
+@media (min-width: d-break)
+  .boxes
+    grid-template-columns 1fr 1fr 1fr
+    max-width 1024px
+    .box
+      i
+        font-size 36px
+
+
+// Afiliation
+
+
+// Directs
+.scroll
+  overflow auto
+  margin 16px 0
+
+table
+  background white
+  white-space nowrap
+  text-align center
+  thead
+    color c-blue
+  tbody
+    font-size 14px
+    td
+      padding 8px
+      &.green
+        background #00d1b2
+        color white
+
+
+// Tree
+.tree
+  .row
+    display flex
+    padding 8px 0
+    .el
+      flex 1
+      text-align center
+      i
+        font-size 32px
+        color #fff
+        &.affiliated
+          color #ffe400
+        &.activated
+          color #14ec42
+      p
+        font-size 12px
+      span
+        font-size 10px
+        display block
+
+
+
+
+.products
+  >div
+    margin-right 20px
+.product
+  display flex
+  margin 8px 0
+  align-items flex-start
+  // font-size 14px
+  small
+    // width 180px
+    width 120px
+    // font-size 10px
+    font-size 12px
+  input
+    width 40px
+    text-align center
+  .control
+    display flex
+
+@media (min-width: d-break)
+  .products
+    display flex
+  .products-container
+    display flex
+
+
+
+.tabs
+  text-align center
+  .tab
+    color c-gray
+    &.router-link-active
+      color gray
+
+.flex
+  display flex
+  align-items flex-start

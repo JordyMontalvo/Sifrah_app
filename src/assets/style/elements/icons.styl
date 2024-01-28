@@ -1,0 +1,84 @@
+.icon
+  width 25px
+  font-size 20px
+  margin-right 8px
+  text-align center
+  // color c-main-red
+  // color c-main-light-green
+  color c-main-purple
+
+.show
+  position absolute
+  margin-top 14px
+  margin-left -24px
+  cursor pointer
+  padding 4px
+  font-size 14px
+  opacity .75
+
+// .msn
+//   color c-msn
+//   font-size 40px
+//   position fixed
+//   bottom 16px
+//   right 16px
+.wsp
+  background #25D366
+  color white
+  font-size 34px
+  position fixed
+  bottom 64px
+  right 16px
+  border-radius 50%
+  height 48px
+  width 48px
+  text-align center
+  padding-top 6px
+  @media (min-width: d-break)
+    bottom 16px
+
+
+
+.burger
+  font-size 22px
+  @media (min-width: d-break)
+    display none
+
+.avatar
+  font-size 22px
+  margin-left 4px
+  &.yellow
+    color #ffe400
+  &.blue
+    color #0093cb
+  &.green
+    color #14ec42
+
+.load
+  display block
+  height 16px
+  width 16px
+  border-radius 50%
+  border solid 1.5px rgba(c-gray, .5)
+  border-right-color transparent
+  border-bottom-color transparent
+  animation 1s linear infinite rotate
+  margin auto
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg)
+  }
+  to {
+    transform: rotate(360deg)
+  }
+}
+
+
+.controls
+  text-align center
+  color white
+  i
+    margin: 6px 12px
+    padding: 8px
+    cursor: pointer
