@@ -10,7 +10,7 @@
         <span v-if="country == 'Argentina'"  style="font-size: 28px;">🇦🇷</span>
         <span v-if="country == 'Chile'"      style="font-size: 28px;">🇨🇱</span>
         <span v-if="country == 'Costa Rica'" style="font-size: 28px;">🇨🇷</span>
-          &nbsp;&nbsp;&nbsp;Compañia Brillante Mundial
+          &nbsp;&nbsp;&nbsp;SUEÑA SIN LIMITES
       </h3>
 
       <i class="burger fas fa-bars" @click="opened"></i>
