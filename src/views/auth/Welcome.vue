@@ -18,7 +18,8 @@ export default {
   components: { Auth },
 
   computed: {
-    wsp()  { return this.$store.state.wsp_ec }
+    // wsp()  { return this.$store.state.wsp_ec }
+    wsp()  { return this.$store.state.wsp_pe }
   },
 }
 </script>

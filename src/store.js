@@ -17,13 +17,13 @@ export default new Vuex.Store({
     photo:      null,
     tree:       null,
 
-    fb:   'https://web.facebook.com/profile.php?id=100094158219946',
-    is:   'https://www.instagram.com/cbmecuadoroficial/',
+    fb:   'https://www.facebook.com/profile.php?id=61555335617817',
+    is:   'https://www.instagram.com/sifrahcorp',
     tk:   '',
     yt:   '',
-    wsp_pe: '',
+    wsp_pe: 'https://web.whatsapp.com/send/?phone=51994235396',
     wsp_bo: '',
-    wsp_ec: 'https://wa.link/5wq8rn',
+    wsp_ec: '',
     site: '',
 
     open: false,
