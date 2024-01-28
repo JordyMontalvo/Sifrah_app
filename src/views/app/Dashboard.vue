@@ -2,9 +2,9 @@
   <App :session="session">
 
     <figure class="slide" style="display: flex; margin: 0;">
-      <img :src="banner.img" style="width: 100%; max-width: 1000px; transition: all 2s;" :style="{ opacity: op }" >
-      <img :src="banner.img2" style="width: 100%; max-width: 1000px; transition: all 2s; transform: translate(-100%); opacity:0;" :style="{ opacity: op2 }">
-      <img :src="banner.img3" style="width: 100%; max-width: 1000px; transition: all 2s; transform: translate(-200%); opacity:0;" :style="{ opacity: op3 }">
+      <img :src="banner.img" style="width: 100%; max-width: 850px; transition: all 2s;" :style="{ opacity: op }" >
+      <img :src="banner.img2" style="width: 100%; max-width: 850px; transition: all 2s; transform: translate(-100%); opacity:0;" :style="{ opacity: op2 }">
+      <img :src="banner.img3" style="width: 100%; max-width: 850px; transition: all 2s; transform: translate(-200%); opacity:0;" :style="{ opacity: op3 }">
     </figure> <br>
 
     <h4>INICIO</h4>
