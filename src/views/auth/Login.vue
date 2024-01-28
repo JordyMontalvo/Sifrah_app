@@ -1,9 +1,9 @@
 <template>
   <Auth>
     <section>
-      <!-- <span class="separator"></span> -->
+      <span class="separator"></span>
 
-      <!-- <img class="person" src="@/assets/img/person.svg"> -->
+      <img class="person" src="@/assets/img/person.svg">
       <br>
 
       <!-- <p>Inicia sesión</p> -->
