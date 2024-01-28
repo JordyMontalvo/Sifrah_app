@@ -29,7 +29,7 @@ export default {
     // color c-gray
     // color c-main-red
     // color c-main-light-green
-    color c-main-purple
+    color c-main-green
 
   @import 'assets/style/elements/inputs.styl'
   @import 'assets/style/elements/icons.styl'
