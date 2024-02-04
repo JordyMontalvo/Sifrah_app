@@ -16,7 +16,7 @@
       <div class="box blue">
         <i class="fas fa-wallet"></i>
         <div>
-          <p>$ {{ balance }}</p>
+          <p>S/. {{ balance }}</p>
           <span>SALDO</span>
         </div>
       </div>
@@ -24,7 +24,7 @@
       <div class="box green">
         <i class="fas fa-hand-holding-usd"></i>
         <div>
-          <p>$ {{ _balance }}</p>
+          <p>S/. {{ _balance }}</p>
           <span>SALDO NO DISPONIBLE</span>
         </div>
       </div>
@@ -32,7 +32,7 @@
       <div class="box green">
         <i class="fas fa-hand-holding-usd"></i>
         <div>
-          <p>$ {{ Number(ins + insVirtual).toFixed(2) }}</p>
+          <p>S/. {{ Number(ins + insVirtual).toFixed(2) }}</p>
           <span>TOTAL GANADO</span>
         </div>
       </div>
@@ -66,14 +66,6 @@
         <div>
           <p>{{ node.next_rank.name | _rank }}</p>
           <span>SIGUIENTE RANGO</span>
-        </div>
-      </div>
-
-      <div class="box green" v-if="plan == 'default'">
-        <i class="fas fa-users"></i>
-        <div>
-          <p>{{ n_affiliates }}</p>
-          <span>AFILIADOS X COBRAR</span>
         </div>
       </div>
 

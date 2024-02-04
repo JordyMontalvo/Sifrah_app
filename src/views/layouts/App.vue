@@ -96,7 +96,7 @@
           </router-link>
         </div>
 
-        <a @click="actived(3)">
+        <a @click="actived(3)" v-if="tree && office_id == null">
           <i class="fas fa-caret-down"></i> RESUMEN
         </a>
         <div class="sub-menu" :class="{'active': resume}">

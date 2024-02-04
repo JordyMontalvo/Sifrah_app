@@ -8,8 +8,8 @@
         :class="{'error': error.country}"
         @change="reset('country')">
         <option value="null" disabled>País</option>
-        <option value="Ecuador"   >🇪🇨 Ecuador</option>
         <option value="Perú"      >🇵🇪 Perú</option>
+        <option value="Ecuador"   >🇪🇨 Ecuador</option>
         <option value="Argentina" >🇦🇷 Argentina</option>
         <option value="Bolivia"   >🇧🇴 Bolivia</option>
         <option value="Colombia"  >🇨🇴 Colombia</option>
