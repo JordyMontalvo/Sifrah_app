@@ -66,9 +66,9 @@
           <i class="fas fa-caret-down"></i> ORGANIZACIÓN
         </a>
         <div class="sub-menu" :class="{'active': network}">
-          <!-- <router-link to="/tree" @click.native="close">
+          <router-link to="/tree" @click.native="close">
             <i class="fas fa-project-diagram"></i> RED
-          </router-link> -->
+          </router-link>
           <router-link to="/directs" @click.native="close">
             <i class="fas fa-users"></i> REGISTROS
           </router-link>
