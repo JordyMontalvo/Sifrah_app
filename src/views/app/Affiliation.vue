@@ -307,9 +307,9 @@ export default {
     this.affiliation = data.affiliation
     console.log('5')
 
-    if(this.affiliation &&
-       this.affiliation.plan.id == 'master' &&
-       this.affiliation.status == 'approved') this.congrats = true
+    if(this.plan == 'master' || (this.affiliation &&
+           this.affiliation.plan.id == 'master' &&
+           this.affiliation.status == 'approved')) this.congrats = true
     console.log('6')
 
 
