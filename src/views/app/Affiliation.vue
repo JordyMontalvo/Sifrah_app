@@ -45,8 +45,8 @@
           </select> <br>
 
           <i class="icon fas fa-dollar-sign"></i>
-          <input class="input" readonly v-model="selec_plan.amount"> <br><br>
-
+          <!-- <input class="input" readonly v-model="selec_plan.amount"> <br><br> -->
+          <input class="input" readonly v-model="text"> <br><br>
 
           <article class="product">
             <small><p>Kit de inicio S/. {{ selec_plan.kit }}</p></small>
@@ -68,7 +68,7 @@
             <article class="product" v-for="(product, i) in products" v-if="product.type == category" @click="touch(i)">
               <small>
                 <p>{{ product.name }}</p>
-                <span>S/. {{ product.price }}, {{ product.points }} PTS</span>
+                <!-- <span>S/. {{ product.price }}, {{ product.points }} PTS</span> -->
               </small>
 
               <div class="control">
@@ -256,6 +256,10 @@ export default {
       if(ret < 0) ret = 0
 
       return ret
+    },
+
+    text() {
+      return `S/. ${ this.selec_plan.amount } / ${ this.selec_plan.affiliation_points } PTS`
     },
   },
   watch:{
