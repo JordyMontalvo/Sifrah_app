@@ -53,9 +53,9 @@
           <i class="fas fa-caret-down"></i> PRODUCTOS
         </a>
         <div class="sub-menu" :class="{'active': buys}">
-          <router-link to="/activation" @click.native="close" v-if="affiliated">
+          <!-- <router-link to="/activation" @click.native="close" v-if="affiliated">
             <i class="fas fa-shopping-bag"></i> COMPRAS
-          </router-link>
+          </router-link> -->
           <router-link to="/affiliation" @click.native="close">
             <i class="fas fa-receipt"></i> AFILIACIÓN
           </router-link>
@@ -66,9 +66,9 @@
           <i class="fas fa-caret-down"></i> ORGANIZACIÓN
         </a>
         <div class="sub-menu" :class="{'active': network}">
-          <router-link to="/tree" @click.native="close">
+          <!-- <router-link to="/tree" @click.native="close">
             <i class="fas fa-project-diagram"></i> RED
-          </router-link>
+          </router-link> -->
           <router-link to="/directs" @click.native="close">
             <i class="fas fa-users"></i> REGISTROS
           </router-link>
@@ -85,9 +85,9 @@
           <!-- <router-link to="/bonuses" @click.native="close">
             <i class="fas fa-gem"></i> BONOS
           </router-link> -->
-          <router-link to="/transfer" @click.native="close">
+          <!-- <router-link to="/transfer" @click.native="close">
             <i class="fas fa-wallet"></i> MONEDERO
-          </router-link>
+          </router-link> -->
           <router-link to="/transactions" @click.native="close">
             <i class="fas fa-dollar-sign"></i> MOVIMIENTOS
           </router-link>

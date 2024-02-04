@@ -94,9 +94,9 @@
           <select class="input" v-model="office">
             <option value="null" disabled>Oficina</option>
             <option v-for="office in offices" :value="office">{{ office.name }}</option>
-          </select> <br>
+          </select> <br><br>
 
-          <small v-if="office">{{ office.address }}</small> <br>
+          <!-- <small v-if="office">{{ office.address }}</small> <br> -->
 
           <!-- <div v-if="office">
             <textarea readonly class="input" style="color: gray; width: 300px;" rows="5">{{ office.accounts }}</textarea> <br><br>
@@ -122,8 +122,8 @@
           </div> -->
 
           <div v-if="!check">
-            <small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Saldo disponible: S/. {{ balance }}</small> <br>
             <small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Saldo no disponible: S/. {{ _balance }}</small> <br>
+            <small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Saldo    disponible: S/. {{ balance }}</small> <br>
           </div>
 
           <br>
@@ -241,21 +241,17 @@ export default {
 
     remaining() {
 
-      console.log(this.selec_plan.price)
-      console.log(this.balance)
-      console.log(this._balance)
-
       let ret = this.selec_plan.amount
 
       // balance
-      ret -= this.balance
+      ret -= this._balance
 
       if(ret < 0) ret = 0
 
       if(ret == 0) return ret
 
       // _balance
-      ret -= this._balance
+      ret -= this.balance
 
       if(ret < 0) ret = 0
 
@@ -336,11 +332,7 @@ export default {
     },
 
     more(product) {
-      // if (product.total == 10) return
-      console.log(this.total)
       if (this.total == this.selec_plan.max_products) return
-      console.log(product)
-
       product.total += 1
     },
     less(product) {
@@ -359,7 +351,7 @@ export default {
 
     async POST() {
 
-      let { products, price, final_plan, voucher, office, check, pay_method, bank, date, voucher_number } = this
+      let { products, selec_plan, voucher, office, check, pay_method, bank, date, voucher_number } = this
 
       if (pay_method == 'bank') {
         if (!bank) {
@@ -380,11 +372,6 @@ export default {
         }
       }
 
-      if (!final_plan) {
-        this.error_price = true
-        return
-      }
-
       if (!office) {
         this.error = 'Seleccione oficina'
         return
@@ -399,12 +386,10 @@ export default {
 
       const { data } = await api.Afiliation.POST(this.session, {
         products,
-        price,
-        final_plan,
+        plan: selec_plan,
         voucher,
         office: office.id,
         check,
-        remaining: this.remaining,
         pay_method,
         bank,
         date,

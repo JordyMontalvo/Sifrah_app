@@ -23,95 +23,24 @@
       </table> <br>
 
 
-    <h4>DIRECTOS</h4>
+    <h4>FRONTALES</h4>
 
-    <i class="load" v-if="loading"></i>
-
-    <div class="scroll" v-if="!loading">
-
-      <table v-if="directs.length">
-        <thead>
-          <tr>
-            <!-- <th>Inscripción</th> -->
-
-            <th>Nombre</th>
-            <!-- <th>Plan</th> -->
-            <th>Email</th>
-            <th>Teléfono</th>
-
-            <th>Afiliado</th>
-            <th>Activo</th>
-
-            <th>Apalancar</th>
-            <!-- <th>Der</th> -->
-
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="direct in directs">
-            <!-- <td>{{ direct.affiliationDate | date }}</td> -->
-
-            <td>{{ direct.name }} {{ direct.lastName }}</td>
-            <!-- <td>
-              <span v-if="direct.activated" style="color: #14ec42">Activado</span>
-              <span v-else-if="direct.affiliated" style="color: #ffe400">Afiliado</span>
-              <span v-else>Registrado</span>
-
-              <span v-else-if="!direct.verified" style="color: #ef476f">Pendiente</span>
-              <span v-else-if="direct.verified">Verificado</span>
-            </td> -->
-            <!-- <td>{{ direct.plan }}</td> -->
-            <td>{{ direct.email }}</td>
-            <td>{{ direct.phone }}</td>
-
-
-            <td>
-              <span v-if="direct.affiliated">Si</span>
-              <span v-else>No</span>
-            </td>
-            <td>
-              <span v-if="direct.activated">Si</span>
-              <span v-else>No</span>
-            </td>
-
-
-            <td v-if="direct.tree">
-              <input type="radio" v-model="coverage" :value="{id: direct.id}" name="coverage">
-            </td>
-            <!-- <td v-if="direct.tree">
-              <input type="radio" v-model="coverage" :value="{id: direct.id, branch: 1}" name="coverage">
-            </td> -->
-
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-
-    <h4>APALANCADOS</h4>
-
-    <table v-if="frontals.length">
+    <table v-if="directs.length">
       <thead>
         <tr>
-
           <th>Nombre</th>
           <th>Email</th>
           <th>Teléfono</th>
-
           <th>Afiliado</th>
           <th>Activo</th>
-
           <th>Apalancar</th>
-
         </tr>
       </thead>
       <tbody>
         <tr v-for="frontal in frontals">
-
           <td>{{ frontal.name }} {{ frontal.lastName }}</td>
           <td>{{ frontal.email }}</td>
           <td>{{ frontal.phone }}</td>
-
           <td>
             <span v-if="frontal.affiliated">Si</span>
             <span v-else>No</span>
@@ -120,10 +49,76 @@
             <span v-if="frontal.activated">Si</span>
             <span v-else>No</span>
           </td>
-
-          <td v-if="frontal.affiliated">
-            <input type="radio" v-model="coverage" :value="{id: frontal.id, branch: 0}" name="coverage">
+          <td>
+            <!-- <input type="radio" v-model="coverage" :value="{id: direct.id}" name="coverage"> -->
+            <input type="radio" v-model="coverage" :value="{ id: frontal.id }">
           </td>
+
+          <!-- <td>
+            <input type="radio" v-model="coverage" :value="{id: direct.id}" name="coverage">
+          </td> -->
+          <!-- <td>
+            <input type="radio" v-model="coverage" :value="{id: direct.id, branch: 1}" name="coverage">
+          </td> -->
+        </tr>
+      </tbody>
+    </table> <br>
+
+
+    <h4>DIRECTOS</h4>
+
+    <table v-if="directs.length">
+      <thead>
+        <tr>
+          <!-- <th>Inscripción</th> -->
+
+          <th>Nombre</th>
+          <!-- <th>Plan</th> -->
+          <th>Email</th>
+          <th>Teléfono</th>
+
+          <th>Afiliado</th>
+          <th>Activo</th>
+
+          <!-- <th>Apalancar</th> -->
+          <!-- <th>Der</th> -->
+
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="direct in directs">
+          <!-- <td>{{ direct.affiliationDate | date }}</td> -->
+
+          <td>{{ direct.name }} {{ direct.lastName }}</td>
+          <!-- <td>
+            <span v-if="direct.activated" style="color: #14ec42">Activado</span>
+            <span v-else-if="direct.affiliated" style="color: #ffe400">Afiliado</span>
+            <span v-else>Registrado</span>
+
+            <span v-else-if="!direct.verified" style="color: #ef476f">Pendiente</span>
+            <span v-else-if="direct.verified">Verificado</span>
+          </td> -->
+          <!-- <td>{{ direct.plan }}</td> -->
+          <td>{{ direct.email }}</td>
+          <td>{{ direct.phone }}</td>
+
+
+          <td>
+            <span v-if="direct.affiliated">Si</span>
+            <span v-else>No</span>
+          </td>
+          <td>
+            <span v-if="direct.activated">Si</span>
+            <span v-else>No</span>
+          </td>
+
+
+          <!-- <td v-if="direct.tree">
+            <input type="radio" v-model="coverage" :value="{id: direct.id}" name="coverage">
+          </td> -->
+          <!-- <td v-if="direct.tree">
+            <input type="radio" v-model="coverage" :value="{id: direct.id, branch: 1}" name="coverage">
+          </td> -->
 
         </tr>
       </tbody>
@@ -180,7 +175,8 @@ export default {
   },
   watch: {
     async coverage(a, b) {
-      const { data } = await api.coverage(this.session, { coverage: this.coverage }); console.log({ data })
+
+      // const { data } = await api.coverage(this.session, { coverage: this.coverage }); console.log({ data })
     },
   },
   async created() {
