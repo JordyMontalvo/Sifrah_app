@@ -49,9 +49,14 @@
 
 
           <article class="product">
-            <small><p>Kit de inicio ${{ selec_plan.kit }}</p></small>
+            <small><p>Kit de inicio S/. {{ selec_plan.kit }}</p></small>
             <div class="control"><input readonly value="1"></div>
           </article>
+
+          <br>
+          <small>Escoger: {{ selec_plan.max_products }} productos</small>
+          <br>
+          <br>
 
           <img class="_product" :src="product.img">
 
@@ -63,7 +68,7 @@
             <article class="product" v-for="(product, i) in products" v-if="product.type == category" @click="touch(i)">
               <small>
                 <p>{{ product.name }}</p>
-                <span>S/. {{ product.price }}</span>
+                <span>S/. {{ product.price }}, {{ product.points }} PTS</span>
               </small>
 
               <div class="control">
@@ -74,16 +79,16 @@
             </article>
           </div>
 
-          <small>
-            Resumen:
-            <p v-for="(product, i) in products" v-if="product.total > 0">
-              {{ product.total }} {{ product.name }}
-            </p>
-          </small> <br>
-
-          <small>
-            Total: <span class="_strong">S/. {{ price }} - {{ final_plan_name }}</span>
-          </small> <br><br>
+          <br>
+          <p>
+            <small>
+              Resumen: <br>
+              <span v-for="(product, i) in products" v-if="product.total > 0">
+                {{ product.total }} {{ product.name }}
+              </span>
+            </small>
+          </p>
+          <br>
 
           <i class="icon fa-solid fa-briefcase"></i>
           <select class="input" v-model="office">
@@ -93,17 +98,16 @@
 
           <small v-if="office">{{ office.address }}</small> <br>
 
-          <div v-if="office">
+          <!-- <div v-if="office">
             <textarea readonly class="input" style="color: gray; width: 300px;" rows="5">{{ office.accounts }}</textarea> <br><br>
-          </div>
-
+          </div> -->
 
           <label>
             <input type="checkbox" v-model="check">
             <small>No Deseo usar mi saldo</small>
           </label> <br>
 
-          <div v-if="!check">
+         <!-- <div v-if="!check">
             <div v-if="plan == 'default'">
               <small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Saldo disponible: S/. {{ balance }}</small> <br>
               <small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Ganancias: S/. {{ selec_plan.pay }}</small> <br>
@@ -115,18 +119,20 @@
               <small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Saldo disponible: S/. {{ balance }}</small> <br>
               <small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;restan: S/. {{ remaining }}</small>
             </div>
+          </div> -->
+
+          <div v-if="!check">
+            <small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Saldo disponible: S/. {{ balance }}</small> <br>
+            <small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Saldo no disponible: S/. {{ _balance }}</small> <br>
           </div>
+
+          <br>
+          <small>Total a pagar: S/. {{ remaining }}</small>
+          <br>
 
           <br>
           <small>Medio de Pago</small>
           <br>
-
-          <div v-if="!check">
-            <small v-if="plan == 'default'">Cash: {{ balance + selec_plan.pay }}</small>
-            <small v-else>                  Cash: {{_balance + balance        }}</small>
-
-            <br>
-          </div>
 
           <label>
             <input type="radio" :value="'bank'" v-model="pay_method">
@@ -141,8 +147,6 @@
           <br>
 
           <div v-if="pay_method == 'bank'">
-            <small>Monto: {{ remaining }}</small> <br>
-
             <input class="input" v-model="bank" placeholder="Banco"> <br>
             <input class="input" v-model="date" placeholder="Fecha" type="date"> <br>
             <input class="input" v-model="voucher_number" placeholder="Número de Voucher" oninput="this.value=this.value.replace(/(?![0-9])./gmi,'')"> <br>
@@ -156,14 +160,9 @@
             </label>
           </div>
 
-          <div v-if="pay_method == 'cash'">
-            <small>Monto: {{ remaining }}</small> <br>
-          </div>
-
           <br>
 
           <small v-if="error" style="color: red;">{{ error }}<br></small>
-          <small class="alert" v-if="error_price">Agregue más productos <br></small>
 
           <button class="button" v-show="!sending" @click="POST">Enviar Afiliación</button>
           <button class="button" v-show= "sending" disabled>Enviando Voucher ...</button>
@@ -221,8 +220,6 @@ export default {
       products: null,
       product:  null,
 
-      error_price: false,
-
       error: null,
 
       bank: null,
@@ -240,39 +237,37 @@ export default {
                  .map(x => x.type)
                  .filter((v, i, self) => i == self.indexOf(v))
     },
-    price() { return this.selec_plan.kit + this.products.reduce((a, b) => a + b.price * b.total, 0) },
-
-    final_plan() {
-      let ret = null
-
-      for(let plan of this.plans) if(this.price >= plan.amount) ret = plan.id
-
-      return ret
-    },
-
-    final_plan_name() {
-      for(let plan of this.plans) if(plan.id == this.final_plan) return plan.name
-    },
+    total() { return this.products.reduce((a, b) => a + b.total, 0) },
 
     remaining() {
-      if(!this.check) {
-        if(this.plan == 'default') {
-          if ((this.balance + this.selec_plan.pay) >= this.price) return 0
-          return this.price - (this.balance + this.selec_plan.pay)
 
-        } else {
-          return this.price - (this.balance + this._balance)
-        }
-      } else {
-        return this.price
-      }
+      console.log(this.selec_plan.price)
+      console.log(this.balance)
+      console.log(this._balance)
+
+      let ret = this.selec_plan.amount
+
+      // balance
+      ret -= this.balance
+
+      if(ret < 0) ret = 0
+
+      if(ret == 0) return ret
+
+      // _balance
+      ret -= this._balance
+
+      if(ret < 0) ret = 0
+
+      return ret
     },
   },
   watch:{
     selec_plan(){
       if(!this.selec_plan) return
-      this.prices()
-      this.totals()
+      // this.prices()
+      // this.totals()
+      this.reset_totals()
     }
   },
   async created() {
@@ -294,62 +289,56 @@ export default {
     this.$store.commit('SET_COUNTRY',    data.country)
     this.$store.commit('SET_PHOTO',      data.photo)
     this.$store.commit('SET_TREE',       data.tree)
-
+    console.log('1')
     this.plans      = data.plans
     this.selec_plan = this.plans[0]
-
+    console.log('2')
 
     this.products = data.products
     this.products = data.products.map(a => ({ ...a, total: 0 }))
     this.product  = this.products[0]
     this.tab      = this.categories[0]
+    console.log('3')
 
     this.balance  = data.balance
     this._balance = data._balance
+    // this.balance  = 50
+    // this._balance = 300
+    console.log('4')
 
     this.offices = data.offices
-    // this.office  = this.offices[0]
 
     this.affiliation = data.affiliation
+    console.log('5')
 
     if(this.affiliation &&
        this.affiliation.plan.id == 'master' &&
        this.affiliation.status == 'approved') this.congrats = true
+    console.log('6')
 
 
     if(this.affiliation && this.affiliation.status == 'pending') this.pending = true
+    console.log('7')
 
 
     this.affiliations = data.affiliations
+    console.log('8')
   },
 
   methods: {
 
-    prices() {
-
-      const i = ['basic', 'standard', 'business', 'master'].findIndex(e => e == this.selec_plan.id)
-
-      this.products.forEach(product => {
-        product.price = product.aff_price[i]
-      })
-    },
-
-    totals() {
+    reset_totals() {
       this.products.forEach(p => { p.total = 0 })
-
-      for(let p of this.selec_plan.products) {
-        const i = this.products.findIndex((e) => e.id == p.id)
-        this.products[i].total = p.total
-      }
     },
 
     touch(i) {
-      this.product     = this.products[i]
-      this.error_price = false
+      this.product = this.products[i]
     },
 
     more(product) {
-      if (product.total == 10) return
+      // if (product.total == 10) return
+      console.log(this.total)
+      if (this.total == this.selec_plan.max_products) return
       console.log(product)
 
       product.total += 1
