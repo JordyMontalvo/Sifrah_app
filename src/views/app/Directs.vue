@@ -176,7 +176,7 @@ export default {
   watch: {
     async coverage(a, b) {
 
-      // const { data } = await api.coverage(this.session, { coverage: this.coverage }); console.log({ data })
+      const { data } = await api.coverage(this.session, { coverage: this.coverage }); console.log({ data })
     },
   },
   async created() {
