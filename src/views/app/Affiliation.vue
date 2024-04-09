@@ -167,7 +167,7 @@
           <button class="button" v-show="!sending" @click="POST">Enviar Afiliación</button>
           <button class="button" v-show= "sending" disabled>Enviando Voucher ...</button>
 
-          <small v-if="pending" class="success">pendiente de aprovación</small>
+          <small v-if="pending" class="success">pendiente de aprobación</small>
 
         </div>
 

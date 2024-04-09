@@ -121,7 +121,7 @@
           <button class="button" v-show= "sending" disabled>Enviando Voucher ...</button>
         </div>
 
-        <small v-if="pending" class="success">pendiente de aprovación</small>
+        <small v-if="pending" class="success">pendiente de aprobación</small>
 
         <br><br>
 
