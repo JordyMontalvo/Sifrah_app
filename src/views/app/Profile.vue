@@ -82,11 +82,9 @@
       <select class="input"
       v-model="bank">
         <option value="null" disabled>Banco</option>
-        <option value="Banco de Guayaquil">Banco de Guayaquil</option>
-        <option value="Banco de la JEF">Banco de la JEF</option>
-        <option value="Banco del pacifico">Banco del pacifico</option>
-        <option value="Banco internaciona">Banco internaciona</option>
-        <option value="Banco Pichincha">Banco Pichincha</option>
+        <option value="BCP">BCP</option>
+        <option value="INTERBANK">INTERBANK</option>
+        <option value="BBVA">BBVA</option>
       </select> <br>
 
       <i class="icon fas fa-university"></i>

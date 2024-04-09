@@ -43,7 +43,7 @@
           <a class="fab fa-facebook-square" :href="fb" target="_blank"></a>
           <a class="fab fa-instagram"       :href="is" target="_blank"></a>
           <!-- <a class="fab fa-tiktok"          target="_blank"></a> -->
-          <a class="fab fa-youtube"         target="_blank"></a>
+          <a class="fab fa-youtube"         :href="yt" target="_blank"></a>
         </div>
       </header>
 

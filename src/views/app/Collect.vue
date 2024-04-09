@@ -14,10 +14,10 @@
 
     <section v-if="!loading"> <br>
 
-      <!-- <label>
+      <label>
         <input type="radio" :value=false v-model="cash">
         <small>Retirar en efectivo</small>
-      </label> <br> -->
+      </label> <br>
 
       <label>
         <input type="radio" :value=true v-model="cash">

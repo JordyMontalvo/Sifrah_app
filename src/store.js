@@ -20,7 +20,7 @@ export default new Vuex.Store({
     fb:   'https://www.facebook.com/profile.php?id=61555335617817',
     is:   'https://www.instagram.com/sifrahcorp',
     tk:   '',
-    yt:   '',
+    yt:   'https://www.youtube.com/@SIFRAHCORP',
     wsp_pe: 'https://web.whatsapp.com/send/?phone=51994235396',
     wsp_bo: '',
     wsp_ec: '',

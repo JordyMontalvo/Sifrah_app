@@ -9,12 +9,12 @@
         @change="reset('country')">
         <option value="null" disabled>País</option>
         <option value="Perú"      >🇵🇪 Perú</option>
-        <option value="Ecuador"   >🇪🇨 Ecuador</option>
+        <!-- <option value="Ecuador"   >🇪🇨 Ecuador</option>
         <option value="Argentina" >🇦🇷 Argentina</option>
         <option value="Bolivia"   >🇧🇴 Bolivia</option>
         <option value="Colombia"  >🇨🇴 Colombia</option>
         <option value="Costa Rica">🇨🇷 Costa Rica</option>
-        <option value="Chile"     >🇨🇱 Chile</option>
+        <option value="Chile"     >🇨🇱 Chile</option> -->
       </select> <br>
 
       <i class="icon fa fa-id-card"></i>
@@ -86,7 +86,7 @@
           <a class="fab fa-facebook-square" :href="fb" target="_blank"></a>
           <a class="fab fa-instagram"       :href="is" target="_blank"></a>
           <!-- <a class="fab fa-tiktok"          target="_blank"></a> -->
-          <a class="fab fa-youtube"         target="_blank"></a>
+          <a class="fab fa-youtube"         :href="yt" target="_blank"></a>
         </div>
       </header>
     </footer>

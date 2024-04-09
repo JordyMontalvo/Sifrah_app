@@ -85,9 +85,9 @@
           <!-- <router-link to="/bonuses" @click.native="close">
             <i class="fas fa-gem"></i> BONOS
           </router-link> -->
-          <!-- <router-link to="/transfer" @click.native="close">
+          <router-link to="/transfer" @click.native="close">
             <i class="fas fa-wallet"></i> MONEDERO
-          </router-link> -->
+          </router-link>
           <router-link to="/transactions" @click.native="close">
             <i class="fas fa-dollar-sign"></i> MOVIMIENTOS
           </router-link>

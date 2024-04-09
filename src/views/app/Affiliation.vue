@@ -8,7 +8,7 @@
     <section v-if="!loading">
 
       <div v-if="congrats">
-        <img class="_img" src="https://ik.imagekit.io/asu/cbm/Trofeo__CdqGzykA.png">
+        <img class="_img" src="https://ik.imagekit.io/asu/sifrah/Trofeo%20sifrah_sIeu2fnie.png">
       </div>
 
       <div v-else>
