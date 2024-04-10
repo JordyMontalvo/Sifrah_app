@@ -24,6 +24,13 @@
       :class="{'error': error.dni}"
       @keydown="reset('dni')"> <br>
 
+      <label>
+        <small>
+          <input type="checkbox" v-model="younger" />menor de edad / extranjero
+        </small>
+      </label>
+      <br />
+
       <i class="icon fa-solid fa-user-tie"></i>
       <input class="input" placeholder="Nombre"
       v-model="name"
