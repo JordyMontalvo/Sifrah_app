@@ -18,7 +18,7 @@
 
       <div v-if="!confirmation">
 
-        <small>Total disponible: ${{ balance }}</small> <br><br>
+        <small>Total disponible: S/. {{ balance }}</small> <br><br>
 
         <i class="icon fa fa-id-card"></i>
         <input class="input" v-model="dni" placeholder="Usuario receptor"
@@ -52,7 +52,7 @@
 
         <span v-if="error2" class="alert">{{ error2 }}<br><br></span>
 
-        <small>Monto a enviar: ${{ amount }}</small> <br>
+        <small>Monto a enviar: S/. {{ amount }}</small> <br>
         <span><i>{{ desc }}</i></span> <br><br>
 
 

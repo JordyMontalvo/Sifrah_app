@@ -73,7 +73,7 @@
       </div>
 
       <br>
-      <small>Total disponible: $ {{ balance }}</small> <br>
+      <small>Total disponible: S/. {{ balance }}</small> <br>
 
       <i class="icon fas fa-hand-holding-usd"></i>
       <input class="input" placeholder="Monto a retirar"
