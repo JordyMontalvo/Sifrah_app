@@ -77,8 +77,8 @@
           </router-link> -->
         </div>
 
-        <a @click="actived(2)" v-if="tree && office_id == null">
-        <!-- <a @click="actived(2)"> -->
+        <!-- <a @click="actived(2)" v-if="tree && office_id == null"> -->
+        <a @click="actived(2)">
           <i class="fas fa-caret-down"></i> COMISIONES
         </a>
         <div class="sub-menu" :class="{'active': commissions}">
