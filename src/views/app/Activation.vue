@@ -32,10 +32,12 @@
               <article class="product" v-for="(product, i) in products" @click="touch(i)" v-if="product.type == category">
                 <small>
                   <p class="_name">{{ product.name }}</p>
-                  <span>Val. a comisionar
+                  <span>S/. {{ product.price }}</span>&nbsp; &nbsp;
+                  <span>PTS {{ product.points }}</span>
+                  <!-- <span>Val. a comisionar
                     <i v-if="product.val">{{ product.val   }}</i>
                     <i v-else>            {{ product.price }}</i>
-                    &nbsp; &nbsp; <i class="_price">$ {{ product.price }}</i></span>
+                    &nbsp; &nbsp; <i class="_price">$ {{ product.price }}</i></span> -->
                 </small>
 
                 <div class="control">
@@ -202,11 +204,12 @@ export default {
       return price
     },
     points() { return this.products.reduce((a, b) => a + b.points * b.total, 0) },
-    commission() { return this.products.reduce((a, b) => a + (b.val ? b.val : b.price) * b.total, 0) },
+    // commission() { return this.products.reduce((a, b) => a + (b.val ? b.val : b.price) * b.total, 0) },
     total()  { return this.products.reduce((a, b) => a + b.total, 0) },
 
-    _price()  { return `Total: $ ${this.price}` },
-    _points() { return `A comisionar: ${this.commission}` },
+    _price()  { return `Total: S/. ${this.price}` },
+    // _points() { return `A comisionar: ${this.commission}` },
+    _points() { return `Puntos: ${this.points}` },
 
     IGV()     { return this.price - this.price / 1.18 },
 

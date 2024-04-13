@@ -53,9 +53,9 @@
           <i class="fas fa-caret-down"></i> PRODUCTOS
         </a>
         <div class="sub-menu" :class="{'active': buys}">
-          <!-- <router-link to="/activation" @click.native="close" v-if="affiliated">
+          <router-link to="/activation" @click.native="close" v-if="affiliated">
             <i class="fas fa-shopping-bag"></i> COMPRAS
-          </router-link> -->
+          </router-link>
           <router-link to="/affiliation" @click.native="close">
             <i class="fas fa-receipt"></i> AFILIACIÓN
           </router-link>
