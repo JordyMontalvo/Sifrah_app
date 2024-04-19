@@ -83,9 +83,9 @@
           <p>
             <small>
               Resumen: <br>
-              <span v-for="(product, i) in products" v-if="product.total > 0">
+              <p v-for="(product, i) in products" v-if="product.total > 0">
                 {{ product.total }} {{ product.name }}
-              </span>
+              </p>
             </small>
           </p>
           <br>
