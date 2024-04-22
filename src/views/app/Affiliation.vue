@@ -33,7 +33,7 @@
             Total: <span class="_strong">S/. {{ affiliation.price }}</span>
           </small> <br><br>
 
-          <small class="success">pendiente de aprovación</small>
+          <small class="success">pendiente de aprobación</small>
 
         </div>
 
