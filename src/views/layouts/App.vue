@@ -111,8 +111,12 @@
           </router-link>
         </div>
 
-        <router-link to="/tools" @click.native="close" v-if="office_id == null">
+        <!-- <router-link to="/tools" @click.native="close" v-if="office_id == null">
           <i class="fas fa-file-pdf"></i> HERRAMIENTAS
+        </router-link> -->
+
+        <router-link to="/tools" @click.native="close" v-if="office_id == null">
+          <i class="fa-solid fa-graduation-cap"></i> EDUCACIÓN
         </router-link>
 
         <router-link to="/profile" @click.native="close" v-if="office_id == null">
