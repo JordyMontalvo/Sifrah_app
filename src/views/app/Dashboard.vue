@@ -48,7 +48,7 @@
       <div class="box green" v-if="rank">
         <i class="fas fa-gem"></i>
         <div>
-          <p>{{ rank | _rank }}</p>
+          <p>{{ rank }}</p>
           <span>RANGO CERRADO</span>
         </div>
       </div>
