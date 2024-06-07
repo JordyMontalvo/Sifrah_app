@@ -143,7 +143,7 @@
             <a class="fab fa-youtube"         :href="yt" target="_blank" style="color: #ff0050;"></a>
           </div> -->
         </header>
-        <section>
+        <section style="overflow: auto;">
 
           <slot/>
 
