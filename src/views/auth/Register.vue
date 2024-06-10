@@ -32,18 +32,27 @@
       <br />
 
       <i class="icon fa-solid fa-user-tie"></i>
-      <input class="input" placeholder="Nombre"
+      <!-- <input class="input" placeholder="Nombre"
       v-model="name"
       :class="{'error': error.name}"
       @keydown="reset('name')"
-      :disabled="country == 'Perú' && !younger"> <br>
+      :disabled="country == 'Perú' && !younger"> <br> -->
+      <input class="input" placeholder="Nombre"
+      v-model="name"
+      :class="{'error': error.name}"
+      @keydown="reset('name')"> <br>
 
       <i class="icon fa-solid fa-user-tie"></i>
       <input class="input" placeholder="Apellidos"
       v-model="lastName"
       :class="{'error': error.lastName}"
+      @keydown="reset('lastName')"> <br>
+      <!-- <i class="icon fa-solid fa-user-tie"></i>
+      <input class="input" placeholder="Apellidos"
+      v-model="lastName"
+      :class="{'error': error.lastName}"
       @keydown="reset('lastName')"
-      :disabled="country == 'Perú' && !younger"> <br>
+      :disabled="country == 'Perú' && !younger"> <br> -->
 
       <i class="icon fa fa-calendar"></i>
       <input type="date" class="input" placeholder="Fecha de Nacimiento"
@@ -172,7 +181,7 @@ export default {
     if(this.code) this.disabled = true
   },
   watch: {
-    async dni(dni) {
+    /* async dni(dni) {
       if(this.country != 'Perú' || this.younger) return
 
       if(dni.length < 8) return
@@ -192,7 +201,7 @@ export default {
 
       this.name     = data.nombres
       this.lastName = data.apellidoPaterno + ' ' + data.apellidoMaterno
-    }
+    } */
   },
   methods: {
     async submit() {
