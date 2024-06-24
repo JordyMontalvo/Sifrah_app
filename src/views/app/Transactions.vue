@@ -93,6 +93,7 @@ export default {
       if(val == 'wallet transfer')       return 'Monedero brillante'
       if(val == 'remaining')             return 'Pago Ganancia'
       if(val == 'closed bonus')          return 'Bono cierre'
+      if(val == 'activation bonnus promo') return 'Bono compra promoción'
     },
   },
 };
