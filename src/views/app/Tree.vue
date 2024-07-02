@@ -77,7 +77,7 @@
           <p>Correo: {{ selec_node.email }}</p>
           <p>Rango Cerrado: {{ selec_node._rank }}</p>
           <!-- <p>Rango Actual:  {{ selec_node.rank | _rank }}</p> -->
-          <p>Siguiente Rango: {{ selec_node.next_rank.name | _rank }}</p>
+          <!-- <p>Siguiente Rango: {{ selec_node.next_rank.name | _rank }}</p> -->
           <!-- <p>Rango Próximo: Hans Evanglelista</p> -->
           <p>Puntos Personales: {{ selec_node.points }}</p>
           <p>Puntos Grupales: {{ selec_node.closed_points_arr }}</p>
