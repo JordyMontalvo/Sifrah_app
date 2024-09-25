@@ -95,7 +95,7 @@ export default {
       // return new Date(val).toLocaleString()
     },
     price(val) {
-      return `$ ${val}`
+      return `S/. ${val}`
     },
     status(val) {
       if(val == 'pending')  return 'Pendiente'
