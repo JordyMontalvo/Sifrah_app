@@ -82,6 +82,9 @@
       :class="{'error': error.amount}"
       @keydown="reset('amount')"> <br>
 
+      <br>
+      <textarea class="input" v-model="desc" placeholder="Descripción" maxlength="30"></textarea> <br>
+
       <p class="alert">{{ alert | alert }}</p>
 
       <small v-if="success" class="success">Retiro Enviado</small> <br>
@@ -110,6 +113,7 @@ export default {
       // interbank_code: null,
       balance: null,
       amount: null,
+      desc: null,
       office: 'central',
 
       error: {
@@ -164,7 +168,7 @@ export default {
   methods: {
     async POST() {
 
-      const { cash, bank, account, account_type, amount, balance, office } = this
+      const { cash, bank, account, account_type, amount, desc, balance, office } = this
 
       // validate fields
       if(cash && !bank)    { return this.error.bank    = true }
@@ -179,7 +183,7 @@ export default {
       // POST Collect
       this.sending = true
 
-      const { data } = await api.Collect.POST(this.session, { cash, bank, account, account_type, amount, office })
+      const { data } = await api.Collect.POST(this.session, { cash, bank, account, account_type, amount, desc, office })
       console.log({ data })
 
       this.sending = false
