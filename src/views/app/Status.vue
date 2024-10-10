@@ -61,13 +61,13 @@ export default {
   },
   data() {
     return {
-      status:          null,
-      date:            null,
+      status: null,
+      date: null,
       affiliationDate: null,
-      rank:            null,
-      team:            null,
-      activateds:      null,
-      unactivateds:    null,
+      rank: null,
+      team: null,
+      activateds: null,
+      unactivateds: null,
 
       loading: true,
     }
@@ -87,56 +87,57 @@ export default {
     this.loading = false
 
     // error
-    if(data.error && data.msg == 'invalid session') this.$router.push('/login')
-    if(data.error && data.msg == 'unverified user') this.$router.push('/verify')
+    if (data.error && data.msg == 'invalid session') this.$router.push('/login')
+    if (data.error && data.msg == 'unverified user') this.$router.push('/verify')
 
     // success
     this.$store.commit('SET_NAME', data.name)
-    this.$store.commit('SET_LAST_NAME',  data.lastName)
+    this.$store.commit('SET_LAST_NAME', data.lastName)
     this.$store.commit('SET_AFFILIATED', data.affiliated)
-    this.$store.commit('SET_ACTIVATED',  data.activated)
-    this.$store.commit('SET_PLAN',       data.plan)
-    this.$store.commit('SET_COUNTRY',    data.country)
-    this.$store.commit('SET_PHOTO',      data.photo)
+    this.$store.commit('SET_ACTIVATED', data.activated)
+    this.$store.commit('SET__ACTIVATED', data._activated)
+    this.$store.commit('SET_PLAN', data.plan)
+    this.$store.commit('SET_COUNTRY', data.country)
+    this.$store.commit('SET_PHOTO', data.photo)
 
     this.status = 'registered'
-    if(data.affiliated) this.status = 'affiliated'
-    if(data.activated)  this.status = 'activated'
+    if (data.affiliated) this.status = 'affiliated'
+    if (data.activated) this.status = 'activated'
 
-    this.date            = data.date
+    this.date = data.date
     this.affiliationDate = data.affiliationDate
-    this.plan            = data.plan
-    this.rank            = data.rank
-    this.team            = data.team
-    this.activateds      = data.activateds
-    this.unactivateds    = data.unactivateds
+    this.plan = data.plan
+    this.rank = data.rank
+    this.team = data.team
+    this.activateds = data.activateds
+    this.unactivateds = data.unactivateds
   },
   filters: {
     status(val) {
-      if(val == 'registered') return 'Registrado'
-      if(val == 'affiliated') return 'Afiliado'
-      if(val == 'activated')  return 'Activado'
+      if (val == 'registered') return 'Registrado'
+      if (val == 'affiliated') return 'Afiliado'
+      if (val == 'activated') return 'Activado'
     },
     date(val) {
-      if(!val) return ""
+      if (!val) return ""
       return new Date(val).toLocaleDateString()
     },
     rank(val) {
-      if(val == 'active')           return 'Activo'
-      if(val == 'coral')            return 'Coral'
-      if(val == 'quartz')           return 'Cuarzo'
-      if(val == 'sapphire')         return 'Zafiro'
-      if(val == 'ruby')             return 'Rubī'
-      if(val == 'emerald')          return 'Esmeralda'
-      if(val == 'diamond')          return 'Diamante'
-      if(val == 'crown-diamond')    return 'Diamante Corona'
-      if(val == 'imperial-diamond') return 'Diamante Imperial'
+      if (val == 'active') return 'Activo'
+      if (val == 'coral') return 'Coral'
+      if (val == 'quartz') return 'Cuarzo'
+      if (val == 'sapphire') return 'Zafiro'
+      if (val == 'ruby') return 'Rubī'
+      if (val == 'emerald') return 'Esmeralda'
+      if (val == 'diamond') return 'Diamante'
+      if (val == 'crown-diamond') return 'Diamante Corona'
+      if (val == 'imperial-diamond') return 'Diamante Imperial'
     },
     plan(val) {
-      if(val == 'basic')        return 'EMPRENDEDOR'
-      if(val == 'standard')     return 'EMPRENDEDOR'
-      if(val == 'business')     return 'EMPRESARIAL'
-      if(val == 'business-vip') return 'EMPRESARIAL VIP'
+      if (val == 'basic') return 'EMPRENDEDOR'
+      if (val == 'standard') return 'EMPRENDEDOR'
+      if (val == 'business') return 'EMPRESARIAL'
+      if (val == 'business-vip') return 'EMPRESARIAL VIP'
     },
   },
 };

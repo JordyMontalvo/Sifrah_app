@@ -49,7 +49,9 @@
           <input class="input" readonly v-model="text"> <br><br>
 
           <article class="product">
-            <small><p>Kit de inicio S/. {{ selec_plan.kit }}</p></small>
+            <small>
+              <p>Kit de inicio S/. {{ selec_plan.kit }}</p>
+            </small>
             <div class="control"><input readonly value="1"></div>
           </article>
 
@@ -61,7 +63,8 @@
           <img class="_product" :src="product.img">
 
           <div class="_tabs">
-            <p class="_tab" v-for="(category, i) in categories" @click="tab = category" :class="{'selected': tab == categories[i]}">{{ category }}</p>
+            <p class="_tab" v-for="(category, i) in categories" @click="tab = category"
+              :class="{ 'selected': tab == categories[i] }">{{ category }}</p>
           </div>
 
           <div class="_tab_content" v-for="(category, i) in categories" v-show="tab == categories[i]">
@@ -107,7 +110,7 @@
             <small>No Deseo usar mi saldo</small>
           </label> <br>
 
-         <!-- <div v-if="!check">
+          <!-- <div v-if="!check">
             <div v-if="plan == 'default'">
               <small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Saldo disponible: S/. {{ balance }}</small> <br>
               <small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Ganancias: S/. {{ selec_plan.pay }}</small> <br>
@@ -123,7 +126,7 @@
 
           <div v-if="!check">
             <small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Saldo no disponible: S/. {{ _balance }}</small> <br>
-            <small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Saldo    disponible: S/. {{ balance }}</small> <br>
+            <small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Saldo disponible: S/. {{ balance }}</small> <br>
           </div>
 
           <br>
@@ -149,7 +152,8 @@
           <div v-if="pay_method == 'bank'">
             <input class="input" v-model="bank" placeholder="Banco"> <br>
             <input class="input" v-model="date" placeholder="Fecha" type="date"> <br>
-            <input class="input" v-model="voucher_number" placeholder="Número de Voucher" oninput="this.value=this.value.replace(/(?![0-9])./gmi,'')"> <br>
+            <input class="input" v-model="voucher_number" placeholder="Número de Voucher"
+              oninput="this.value=this.value.replace(/(?![0-9])./gmi,'')"> <br>
 
             <label>
               <span class="input" v-show="!voucher">Comprobante de pago</span>
@@ -165,7 +169,7 @@
           <small v-if="error" style="color: red;">{{ error }}<br></small>
 
           <button class="button" v-show="!sending" @click="POST">Enviar Afiliación</button>
-          <button class="button" v-show= "sending" disabled>Enviando Voucher ...</button>
+          <button class="button" v-show="sending" disabled>Enviando Voucher ...</button>
 
           <small v-if="pending" class="success">pendiente de aprobación</small>
 
@@ -173,7 +177,8 @@
 
       </div> <br><br>
 
-      <a v-for="(affiliation, i) in affiliations" :href=" `${INVOICE_ROOT}?id=${affiliation.id}` " target="_blank" style="color: gray;">Boleta {{ i + 1 }} &nbsp;&nbsp;</a>
+      <a v-for="(affiliation, i) in affiliations" :href="`${INVOICE_ROOT}?id=${affiliation.id}`" target="_blank"
+        style="color: gray;">Boleta {{ i + 1 }} &nbsp;&nbsp;</a>
 
       <br><br>
 
@@ -201,24 +206,24 @@ export default {
       loading: true,
       sending: false,
 
-      plans:        null,
-      selec_plan:   null,
-      voucher:      null,
+      plans: null,
+      selec_plan: null,
+      voucher: null,
       voucher_file: null,
-      office:       null,
-      offices:      null,
+      office: null,
+      offices: null,
 
       pay_method: null,
 
-      pending:  false,
+      pending: false,
       congrats: false,
 
       check: false,
       INVOICE_ROOT,
 
-      tab:      null,
+      tab: null,
       products: null,
-      product:  null,
+      product: null,
 
       error: null,
 
@@ -228,14 +233,14 @@ export default {
     }
   },
   computed: {
-    session()   { return this.$store.state.session   },
+    session() { return this.$store.state.session },
     office_id() { return this.$store.state.office_id },
-    plan()      { return this.$store.state.plan      },
+    plan() { return this.$store.state.plan },
 
     categories() {
       return this.products
-                 .map(x => x.type)
-                 .filter((v, i, self) => i == self.indexOf(v))
+        .map(x => x.type)
+        .filter((v, i, self) => i == self.indexOf(v))
     },
     total() { return this.products.reduce((a, b) => a + b.total, 0) },
 
@@ -246,25 +251,25 @@ export default {
       // balance
       ret -= this._balance
 
-      if(ret < 0) ret = 0
+      if (ret < 0) ret = 0
 
-      if(ret == 0) return ret
+      if (ret == 0) return ret
 
       // _balance
       ret -= this.balance
 
-      if(ret < 0) ret = 0
+      if (ret < 0) ret = 0
 
       return ret
     },
 
     text() {
-      return `S/. ${ this.selec_plan.amount } / ${ this.selec_plan.affiliation_points } PTS`
+      return `S/. ${this.selec_plan.amount} / ${this.selec_plan.affiliation_points} PTS`
     },
   },
-  watch:{
-    selec_plan(){
-      if(!this.selec_plan) return
+  watch: {
+    selec_plan() {
+      if (!this.selec_plan) return
       // this.prices()
       // this.totals()
       this.reset_totals()
@@ -277,30 +282,30 @@ export default {
     this.loading = false
 
     // error
-    if(data.error && data.msg == 'invalid session') this.$router.push('/login')
+    if (data.error && data.msg == 'invalid session') this.$router.push('/login')
 
     // success
-    this.$store.commit('SET_NAME',       data.name)
-    this.$store.commit('SET_LAST_NAME',  data.lastName)
+    this.$store.commit('SET_NAME', data.name)
+    this.$store.commit('SET_LAST_NAME', data.lastName)
     this.$store.commit('SET_AFFILIATED', data.affiliated)
-    this.$store.commit('SET__ACTIVATED',  data._activated)
-    this.$store.commit('SET_ACTIVATED',  data.activated)
-    this.$store.commit('SET_PLAN',       data.plan)
-    this.$store.commit('SET_COUNTRY',    data.country)
-    this.$store.commit('SET_PHOTO',      data.photo)
-    this.$store.commit('SET_TREE',       data.tree)
+    this.$store.commit('SET_ACTIVATED', data.activated)
+    this.$store.commit('SET__ACTIVATED', data._activated)
+    this.$store.commit('SET_PLAN', data.plan)
+    this.$store.commit('SET_COUNTRY', data.country)
+    this.$store.commit('SET_PHOTO', data.photo)
+    this.$store.commit('SET_TREE', data.tree)
     console.log('1')
-    this.plans      = data.plans
+    this.plans = data.plans
     this.selec_plan = this.plans[0]
     console.log('2')
 
     this.products = data.products
     this.products = data.products.map(a => ({ ...a, total: 0 }))
-    this.product  = this.products[0]
-    this.tab      = this.categories[0]
+    this.product = this.products[0]
+    this.tab = this.categories[0]
     console.log('3')
 
-    this.balance  = data.balance
+    this.balance = data.balance
     this._balance = data._balance
     // this.balance  = 50
     // this._balance = 300
@@ -311,13 +316,13 @@ export default {
     this.affiliation = data.affiliation
     console.log('5')
 
-    if(this.plan == 'master' || (this.affiliation &&
-           this.affiliation.plan.id == 'master' &&
-           this.affiliation.status == 'approved')) this.congrats = true
+    if (this.plan == 'master' || (this.affiliation &&
+      this.affiliation.plan.id == 'master' &&
+      this.affiliation.status == 'approved')) this.congrats = true
     console.log('6')
 
 
-    if(this.affiliation && this.affiliation.status == 'pending') this.pending = true
+    if (this.affiliation && this.affiliation.status == 'pending') this.pending = true
     console.log('7')
 
 
@@ -405,7 +410,7 @@ export default {
       this.pending = true
 
       this.affiliation = {
-        plan:     this.selec_plan,
+        plan: this.selec_plan,
         products: this.products,
       }
     },

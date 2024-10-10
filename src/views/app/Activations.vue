@@ -58,7 +58,8 @@
               </a>
             </td>
             <td>{{ activation.status | status }}</td>
-            <td><a :href=" `${INVOICE_ROOT}?id=${activation.id}` " target="_blank" style="color: gray;" v-if="activation.status == 'approved'">boleta</a></td>
+            <td><a :href="`${INVOICE_ROOT}?id=${activation.id}`" target="_blank" style="color: gray;"
+                v-if="activation.status == 'approved'">boleta</a></td>
           </tr>
         </tbody>
       </table>
@@ -98,9 +99,9 @@ export default {
       return `S/. ${val}`
     },
     status(val) {
-      if(val == 'pending')  return 'Pendiente'
-      if(val == 'approved') return 'Aprobada'
-      if(val == 'rejected') return 'Rechazada'
+      if (val == 'pending') return 'Pendiente'
+      if (val == 'approved') return 'Aprobada'
+      if (val == 'rejected') return 'Rechazada'
     },
   },
   async created() {
@@ -110,18 +111,19 @@ export default {
     this.loading = false
 
     // error
-    if(data.error && data.msg == 'invalid session') this.$router.push('/login')
-    if(data.error && data.msg == 'unverified user') this.$router.push('/verify')
+    if (data.error && data.msg == 'invalid session') this.$router.push('/login')
+    if (data.error && data.msg == 'unverified user') this.$router.push('/verify')
 
     // success
     this.$store.commit('SET_NAME', data.name)
-    this.$store.commit('SET_LAST_NAME',  data.lastName)
+    this.$store.commit('SET_LAST_NAME', data.lastName)
     this.$store.commit('SET_AFFILIATED', data.affiliated)
-    this.$store.commit('SET_ACTIVATED',  data.activated)
-    this.$store.commit('SET_PLAN',       data.plan)
-    this.$store.commit('SET_COUNTRY',    data.country)
-    this.$store.commit('SET_PHOTO',      data.photo)
-    this.$store.commit('SET_TREE',       data.tree)
+    this.$store.commit('SET_ACTIVATED', data.activated)
+    this.$store.commit('SET__ACTIVATED', data._activated)
+    this.$store.commit('SET_PLAN', data.plan)
+    this.$store.commit('SET_COUNTRY', data.country)
+    this.$store.commit('SET_PHOTO', data.photo)
+    this.$store.commit('SET_TREE', data.tree)
 
     this.activations = data.activations.reverse()
     // this.arr         = data.arr

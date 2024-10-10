@@ -96,16 +96,17 @@ export default {
     this.loading = false
 
     // error
-    if(data.error && data.msg == 'invalid session') this.$router.push('/login')
-    if(data.error && data.msg == 'unverified user') this.$router.push('/verify')
+    if (data.error && data.msg == 'invalid session') this.$router.push('/login')
+    if (data.error && data.msg == 'unverified user') this.$router.push('/verify')
 
     // success
-    this.$store.commit('SET_NAME',       data.name)
-    this.$store.commit('SET_LAST_NAME',  data.lastName)
+    this.$store.commit('SET_NAME', data.name)
+    this.$store.commit('SET_LAST_NAME', data.lastName)
     this.$store.commit('SET_AFFILIATED', data.affiliated)
-    this.$store.commit('SET_ACTIVATED',  data.activated)
+    this.$store.commit('SET_ACTIVATED', data.activated)
+    this.$store.commit('SET__ACTIVATED', data._activated)
 
-    this.id      = data.id
+    this.id = data.id
     this.closeds = data.closeds
 
 
@@ -115,7 +116,7 @@ export default {
   methods: {
     report() {
       console.log('report')
-      if(!this.selec_closed) return
+      if (!this.selec_closed) return
 
       console.log(this.id)
       this.node = this.selec_closed.tree.find(e => e.id == this.id)
@@ -127,7 +128,7 @@ export default {
     ordered(arr) {
       console.log({ arr })
 
-      arr.sort((a,b) => (a.n > b.n) ? 1 : ((b.n > a.n) ? -1 : 0))
+      arr.sort((a, b) => (a.n > b.n) ? 1 : ((b.n > a.n) ? -1 : 0))
 
       return arr
     },

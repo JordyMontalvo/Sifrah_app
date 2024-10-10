@@ -28,7 +28,7 @@
 
           </div>
 
-          <img :src="selected_plan.img" style="max-width: 400px; margin: 8px 20px;" >
+          <img :src="selected_plan.img" style="max-width: 400px; margin: 8px 20px;">
 
         </div> <br>
 
@@ -56,7 +56,7 @@
               <div class="control">
                 <i class="fas fa-minus-square" @click="less(group, i, j)" v-if="!pending"></i>
                 <input readonly :value="product.total">
-                <i class="fas fa-plus-square"  @click="more(group, i, j)" v-if="!pending"></i>
+                <i class="fas fa-plus-square" @click="more(group, i, j)" v-if="!pending"></i>
               </div>
 
             </article>
@@ -111,14 +111,14 @@
           <option v-for="office in offices" :value="office">{{ office.name }}</option>
 
         </select>
-        <input class="input" readonly value="Central"  v-if="pending && office == 'central'">
+        <input class="input" readonly value="Central" v-if="pending && office == 'central'">
         <input class="input" readonly value="Ledezma" v-if="pending && office == 'secondary'">
 
         <br><br>
 
         <div v-if="!pending">
           <button class="button" v-show="!sending" @click="POST">Enviar Voucher</button>
-          <button class="button" v-show= "sending" disabled>Enviando Voucher ...</button>
+          <button class="button" v-show="sending" disabled>Enviando Voucher ...</button>
         </div>
 
         <small v-if="pending" class="success">pendiente de aprobación</small>
@@ -127,7 +127,8 @@
 
       </div>
 
-      <a v-for="(affiliation, i) in affiliations" :href=" `${INVOICE_ROOT}?id=${affiliation.id}` " target="_blank" style="color: gray;">Boleta {{ i + 1 }} &nbsp;&nbsp;</a>
+      <a v-for="(affiliation, i) in affiliations" :href="`${INVOICE_ROOT}?id=${affiliation.id}`" target="_blank"
+        style="color: gray;">Boleta {{ i + 1 }} &nbsp;&nbsp;</a>
 
       <br><br>
 
@@ -155,12 +156,12 @@ export default {
       loading: true,
       sending: false,
 
-      plans:         null,
+      plans: null,
       selected_plan: null,
-      voucher:       null,
-      voucher_file:  null,
-      office:        null,
-      offices:       null,
+      voucher: null,
+      voucher_file: null,
+      office: null,
+      offices: null,
 
       pending: false,
       congrats: false,
@@ -170,13 +171,13 @@ export default {
     }
   },
   computed: {
-    session()   { return this.$store.state.session   },
+    session() { return this.$store.state.session },
     office_id() { return this.$store.state.office_id },
-    plan()      { return this.$store.state.plan },
+    plan() { return this.$store.state.plan },
 
     remaining() {
 
-      if(this.plan == 'default') {
+      if (this.plan == 'default') {
 
         if ((this.balance + this.selected_plan.pay) >= this.selected_plan.amount) return 0
         return this.selected_plan.amount - (this.balance + this.selected_plan.pay)
@@ -194,36 +195,37 @@ export default {
     this.loading = false
 
     // error
-    if(data.error && data.msg == 'invalid session') this.$router.push('/login')
+    if (data.error && data.msg == 'invalid session') this.$router.push('/login')
 
     // success
-    this.$store.commit('SET_NAME',       data.name)
-    this.$store.commit('SET_LAST_NAME',  data.lastName)
+    this.$store.commit('SET_NAME', data.name)
+    this.$store.commit('SET_LAST_NAME', data.lastName)
     this.$store.commit('SET_AFFILIATED', data.affiliated)
-    this.$store.commit('SET_ACTIVATED',  data.activated)
-    this.$store.commit('SET_PLAN',       data.plan)
-    this.$store.commit('SET_COUNTRY',    data.country)
-    this.$store.commit('SET_PHOTO',      data.photo)
-    this.$store.commit('SET_TREE',       data.tree)
+    this.$store.commit('SET_ACTIVATED', data.activated)
+    this.$store.commit('SET__ACTIVATED', data._activated)
+    this.$store.commit('SET_PLAN', data.plan)
+    this.$store.commit('SET_COUNTRY', data.country)
+    this.$store.commit('SET_PHOTO', data.photo)
+    this.$store.commit('SET_TREE', data.tree)
 
-    this.offices       = data.offices
+    this.offices = data.offices
 
-    this.plans         = data.plans
+    this.plans = data.plans
     this.selected_plan = this.plans[0]
 
     const affiliation = data.affiliation
     this.affiliations = data.affiliations
 
-    if(affiliation && affiliation.status == 'pending') {
+    if (affiliation && affiliation.status == 'pending') {
       this.pending = true
       this.selected_plan = affiliation.plan
       this.voucher = affiliation.voucher
       this.office = affiliation.office
     }
 
-    if(affiliation && affiliation.plan.id == 'master' && affiliation.status == 'approved') this.congrats = true
+    if (affiliation && affiliation.plan.id == 'master' && affiliation.status == 'approved') this.congrats = true
 
-    if(this.office_id) this.office = this.office_id
+    if (this.office_id) this.office = this.office_id
 
     this.balance = data.balance
     this._balance = data._balance
@@ -237,14 +239,14 @@ export default {
         total += product.total
       })
 
-      if(total == group.total) return
+      if (total == group.total) return
 
       this.selected_plan.products[i].list[j].total += 1
     },
 
     less(group, i, j) {
 
-      if(this.selected_plan.products[i].list[j].total == 0) return
+      if (this.selected_plan.products[i].list[j].total == 0) return
 
       this.selected_plan.products[i].list[j].total -= 1
     },
@@ -271,19 +273,19 @@ export default {
           total += product.total
         })
 
-        if(total < group.total) ret = true
+        if (total < group.total) ret = true
       })
 
-      if(ret) return
+      if (ret) return
 
       // if(!voucher) return
-      if(!office) return
+      if (!office) return
 
 
       // // POST Affiliation
       this.sending = true
 
-      if(voucher) voucher = await lib.upload(this.voucher_file, this.voucher_file.name, 'affiliations')
+      if (voucher) voucher = await lib.upload(this.voucher_file, this.voucher_file.name, 'affiliations')
 
       const { data } = await api.Afiliation.POST(this.session, {
         selected_plan,

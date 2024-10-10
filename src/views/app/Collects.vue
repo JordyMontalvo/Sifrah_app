@@ -31,9 +31,9 @@
                 En efectivo
               </div>
               <div v-else>
-                Banco:  {{ collect.bank }}    <br>
+                Banco: {{ collect.bank }} <br>
                 Cuenta: {{ collect.account }} <br>
-                CCI:    {{ collect.ink }}
+                CCI: {{ collect.ink }}
               </div>
             </td>
             <td>{{ collect.amount }}</td>
@@ -70,8 +70,8 @@ export default {
       // return new Date(val).toLocaleString()
     },
     status(val) {
-      if(val == 'pending')  return 'Pendiente'
-      if(val == 'approved') return 'Entregado'
+      if (val == 'pending') return 'Pendiente'
+      if (val == 'approved') return 'Entregado'
     },
   },
   async created() {
@@ -81,14 +81,15 @@ export default {
     this.loading = false
 
     // error
-    if(data.error && data.msg == 'invalid session') this.$router.push('/login')
-    if(data.error && data.msg == 'unverified user') this.$router.push('/verify')
+    if (data.error && data.msg == 'invalid session') this.$router.push('/login')
+    if (data.error && data.msg == 'unverified user') this.$router.push('/verify')
 
     // success
     this.$store.commit('SET_NAME', data.name)
-    this.$store.commit('SET_LAST_NAME',  data.lastName)
+    this.$store.commit('SET_LAST_NAME', data.lastName)
     this.$store.commit('SET_AFFILIATED', data.affiliated)
-    this.$store.commit('SET_ACTIVATED',  data.activated)
+    this.$store.commit('SET_ACTIVATED', data.activated)
+    this.$store.commit('SET__ACTIVATED', data._activated)
 
     this.collects = data.collects.reverse()
 

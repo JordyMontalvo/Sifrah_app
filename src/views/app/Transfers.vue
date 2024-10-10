@@ -28,7 +28,7 @@
             <td>{{ transaction.name }}</td>
             <td>{{ transaction.desc }}</td>
             <td>
-              <span v-if="transaction.type == 'in'"  class="in" >+ {{ transaction.value.toFixed(2) }}</span>
+              <span v-if="transaction.type == 'in'" class="in">+ {{ transaction.value.toFixed(2) }}</span>
               <span v-if="transaction.type == 'out'" class="out">- {{ transaction.value.toFixed(2) }}</span>
             </td>
           </tr>
@@ -68,18 +68,19 @@ export default {
     this.loading = false
 
     // error
-    if(data.error && data.msg == 'invalid session') this.$router.push('/login')
-    if(data.error && data.msg == 'unverified user') this.$router.push('/verify')
+    if (data.error && data.msg == 'invalid session') this.$router.push('/login')
+    if (data.error && data.msg == 'unverified user') this.$router.push('/verify')
 
     // success
-    this.$store.commit('SET_NAME',       data.name)
-    this.$store.commit('SET_LAST_NAME',  data.lastName)
+    this.$store.commit('SET_NAME', data.name)
+    this.$store.commit('SET_LAST_NAME', data.lastName)
     this.$store.commit('SET_AFFILIATED', data.affiliated)
-    this.$store.commit('SET_ACTIVATED',  data.activated)
-    this.$store.commit('SET_PLAN',       data.plan)
-    this.$store.commit('SET_COUNTRY',    data.country)
-    this.$store.commit('SET_PHOTO',      data.photo)
-    this.$store.commit('SET_TREE',       data.tree)
+    this.$store.commit('SET_ACTIVATED', data.activated)
+    this.$store.commit('SET__ACTIVATED', data._activated)
+    this.$store.commit('SET_PLAN', data.plan)
+    this.$store.commit('SET_COUNTRY', data.country)
+    this.$store.commit('SET_PHOTO', data.photo)
+    this.$store.commit('SET_TREE', data.tree)
 
     this.transactions = data.transactions.reverse()
   },

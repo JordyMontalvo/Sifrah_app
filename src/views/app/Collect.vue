@@ -37,11 +37,7 @@
       </router-link>
 
       <i class="icon fas fa-university"></i>
-      <select class="input"
-      v-model="office"
-      :class="{'error': error.office}"
-      @change="reset('office')"
-      disabled>
+      <select class="input" v-model="office" :class="{ 'error': error.office }" @change="reset('office')" disabled>
         <option value="null" disabled>Oficina</option>
         <option value="central">Central</option>
         <option value="secondary">Ledezma</option>
@@ -50,22 +46,16 @@
 
       <div v-if="cash">
         <i class="icon fas fa-university"></i>
-        <input class="input" readonly placeholder="Banco"
-        v-model="bank"
-        :class="{'error': error.bank}"
-        @keydown="reset('bank')"> <br>
+        <input class="input" readonly placeholder="Banco" v-model="bank" :class="{ 'error': error.bank }"
+          @keydown="reset('bank')"> <br>
 
         <i class="icon fas fa-university"></i>
-        <input class="input" readonly placeholder="Banco"
-        v-model="account_type"
-        :class="{'error': error.bank}"
-        @keydown="reset('bank')"> <br>
+        <input class="input" readonly placeholder="Banco" v-model="account_type" :class="{ 'error': error.bank }"
+          @keydown="reset('bank')"> <br>
 
         <i class="icon fas fa-user-circle"></i>
-        <input class="input" readonly placeholder="Número de cuenta"
-        v-model="account"
-        :class="{'error': error.account}"
-        @keydown="reset('account')"> <br>
+        <input class="input" readonly placeholder="Número de cuenta" v-model="account" :class="{ 'error': error.account }"
+          @keydown="reset('account')"> <br>
 
         <!-- <i class="icon far fa-user-circle"></i>
         <input class="input" readonly placeholder="Código interbancario"
@@ -77,10 +67,8 @@
 
       <i class="icon fas fa-hand-holding-usd"></i>
       <input class="input" placeholder="Monto a retirar"
-      oninput="this.value=this.value.replace(/(?![0-9, '.'])./gmi,'')"
-      v-model.number="amount"
-      :class="{'error': error.amount}"
-      @keydown="reset('amount')"> <br>
+        oninput="this.value=this.value.replace(/(?![0-9, '.'])./gmi,'')" v-model.number="amount"
+        :class="{ 'error': error.amount }" @keydown="reset('amount')"> <br>
 
       <br>
       <textarea class="input" v-model="desc" placeholder="Descripción" maxlength="30"></textarea> <br>
@@ -90,7 +78,7 @@
       <small v-if="success" class="success">Retiro Enviado</small> <br>
 
       <button class="button" v-show="!sending" @click="POST">Solicitar retiro</button>
-      <button class="button" v-show= "sending" disabled>Guardando datos ...</button>
+      <button class="button" v-show="sending" disabled>Guardando datos ...</button>
     </section>
 
   </App>
@@ -117,10 +105,10 @@ export default {
       office: 'central',
 
       error: {
-        bank:    false,
+        bank: false,
         account: false,
-        amount:  false,
-        office:  false,
+        amount: false,
+        office: false,
       },
 
       loading: true,
@@ -146,19 +134,20 @@ export default {
     this.loading = false
 
     // error
-    if(data.error && data.msg == 'invalid session') this.$router.push('/login')
-    if(data.error && data.msg == 'unverified user') this.$router.push('/verify')
+    if (data.error && data.msg == 'invalid session') this.$router.push('/login')
+    if (data.error && data.msg == 'unverified user') this.$router.push('/verify')
 
     // success
     this.$store.commit('SET_NAME', data.name)
-    this.$store.commit('SET_LAST_NAME',  data.lastName)
+    this.$store.commit('SET_LAST_NAME', data.lastName)
     this.$store.commit('SET_AFFILIATED', data.affiliated)
-    this.$store.commit('SET_ACTIVATED',  data.activated)
-    this.$store.commit('SET_PLAN',       data.plan)
-    this.$store.commit('SET_COUNTRY',    data.country)
-    this.$store.commit('SET_PHOTO',      data.photo)
+    this.$store.commit('SET_ACTIVATED', data.activated)
+    this.$store.commit('SET__ACTIVATED', data._activated)
+    this.$store.commit('SET_PLAN', data.plan)
+    this.$store.commit('SET_COUNTRY', data.country)
+    this.$store.commit('SET_PHOTO', data.photo)
 
-    this.bank    = data.bank
+    this.bank = data.bank
     this.account = data.account
     this.account_type = data.account_type
     // this.ibk     = data.ibk
@@ -171,13 +160,13 @@ export default {
       const { cash, bank, account, account_type, amount, desc, balance, office } = this
 
       // validate fields
-      if(cash && !bank)    { return this.error.bank    = true }
-      if(cash && !account) { return this.error.account = true }
-      if(!office)          { return this.error.office  = true }
-      if(!amount)          { return this.error.amount  = true }
+      if (cash && !bank) { return this.error.bank = true }
+      if (cash && !account) { return this.error.account = true }
+      if (!office) { return this.error.office = true }
+      if (!amount) { return this.error.amount = true }
 
       // validate amount
-      if (amount > balance) { return this.alert = 'amount exceeds the balance'}
+      if (amount > balance) { return this.alert = 'amount exceeds the balance' }
 
 
       // POST Collect
@@ -189,7 +178,7 @@ export default {
       this.sending = false
 
       // error
-      if(data.error) return this.alert = data.msg
+      if (data.error) return this.alert = data.msg
 
       // success
       this.success = true
@@ -198,10 +187,10 @@ export default {
     reset(name) {
       this.alert = null
 
-      if(name == 'bank')    this.error.bank    = false
-      if(name == 'account') this.error.account = false
-      if(name == 'amount')  this.error.amount  = false
-      if(name == 'office')  this.error.office  = false
+      if (name == 'bank') this.error.bank = false
+      if (name == 'account') this.error.account = false
+      if (name == 'amount') this.error.amount = false
+      if (name == 'office') this.error.office = false
     },
   },
 };
