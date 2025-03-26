@@ -94,6 +94,7 @@ export default {
       if(val == 'remaining')             return 'Pago Ganancia'
       if(val == 'closed bonus')          return 'Bono cierre'
       if(val == 'activation bonnus promo') return 'Bono compra promoción'
+      if(val == 'closed reset')            return 'Descuento por cierre'
     },
   },
 };
