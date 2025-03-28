@@ -9,7 +9,7 @@ import Remember from './views/auth/Remember.vue'
 // Aux
 import Logout from './views/auxi/Logout.vue'
 // import Verify from './views/iaux/Verify.vue'
-import Check  from './views/aux/Check.vue'
+import Check  from './views/auxi/Check.vue'
 // App
 import Dashboard    from './views/app/Dashboard.vue'
 import Status       from './views/app/Status.vue'
