@@ -5,7 +5,7 @@ const publicKey = process.env.VUE_APP_IMAGEKIT_KEY
 const folder    = process.env.VUE_APP_IMAGEKIT_FOLDER
 
 const urlEndpoint            = 'https://ik.imagekit.io/asu'
-const authenticationEndpoint =  SERVER + '/api/aux/imagekit'
+const authenticationEndpoint =  SERVER + '/api/auxi/imagekit'
 
 const imagekit = new ImageKit({ publicKey, urlEndpoint, authenticationEndpoint })
 

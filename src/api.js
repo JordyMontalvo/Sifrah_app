@@ -27,13 +27,13 @@ class API {
     return axios.post('/auth/login', data)
   }
   logout(session) {
-    return axios.post('/aux/logout', { session })
+    return axios.post('/auxi/logout', { session })
   }
   verify(session) {
-    return axios.get (`/aux/verify?session=${session}`)
+    return axios.get (`/auxi/verify?session=${session}`)
   }
   check(check) {
-    return axios.post('/aux/check', { check })
+    return axios.post('/auxi/check', { check })
   }
   dashboard(session) {
     return axios.get (`/app/dashboard?session=${session}`)
