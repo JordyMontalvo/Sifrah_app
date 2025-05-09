@@ -16,6 +16,8 @@ export default new Vuex.Store({
     country:    null,
     photo:      null,
     tree:       null,
+    email:      null,
+    token:      null,
 
     fb:   'https://www.facebook.com/profile.php?id=61555335617817',
     is:   'https://www.instagram.com/sifrahcorp',
@@ -100,6 +102,12 @@ export default new Vuex.Store({
       state.buys = false
       state.network = false
       state.commissions = !state.commissions
+    },
+    SET_EMAIL: (state, email) => {
+      state.email = email
+    },
+    SET_TOKEN: (state, token) => {
+      state.token = token
     },
   },
 })

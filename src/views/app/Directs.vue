@@ -172,6 +172,9 @@ export default {
     session() { return this.$store.state.session },
     office_id() { return this.$store.state.office_id },
     link()    { return `${ROOT}/register/${this.token}`},
+    title() {
+      return "Organización";
+    },
   },
   watch: {
     async coverage(a, b) {

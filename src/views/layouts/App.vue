@@ -37,11 +37,13 @@
             <i @click="changeNewPhoto" class="fas fa-check"></i>
           </div>
           <div>
-            <p style="color: white; font-size: 18px ">
+            <p style="color: white; font-size: 18px">
               {{ name }} {{ lastName }}
             </p>
             <p style="color: white; font-size: 12px">{{ email }}</p>
           </div>
+
+          <!-- Ícono de tuerca para redirigir a perfil -->
         </div>
         <!-- <div class="social" style="display: flex;" v-if="office_id == null">
           <a class="fab fa-facebook-square" :href="fb" target="_blank" style="font-size: 18px;color: #4267B2;"></a>
@@ -74,9 +76,9 @@
           <router-link to="/activation" @click.stop v-if="affiliated">
             <i class="fas fa-shopping-bag"></i> COMPRAS
           </router-link>
-           <router-link to="/affiliation" @click.native="close">
+          <router-link to="/affiliation" @click.native="close">
             <i class="fas fa-receipt"></i> AFILIACIÓN
-          </router-link> 
+          </router-link>
         </div>
 
         <a
@@ -185,7 +187,7 @@
 
       <div class="content">
         <header>
-          <p style="    font-weight: bold;font-size: 20px;">{{ title }}</p>
+          <p style="font-weight: bold; font-size: 20px">{{ title }}</p>
           <div
             style="
               display: flex;
@@ -239,6 +241,9 @@
                 {{ email }}
               </p>
             </div>
+            <router-link to="/profile" style="color: black; margin-left: 10px">
+            <i class="fas fa-cog" style="font-size: 20px"></i>
+          </router-link>
           </div>
 
           <!-- <div class="social">
@@ -249,11 +254,13 @@
             
           </div> -->
         </header>
-        <section style="overflow: auto"
-        :class="{ slide: open }"
-        @touchstart="startTouch"
-        @touchmove="moveTouch"
-        @touchend="endTouch">
+        <section
+          style="overflow: auto"
+          :class="{ slide: open }"
+          @touchstart="startTouch"
+          @touchmove="moveTouch"
+          @touchend="endTouch"
+        >
           <slot />
         </section>
       </div>
@@ -412,30 +419,34 @@ export default {
       this.$store.commit("SET_OPEN");
     },
     changePhoto(e) {
-      this.photoFile = e.target.files[0]
+      this.photoFile = e.target.files[0];
 
-      if(!this.photoFile) return
+      if (!this.photoFile) return;
 
-      const reader = new FileReader()
+      const reader = new FileReader();
 
       reader.onload = (e) => {
-        this.newPhoto = e.target.result
-        this.photoState = 'changed'
-      }
+        this.newPhoto = e.target.result;
+        this.photoState = "changed";
+      };
 
-      reader.readAsDataURL(this.photoFile)
+      reader.readAsDataURL(this.photoFile);
     },
     async changeNewPhoto() {
-      const ret = await lib.upload(this.photoFile, this.photoFile.name, 'photos')
+      const ret = await lib.upload(
+        this.photoFile,
+        this.photoFile.name,
+        "photos"
+      );
 
-      this.$store.commit('SET_PHOTO', ret)
+      this.$store.commit("SET_PHOTO", ret);
 
-      this.photoState = 'default'
+      this.photoState = "default";
 
-      await api.photo(this.session, { photo: this.photo })
+      await api.photo(this.session, { photo: this.photo });
     },
     cancelNewPhoto() {
-      this.photoState = 'default'
+      this.photoState = "default";
     },
     cancelNewPhoto() {
       this.photoState = "default";
