@@ -1,8 +1,7 @@
 <template>
   <div class="app">
-    <header :class="{ silver: plan == 'business', gold: plan == 'master' }">
-
-      <h3 class="slogan">
+    <header>
+      <!--<h3 class="slogan">
         <span v-if="country == 'Perú'"       style="font-size: 28px;">🇵🇪</span>
         <span v-if="country == 'Bolivia'"    style="font-size: 28px;">🇧🇴</span>
         <span v-if="country == 'Ecuador'"    style="font-size: 28px;">🇪🇨</span>
@@ -11,61 +10,89 @@
         <span v-if="country == 'Chile'"      style="font-size: 28px;">🇨🇱</span>
         <span v-if="country == 'Costa Rica'" style="font-size: 28px;">🇨🇷</span>
           &nbsp;&nbsp;&nbsp;SUEÑA SIN LIMITES
-      </h3>
+      </h3>-->
+      <img src="../../assets/img/logo/logo.svg" alt="" class="logo" />
+      <i
+        class="burger fas fa-bars"
+        style="margin-left: 310px"
+        @click.stop="toggleMenu"
+      ></i>
 
-      <i class="burger fas fa-bars" @click="opened"></i>
-
-      <h4>{{ name }} {{ lastName }} <i class="avatar fas fa-user"
+      <!-- <h4>{{ name }} {{ lastName }} <i class=""
                       :class="{'yellow': affiliated, 'blue': _activated, 'green': activated}"></i>
-      </h4>
-
+      </h4>-->
     </header>
-    <section :class="{ 'open': open }">
-
+    <section :class="{ open: open }">
       <div class="menu">
-        
-        <label v-if="office_id == null">
-          <img v-if="photoState == 'default'" class="photo" :src="photo">
-          <img v-if="photoState == 'changed'" class="photo" :src="newPhoto">
+        <div class="text-header">
+          <label v-if="office_id == null">
+            <img v-if="photoState == 'default'" class="photo" :src="photo" />
+            <img v-if="photoState == 'changed'" class="photo" :src="newPhoto" />
 
-          <input type="file" @change="changePhoto">
-        </label>
+            <input type="file" @change="changePhoto" />
+          </label>
 
-        <div v-if="photoState == 'changed'" class="controls" >
-          <i @click="cancelNewPhoto" class="fas fa-times"></i>
-          <i @click="changeNewPhoto" class="fas fa-check"></i>
+          <div v-if="photoState == 'changed'" class="controls">
+            <i @click="cancelNewPhoto" class="fas fa-times"></i>
+            <i @click="changeNewPhoto" class="fas fa-check"></i>
+          </div>
+          <div>
+            <p style="color: white; font-size: 18px ">
+              {{ name }} {{ lastName }}
+            </p>
+            <p style="color: white; font-size: 12px">{{ email }}</p>
+          </div>
         </div>
-
-        <div class="social" style="display: flex;" v-if="office_id == null">
+        <!-- <div class="social" style="display: flex;" v-if="office_id == null">
           <a class="fab fa-facebook-square" :href="fb" target="_blank" style="font-size: 18px;color: #4267B2;"></a>
           <a class="fab fa-instagram"       :href="is" target="_blank" style="font-size: 18px;color: #e95950;"></a>
           <a class="fab fa-youtube"         :href="yt" target="_blank" style="font-size: 18px;color: #ff0050;"></a>
-        </div>
+        </div>-->
 
-        <router-link to="/dashboard" @click.native="close" v-if="office_id == null">
+        <img src="../../assets/img/logo/logo.svg" class="photo-logo" />
+
+        <router-link to="/dashboard" @click.stop v-if="office_id == null">
           <i class="fas fa-home"></i> INICIO
         </router-link>
         <!-- <router-link to="/status" @click.native="close">
           <i class="fas fa-tachometer-alt"></i> ESTADO
         </router-link> -->
 
-        <a @click="actived(0)">
-          <i class="fas fa-caret-down"></i> PRODUCTOS
+        <a
+          @click.stop="actived(0)"
+          :style="{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            backgroundColor: activeProduct === 0 ? 'rgba(8, 56, 92, 1)' : '',
+          }"
+        >
+          <span> <i class="fa fa-cart-plus"></i> PRODUCTOS </span>
+          <i class="fa fa-angle-down" style="margin-left: 16px"></i>
         </a>
-        <div class="sub-menu" :class="{'active': buys}">
-          <router-link to="/activation" @click.native="close" v-if="affiliated">
+        <div class="sub-menu" :class="{ active: buys }">
+          <router-link to="/activation" @click.stop v-if="affiliated">
             <i class="fas fa-shopping-bag"></i> COMPRAS
           </router-link>
-          <router-link to="/affiliation" @click.native="close">
+           <router-link to="/affiliation" @click.native="close">
             <i class="fas fa-receipt"></i> AFILIACIÓN
-          </router-link>
+          </router-link> 
         </div>
 
-        <a @click="actived(1)" v-if="tree">
-        <!-- <a @click="actived(1)"> -->
-          <i class="fas fa-caret-down"></i> ORGANIZACIÓN
+        <a
+          @click="actived(1)"
+          v-if="tree"
+          :style="{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            backgroundColor: activeProduct === 1 ? 'rgba(8, 56, 92, 1)' : '',
+          }"
+        >
+          <span> <i class="fa fa-users"></i> ORGANIZACIÓN </span>
+          <i class="fa fa-angle-down" style="margin-left: 16px"></i>
         </a>
-        <div class="sub-menu" :class="{'active': network}">
+        <div class="sub-menu" :class="{ active: network }">
           <router-link to="/tree" @click.native="close">
             <i class="fas fa-project-diagram"></i> RED
           </router-link>
@@ -77,11 +104,20 @@
           </router-link> -->
         </div>
 
-        <!-- <a @click="actived(2)" v-if="tree && office_id == null"> -->
-        <a @click="actived(2)">
-          <i class="fas fa-caret-down"></i> COMISIONES
+        <a
+          @click="actived(2)"
+          v-if="tree"
+          :style="{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            backgroundColor: activeProduct === 2 ? 'rgba(8, 56, 92, 1)' : '',
+          }"
+        >
+          <span> <i class="fa fa-money"></i> COMISIONES </span>
+          <i class="fa fa-angle-down" style="margin-left: 16px"></i>
         </a>
-        <div class="sub-menu" :class="{'active': commissions}">
+        <div class="sub-menu" :class="{ active: commissions }">
           <!-- <router-link to="/bonuses" @click.native="close">
             <i class="fas fa-gem"></i> BONOS
           </router-link> -->
@@ -96,10 +132,20 @@
           </router-link>
         </div>
 
-        <a @click="actived(3)" v-if="tree && office_id == null">
-          <i class="fas fa-caret-down"></i> RESUMEN
+        <a
+          @click="actived(3)"
+          v-if="tree && office_id == null"
+          :style="{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            backgroundColor: activeProduct === 3 ? 'rgba(8, 56, 92, 1)' : '',
+          }"
+        >
+          <span> <i class="fa fa-file-text"></i> RESUMEN </span>
+          <i class="fa fa-angle-down" style="margin-left: 16px"></i>
         </a>
-        <div class="sub-menu" :class="{'active': resume}">
+        <div class="sub-menu" :class="{ active: resume }">
           <router-link to="/bonuses" @click.native="close" v-if="affiliated">
             <i class="fas fa-shopping-bag"></i> BONIFICACIONES
           </router-link>
@@ -115,45 +161,105 @@
           <i class="fas fa-file-pdf"></i> HERRAMIENTAS
         </router-link> -->
 
-        <router-link to="/tools" @click.native="close" v-if="office_id == null && affiliated">
-          <i class="fa-solid fa-graduation-cap"></i> EDUCACIÓN
+        <router-link
+          to="/tools"
+          @click.native="close"
+          v-if="office_id == null && affiliated"
+        >
+          <i class="fas fa-building"></i> EDUCACIÓN
         </router-link>
 
-        <router-link to="/profile" @click.native="close" v-if="office_id == null">
+        <router-link
+          to="/profile"
+          @click.native="close"
+          v-if="office_id == null"
+        >
           <i class="fas fa-user"></i> PERFIL
         </router-link>
 
-        <br>
-        <a @click="logout">
+        <br />
+        <a @click="logout" style="background-color: black">
           <i class="fas fa-sign-out-alt"></i> CERRAR SESIÓN
         </a>
-
       </div>
 
       <div class="content">
         <header>
-          <div style="display: flex; align-items: center;">
-            <img class="logo" src="@/assets/img/logo/logo.svg" style="height: 64px;">
+          <p style="    font-weight: bold;font-size: 20px;">{{ title }}</p>
+          <div
+            style="
+              display: flex;
+              align-items: center;
+              gap: 20px;
+              margin-top: 25px;
+            "
+          >
+            <img class="logo" style="height: 50px" />
+            <button class="share-button" @click="copy_affiliation_link">
+              <i class="fas fa-share-alt" style="margin-right: 8px"></i
+              >Compartir Afiliación
+              <input
+                readonly
+                id="link-global"
+                @click="copy_affiliation_link"
+                v-model="affiliationLink"
+                style="opacity: 0; position: absolute"
+              />
+            </button>
+            <i class="copy" v-if="c_affiliation_link"
+              >link copiado <i class="fas fa-check"></i
+            ></i>
+
             <!-- <img class="logo-text" src="@/assets/img/logo/text.svg" style="margin-left: 12px;"> -->
+
+            <label v-if="office_id == null">
+              <img
+                v-if="photoState == 'default'"
+                class="photo-header"
+                :src="photo"
+              />
+              <img
+                v-if="photoState == 'changed'"
+                class="photo-header"
+                :src="newPhoto"
+              />
+
+              <input type="file" @change="changePhoto" />
+            </label>
+
+            <div v-if="photoState == 'changed'" class="controls">
+              <i @click="cancelNewPhoto" class="fas fa-times"></i>
+              <i @click="changeNewPhoto" class="fas fa-check"></i>
+            </div>
+            <div>
+              <p style="color: rgba(8, 56, 92, 1); font-size: 18px">
+                {{ name }} {{ lastName }}
+              </p>
+              <p style="color: rgba(8, 56, 92, 1); font-size: 12px">
+                {{ email }}
+              </p>
+            </div>
           </div>
+
           <!-- <div class="social">
             <a class="fab fa-facebook-square" :href="fb" target="_blank" style="color: #4267B2;"></a>
             <a class="fab fa-instagram"       :href="is" target="_blank" style="color: #e95950;"></a>
             <a class="fab fa-tiktok"          :href="tk" target="_blank" style="color: #ff0050;"></a>
             <a class="fab fa-youtube"         :href="yt" target="_blank" style="color: #ff0050;"></a>
+            
           </div> -->
         </header>
-        <section style="overflow: auto;">
-
-          <slot/>
-
+        <section style="overflow: auto"
+        :class="{ slide: open }"
+        @touchstart="startTouch"
+        @touchmove="moveTouch"
+        @touchend="endTouch">
+          <slot />
         </section>
-
       </div>
-
     </section>
 
-    <footer>
+    <footer class="footer-Dashboard">
       <router-link to="/dashboard">
         <i class="fa-solid fa-house"></i>
         Inicio
@@ -181,66 +287,129 @@
 </template>
 
 <script>
-import api from '@/api'
-import lib from '@/lib'
+import api from "@/api";
+import lib from "@/lib";
+
+const ROOT = process.env.VUE_APP_ROOT;
+console.log({ ROOT });
 
 export default {
   props: {
     session: String,
     office_id: String,
+    title: String,
   },
   data() {
     return {
       // photo: 'https://ik.imagekit.io/asu/Lehaim/avatar_bEyc3MFLf.png',
       newPhoto: null,
-      photoState: 'default',
+      photoState: "default",
       photoFile: null,
-    }
+      c_affiliation_link: false,
+      activeProduct: false,
+      startX: 0,
+      endX: 0,
+    };
   },
   computed: {
     // user
-    name      () { return this.$store.state.name       },
-    lastName  () { return this.$store.state.lastName   },
-    affiliated() { return this.$store.state.affiliated },
-    activated () { return this.$store.state.activated  },
-    _activated () { return this.$store.state._activated },
-    plan      () { return this.$store.state.plan       },
-    country   () { return this.$store.state.country    },
-    photo     () { return this.$store.state.photo      },
-    tree      () { return this.$store.state.tree       },
+    name() {
+      return this.$store.state.name;
+    },
+    lastName() {
+      return this.$store.state.lastName;
+    },
+    affiliated() {
+      return this.$store.state.affiliated;
+    },
+    activated() {
+      return this.$store.state.activated;
+    },
+    _activated() {
+      return this.$store.state._activated;
+    },
+    plan() {
+      return this.$store.state.plan;
+    },
+    country() {
+      return this.$store.state.country;
+    },
+    photo() {
+      return this.$store.state.photo;
+    },
+    tree() {
+      return this.$store.state.tree;
+    },
+    email() {
+      return this.$store.state.email;
+    },
 
     // social
-    fb() { return this.$store.state.fb },
-    is() { return this.$store.state.is },
-    tk() { return this.$store.state.tk },
-    yt() { return this.$store.state.yt },
+    fb() {
+      return this.$store.state.fb;
+    },
+    is() {
+      return this.$store.state.is;
+    },
+    tk() {
+      return this.$store.state.tk;
+    },
+    yt() {
+      return this.$store.state.yt;
+    },
 
     // help
     wsp() {
-      if(this.country == 'Perú')    return this.$store.state.wsp_pe
-      if(this.country == 'Bolivia') return this.$store.state.wsp_bo
-      if(this.country == 'Ecuador') return this.$store.state.wsp_ec
+      if (this.country == "Perú") return this.$store.state.wsp_pe;
+      if (this.country == "Bolivia") return this.$store.state.wsp_bo;
+      if (this.country == "Ecuador") return this.$store.state.wsp_ec;
     },
 
     // menú
-    open()        { return this.$store.state.open        },
-    resume()      { return this.$store.state.resume      },
-    buys()        { return this.$store.state.buys        },
-    network()     { return this.$store.state.network     },
-    commissions() { return this.$store.state.commissions },
+    open() {
+      return this.$store.state.open;
+    },
+    resume() {
+      return this.$store.state.resume;
+    },
+    buys() {
+      return this.$store.state.buys;
+    },
+    network() {
+      return this.$store.state.network;
+    },
+    commissions() {
+      return this.$store.state.commissions;
+    },
+    affiliationLink() {
+      return `${ROOT}/register/${this.token}`;
+    },
+    token() {
+      return this.$store.state.token;
+    },
   },
   methods: {
-    opened() {
-      this.$store.commit('SET_OPEN')
+    toggleMenu() {
+      this.$store.commit("SET_OPEN");
+    },
+    closeMenu() {
+      if (this.open) {
+        this.$store.commit("SET_OPEN");
+      }
     },
     actived(i) {
-      if(i == 0)this.$store.commit('SET_BUYS')
-      if(i == 1)this.$store.commit('SET_NETWORK')
-      if(i == 2)this.$store.commit('SET_COMMISSIONS')
-      if(i == 3)this.$store.commit('SET_RESUME')
+      if (this.activeProduct === i) {
+        this.activeProduct = false;
+      } else {
+        this.activeProduct = i;
+      }
+      if (i == 0) this.$store.commit("SET_BUYS");
+      if (i == 1) this.$store.commit("SET_NETWORK");
+      if (i == 2) this.$store.commit("SET_COMMISSIONS");
+      if (i == 3) this.$store.commit("SET_RESUME");
     },
     close() {
-      this.$store.commit('SET_OPEN')
+      this.$store.commit("SET_OPEN");
     },
     changePhoto(e) {
       this.photoFile = e.target.files[0]
@@ -268,6 +437,37 @@ export default {
     cancelNewPhoto() {
       this.photoState = 'default'
     },
+    cancelNewPhoto() {
+      this.photoState = "default";
+    },
+    copy_affiliation_link() {
+      console.log("Copying Affiliation Link:", this.affiliationLink);
+      lib.copy("link-global");
+      this.c_affiliation_link = true;
+      setTimeout(() => (this.c_affiliation_link = false), 4000);
+    },
+    startTouch(event) {
+      this.startX = event.touches[0].clientX; // Guardar la posición inicial del toque
+    },
+    moveTouch(event) {
+      this.endX = event.touches[0].clientX; // Actualizar la posición del toque
+    },
+    endTouch() {
+      // Si el deslizamiento es hacia la izquierda y el menú está abierto, cerrarlo
+      if (this.startX - this.endX > 100 && this.open) {
+        this.closeMenu();
+      }
+    },
   },
 };
 </script>
+<style scoped>
+.menu {
+  transition: transform 0.3s ease;
+  transform: translateX(-100%); /* Oculta el menú fuera de la vista */
+}
+
+.menu.slide {
+  transform: translateX(0); /* Muestra el menú */
+}
+</style>

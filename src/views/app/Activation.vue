@@ -1,5 +1,5 @@
 <template>
-  <App :session="session" :office_id="office_id">
+  <App :session="session" :office_id="office_id" :title="title">
 
     <h4 class="tabs">
       <router-link class="tab" to="/activation">
@@ -202,6 +202,9 @@ export default {
       console.log('price')
       let price = this.products.reduce((a, b) => a + b.price  * b.total, 0)
       return price
+    },
+    title() {
+      return "Productos";
     },
     points() { return this.products.reduce((a, b) => a + b.points * b.total, 0) },
     // commission() { return this.products.reduce((a, b) => a + (b.val ? b.val : b.price) * b.total, 0) },

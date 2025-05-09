@@ -1,5 +1,5 @@
 <template>
-  <App :session="session" :office_id="office_id">
+  <App :session="session" :office_id="office_id" :title="title">
 
     <h4>EQUIPO</h4>
 

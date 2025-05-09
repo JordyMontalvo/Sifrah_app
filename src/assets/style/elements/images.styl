@@ -1,7 +1,7 @@
 .logo
   // width 120px
   // height 60px
-  height 88px
+  height 40px
   // margin 2px 0
   &-text
     width 200px
@@ -21,8 +21,33 @@
   vertical-align middle
 
 .photo
-  width 80px
-  height 80px
+  width 50px
+  height 60px
   margin 12px auto
   display table
   border-radius 50%
+  
+.photo-logo
+  height: 80px;
+  display: block;
+  margin auto ;
+  margin-bottom 40px ;  // Añadido para separar la imagen de los inputs arriba y abajo
+  margin-top 40px
+.photo-header 
+  width 50px
+  height 50px
+  margin 12px auto
+  display table
+  border-radius 50%
+  margin-bottom 10px ;  // Añadido para separar la imagen de los inputs arriba y abajo  
+  
+
+@media (max-width: d-break)
+  .photo-logo 
+    display none
+@media (min-width: d-break)
+  .photo 
+    display none
+@media (max-width: d-break)
+  .photo-header
+    display block

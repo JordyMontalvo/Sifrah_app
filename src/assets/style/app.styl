@@ -1,12 +1,13 @@
 .app
   min-height 100vh
-  _grid()
+  display flex 
+  flex-direction column
   >header
     _flex()
     // background c-blue
     // background c-main-red
     // background c-red
-    background c-main-light-green
+    background linear-gradient(to right, rgba(8, 56, 92, 1), rgba(17, 95, 153, 1), rgba(8, 56, 92, 1))
     color white
     padding 16px
     &.silver
@@ -16,31 +17,35 @@
   >section
     display flex
     overflow hidden
+    flex 1
     // layout
     .menu
+      padding 10px 20px
     .content
       transition all .5s
     .menu
-      min-width 40%
+      min-width 70%
       transform translate(-100%, 0)
     .content
       min-width 100%
-      transform translate(-40%, 0)
+      transform translate(-70%, 0)
       overflow hidden
       position relative
     &.open
-      .menu
+      .menu 
       .content
         transform translate(0, 0)
+        height auto
     // style
     .content
-      background c-ligh-gray
+      background rgba(109, 193, 255, 0.14)
       >header
-        padding 8px 16px
-        background white
+        padding 0px 40px
         display flex
         align-items center
-        justify-content space-between
+        justify-content: space-between;
+        color green
+        border-bottom: 2px solid #00796b;
         .social
           font-size 20px
           margin-left 20px
@@ -50,7 +55,34 @@
         padding 8px 16px
         padding-bottom 72px
 
-  footer
+@media (max-width: 450px) 
+    .app >section .content >header 
+      display none
+
+  .share-button
+    background-color: #00195e;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    display: flex
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: bold;
+    /* margin-left: 10px; */
+    /* margin-left: 600px; */
+    /* position: relative; */
+    /* left: 400px; */
+    /* transform: translate(500px, 0); */
+    
+    // Aumentar el margen izquierdo
+.footer-register
+  display flex
+  color white
+  
+.footer-Dashboard
     position fixed
     bottom 0
     width 100%
@@ -58,11 +90,13 @@
     display: flex;
     justify-content: space-around;
     border-top: solid 1px;
-    background white
+    background linear-gradient(to right, rgba(8, 56, 92, 1), rgba(17, 95, 153, 1), rgba(8, 56, 92, 1))
 
-    a
+    a 
+      display flex  
+      flex-direction column
       text-align center
-      color c-main-light-green
+      color white 
       // color c-main-light-purple
       font-size 12px
       padding 10px
@@ -73,15 +107,17 @@
     @media (min-width: d-break)
       display none
 
-
+  
 @media (min-width: d-break)
   .app
     >header
+      display none
       // padding 16px 40px
       padding 12px 40px
     >section
       .menu
       .content
+        //height auto
         min-width auto
         transform none
       .content
@@ -96,23 +132,32 @@
   // background c-dark-blue
   // background c-main-purple
   // background c-main-green
-  background c-black
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+  min-width 40%
+  //height auto // Asegura que el sidebar ocupe toda la altura de la vista
+  transform translate(-100%, 0)
+
+  background linear-gradient(to right, rgba(8, 56, 92, 1), rgba(17, 95, 153, 1), rgba(8, 56, 92, 1))
   a
+    background  rgba(53, 160, 244, 1);
     display block
     color white
-    font-size 12px
-    padding 16px 16px
-    cursor pointer
+    font-size 14px
+    padding 16px
+    border: 1px solid transparent // Borde transparente por defecto
+    margin-bottom: 20px
+    border-radius: 10px
     i
-      // width 15px
-      width 13.5px
+      width 20px
       text-align center
-      margin-right 4px
+      margin-right 10px
+
     &.router-link-active
-      // background c-semi-dark-blue
-      background c-main-light-green
-    &.disabled
-      color c-gray
+      background: rgba(74, 176, 46, 1);
+      border-radius: 12px;
+      align-items: center;
+      
 
 @media (min-width: d-break)
   .menu
@@ -126,6 +171,8 @@
     font-size 10px
     padding 12px
     padding-left 32px
+    background: rgba(8, 56, 92, 1);
+
     i
       width 12.5px
   &.active
@@ -182,22 +229,23 @@
 .scroll
   overflow auto
   margin 16px 0
+  color rgb(0, 17, 92)
 
 table
-  background white
   white-space nowrap
   text-align center
   thead
+    
     color c-blue
   tbody
-    font-size 14px
-    td
+    font-size 16px
+    font-weight bold
+    td  
+      color rgba(8, 56, 92, 1);
+      font roboto-bold
       padding 8px
-      &.green
-        background #00d1b2
-        color white
-
-
+              
+        
 // Tree
 .tree
   .row
@@ -250,12 +298,26 @@ table
 
 
 .tabs
-  text-align center
   .tab
     color c-gray
     &.router-link-active
-      color gray
+      color  rgba(8, 56, 92, 1);
+
 
 .flex
   display flex
   align-items flex-start
+
+._tabs
+  padding: 10px;
+  color: black;
+  margin-bottom 30px
+
+.flex-activacion
+  display flex
+  gap 20px
+
+
+@media(max-width: d-break)
+  .flex-activacion
+    display block

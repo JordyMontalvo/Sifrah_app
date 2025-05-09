@@ -1,5 +1,5 @@
 <template>
-  <App :session="session" :office_id="office_id">
+  <App :session="session" :office_id="office_id" :title="title">
 
     <h4>AFILIACIÓN</h4>
 
@@ -241,6 +241,9 @@ export default {
       return this.products
         .map(x => x.type)
         .filter((v, i, self) => i == self.indexOf(v))
+    },
+    title() {
+      return "Productos";
     },
     total() { return this.products.reduce((a, b) => a + b.total, 0) },
 

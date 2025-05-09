@@ -1,5 +1,5 @@
 <template>
-  <App :session="session">
+  <App :session="session" :title="title">
 
     <figure class="slide" style="display: flex; margin: 0;">
       <img :src="banner.img" style="width: 100%; max-width: 850px; transition: all 2s;" :style="{ opacity: op }" >
