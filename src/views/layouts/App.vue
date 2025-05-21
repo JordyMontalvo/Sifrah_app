@@ -51,7 +51,7 @@
           <a class="fab fa-youtube"         :href="yt" target="_blank" style="font-size: 18px;color: #ff0050;"></a>
         </div>-->
 
-        <img src="../../assets/img/logo/logo.svg" class="photo-logo" />
+        <img src="../../assets/img/logo/logo-sifrah-BLANCO.png" class="photo-logo" />
 
         <router-link to="/dashboard" @click.stop v-if="office_id == null">
           <i class="fas fa-home"></i> INICIO

@@ -14,7 +14,7 @@
       <div class="content">
         <div class="form">
           <header>
-            <img class="logo" src="@/assets/img/logo/logo-sifrah-BLANCO.png"> <br>
+            <img class="logo" src="@/assets/img/logo/logo.svg"> <br>
             <!-- <img class="logo" src="@/assets/img/logo/logo.jpeg"> <br> -->
             <!-- <img class="logo-text" src="@/assets/img/logo/text.svg"> -->
           </header>
