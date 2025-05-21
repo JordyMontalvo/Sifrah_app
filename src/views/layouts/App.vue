@@ -11,7 +11,7 @@
         <span v-if="country == 'Costa Rica'" style="font-size: 28px;">🇨🇷</span>
           &nbsp;&nbsp;&nbsp;SUEÑA SIN LIMITES
       </h3>-->
-      <img src="../../assets/img/logo/logo.svg" alt="" class="logo" />
+      <img src="../../assets/img/logo/logo-sifrah-BLANCO.png" alt="" class="logo" />
       <i
         class="burger fas fa-bars"
         style="margin-left: 310px"
