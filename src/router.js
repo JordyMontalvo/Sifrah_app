@@ -38,7 +38,7 @@ const routes = [
   // all
   {
     path: '*',
-    redirect: '/welcome'
+    redirect: '/login'
   },
   // Auth
   {
