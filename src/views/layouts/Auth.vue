@@ -1,5 +1,7 @@
 <template>
+
   <div class="auth">
+    <img src="@/assets/img/logo/logo sifrah BLANCO LOGIN.svg" style="width: 699px; height: auto;">
     <!-- <header>
       <img class="logo" src="@/assets/img/logo-big.svg" style="width: 400px;">
       <p style="color: white; font-size: 14px; margin: 12px 0 8px 0;">Siguenos</p>
@@ -10,11 +12,11 @@
         <a class="fab fa-youtube"         :href="yt" target="_blank"></a>
       </div>
     </header> -->
-    <section>
-      <div class="content">
+    <section  >
+      <div class="content" >
         <div class="form">
           <header>
-            <img class="logo" src="@/assets/img/logo/logo.svg"> <br>
+
             <!-- <img class="logo" src="@/assets/img/logo/logo.jpeg"> <br> -->
             <!-- <img class="logo-text" src="@/assets/img/logo/text.svg"> -->
           </header>

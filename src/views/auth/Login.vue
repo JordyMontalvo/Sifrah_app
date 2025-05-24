@@ -1,23 +1,18 @@
 <template>
   <Auth>
     <section>
-      <span class="separator"></span>
-
-      <img class="person" src="@/assets/img/person.svg">
-      <br>
-
-      <!-- <p>Inicia sesión</p> -->
-
-      <i class="icon fa-solid fa-user-tie"></i>
-      <input class="input" placeholder="Usuario"
+      <div style="justify-content: center; align-items: center; text-align: center;">
+  <h1 style="font-size: 35px; font-style: roboto; color: rgba(137, 136, 141, 1); margin-bottom: 0;">Bienvenido</h1>
+  <img src="@/assets/img/logo/logo 2 sifrah NARANJA LOGIN.svg" style="width: 369px; height: auto; margin-top: -45px;" />
+</div>
+      <input class="input" placeholder="Dni"
       oninput="this.value=this.value.replace(/(?![0-9])./gmi,'')"
       v-model="dni"
       :class="{'error': error.dni}"
       @keydown="reset('dni')"> <br>
 
       <div v-if="!office_id">        
-        <i class="icon fa-solid fa-key"></i>
-        <input :type="show ? 'text' : 'password'" class="input pass" placeholder="Contraseña"
+        <input :type="show ? 'text' : 'password'" class="input pass" placeholder="*************"
         v-model="password"
         :class="{'error': error.password}"
         @keydown="reset('password')">
@@ -26,26 +21,31 @@
 
       <p class="alert">{{ alert | alert }}</p>
 
-      <button class="button" v-show="!sending" @click="submit">Ingresar</button>
+      <button class="button" v-show="!sending" @click="submit" style="width: 365px; height: 50px; background: rgba(178, 108, 46, 1);">Iniciar sesión</button>
       <button class="button" v-show= "sending" disabled>Validando datos ...</button> <br><br>
+      
 
-      <!-- <small>¿Olvidaste tu contraseña?</small> <br><br> -->
+       <small>¿Olvidaste tu contraseña? </small> <br><br>
     </section>
     <footer>
-      <router-link to="/welcome" class="route">Regresar</router-link>
+
       <br>
       <header>
-        <div class="social">
-          <!-- <a class="fab fa-facebook-square" :href="fb" target="_blank"></a>
-          <a class="fab fa-instagram"       :href="is" target="_blank"></a>
-          <a class="fab fa-tiktok"          :href="tk" target="_blank"></a>
-          <a class="fab fa-youtube"         :href="yt" target="_blank"></a> -->
-          <a class="fab fa-facebook-square" :href="fb" target="_blank"></a>
-          <a class="fab fa-instagram"       :href="is" target="_blank"></a>
-          <!-- <a class="fab fa-tiktok"          target="_blank"></a> -->
-          <a class="fab fa-youtube"         :href="yt" target="_blank"></a>
-        </div>
-      </header>
+  <div class="social">
+    <a class="fab fa-facebook-square social-icon facebook" :href="fb" target="_blank"></a>
+    <a class="fab fa-instagram social-icon instagram" :href="is" target="_blank"></a>
+    <a class="fab fa-youtube social-icon youtube" :href="yt" target="_blank"></a>
+    <a class="fab fa-tiktok social-icon tiktok" :href="tk" target="_blank"></a>
+    <a class="fab fa-whatsapp social-icon whatsapp" :href="wsp" target="_blank"></a>
+  </div>
+  <br>
+  <div>
+    <small>
+  ¿No tienes cuenta? 
+  <router-link to="/register" style="color:rgba(178, 108, 46, 1); text-decoration: underline;">Regístrate</router-link>
+</small>
+  </div>
+</header>
 
     </footer>
   </Auth>

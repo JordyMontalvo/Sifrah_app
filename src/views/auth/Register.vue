@@ -3,19 +3,19 @@
     <section>
       <br>
 
-      <i class="icon fa fa-flag"></i>
+     <!-- <i class="icon fa fa-flag"></i>
       <select class="input" v-model="country"
         :class="{'error': error.country}"
         @change="reset('country')">
         <option value="null" disabled>País</option>
         <option value="Perú"      >🇵🇪 Perú</option>
-        <!-- <option value="Ecuador"   >🇪🇨 Ecuador</option>
+         <option value="Ecuador"   >🇪🇨 Ecuador</option>
         <option value="Argentina" >🇦🇷 Argentina</option>
         <option value="Bolivia"   >🇧🇴 Bolivia</option>
         <option value="Colombia"  >🇨🇴 Colombia</option>
         <option value="Costa Rica">🇨🇷 Costa Rica</option>
-        <option value="Chile"     >🇨🇱 Chile</option> -->
-      </select> <br>
+        <option value="Chile"     >🇨🇱 Chile</option> 
+      </select> <br> -->
 
       <i class="icon fa fa-id-card"></i>
       <input class="input" placeholder="Documento de identidad"
@@ -54,18 +54,18 @@
       @keydown="reset('lastName')"
       :disabled="country == 'Perú' && !younger"> <br> -->
 
-      <i class="icon fa fa-calendar"></i>
+      <!--<i class="icon fa fa-calendar"></i>
       <input type="date" class="input" placeholder="Fecha de Nacimiento"
-      v-model="date"> <br>
+      v-model="date"> <br>-->
 
       <i class="icon fa-solid fa-mobile-retro" v-if="!country"></i>
       <small v-if="country" style="min-width: 25px; margin-right: 8px; display: inline-block;">{{ prefix }}</small>
       <input class="input" placeholder="Celular" maxlength="12"
       v-model="phone"> <br>
 
-      <i class="icon fa-solid fa-envelope-open"></i>
+      <!--<i class="icon fa-solid fa-envelope-open"></i>
       <input class="input" placeholder="Correo"
-      v-model.trim="email"> <br>
+      v-model.trim="email"> <br>-->
 
       <i class="icon fa-solid fa-key"></i>
       <input :type="show ? 'text' : 'password'" class="input pass" placeholder="Contraseña"
@@ -86,12 +86,11 @@
       <small><input type="checkbox" v-model="check">Acepto los <a href="" target="_blank" style="color: #351251;font-weight: 600;">términos de uso</a></small> <br>
 
 
-      <button class="button" v-show="!sending" @click="submit">Registrarme</button>
+      <button class="button" v-show="!sending" @click="submit" style="background: rgba(178, 108, 46, 1);">Registrarme</button>
       <button class="button" v-show= "sending" disabled>Creando cuenta ...</button> <br><br>
 
     </section>
     <footer>
-      <router-link to="/welcome" class="route">Regresar</router-link>
       <br>
       <header>
         <div class="social">
@@ -207,10 +206,10 @@ export default {
     async submit() {
 
       // const { name, lastName, username, email, password, phone, code, check } = this
-      const { country, dni, name, lastName, date, email, password, phone, code, check } = this
+      const {  dni, name, lastName,   password, phone, code, check } = this
 
       // valid fields
-      if(!country)  { return this.error.country  = true }
+
       if(!dni)      { return this.error.dni      = true }
       if(!name)     { return this.error.name     = true }
       if(!lastName) { return this.error.lastName = true }
@@ -225,7 +224,7 @@ export default {
       this.sending = true
 
       // const { data } = await api.register({ name, lastName, username, email, password, phone, code }); console.log({ data })
-      const { data } = await api.register({ country, dni, name, lastName, date, email, password, phone, code }); console.log({ data })
+      const { data } = await api.register({  dni, name, lastName,  password, phone, code }); console.log({ data })
 
       this.sending = false
 
@@ -250,7 +249,6 @@ export default {
     reset(name) {
       this.alert = null
 
-      if(name == 'country')  this.error.country  = false
       if(name == 'dni')      this.error.dni      = false
       if(name == 'name')     this.error.name     = false
       if(name == 'lastName') this.error.lastName = false
