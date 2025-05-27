@@ -1,5 +1,21 @@
 <template>
   <div class="auth">
+    <div class="auth-tabs">
+      <router-link
+        to="/login"
+        class="tab"
+        :class="{ active: $route.path === '/login' }"
+      >
+        INICIO
+      </router-link>
+      <router-link
+        to="/register"
+        class="tab"
+        :class="{ active: $route.path === '/register' }"
+      >
+        REGISTRO
+      </router-link>
+    </div>
     <div>
       <img
         src="@/assets/img/logo/logo sifrah BLANCO LOGIN.svg"
@@ -67,3 +83,36 @@ export default {
   },
 };
 </script>
+<style scoped>
+.auth-tabs {
+  position: absolute;
+  top: 0;
+  left: 20%;
+  transform: translateX(-50%);
+  display: flex;
+  background-color: #d46b00; /* fondo base */
+  border-radius: 0 0 12px 12px;
+  overflow: hidden;
+  width: fit-content;
+  z-index: 1000;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.tab {
+  padding: 12px 24px;
+  text-decoration: none;
+  color: white;
+  font-weight: bold;
+  background-color: transparent;
+  transition: background 0.3s ease;
+}
+
+.tab:first-child.active {
+  border-top-left-radius: 30px;
+}
+
+.tab.active {
+  background-color: #ffd8a3;
+  color: #222;
+}
+</style>
