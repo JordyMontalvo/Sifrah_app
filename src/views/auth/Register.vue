@@ -50,52 +50,51 @@
         <option value="Costa Rica">🇨🇷 Costa Rica</option>
         <option value="Chile"     >🇨🇱 Chile</option> 
       </select> <br> -->
-      <div>
-        <input
-          class="input-register"
-          placeholder="Documento de identidad"
-          oninput="this.value=this.value.replace(/(?![0-9])./gmi,'')"
-          v-model="dni"
-          :class="{ error: error.dni }"
-          @keydown="reset('dni')"
-        />
-        <i class="icon-register fa fa-id-card"></i>
-        <br />
-      </div>
-      <label>
-        <small>
-          <input type="checkbox" v-model="younger" />menor de edad / extranjero
-        </small>
-      </label>
+
+      <input
+        class="input-register"
+        placeholder="Documento de identidad"
+        oninput="this.value=this.value.replace(/(?![0-9])./gmi,'')"
+        v-model="dni"
+        :class="{ error: error.dni }"
+        @keydown="reset('dni')"
+      />
+      <i class="icon-register fa fa-id-card"></i>
       <br />
+      <div style="margin-right: 140px">
+        <label>
+          <small>
+            <input type="checkbox" v-model="younger" />menor de edad /
+            extranjero
+          </small>
+        </label>
+      </div>
 
       <!-- <input class="input" placeholder="Nombre"
       v-model="name"
       :class="{'error': error.name}"
       @keydown="reset('name')"
       :disabled="country == 'Perú' && !younger"> <br> -->
-      <div>
-        <input
-          class="input-register"
-          placeholder="Nombre"
-          v-model="name"
-          :class="{ error: error.name }"
-          @keydown="reset('name')"
-        />
-        <i class="icon-register fa-solid fa-user-tie"></i>
-        <br />
-      </div>
-      <div>
-        <input
-          class="input-register"
-          placeholder="Apellidos"
-          v-model="lastName"
-          :class="{ error: error.lastName }"
-          @keydown="reset('lastName')"
-        />
-        <i class="icon-register fa-solid fa-user-tie"></i>
-        <br />
-      </div>
+
+      <input
+        class="input-register"
+        placeholder="Nombre"
+        v-model="name"
+        :class="{ error: error.name }"
+        @keydown="reset('name')"
+      />
+      <i class="icon-register fa-solid fa-user-tie"></i>
+      <br />
+      <input
+        class="input-register"
+        placeholder="Apellidos"
+        v-model="lastName"
+        :class="{ error: error.lastName }"
+        @keydown="reset('lastName')"
+      />
+      <i class="icon-register fa-solid fa-user-tie"></i>
+      <br />
+
       <!-- <i class="icon fa-solid fa-user-tie"></i>
       <input class="input" placeholder="Apellidos"
       v-model="lastName"
@@ -157,7 +156,10 @@
 
       <small style="color: rgba(255, 107, 0, 1)"
         ><input type="checkbox" v-model="check" />Acepto los
-        <a href="" target="_blank" style="color: #351251; font-weight: 600"
+        <a
+          href=""
+          target="_blank"
+          style="color: rgba(137, 136, 141, 1); font-weight: 600"
           >términos de uso</a
         ></small
       >
@@ -174,7 +176,7 @@
       <button class="button" v-show="sending" disabled>
         Creando cuenta ...</button
       ><br />
-      <small
+      <small style="color: rgba(137, 136, 141, 1)"
         >¿Ya tienes una cuenta?
         <router-link to="/login" style="color: rgba(255, 107, 0, 1)"
           >Haz click aquí</router-link
@@ -191,23 +193,27 @@
           <a class="fab fa-tiktok"          :href="tk" target="_blank"></a>
           <a class="fab fa-youtube"         :href="yt" target="_blank"></a> -->
           <a
-            class="fab fa-facebook-square social-icon facebook"
+            style="padding: 5px"
+            class="fab fa-facebook-square social-icon-register facebook"
             :href="fb"
             target="_blank"
           ></a>
           <a
-            class="fab fa-instagram social-icon instagram"
+            style="padding: 5px"
+            class="fab fa-instagram social-icon-register instagram"
             :href="is"
             target="_blank"
           ></a>
           <!-- <a class="fab fa-tiktok"          target="_blank"></a> -->
           <a
-            class="fab fa-youtube social-icon youtube"
+            style="padding: 5px"
+            class="fab fa-youtube social-icon-register youtube"
             :href="yt"
             target="_blank"
           ></a>
           <a
-            class="fab fa-whatsapp social-icon whatsapp"
+            style="padding: 5px"
+            class="fab fa-whatsapp social-icon-register whatsapp"
             :href="wsp"
             target="_blank"
           ></a>

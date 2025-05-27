@@ -2,11 +2,11 @@
   <Auth>
     <section>
       <div
-        style="justify-content: center; align-items: center; text-align: center"
+        style="align-items: center; text-align: center"
       >
         <h1
           style="
-            font-size: 35px;
+            font-size: 30px;
             font-style: roboto;
             color: rgba(137, 136, 141, 1);
             margin-bottom: 0;
@@ -16,11 +16,22 @@
         </h1>
         <img
           src="@/assets/img/logo/logo 2 sifrah NARANJA LOGIN.svg"
-          style="width: 369px; height: auto; margin-top: -45px"
+          style="width: 369px; height: auto; margin-top: -65px"
         />
       </div>
       <div>
+        <label
+          for="dni"
+          style="
+            font-size: 12px;
+            color: rgba(137, 136, 141, 1);
+            display: block;
+            margin-right: 300px;
+          "
+          >DNI:</label
+        >
         <input
+          id="dni"
           class="input"
           style="border: solid 1px rgba(255, 107, 0, 1)"
           placeholder="Dni"
@@ -33,7 +44,7 @@
           class="icon fa-solid fa-user-tie"
           style="
             margin-top: 14px;
-            margin-left: -28px;
+            margin-left: -33px;
             cursor: pointer;
             padding: 4px;
             font-size: 14px;
@@ -45,7 +56,18 @@
       </div>
 
       <div v-if="!office_id">
+        <label
+          for="password"
+          style="
+            font-size: 12px;
+            color: rgba(137, 136, 141, 1);
+            display: block;
+            margin-right: 260px;
+          "
+          >Contraseña:</label
+        >
         <input
+          id="password"
           :type="show ? 'text' : 'password'"
           class="input pass"
           style="border: solid 1px rgba(255, 107, 0, 1)"
@@ -72,7 +94,13 @@
       </button>
       <br /><br />
 
-      <small>¿Olvidaste tu contraseña? </small> <br /><br />
+      <small style="color: rgba(137, 136, 141, 1)"
+        >¿Olvidaste tu contraseña?
+        <router-link to="/remember" style="color: rgba(254, 127, 14, 1)"
+          >Ingresa Aquí</router-link
+        ></small
+      >
+      <br /><br />
     </section>
     <footer>
       <br />
@@ -83,11 +111,11 @@
             :href="fb"
             target="_blank"
           ></a>
-          <a
+          <!-- <a
             class="fab fa-instagram social-icon instagram"
             :href="is"
             target="_blank"
-          ></a>
+          ></a>-->
           <a
             class="fab fa-youtube social-icon youtube"
             :href="yt"
@@ -106,11 +134,11 @@
         </div>
         <br />
         <div>
-          <small>
+          <small style="color: rgba(137, 136, 141, 1)">
             ¿No tienes cuenta?
             <router-link
               to="/register"
-              style="color: rgba(178, 108, 46, 1); text-decoration: underline"
+              style="color: rgba(254, 127, 14, 1); text-decoration: underline"
               >Regístrate</router-link
             >
           </small>
