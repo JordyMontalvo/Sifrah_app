@@ -112,16 +112,16 @@
         style="min-width: 25px; margin-right: 8px; display: inline-block"
         >{{ prefix }}</small
       >
-    <div>
-      <input
-        class="input-register"
-        placeholder="Celular"
-        maxlength="12"
-        v-model="phone"
-      />
-      <i class="icon-register fa-solid fa-mobile-retro" v-if="!country"></i>
-      <br />
-    </div>
+      <div>
+        <input
+          class="input-register"
+          placeholder="Celular"
+          maxlength="12"
+          v-model="phone"
+        />
+        <i class="icon-register fa-solid fa-mobile-retro" v-if="!country"></i>
+        <br />
+      </div>
 
       <!--<i class="icon fa-solid fa-envelope-open"></i>
       <input class="input" placeholder="Correo"
@@ -129,27 +129,29 @@
 
       <!-- <i class="icon-register fa-solid fa-key"></i>-->
       <div>
-      <input
-        :type="show ? 'text' : 'password'"
-        class="input-register"
-        placeholder="Contraseña"
-        v-model="password"
-        :class="{ error: error.password }"
-        @keydown="reset('password')"
-      />
-      <i class="icon-register show far fa-eye" @click="show = !show"></i> <br />
-    </div>
-<div>
-      <input
-        class="input-register"
-        placeholder="Código de patrocinador"
-        :disabled="disabled"
-        v-model="code"
-        :class="{ error: error.code }"
-        @keydown="reset('code')"
-      />
-      <i class="icon-register fa-solid fa-paper-plane"></i>
-    </div> <br />
+        <input
+          :type="show ? 'text' : 'password'"
+          class="input-register"
+          placeholder="Contraseña"
+          v-model="password"
+          :class="{ error: error.password }"
+          @keydown="reset('password')"
+        />
+        <i class="icon-register show far fa-eye" @click="show = !show"></i>
+        <br />
+      </div>
+      <div>
+        <input
+          class="input-register"
+          placeholder="Código de patrocinador"
+          :disabled="disabled"
+          v-model="code"
+          :class="{ error: error.code }"
+          @keydown="reset('code')"
+        />
+        <i class="icon-register fa-solid fa-paper-plane"></i>
+      </div>
+      <br />
 
       <p class="alert">{{ alert | alert }}</p>
 

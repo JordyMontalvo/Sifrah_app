@@ -22,6 +22,7 @@
       <div>
         <input
           class="input"
+          style="border: solid 1px #008000"
           placeholder="Dni"
           oninput="this.value=this.value.replace(/(?![0-9])./gmi,'')"
           v-model="dni"
@@ -47,6 +48,7 @@
         <input
           :type="show ? 'text' : 'password'"
           class="input pass"
+          style="border: solid 1px #008000"
           placeholder="*************"
           v-model="password"
           :class="{ error: error.password }"
