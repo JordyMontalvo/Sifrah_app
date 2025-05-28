@@ -205,6 +205,17 @@ export default {
       localStorage.removeItem("office");
       localStorage.removeItem("path");
     }
+
+
+    setTimeout(() => {
+      const logoAuth = document.getElementById("logo-auth");
+      console.log(logoAuth);
+      logoAuth.style.order = 0;
+
+      const contentAuth = document.getElementById("content-auth");
+      console.log(contentAuth);
+      contentAuth.style.order = 1;
+    }, 100);
   },
   methods: {
     async submit() {

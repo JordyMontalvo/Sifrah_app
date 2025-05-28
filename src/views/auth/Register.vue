@@ -297,9 +297,29 @@ export default {
     },
   },
   created() {
+    console.log("Register");
+
     this.code = this.$route.params.code;
 
     if (this.code) this.disabled = true;
+
+    setTimeout(() => {
+      const logoAuth = document.getElementById("logo-auth");
+      console.log(logoAuth);
+      logoAuth.style.order = 1;
+
+      const contentAuth = document.getElementById("content-auth");
+      console.log(contentAuth);
+      contentAuth.style.order = 0;
+    }, 100);
+
+    // const logoAuth = document.getElementById("logo-auth");
+    // console.log(logoAuth);
+    // logoAuth.style.order = 1;
+
+    // const contentAuth = document.getElementById("content-auth");
+    // console.log(contentAuth);
+    // contentAuth.style.order = 0;
   },
   watch: {
     /* async dni(dni) {

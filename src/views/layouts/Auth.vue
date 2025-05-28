@@ -16,7 +16,7 @@
         REGISTRO
       </router-link>
     </div>
-    <div>
+    <div id="logo-auth">
       <img class="logo-auth"
         src="@/assets/img/logo/logo sifrah BLANCO LOGIN.svg"
         style="width: 699px; height: auto"
@@ -32,7 +32,7 @@
         <a class="fab fa-youtube"         :href="yt" target="_blank"></a>
       </div>
     </header> -->
-    <section>
+    <section id="content-auth">
       <div class="content">
         <div class="form">
           <header>
