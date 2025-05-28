@@ -19,7 +19,7 @@
     <div id="logo-auth">
       <img class="logo-auth"
         src="@/assets/img/logo/logo sifrah BLANCO LOGIN.svg"
-        style="width: 699px; height: auto"
+        style="width: auto; height: auto"
       />
     </div>
     <!-- <header>

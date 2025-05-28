@@ -256,8 +256,8 @@ export default {
 </script>
 <style scoped>
 .login-button {
-  border-radius: 18px;
-  width: 365px;
+  border-radius: 29px;
+  width: 345px;
   height: 50px;
   background: rgba(178, 108, 46, 1);
   color: white; /* Color del texto */
@@ -267,7 +267,7 @@ export default {
 }
 
 .login-button:hover {
-  background: rgba(200, 120, 60, 1); /* Color de fondo al hacer hover */
+  background: rgb(255, 111, 0); /* Color de fondo al hacer hover */
 }
 
 </style>
