@@ -17,7 +17,7 @@
       </router-link>
     </div>
     <div>
-      <img
+      <img class="logo-auth"
         src="@/assets/img/logo/logo sifrah BLANCO LOGIN.svg"
         style="width: 699px; height: auto"
       />
@@ -87,7 +87,7 @@ export default {
 .auth-tabs {
   position: absolute;
   top: 0;
-  left: 20%;
+  left: 25%;
   transform: translateX(-50%);
   display: flex;
   background-color: #d46b00; /* fondo base */
@@ -99,20 +99,34 @@ export default {
 }
 
 .tab {
-  padding: 12px 24px;
+  width: 170px; /* Ancho fijo */
+  height: 70px; /* Altura fija */
+  padding: 12px 0; /* Espaciado interno */
   text-decoration: none;
   color: white;
   font-weight: bold;
   background-color: transparent;
   transition: background 0.3s ease;
+  display: flex; /* Para centrar el texto */
+  align-items: center; /* Centrar verticalmente */
+  justify-content: center; /* Centrar horizontalmente */
 }
-
 .tab:first-child.active {
-  border-top-left-radius: 30px;
+  border-bottom-left-radius: 30px;
 }
 
 .tab.active {
   background-color: #ffd8a3;
   color: #222;
+}
+@media (max-width: 792px) {
+  .logo-auth {
+    display: none;
+  }
+}
+@media (max-width: 792px) {
+  .auth-tabs {
+    display: none;
+  }
 }
 </style>

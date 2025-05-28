@@ -63,7 +63,7 @@
       <br />
       <div style="margin-right: 140px">
         <label>
-          <small>
+          <small style="color :rgba(102, 108, 104, 1) ">
             <input type="checkbox" v-model="younger" />menor de edad /
             extranjero
           </small>
@@ -155,7 +155,7 @@
       <p class="alert">{{ alert | alert }}</p>
 
       <small style="color: rgba(255, 107, 0, 1)"
-        ><input type="checkbox" v-model="check" />Acepto los
+        ><input type="checkbox" v-model="check" style="color: green;"/>Acepto los
         <a
           href=""
           target="_blank"
@@ -399,3 +399,9 @@ export default {
   },
 };
 </script>
+<style scoped>
+input[type="checkbox"]:checked {
+  accent-color: green; /* Cambia el color del checkbox a verde en navegadores compatibles */
+}
+
+</style>
