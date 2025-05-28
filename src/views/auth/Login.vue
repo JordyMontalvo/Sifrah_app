@@ -1,9 +1,7 @@
 <template>
   <Auth>
     <section>
-      <div
-        style="align-items: center; text-align: center"
-      >
+      <div style="align-items: center; text-align: center">
         <h1
           style="
             font-size: 30px;
@@ -19,7 +17,7 @@
           style="width: 369px; height: auto; margin-top: -65px"
         />
       </div>
-      <div>
+      <div style="margin-top: -20px">
         <label
           for="dni"
           style="
@@ -81,12 +79,7 @@
 
       <p class="alert">{{ alert | alert }}</p>
 
-      <button
-        class="button"
-        v-show="!sending"
-        @click="submit"
-        style="width: 365px; height: 50px; background: rgba(178, 108, 46, 1)"
-      >
+      <button class="login-button" v-show="!sending" @click="submit">
         Iniciar sesión
       </button>
       <button class="button" v-show="sending" disabled>
@@ -105,7 +98,7 @@
     <footer>
       <br />
       <header>
-        <div class="social" style="margin-top: -15px;">
+        <div class="social" style="margin-top: -15px">
           <a
             class="fab fa-facebook-square social-icon facebook"
             :href="fb"
@@ -206,7 +199,6 @@ export default {
       localStorage.removeItem("path");
     }
 
-
     setTimeout(() => {
       const logoAuth = document.getElementById("logo-auth");
       console.log(logoAuth);
@@ -262,3 +254,20 @@ export default {
   },
 };
 </script>
+<style scoped>
+.login-button {
+  border-radius: 18px;
+  width: 365px;
+  height: 50px;
+  background: rgba(178, 108, 46, 1);
+  color: white; /* Color del texto */
+  border: none; /* Sin borde */
+  cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
+  transition: background 0.3s ease; /* Transición suave para el hover */
+}
+
+.login-button:hover {
+  background: rgba(200, 120, 60, 1); /* Color de fondo al hacer hover */
+}
+
+</style>
