@@ -105,7 +105,7 @@
     <footer>
       <br />
       <header>
-        <div class="social">
+        <div class="social" style="margin-top: -15px;">
           <a
             class="fab fa-facebook-square social-icon facebook"
             :href="fb"
