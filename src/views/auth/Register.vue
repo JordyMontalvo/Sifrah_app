@@ -53,6 +53,7 @@
 
       <input
         class="input-register"
+        style="margin-bottom: 12px;"
         placeholder="Documento de identidad"
         oninput="this.value=this.value.replace(/(?![0-9])./gmi,'')"
         v-model="dni"
@@ -62,8 +63,8 @@
       <i class="icon-register fa fa-id-card"></i>
       <br />
       <div style="margin-right: 140px">
-        <label>
-          <small style="color: rgba(102, 108, 104, 1)">
+        <label style="margin-top: 5px">
+          <small style="color: rgba(102, 108, 104, 1);">
             <input type="checkbox" v-model="younger" />menor de edad /
             extranjero
           </small>
