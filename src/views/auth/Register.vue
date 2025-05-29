@@ -7,7 +7,7 @@
         <img
           src="@/assets/img/logo/logo 2 sifrah NARANJA LOGIN.svg"
           style="
-            width: 369px;
+            width: 340px;
             height: auto;
             margin-top: -45px;
             margin-bottom: -60px;
@@ -131,6 +131,7 @@
         <input
           :type="show ? 'text' : 'password'"
           class="input-register"
+          style="margin-left: 8px;"
           placeholder="Contraseña"
           v-model="password"
           :class="{ error: error.password }"
@@ -143,6 +144,7 @@
         <input
           class="input-register"
           placeholder="Código de patrocinador"
+          style="margin-left: 8px;"
           :disabled="disabled"
           v-model="code"
           :class="{ error: error.code }"
@@ -166,10 +168,9 @@
       <br />
 
       <button
-        class="button"
+        class=" register-button"
         v-show="!sending"
         @click="submit"
-        style="background: rgba(178, 108, 46, 1); width: 280px"
       >
         Registrarme
       </button>
@@ -200,7 +201,7 @@
           ></a>
           <a
             style="padding: 5px"
-            class="fab fa-instagram social-icon-register instagram"
+            class="fab fa-tiktok social-icon-register tiktok"
             :href="is"
             target="_blank"
           ></a>
@@ -422,6 +423,22 @@ export default {
 <style scoped>
 input[type="checkbox"]:checked {
   accent-color: green; /* Cambia el color del checkbox a verde en navegadores compatibles */
+}
+
+.register-button { /* Color de fondo normal */
+  background: rgba(178, 108, 46, 1);
+  width: 280px; /* Ancho del botón */
+  height: 35px; /* Altura del botón */
+  color: white; /* Color del texto */
+  border: none; /* Sin borde */
+  cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
+  transition: background 0.3s ease;
+  border-radius: 18px;
+  margin: 8px 0 /* Transición suave para el hover */
+}
+
+.register-button:hover {
+  background: rgb(255, 111, 0); /* Color de fondo al hacer hover */
 }
 
 </style>
