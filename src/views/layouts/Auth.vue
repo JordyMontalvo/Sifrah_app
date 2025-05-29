@@ -1,6 +1,6 @@
 <template>
   <div class="auth">
-    <div class="auth-tabs">
+    <div class="auth-tabs" id="tabs">
       <router-link
         to="/login"
         class="tab"

@@ -63,7 +63,7 @@
       <br />
       <div style="margin-right: 140px">
         <label>
-          <small style="color :rgba(102, 108, 104, 1) ">
+          <small style="color: rgba(102, 108, 104, 1)">
             <input type="checkbox" v-model="younger" />menor de edad /
             extranjero
           </small>
@@ -131,7 +131,7 @@
         <input
           :type="show ? 'text' : 'password'"
           class="input-register"
-          style="margin-left: 8px;"
+          style="margin-left: 8px"
           placeholder="Contraseña"
           v-model="password"
           :class="{ error: error.password }"
@@ -144,7 +144,7 @@
         <input
           class="input-register"
           placeholder="Código de patrocinador"
-          style="margin-left: 8px;"
+          style="margin-left: 8px"
           :disabled="disabled"
           v-model="code"
           :class="{ error: error.code }"
@@ -157,7 +157,8 @@
       <p class="alert">{{ alert | alert }}</p>
 
       <small style="color: rgba(255, 107, 0, 1)"
-        ><input type="checkbox" v-model="check" style="color: green;"/>Acepto los
+        ><input type="checkbox" v-model="check" style="color: green" />Acepto
+        los
         <a
           href=""
           target="_blank"
@@ -167,11 +168,7 @@
       >
       <br />
 
-      <button
-        class=" register-button"
-        v-show="!sending"
-        @click="submit"
-      >
+      <button class="register-button" v-show="!sending" @click="submit">
         Registrarme
       </button>
       <button class="button" v-show="sending" disabled>
@@ -313,6 +310,13 @@ export default {
       console.log(contentAuth);
       contentAuth.style.order = 0;
     }, 100);
+      
+    setTimeout(() => {
+      const tabs = document.getElementById("tabs");
+      console.log(tabs);
+      tabs.style.transform = "translateX(170%)";
+      tabs.style.right = "25%";
+    }, 100);
 
     // const logoAuth = document.getElementById("logo-auth");
     // console.log(logoAuth);
@@ -425,7 +429,8 @@ input[type="checkbox"]:checked {
   accent-color: green; /* Cambia el color del checkbox a verde en navegadores compatibles */
 }
 
-.register-button { /* Color de fondo normal */
+.register-button {
+  /* Color de fondo normal */
   background: rgba(178, 108, 46, 1);
   width: 280px; /* Ancho del botón */
   height: 35px; /* Altura del botón */
@@ -434,11 +439,10 @@ input[type="checkbox"]:checked {
   cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
   transition: background 0.3s ease;
   border-radius: 18px;
-  margin: 8px 0 /* Transición suave para el hover */
+  margin: 8px 0; /* Transición suave para el hover */
 }
 
 .register-button:hover {
   background: rgb(255, 111, 0); /* Color de fondo al hacer hover */
 }
-
 </style>
