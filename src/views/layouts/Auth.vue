@@ -11,16 +11,20 @@
       <router-link
         to="/register"
         class="tab"
-        :class="{ active: $route.path === '/register' }"
+        :class="{ activety: $route.path === '/register' }"
       >
         REGISTRO
       </router-link>
     </div>
     <div id="logo-auth">
-      <img class="logo-auth"
+      <img
+        class="logo-auth"
         src="@/assets/img/logo/logo sifrah BLANCO LOGIN.svg"
         style="width: auto; height: auto"
       />
+      <transition name="fade" mode="out-in">
+        <router-view />
+      </transition>
     </div>
     <!-- <header>
       <img class="logo" src="@/assets/img/logo-big.svg" style="width: 400px;">
@@ -114,7 +118,13 @@ export default {
 .tab:first-child.active {
   border-bottom-left-radius: 30px;
 }
-
+.tab.activety {
+  border-bottom-right-radius: 30px;
+}
+.tab.activety {
+  background-color: #ffd8a3;
+  color: #222;
+}
 .tab.active {
   background-color: #ffd8a3;
   color: #222;

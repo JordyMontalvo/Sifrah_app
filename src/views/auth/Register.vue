@@ -310,7 +310,7 @@ export default {
       console.log(contentAuth);
       contentAuth.style.order = 0;
     }, 100);
-      
+
     setTimeout(() => {
       const tabs = document.getElementById("tabs");
       console.log(tabs);

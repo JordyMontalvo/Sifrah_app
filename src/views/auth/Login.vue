@@ -31,7 +31,7 @@
         <input
           id="dni"
           class="input"
-          style="border: solid 1px rgba(255, 107, 0, 1);margin-left: 5px;"
+          style="border: solid 1px rgba(255, 107, 0, 1); margin-left: 5px"
           placeholder="Dni"
           oninput="this.value=this.value.replace(/(?![0-9])./gmi,'')"
           v-model="dni"
@@ -270,5 +270,4 @@ export default {
 .login-button:hover {
   background: rgb(255, 111, 0); /* Color de fondo al hacer hover */
 }
-
 </style>
