@@ -285,7 +285,7 @@ export default {
       return this.$store.state.yt;
     },
     wsp_pe() {
-      return this.$store.state.wsp;
+      return this.$store.state.wsp_pe;
     },
 
     prefix() {
