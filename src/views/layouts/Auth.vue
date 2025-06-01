@@ -95,7 +95,7 @@ export default {
   transform: translateX(-50%);
   display: flex;
   background-color: #d46b00; /* fondo base */
-  border-radius: 0 0 12px 12px;
+  border-radius: 0 0 37px 37px;
   overflow: hidden;
   width: fit-content;
   z-index: 1000;

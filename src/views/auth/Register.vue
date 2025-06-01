@@ -200,7 +200,7 @@
           <a
             style="padding: 5px"
             class="fab fa-tiktok social-icon-register tiktok"
-            :href="is"
+            :href="tk"
             target="_blank"
           ></a>
           <!-- <a class="fab fa-tiktok"          target="_blank"></a> -->
@@ -283,6 +283,9 @@ export default {
     },
     yt() {
       return this.$store.state.yt;
+    },
+    wsp() {
+      return this.$store.state.wsp;
     },
 
     prefix() {
