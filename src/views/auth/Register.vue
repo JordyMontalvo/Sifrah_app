@@ -213,7 +213,7 @@
           <a
             style="padding: 5px"
             class="fab fa-whatsapp social-icon-register whatsapp"
-            :href="wsp"
+            :href="wsp_pe"
             target="_blank"
           ></a>
         </div>
@@ -284,7 +284,7 @@ export default {
     yt() {
       return this.$store.state.yt;
     },
-    wsp() {
+    wsp_pe() {
       return this.$store.state.wsp;
     },
 
