@@ -85,7 +85,7 @@
       </div>
 
       <div class="box green" v-if="rank">
-        <i class="fas fa-gem"></i>
+        <i class="fas fa-user-shield"></i>
         <div>
           <p>{{ directs.length }}</p>
           <span>DIRECTOS</span>
