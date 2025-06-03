@@ -84,6 +84,14 @@
         </div>
       </div>
 
+      <div class="box green" v-if="rank">
+        <i class="fas fa-gem"></i>
+        <div>
+          <p>{{ directs.length }}</p>
+          <span>DIRECTOS</span>
+        </div>
+      </div>
+
       <div class="box green" v-if="node">
         <i class="fas fa-gem"></i>
         <div>
@@ -121,7 +129,8 @@ export default {
       team: null,
       rank: null,
       points: null,
-
+      directs: null,
+      frontals: [],
       loading: true,
 
       op: 1,
@@ -134,7 +143,7 @@ export default {
       return this.$store.state.session;
     },
     plan() {
-      if(this.$store.state.plan == "early") return "CLIENTE PREFERENTE";
+      if (this.$store.state.plan == "early") return "CLIENTE PREFERENTE";
       if (this.$store.state.plan == "basic") return "DISTRIBUIDOR";
       if (this.$store.state.plan == "standard") return "EJECUTIVO";
       if (this.$store.state.plan == "master") return "EMPRESARIO";
@@ -195,6 +204,8 @@ export default {
     this.points = data.points;
     this.node = data.node;
     this.n_affiliates = data.n_affiliates;
+    this.directs = data.directs;
+    this.frontals = data.frontals;
 
     const time = 4000;
     let i = 0;
