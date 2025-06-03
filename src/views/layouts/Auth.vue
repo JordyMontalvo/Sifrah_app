@@ -11,7 +11,7 @@
       <router-link
         to="/register"
         class="tab"
-        :class="{ activety: $route.path === '/register' }"
+        :class="{ active: $route.path === '/register' }"
       >
         REGISTRO
       </router-link>
@@ -118,12 +118,8 @@ export default {
 .tab:first-child.active {
   border-bottom-left-radius: 30px;
 }
-.tab.activety {
+.tab.active {
   border-bottom-right-radius: 30px;
-}
-.tab.activety {
-  background-color: #ffd8a3;
-  color: #222;
 }
 .tab.active {
   background-color: #ffd8a3;

@@ -71,6 +71,14 @@
       <div class="box green" v-if="rank">
         <i class="fas fa-gem"></i>
         <div>
+          <p>{{ plan }}</p>
+          <span>PAQUETE DE AFILIACIÓN</span>
+        </div>
+      </div>
+
+      <div class="box green" v-if="rank">
+        <i class="fas fa-gem"></i>
+        <div>
           <p>{{ rank }}</p>
           <span>RANGO CERRADO</span>
         </div>
@@ -126,6 +134,10 @@ export default {
       return this.$store.state.session;
     },
     plan() {
+      if(this.$store.state.plan == "early") return "CLIENTE PREFERENTE";
+      if (this.$store.state.plan == "basic") return "DISTRIBUIDOR";
+      if (this.$store.state.plan == "standard") return "EJECUTIVO";
+      if (this.$store.state.plan == "master") return "EMPRESARIO";
       return this.$store.state.plan;
     },
     title() {
