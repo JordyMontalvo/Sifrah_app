@@ -1,5 +1,5 @@
 <template>
-  <Auth>
+  <Auth >
     <section>
       <div style="display: flex;justify-content: center;">
         <router-link
@@ -34,14 +34,8 @@
         />
       </div>
       <div style="margin-top: -20px">
-        <label
+        <label class="label-login-2"
           for="dni"
-          style="
-            font-size: 12px;
-            color: rgba(137, 136, 141, 1);
-            display: block;
-            margin-right: 300px;
-          "
           >DNI:</label
         >
         <input
@@ -70,14 +64,8 @@
       </div>
 
       <div v-if="!office_id">
-        <label
+        <label class="label-login"
           for="password"
-          style="
-            font-size: 12px;
-            color: rgba(137, 136, 141, 1);
-            display: block;
-            margin-right: 260px;
-          "
           >Contraseña:</label
         >
         <input
@@ -298,6 +286,18 @@ export default {
   margin-bottom: 10%;
   transition: all 0.3s ease;
 }
+.label-login-2{
+  font-size: 12px;
+  color: rgba(137, 136, 141, 1);
+  display: block;
+  margin-right: 300px;
+}
+.label-login {
+  font-size: 12px;
+  color: rgba(137, 136, 141, 1);
+  display: block;
+  margin-right: 260px;
+}
 
 .tab-login.active {
   color: #4b2e12; /* marrón oscuro */
@@ -318,6 +318,16 @@ export default {
 @media (max-width: 1260px) {
   .login-button {
     width: 305px;
+  }
+}
+@media (max-width: 1260px) {
+  .label-login {
+    margin-right: 208px;
+  }
+}
+@media (max-width: 1260px) {
+  .label-login-2 {
+    margin-right: 255px;
   }
 }
 </style>

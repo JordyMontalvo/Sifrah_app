@@ -129,6 +129,14 @@ export default {
   color: #222;
   transition: all 0.3s ease;
 }
+
+.form{
+  background:white;
+  border-radius: 50px;
+  padding: 16px;
+  width :469px;
+  height:671px;
+}
 @media (max-width: 1260px) {
   .logo-auth {
     display: none;
@@ -144,4 +152,5 @@ export default {
     display: none;
   }
 }
+
 </style>
