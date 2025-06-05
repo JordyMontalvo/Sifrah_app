@@ -323,10 +323,12 @@ export default {
       const logoAuth = document.getElementById("logo-auth");
       console.log(logoAuth);
       logoAuth.style.order = 1;
+      logoAuth.style.transition = "all 0.80s ease";
 
       const contentAuth = document.getElementById("content-auth");
       console.log(contentAuth);
       contentAuth.style.order = 0;
+      contentAuth.style.transition = "all 0.80s ease";
     }, 100);
 
     setTimeout(() => {
@@ -334,6 +336,7 @@ export default {
       console.log(tabs);
       tabs.style.transform = "translateX(170%)";
       tabs.style.right = "25%";
+      tabs.style.transition = "all 0.80s ease";
     }, 100);
 
     // const logoAuth = document.getElementById("logo-auth");
@@ -457,7 +460,8 @@ input[type="checkbox"]:checked {
   cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
   transition: background 0.3s ease;
   border-radius: 18px;
-  margin: 8px 0; /* Transición suave para el hover */
+  margin: 8px 0;
+  transition: all 0.3s ease; /* Transición suave para el hover */
 }
 
 .register-button:hover {
@@ -476,6 +480,7 @@ input[type="checkbox"]:checked {
   color: #4b2e12; /* marrón oscuro */
   border-bottom: solid 2px #ffb57a; /* naranja claro */
   font-weight: bold;
+  transition: all 0.10s ease;
 }
 @media (min-width: 1260px) {
   .tab-login {

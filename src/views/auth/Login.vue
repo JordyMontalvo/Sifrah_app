@@ -30,7 +30,7 @@
         </h1>
         <img
           src="@/assets/img/logo/logo 2 sifrah NARANJA LOGIN.svg"
-          style="width: 369px; height: auto; margin-top: -65px"
+          style="width: 369px; height: auto; margin-top: -65px;  transition: all 0.3s ease;"
         />
       </div>
       <div style="margin-top: -20px">
@@ -280,7 +280,8 @@ export default {
   border: none; /* Sin borde */
   cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
   transition: background 0.3s ease;
-  margin-left: 13px; /* Transición suave para el hover */
+  margin-left: 13px;
+  transition: all 0.3s ease; /* Transición suave para el hover */
 }
 
 .login-button:hover {
@@ -295,12 +296,14 @@ export default {
   transition: all 0.3s ease;
   margin-top: 10%;
   margin-bottom: 10%;
+  transition: all 0.3s ease;
 }
 
 .tab-login.active {
   color: #4b2e12; /* marrón oscuro */
   border-bottom: solid 2px #ffb57a; /* naranja claro */
   font-weight: bold;
+  transition: all 0.3s ease;
 }
 @media (max-width: 1260px) {
   .logos {

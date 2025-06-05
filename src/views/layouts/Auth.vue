@@ -20,12 +20,10 @@
       <img
         class="logo-auth"
         src="@/assets/img/logo/logo sifrah BLANCO LOGIN.svg"
-        style="width: auto; height: auto"
+        style="width: auto; height: auto;  transition: all 0.3s ease;"
       />
-      <transition name="fade" mode="out-in">
-        <router-view />
-      </transition>
     </div>
+    <img class="logo-blanco" src="@/assets/img/logo/logo 2 sifrah NARANJA LOGIN.svg" style="width: 280px; height: auto" />
     <!-- <header>
       <img class="logo" src="@/assets/img/logo-big.svg" style="width: 400px;">
       <p style="color: white; font-size: 14px; margin: 12px 0 8px 0;">Siguenos</p>
@@ -100,6 +98,7 @@ export default {
   width: fit-content;
   z-index: 1000;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.10s ease;
 }
 
 .tab {
@@ -113,17 +112,22 @@ export default {
   transition: background 0.3s ease;
   display: flex; /* Para centrar el texto */
   align-items: center; /* Centrar verticalmente */
-  justify-content: center; /* Centrar horizontalmente */
+  justify-content: center;
+  transition: all 0.10s ease;
+ /* Centrar horizontalmente */
 }
 .tab:first-child.active {
   border-bottom-left-radius: 30px;
+  transition: all 0.10s ease;
 }
 .tab.active {
   border-bottom-right-radius: 30px;
+  transition: all 0.10s ease;
 }
 .tab.active {
   background-color: #ffd8a3;
   color: #222;
+  transition: all 0.3s ease;
 }
 @media (max-width: 1260px) {
   .logo-auth {
@@ -132,6 +136,11 @@ export default {
 }
 @media (max-width: 1260px) {
   .auth-tabs {
+    display: none;
+  }
+}
+@media (min-width: 1260px) {
+  .logo-blanco {
     display: none;
   }
 }
