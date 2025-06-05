@@ -1,7 +1,23 @@
 <template>
   <Auth>
     <section>
-      <div style="align-items: center; text-align: center">
+      <div style="display: flex;justify-content: center;">
+        <router-link
+        to="/login"
+        class="tab-login"
+        :class="{ active: $route.path === '/login' }"
+      >
+        INICIO
+      </router-link>
+      <router-link
+        to="/register"
+        class="tab-login"
+        :class="{ active: $route.path === '/register' }"
+      >
+        REGISTRO
+      </router-link>
+      </div>
+      <div class="logos">
         <h1
           style="
             font-size: 30px;
@@ -269,5 +285,36 @@ export default {
 
 .login-button:hover {
   background: rgb(255, 111, 0); /* Color de fondo al hacer hover */
+}
+.tab-login {
+  font-size: 20px;
+  color: rgba(137, 136, 141, 1);
+  text-decoration: none;
+  padding: 10px 20px;
+  border-bottom: solid 2px rgba(137, 136, 141, 1);
+  transition: all 0.3s ease;
+  margin-top: 10%;
+  margin-bottom: 10%;
+}
+
+.tab-login.active {
+  color: #4b2e12; /* marrón oscuro */
+  border-bottom: solid 2px #ffb57a; /* naranja claro */
+  font-weight: bold;
+}
+@media (max-width: 1260px) {
+  .logos {
+    display: none;
+  } 
+}
+@media (min-width: 1260px) {
+  .tab-login {
+    display: none;
+  }
+}
+@media (max-width: 1260px) {
+  .login-button {
+    width: 305px;
+  }
 }
 </style>

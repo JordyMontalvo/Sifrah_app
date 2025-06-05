@@ -125,12 +125,12 @@ export default {
   background-color: #ffd8a3;
   color: #222;
 }
-@media (max-width: 792px) {
+@media (max-width: 1260px) {
   .logo-auth {
     display: none;
   }
 }
-@media (max-width: 792px) {
+@media (max-width: 1260px) {
   .auth-tabs {
     display: none;
   }

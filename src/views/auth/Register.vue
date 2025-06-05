@@ -1,9 +1,23 @@
 <template>
   <Auth>
     <section>
-      <div
-        style="justify-content: center; align-items: center; text-align: center"
+      <div style="display: flex;justify-content: center;">
+        <router-link
+        to="/login"
+        class="tab-login"
+        :class="{ active: $route.path === '/login' }"
       >
+        INICIO
+      </router-link>
+      <router-link
+        to="/register"
+        class="tab-login"
+        :class="{ active: $route.path === '/register' }"
+      >
+        REGISTRO
+      </router-link>
+      </div>
+      <div class="logos">
         <img
           src="@/assets/img/logo/logo 2 sifrah NARANJA LOGIN.svg"
           style="
@@ -63,7 +77,7 @@
       <i class="icon-register fa fa-id-card"></i>
       <br />
       <div style="margin-right: 140px">
-        <label style="margin-top: 5px">
+        <label class="label-register" style="margin-top: 5px">
           <small style="color: rgba(102, 108, 104, 1);">
             <input type="checkbox" v-model="younger" />menor de edad /
             extranjero
@@ -448,5 +462,36 @@ input[type="checkbox"]:checked {
 
 .register-button:hover {
   background: rgb(255, 111, 0); /* Color de fondo al hacer hover */
+}
+.tab-login {
+  font-size: 20px;
+  color: rgba(137, 136, 141, 1);
+  text-decoration: none;
+  padding: 10px 20px;
+  border-bottom: solid 2px rgba(137, 136, 141, 1);
+  transition: all 0.3s ease;
+}
+
+.tab-login.active {
+  color: #4b2e12; /* marrón oscuro */
+  border-bottom: solid 2px #ffb57a; /* naranja claro */
+  font-weight: bold;
+}
+@media (min-width: 1260px) {
+  .tab-login {
+    display: none;
+  }
+}
+@media (max-width: 1260px) {
+  .logos {
+    display: none;
+  } 
+}
+@media (max-width: 1260px) {
+  .label-register {
+    margin-left: 10px;
+    /* margin-top: 5px; */
+    white-space: nowrap;
+  }
 }
 </style>
