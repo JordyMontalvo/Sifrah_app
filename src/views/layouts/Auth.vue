@@ -23,7 +23,7 @@
         style="width: auto; height: auto;  transition: all 0.3s ease;"
       />
     </div>
-    <img class="logo-blanco" src="@/assets/img/logo/logo 2 sifrah NARANJA LOGIN.svg" style="width: 280px; height: auto" />
+    <img class="logo-blanco" src="@/assets/img/logo/sifrah-blanco.png" style="width: 380px; height: auto" />
     <!-- <header>
       <img class="logo" src="@/assets/img/logo-big.svg" style="width: 400px;">
       <p style="color: white; font-size: 14px; margin: 12px 0 8px 0;">Siguenos</p>
