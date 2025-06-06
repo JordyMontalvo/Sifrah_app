@@ -468,7 +468,7 @@ input[type="checkbox"]:checked {
   background: rgb(255, 111, 0); /* Color de fondo al hacer hover */
 }
 .tab-login {
-  font-size: 20px;
+  font-size: 15px;
   color: rgba(137, 136, 141, 1);
   text-decoration: none;
   padding: 10px 20px;
@@ -494,9 +494,14 @@ input[type="checkbox"]:checked {
 }
 @media (max-width: 1260px) {
   .label-register {
-    margin-left: 10px;
+    margin-left: 20px;
     /* margin-top: 5px; */
     white-space: nowrap;
+  }
+}
+@media (max-width: 1024px) {
+  .register-button {
+    margin-left: 15px;
   }
 }
 </style>

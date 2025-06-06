@@ -33,7 +33,7 @@
           style="width: 369px; height: auto; margin-top: -65px;  transition: all 0.3s ease;"
         />
       </div>
-      <div style="margin-top: -20px">
+      <div>
         <label class="label-login-2"
           for="dni"
           >DNI:</label
@@ -276,7 +276,7 @@ export default {
   background: rgb(255, 111, 0); /* Color de fondo al hacer hover */
 }
 .tab-login {
-  font-size: 20px;
+  font-size: 15px;
   color: rgba(137, 136, 141, 1);
   text-decoration: none;
   padding: 10px 20px;
@@ -291,6 +291,7 @@ export default {
   color: rgba(137, 136, 141, 1);
   display: block;
   margin-right: 300px;
+  margin-top: -20px;
 }
 .label-login {
   font-size: 12px;
@@ -317,17 +318,19 @@ export default {
 }
 @media (max-width: 1260px) {
   .login-button {
-    width: 305px;
+    width: 280px;
   }
 }
 @media (max-width: 1260px) {
   .label-login {
-    margin-right: 208px;
+    margin-right: 195px;
+    margin-top: -13px;
   }
 }
 @media (max-width: 1260px) {
   .label-login-2 {
-    margin-right: 255px;
+    margin-right: 235px;
+    margin-top: 0px;
   }
 }
 </style>
