@@ -1,5 +1,15 @@
 <template>
   <div class="app">
+    <div id="app">
+      <transition name="fade">
+        <div v-if="notification" class="notification">
+          {{ notification }}
+        </div>
+      </transition>
+
+      <router-view />
+    </div>
+
     <header>
       <!--<h3 class="slogan">
         <span v-if="country == 'Perú'"       style="font-size: 28px;">🇵🇪</span>
@@ -11,7 +21,11 @@
         <span v-if="country == 'Costa Rica'" style="font-size: 28px;">🇨🇷</span>
           &nbsp;&nbsp;&nbsp;SUEÑA SIN LIMITES
       </h3>-->
-      <img src="../../assets/img/logo/logo-sifrah-BLANCO.png" alt="" class="logo" />
+      <img
+        src="../../assets/img/logo/logo-sifrah-BLANCO.png"
+        alt=""
+        class="logo"
+      />
       <i
         class="burger fas fa-bars"
         style="margin-left: 310px"
@@ -51,7 +65,11 @@
           <a class="fab fa-youtube"         :href="yt" target="_blank" style="font-size: 18px;color: #ff0050;"></a>
         </div>-->
 
-        <img src="../../assets/img/logo/logo-sifrah-BLANCO.png" style="width: 100px; height: 100px; margin-bottom: 10px;" class="photo-logo" />
+        <img
+          src="../../assets/img/logo/logo-sifrah-BLANCO.png"
+          style="width: 100px; height: 100px; margin-bottom: 10px"
+          class="photo-logo"
+        />
 
         <router-link to="/dashboard" @click.stop v-if="office_id == null">
           <i class="fas fa-home"></i> INICIO
@@ -242,8 +260,8 @@
               </p>
             </div>
             <router-link to="/profile" style="color: black; margin-left: 10px">
-            <i class="fas fa-cog" style="font-size: 20px"></i>
-          </router-link>
+              <i class="fas fa-cog" style="font-size: 20px"></i>
+            </router-link>
           </div>
 
           <!-- <div class="social">
@@ -316,7 +334,12 @@ export default {
       activeProduct: false,
       startX: 0,
       endX: 0,
+      notification: null,
+      notificationTimer: null,
     };
+  },
+  created() {
+    this.startNotificationLoop();
   },
   computed: {
     // user
@@ -349,6 +372,9 @@ export default {
     },
     email() {
       return this.$store.state.email;
+    },
+    address() {
+      return this.$store.state.address;
     },
 
     // social
@@ -396,6 +422,45 @@ export default {
     },
   },
   methods: {
+    startNotificationLoop() {
+      setTimeout(() => {
+        this.checkAndShowNotification();
+
+        // Luego lo repite cada 20 segundos
+        this.notificationTimer = setInterval(
+          this.checkAndShowNotification,
+          20000
+        );
+      }, 5000); // Espera inicial de 5 segundos (5000 ms)
+      this.notificationTimer = setInterval(
+        this.checkAndShowNotification,
+        20000
+      );
+      // cada 20s
+    },
+    checkAndShowNotification() {
+      const missing = [];
+      if (!this.email) missing.push("correo electrónico");
+
+      if (missing.length > 0) {
+        this.notification = `Por favor, completa tu ${missing.join(" y ")}.`;
+
+        setTimeout(() => {
+          this.notification = null;
+        }, 10000);
+      } else {
+        this.notification = null;
+      }
+    },
+    beforeDestroy() {
+      if (this.notificationTimer) clearInterval(this.notificationTimer);
+    },
+    computed: {
+      email() {
+        return this.$store.state.email;
+      },
+    },
+
     toggleMenu() {
       this.$store.commit("SET_OPEN");
     },
@@ -480,5 +545,37 @@ export default {
 
 .menu.slide {
   transform: translateX(0); /* Muestra el menú */
+}
+.notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background-color: #f44336; /* rojo para alerta */
+  color: white;
+  padding: 15px 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  animation: slideIn 0.5s ease-out, fadeOut 0.5s ease-in 4.5s forwards;
+}
+
+/* Animación de entrada */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Animación de salida */
+@keyframes fadeOut {
+  to {
+    opacity: 0;
+    transform: translateX(100%);
+  }
 }
 </style>

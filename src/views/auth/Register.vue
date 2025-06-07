@@ -1,21 +1,21 @@
 <template>
   <Auth>
     <section>
-      <div style="display: flex;justify-content: center;">
+      <div style="display: flex; justify-content: center">
         <router-link
-        to="/login"
-        class="tab-login"
-        :class="{ active: $route.path === '/login' }"
-      >
-        INICIO
-      </router-link>
-      <router-link
-        to="/register"
-        class="tab-login"
-        :class="{ active: $route.path === '/register' }"
-      >
-        REGISTRO
-      </router-link>
+          to="/login"
+          class="tab-login"
+          :class="{ active: $route.path === '/login' }"
+        >
+          INICIO
+        </router-link>
+        <router-link
+          to="/register"
+          class="tab-login"
+          :class="{ active: $route.path === '/register' }"
+        >
+          REGISTRO
+        </router-link>
       </div>
       <div class="logos">
         <img
@@ -67,7 +67,7 @@
 
       <input
         class="input-register"
-        style="margin-bottom: 12px;"
+        style="margin-bottom: 12px"
         placeholder="Documento de identidad"
         oninput="this.value=this.value.replace(/(?![0-9])./gmi,'')"
         v-model="dni"
@@ -78,7 +78,7 @@
       <br />
       <div style="margin-right: 140px">
         <label class="label-register" style="margin-top: 5px">
-          <small style="color: rgba(102, 108, 104, 1);">
+          <small style="color: rgba(102, 108, 104, 1)">
             <input type="checkbox" v-model="younger" />menor de edad /
             extranjero
           </small>
@@ -278,12 +278,12 @@ export default {
     };
   },
   filters: {
-    alert(msg) {
-      // if (msg == 'username already use') return 'El usuario ya existe'
-      if (msg == "dni already use") return "El documento ya existe";
-      if (msg == "code not found") return "El código de invitación no existe";
+      alert(msg) {
+        if (msg === "dni already use") return "El documento ya existe";
+        if (msg === "code not found") return "El código de invitación no existe";
+        return msg;
+      },
     },
-  },
   computed: {
     // social
     fb() {
@@ -372,71 +372,82 @@ export default {
   },
   methods: {
     async submit() {
-      // const { name, lastName, username, email, password, phone, code, check } = this
       const { dni, name, lastName, password, phone, code, check } = this;
 
-      // valid fields
-
       if (!dni) {
-        return (this.error.dni = true);
+        this.error.dni = true;
+        this.alert = "El documento se requiere";
+        return;
       }
       if (!name) {
-        return (this.error.name = true);
+        this.error.name = true;
+        this.alert = "El nombre se requiere";
+        return;
       }
       if (!lastName) {
-        return (this.error.lastName = true);
+        this.error.lastName = true;
+        this.alert = "El apellido se requiere";
+        return;
       }
-      // if(!username) { return this.error.username = true }
-      // if(!email)    { return this.error.email    = true }
       if (!password) {
-        return (this.error.password = true);
+        this.error.password = true;
+        this.alert = "password required";
+        return;
       }
-      // if(!phone)    { return this.error.phone    = true }
       if (!code) {
-        return (this.error.code = true);
+        this.error.code = true;
+        this.alert = "code required";
+        return;
+      }
+      if(!phone) {
+        this.error.phone = true;
+        this.alert = "El telefono se requiere";
+        return;
       }
       if (!check) {
+        this.alert = "Debes aceptar los términos.";
         return;
       }
 
-      // POST Register
       this.sending = true;
 
-      // const { data } = await api.register({ name, lastName, username, email, password, phone, code }); console.log({ data })
-      const { data } = await api.register({
-        dni,
-        name,
-        lastName,
-        password,
-        phone,
-        code,
-      });
-      console.log({ data });
+      try {
+        const { data } = await api.register({
+          dni,
+          name,
+          lastName,
+          password,
+          phone,
+          code,
+        });
 
-      this.sending = false;
+        this.sending = false;
 
-      // error
-      if (data.error) return (this.alert = data.msg);
+        if (data.error) {
+          this.alert = data.msg;
+          return;
+        }
 
-      // logout
-      const session = localStorage.getItem("session");
-      if (session) {
-        localStorage.removeItem("session");
-        api.logout(this.session);
+        const session = localStorage.getItem("session");
+        if (session) {
+          localStorage.removeItem("session");
+          api.logout(this.session);
+        }
+
+        this.$store.commit("SET_SESSION", data.session);
+        this.$router.push("/dashboard");
+      } catch (err) {
+        this.sending = false;
       }
-
-      // login
-      this.$store.commit("SET_SESSION", data.session);
-
-      // routing
-      this.$router.push("/dashboard");
     },
+
     reset(name) {
       this.alert = null;
 
       if (name == "dni") this.error.dni = false;
       if (name == "name") this.error.name = false;
       if (name == "lastName") this.error.lastName = false;
+      if(name == "phone") this.error.phone = false;
       // if(name == 'username') this.error.username = false
       // if(name == 'email')    this.error.email    = false
       if (name == "password") this.error.password = false;
@@ -480,7 +491,7 @@ input[type="checkbox"]:checked {
   color: #4b2e12; /* marrón oscuro */
   border-bottom: solid 2px #ffb57a; /* naranja claro */
   font-weight: bold;
-  transition: all 0.10s ease;
+  transition: all 0.1s ease;
 }
 @media (min-width: 1260px) {
   .tab-login {
@@ -490,7 +501,7 @@ input[type="checkbox"]:checked {
 @media (max-width: 1260px) {
   .logos {
     display: none;
-  } 
+  }
 }
 @media (max-width: 1260px) {
   .label-register {

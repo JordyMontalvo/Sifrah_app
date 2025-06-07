@@ -154,4 +154,4 @@ class Transfers {
   }
 }
 
-export default new API({ Profile, Password, Security, Afiliation, Activation, Promo, Activations, Collect, Closeds, Transfer, Collects, Transfers })
+export default new API({ Profile, Password, Security, Afiliation, Activation, Promo, Activations, Collect, Closeds, Transfer, Collects, Transfers})
