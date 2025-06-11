@@ -19,6 +19,7 @@ export default new Vuex.Store({
     email:      null,
     token:      null,
     address:    null,
+    city:       null,
 
     fb:   'https://www.facebook.com/profile.php?id=61555335617817',
     is:   'https://www.instagram.com/sifrahcorp',
@@ -112,6 +113,9 @@ export default new Vuex.Store({
     },
     SET_ADDRESS: (state, address) => {
       state.address = address
+    },
+    SET_CITY: (state, city) => {
+      state.city = city
     },
   },
 })
