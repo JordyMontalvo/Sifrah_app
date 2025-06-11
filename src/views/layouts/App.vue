@@ -376,6 +376,15 @@ export default {
     address() {
       return this.$store.state.address;
     },
+    phone() {
+      return this.$store.state.phone;
+    },
+    birthdate() {
+      return this.$store.state.birthdate;
+    },
+    city() {
+      return this.$store.state.city;
+    },
 
     // social
     fb() {
@@ -440,10 +449,8 @@ export default {
     },
     checkAndShowNotification() {
       const missing = [];
-      if (!this.email) missing.push("correo electrónico");
-
-      if (missing.length > 0) {
-        this.notification = `Por favor, completa tu ${missing.join(" y ")}.`;
+      if (!this.email ||  !this.birthdate || !this.city || !this.country ){
+        this.notification = "Por favor, completa tu perfil.";
 
         setTimeout(() => {
           this.notification = null;

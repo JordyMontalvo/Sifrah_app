@@ -8,7 +8,7 @@
       <i class="icon fas fa-flag"></i>
       <select class="input" v-model="country" @change="updateCities">
         <option value="null" disabled>Selecciona un país</option>
-        <option value="Peru">Perú</option>
+        <option value="Perú">Perú</option>
       <!--  <option value="Argentina">Argentina</option>
         <option value="Bolivia">Bolivia</option>
         <option value="Brazil">Brasil</option>
@@ -99,7 +99,6 @@
         type="date"
         class="input"
         placeholder="Fecha de Nacimiento"
-        readonly
         v-model="birthdate"
       />
       <br />
@@ -233,6 +232,8 @@ export default {
     this.$store.commit("SET_PHOTO", data.photo);
     this.$store.commit("SET_TREE", data.tree);
     this.$store.commit("SET_CITY", data.city);
+    this.$store.commit("SET_EMAIL", data.email);
+    this.$store.commit("SET_BIRTHDATE", data.birthdate);
 
     this.country = data.country;
     this.dni = data.dni;
@@ -267,7 +268,7 @@ export default {
         Colombia: ["Bogotá", "Medellín", "Cali"],
         Ecuador: ["Quito", "Guayaquil", "Cuenca"],
         Paraguay: ["Asunción", "Ciudad del Este", "Encarnación"],
-        Peru: [
+        Perú: [
           "Lima",
           "Arequipa",
           "Trujillo",

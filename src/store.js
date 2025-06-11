@@ -20,6 +20,7 @@ export default new Vuex.Store({
     token:      null,
     address:    null,
     city:       null,
+    birthdate:   null,
 
     fb:   'https://www.facebook.com/profile.php?id=61555335617817',
     is:   'https://www.instagram.com/sifrahcorp',
@@ -116,6 +117,9 @@ export default new Vuex.Store({
     },
     SET_CITY: (state, city) => {
       state.city = city
+    },
+    SET_BIRTHDATE: (state, birthdate) => {
+      state.birthdate = birthdate
     },
   },
 })
