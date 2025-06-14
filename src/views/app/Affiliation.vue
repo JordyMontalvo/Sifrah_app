@@ -1,74 +1,96 @@
 <template>
   <App :session="session" :office_id="office_id" :title="title">
-
     <h4>AFILIACIÓN</h4>
 
     <i class="load" v-if="loading"></i>
 
     <section v-if="!loading">
-
       <div v-if="congrats">
-        <img class="_img" src="https://ik.imagekit.io/asu/sifrah/Trofeo%20sifrah_sIeu2fnie.png">
+        <img
+          class="_img"
+          src="https://ik.imagekit.io/asu/sifrah/Trofeo%20sifrah_sIeu2fnie.png"
+        />
       </div>
 
       <div v-else>
-
         <div v-if="pending">
-
           <i class="icon fas fa-gem"></i>
-          <input class="input" readonly :value="affiliation.plan.name"> <br>
+          <input class="input" readonly :value="affiliation.plan.name" /> <br />
 
           <i class="icon fas fa-dollar-sign"></i>
-          <input class="input" readonly v-model="affiliation.plan.amount"> <br>
+          <input class="input" readonly v-model="affiliation.plan.amount" />
+          <br />
 
           <small>
             Resumen:
-            <p v-for="(product, i) in affiliation.products" v-if="product.total > 0">
+            <p
+              v-for="(product, i) in affiliation.products"
+              v-if="product.total > 0"
+            >
               {{ product.total }} {{ product.name }}
             </p>
-          </small> <br>
-
+          </small>
+          <br />
 
           <small>
             Total: <span class="_strong">S/. {{ affiliation.price }}</span>
-          </small> <br><br>
+          </small>
+          <br /><br />
 
           <small class="success">pendiente de aprobación</small>
-
         </div>
 
         <div v-else>
-
           <i class="icon fas fa-gem"></i>
           <select class="input" v-model="selec_plan">
             <option v-for="plan in plans" :value="plan">{{ plan.name }}</option>
-          </select> <br>
+          </select>
+          <br />
 
           <i class="icon fas fa-dollar-sign"></i>
           <!-- <input class="input" readonly v-model="selec_plan.amount"> <br><br> -->
-          <input class="input" readonly v-model="text"> <br><br>
+          <input class="input" readonly v-model="text" /> <br /><br />
 
           <article class="product">
             <small>
               <p>Kit de inicio S/. {{ selec_plan.kit }}</p>
             </small>
-            <div class="control"><input readonly value="1"></div>
+            <div class="control"><input readonly value="1" /></div>
           </article>
 
-          <br>
+          <br />
           <small>Escoger: {{ selec_plan.max_products }} productos</small>
-          <br>
-          <br>
+          <br />
+          <br />
 
-          <img class="_product" :src="product.img">
+          <img class="_product" :src="product.img" />
 
           <div class="_tabs">
-            <p class="_tab" v-for="(category, i) in categories" @click="tab = category"
-              :class="{ 'selected': tab == categories[i] }">{{ category }}</p>
+            <p
+              class="_tab"
+              v-for="(category, i) in categories"
+              @click="tab = category"
+              :class="{ selected: tab == categories[i] }"
+            >
+              {{ category }}
+            </p>
           </div>
 
-          <div class="_tab_content" v-for="(category, i) in categories" v-show="tab == categories[i]">
-            <article class="product" v-for="(product, i) in products" v-if="product.type == category" @click="touch(i)">
+          <div
+            class="_tab_content"
+            v-for="(category, i) in categories"
+            v-show="tab == categories[i]"
+          >
+            <article
+              class="product"
+              v-for="(product, i) in products"
+              v-if="
+                product.type == category &&
+                product.plans &&
+                product.plans[selec_plan.id]
+              "
+              @click="touch(i)"
+            >
               <small>
                 <p>{{ product.name }}</p>
                 <!-- <span>S/. {{ product.price }}, {{ product.points }} PTS</span> -->
@@ -76,28 +98,31 @@
 
               <div class="control">
                 <i class="fas fa-minus-square" @click="less(product)"></i>
-                <input v-model="product.total" readonly>
+                <input v-model="product.total" readonly />
                 <i class="fas fa-plus-square" @click="more(product)"></i>
               </div>
             </article>
           </div>
 
-          <br>
+          <br />
           <p>
             <small>
-              Resumen: <br>
+              Resumen: <br />
               <p v-for="(product, i) in products" v-if="product.total > 0">
                 {{ product.total }} {{ product.name }}
               </p>
             </small>
           </p>
-          <br>
+          <br />
 
           <i class="icon fa-solid fa-briefcase"></i>
           <select class="input" v-model="office">
             <option value="null" disabled>Oficina</option>
-            <option v-for="office in offices" :value="office">{{ office.name }}</option>
-          </select> <br><br>
+            <option v-for="office in offices" :value="office">
+              {{ office.name }}
+            </option>
+          </select>
+          <br /><br />
 
           <!-- <small v-if="office">{{ office.address }}</small> <br> -->
 
@@ -106,9 +131,10 @@
           </div> -->
 
           <label>
-            <input type="checkbox" v-model="check">
+            <input type="checkbox" v-model="check" />
             <small>No Deseo usar mi saldo</small>
-          </label> <br>
+          </label>
+          <br />
 
           <!-- <div v-if="!check">
             <div v-if="plan == 'default'">
@@ -125,77 +151,102 @@
           </div> -->
 
           <div v-if="!check">
-            <small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Saldo no disponible: S/. {{ _balance }}</small> <br>
-            <small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Saldo disponible: S/. {{ balance }}</small> <br>
+            <small
+              >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Saldo no disponible: S/.
+              {{ _balance }}</small
+            >
+            <br />
+            <small
+              >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Saldo disponible: S/.
+              {{ balance }}</small
+            >
+            <br />
           </div>
 
-          <br>
+          <br />
           <small>Total a pagar: S/. {{ remaining }}</small>
-          <br>
+          <br />
 
-          <br>
+          <br />
           <small>Medio de Pago</small>
-          <br>
+          <br />
 
           <label>
-            <input type="radio" :value="'bank'" v-model="pay_method">
+            <input type="radio" :value="'bank'" v-model="pay_method" />
             <small>Banco</small>
-          </label> <br>
+          </label>
+          <br />
 
           <label>
-            <input type="radio" :value="'cash'" v-model="pay_method">
+            <input type="radio" :value="'cash'" v-model="pay_method" />
             <small>Efectivo</small>
-          </label> <br>
+          </label>
+          <br />
 
-          <br>
+          <br />
 
           <div v-if="pay_method == 'bank'">
-            <input class="input" v-model="bank" placeholder="Banco"> <br>
-            <input class="input" v-model="date" placeholder="Fecha" type="date"> <br>
-            <input class="input" v-model="voucher_number" placeholder="Número de Voucher"
-              oninput="this.value=this.value.replace(/(?![0-9])./gmi,'')"> <br>
+            <input class="input" v-model="bank" placeholder="Banco" /> <br />
+            <input
+              class="input"
+              v-model="date"
+              placeholder="Fecha"
+              type="date"
+            />
+            <br />
+            <input
+              class="input"
+              v-model="voucher_number"
+              placeholder="Número de Voucher"
+              oninput="this.value=this.value.replace(/(?![0-9])./gmi,'')"
+            />
+            <br />
 
             <label>
               <span class="input" v-show="!voucher">Comprobante de pago</span>
 
-              <img class="voucher" v-show="voucher" :src="voucher">
+              <img class="voucher" v-show="voucher" :src="voucher" />
 
-              <input type="file" @change="change" :disabled="pending">
+              <input type="file" @change="change" :disabled="pending" />
             </label>
           </div>
 
-          <br>
+          <br />
 
-          <small v-if="error" style="color: red;">{{ error }}<br></small>
+          <small v-if="error" style="color: red">{{ error }}<br /></small>
 
-          <button class="button" v-show="!sending" @click="POST">Enviar Afiliación</button>
-          <button class="button" v-show="sending" disabled>Enviando Voucher ...</button>
+          <button class="button" v-show="!sending" @click="POST">
+            Enviar Afiliación
+          </button>
+          <button class="button" v-show="sending" disabled>
+            Enviando Voucher ...
+          </button>
 
           <small v-if="pending" class="success">pendiente de aprobación</small>
-
         </div>
+      </div>
+      <br /><br />
 
-      </div> <br><br>
+      <a
+        v-for="(affiliation, i) in affiliations"
+        :href="`${INVOICE_ROOT}?id=${affiliation.id}`"
+        target="_blank"
+        style="color: gray"
+        >Boleta {{ i + 1 }} &nbsp;&nbsp;</a
+      >
 
-      <a v-for="(affiliation, i) in affiliations" :href="`${INVOICE_ROOT}?id=${affiliation.id}`" target="_blank"
-        style="color: gray;">Boleta {{ i + 1 }} &nbsp;&nbsp;</a>
-
-      <br><br>
-
+      <br /><br />
     </section>
-
-
   </App>
 </template>
 
 <script>
-import App from '@/views/layouts/App'
-import api from '@/api'
-import lib from '@/lib'
+import App from "@/views/layouts/App";
+import api from "@/api";
+import lib from "@/lib";
 
-const INVOICE_ROOT = process.env.VUE_APP_INVOICE_ROOT
-console.log({ INVOICE_ROOT })
-
+const INVOICE_ROOT = process.env.VUE_APP_INVOICE_ROOT;
+console.log({ INVOICE_ROOT });
 
 export default {
   components: {
@@ -230,171 +281,228 @@ export default {
       bank: null,
       date: null,
       voucher_number: null,
-    }
+    };
   },
   computed: {
-    session() { return this.$store.state.session },
-    office_id() { return this.$store.state.office_id },
-    plan() { return this.$store.state.plan },
+    session() {
+      return this.$store.state.session;
+    },
+    office_id() {
+      return this.$store.state.office_id;
+    },
+    plan() {
+      return this.$store.state.plan;
+    },
 
     categories() {
+      if (!this.products) return [];
       return this.products
-        .map(x => x.type)
-        .filter((v, i, self) => i == self.indexOf(v))
+        .map((x) => x.type)
+        .filter((v, i, self) => i == self.indexOf(v));
     },
     title() {
       return "Productos";
     },
-    total() { return this.products.reduce((a, b) => a + b.total, 0) },
+    total() {
+      if (!this.products) return 0;
+      return this.products.reduce((a, b) => a + (b.total || 0), 0);
+    },
 
     remaining() {
+      if (!this.selec_plan) return 0;
 
-      let ret = this.selec_plan.amount
+      let ret = this.selec_plan.amount || 0;
 
       // balance
-      ret -= this._balance
+      ret -= this._balance || 0;
 
-      if (ret < 0) ret = 0
+      if (ret < 0) ret = 0;
 
-      if (ret == 0) return ret
+      if (ret == 0) return ret;
 
       // _balance
-      ret -= this.balance
+      ret -= this.balance || 0;
 
-      if (ret < 0) ret = 0
+      if (ret < 0) ret = 0;
 
-      return ret
+      return ret;
     },
 
     text() {
-      return `S/. ${this.selec_plan.amount} / ${this.selec_plan.affiliation_points} PTS`
+      if (!this.selec_plan) return "";
+      return `S/. ${this.selec_plan.amount || 0} / ${
+        this.selec_plan.affiliation_points || 0
+      } PTS`;
     },
   },
   watch: {
     selec_plan() {
-      if (!this.selec_plan) return
+      if (!this.selec_plan) return;
       // this.prices()
       // this.totals()
-      this.reset_totals()
-    }
+      this.reset_totals();
+    },
   },
   async created() {
-    // GET data
-    const { data } = await api.Afiliation.GET(this.session); console.log({ data })
+    try {
+      // GET data
+      const { data } = await api.Afiliation.GET(this.session);
+      console.log("API Response:", data);
 
-    this.loading = false
+      this.loading = false;
 
-    // error
-    if (data.error && data.msg == 'invalid session') this.$router.push('/login')
+      // error
+      if (data.error && data.msg == "invalid session") {
+        this.$router.push("/login");
+        return;
+      }
 
-    // success
-    this.$store.commit('SET_NAME', data.name)
-    this.$store.commit('SET_LAST_NAME', data.lastName)
-    this.$store.commit('SET_AFFILIATED', data.affiliated)
-    this.$store.commit('SET_ACTIVATED', data.activated)
-    this.$store.commit('SET__ACTIVATED', data._activated)
-    this.$store.commit('SET_PLAN', data.plan)
-    this.$store.commit('SET_COUNTRY', data.country)
-    this.$store.commit('SET_PHOTO', data.photo)
-    this.$store.commit('SET_TREE', data.tree)
-    console.log('1')
-    this.plans = data.plans
-    this.selec_plan = this.plans[0]
-    console.log('2')
+      // success
+      this.$store.commit("SET_NAME", data.name);
+      this.$store.commit("SET_LAST_NAME", data.lastName);
+      this.$store.commit("SET_AFFILIATED", data.affiliated);
+      this.$store.commit("SET_ACTIVATED", data.activated);
+      this.$store.commit("SET__ACTIVATED", data._activated);
+      this.$store.commit("SET_PLAN", data.plan);
+      this.$store.commit("SET_COUNTRY", data.country);
+      this.$store.commit("SET_PHOTO", data.photo);
+      this.$store.commit("SET_TREE", data.tree);
 
-    this.products = data.products
-    this.products = data.products.map(a => ({ ...a, total: 0 }))
-    this.product = this.products[0]
-    this.tab = this.categories[0]
-    console.log('3')
+      // Initialize plans
+      this.plans = data.plans || [];
+      if (this.plans.length > 0) {
+        this.selec_plan = this.plans[0];
+      }
 
-    this.balance = data.balance
-    this._balance = data._balance
-    // this.balance  = 50
-    // this._balance = 300
-    console.log('4')
+      // Initialize products with proper structure
+      if (data.products && Array.isArray(data.products)) {
+        this.products = data.products.map((product) => ({
+          ...product,
+          total: 0,
+          plans: product.plans || {
+            basic: false,
+            standard: false,
+            master: false,
+          },
+        }));
 
-    this.offices = data.offices
+        if (this.products.length > 0) {
+          this.product = this.products[0];
+          // Set initial tab if categories exist
+          if (this.categories && this.categories.length > 0) {
+            this.tab = this.categories[0];
+          }
+        }
+      } else {
+        console.error("No products data received or invalid format");
+        this.products = [];
+      }
 
-    this.affiliation = data.affiliation
-    console.log('5')
+      this.balance = data.balance || 0;
+      this._balance = data._balance || 0;
+      this.offices = data.offices || [];
+      this.affiliation = data.affiliation || null;
+      this.affiliations = data.affiliations || [];
 
-    if (this.plan == 'master' || (this.affiliation &&
-      this.affiliation.plan.id == 'master' &&
-      this.affiliation.status == 'approved')) this.congrats = true
-    console.log('6')
+      // Set congrats state
+      if (
+        this.plan == "master" ||
+        (this.affiliation &&
+          this.affiliation.plan.id == "master" &&
+          this.affiliation.status == "approved")
+      ) {
+        this.congrats = true;
+      }
 
-
-    if (this.affiliation && this.affiliation.status == 'pending') this.pending = true
-    console.log('7')
-
-
-    this.affiliations = data.affiliations
-    console.log('8')
+      // Set pending state
+      if (this.affiliation && this.affiliation.status == "pending") {
+        this.pending = true;
+      }
+    } catch (error) {
+      console.error("Error loading data:", error);
+      this.loading = false;
+    }
   },
 
   methods: {
-
     reset_totals() {
-      this.products.forEach(p => { p.total = 0 })
+      this.products.forEach((p) => {
+        p.total = 0;
+      });
     },
 
     touch(i) {
-      this.product = this.products[i]
+      this.product = this.products[i];
     },
 
     more(product) {
-      if (this.total == this.selec_plan.max_products) return
-      product.total += 1
+      if (this.total == this.selec_plan.max_products) return;
+      product.total += 1;
     },
     less(product) {
-      if (product.total == 0) return
-      product.total -= 1
+      if (product.total == 0) return;
+      product.total -= 1;
     },
 
     change(e) {
-      this.voucher_file = e.target.files[0]
+      this.voucher_file = e.target.files[0];
 
-      const reader = new FileReader()
-      reader.onload = (e) => { this.voucher = e.target.result }
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        this.voucher = e.target.result;
+      };
 
-      reader.readAsDataURL(this.voucher_file)
+      reader.readAsDataURL(this.voucher_file);
     },
 
     async POST() {
+      let {
+        products,
+        selec_plan,
+        voucher,
+        office,
+        check,
+        pay_method,
+        bank,
+        date,
+        voucher_number,
+      } = this;
 
-      let { products, selec_plan, voucher, office, check, pay_method, bank, date, voucher_number } = this
-
-      if (pay_method == 'bank') {
+      if (pay_method == "bank") {
         if (!bank) {
-          this.error = 'Nombre de banco'
-          return
+          this.error = "Nombre de banco";
+          return;
         }
         if (!date) {
-          this.error = 'Fecha de voucher'
-          return
+          this.error = "Fecha de voucher";
+          return;
         }
         if (!voucher_number) {
-          this.error = 'Número de voucher'
-          return
+          this.error = "Número de voucher";
+          return;
         }
         if (!voucher) {
-          this.error = 'Voucher de pago'
-          return
+          this.error = "Voucher de pago";
+          return;
         }
       }
 
       if (!office) {
-        this.error = 'Seleccione oficina'
-        return
+        this.error = "Seleccione oficina";
+        return;
       }
 
-      this.error = null
+      this.error = null;
 
       // // POST Affiliation
-      this.sending = true
+      this.sending = true;
 
-      if (voucher) voucher = await lib.upload(this.voucher_file, this.voucher_file.name, 'affiliations')
+      if (voucher)
+        voucher = await lib.upload(
+          this.voucher_file,
+          this.voucher_file.name,
+          "affiliations"
+        );
 
       const { data } = await api.Afiliation.POST(this.session, {
         products,
@@ -406,39 +514,36 @@ export default {
         bank,
         date,
         voucher_number,
-      })
-      console.log({ data })
+      });
+      console.log({ data });
 
-      this.sending = false
-      this.pending = true
+      this.sending = false;
+      this.pending = true;
 
       this.affiliation = {
         plan: this.selec_plan,
         products: this.products,
-      }
+      };
     },
-
   },
 };
 </script>
 
-
 <style lang="stylus">
 
-  ._img
-    width 100%
-    max-width 600px
+._img
+  width 100%
+  max-width 600px
 
-  ._plan
-    max-width 400px
-    margin 8px 0
+._plan
+  max-width 400px
+  margin 8px 0
 
-  ._product
-    max-width 240px
-    margin 8px 0
-    max-height 240px
+._product
+  max-width 240px
+  margin 8px 0
+  max-height 240px
 
-  ._strong
-    font-weight 600
-
+._strong
+  font-weight 600
 </style>
