@@ -144,8 +144,8 @@ export default {
     },
     plan() {
       if (this.$store.state.plan == "early") return "CLIENTE PREFERENTE";
-      if (this.$store.state.plan == "basic") return "DISTRIBUIDOR";
-      if (this.$store.state.plan == "standard") return "EJECUTIVO";
+      if (this.$store.state.plan == "basic") return "EJECUTIVO";
+      if (this.$store.state.plan == "standard") return "DISTRIBUIDOR";
       if (this.$store.state.plan == "master") return "EMPRESARIO";
       return this.$store.state.plan;
     },
