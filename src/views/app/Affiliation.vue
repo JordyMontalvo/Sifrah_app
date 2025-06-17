@@ -111,6 +111,7 @@
               <p v-for="(product, i) in products" v-if="product.total > 0">
                 {{ product.total }} {{ product.name }}
               </p>
+              <p>Total: {{ total }}</p>
             </small>
           </p>
           <br />
@@ -305,6 +306,10 @@ export default {
     },
     total() {
       if (!this.products) return 0;
+      // return this.products.reduce(
+      //   (a, b) => a + (b.total || 0) * (b.weight || 1),
+      //   0
+      // );
       return this.products.reduce((a, b) => a + (b.total || 0), 0);
     },
 
@@ -333,6 +338,14 @@ export default {
       return `S/. ${this.selec_plan.amount || 0} / ${
         this.selec_plan.affiliation_points || 0
       } PTS`;
+    },
+
+    totalPrice() {
+      if (!this.products) return 0;
+      return this.products.reduce(
+        (a, b) => a + (b.total || 0) * (b.price || 0),
+        0
+      );
     },
   },
   watch: {
@@ -436,6 +449,8 @@ export default {
     },
 
     more(product) {
+      // if (this.total + (product.weight || 1) > this.selec_plan.max_products)
+      //   return;
       if (this.total == this.selec_plan.max_products) return;
       product.total += 1;
     },
