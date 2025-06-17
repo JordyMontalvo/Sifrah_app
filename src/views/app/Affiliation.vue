@@ -87,7 +87,8 @@
               v-if="
                 product.type == category &&
                 product.plans &&
-                product.plans[selec_plan.id]
+                product.plans[selec_plan.id] &&
+                Object.values(product.plans).some((plan) => plan === true)
               "
               @click="touch(i)"
             >
@@ -297,7 +298,13 @@ export default {
 
     categories() {
       if (!this.products) return [];
-      return this.products
+      // Filtrar productos que están en algún plan
+      const productsWithPlans = this.products.filter(
+        (product) =>
+          product.plans &&
+          Object.values(product.plans).some((plan) => plan === true)
+      );
+      return productsWithPlans
         .map((x) => x.type)
         .filter((v, i, self) => i == self.indexOf(v));
     },
