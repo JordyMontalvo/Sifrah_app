@@ -59,7 +59,9 @@
           </article>
 
           <br />
-          <small>Escoger: {{ selec_plan.max_products }} productos</small>
+          <small
+            >Escoger: {{ selec_plan.max_products }} productos</small
+          >
           <br />
           <br />
 
@@ -110,9 +112,12 @@
             <small>
               Resumen: <br />
               <p v-for="(product, i) in products" v-if="product.total > 0">
-                {{ product.total }} {{ product.name }}
+                {{ product.total }} {{ product.name }} 
+                {{ (product.total || 0) * (product.weight || 1) }})
               </p>
-              <p>Total: {{ total }}</p>
+              <p>
+                Total: {{ total }} / {{ selec_plan.max_products }}
+              </p>
             </small>
           </p>
           <br />
@@ -313,11 +318,10 @@ export default {
     },
     total() {
       if (!this.products) return 0;
-      // return this.products.reduce(
-      //   (a, b) => a + (b.total || 0) * (b.weight || 1),
-      //   0
-      // );
-      return this.products.reduce((a, b) => a + (b.total || 0), 0);
+      return this.products.reduce(
+        (a, b) => a + (b.total || 0) * (b.weight || 1),
+        0
+      );
     },
 
     remaining() {
@@ -456,9 +460,8 @@ export default {
     },
 
     more(product) {
-      // if (this.total + (product.weight || 1) > this.selec_plan.max_products)
-      //   return;
-      if (this.total == this.selec_plan.max_products) return;
+      const productWeight = product.weight || 1;
+      if (this.total + productWeight > this.selec_plan.max_products) return;
       product.total += 1;
     },
     less(product) {
