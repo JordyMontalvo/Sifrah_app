@@ -35,79 +35,115 @@
 
     <i class="load" v-if="loading"></i>
 
-    <div class="boxes" v-if="!loading">
-      <div class="box blue">
+    <transition-group
+      name="card-fade"
+      tag="div"
+      class="boxes masonry"
+      v-if="!loading"
+    >
+      <div class="box blue" title="Saldo disponible para usar" key="saldo">
         <i class="fas fa-wallet"></i>
         <div>
           <p>S/. {{ balance }}</p>
           <span>SALDO</span>
+          <div class="progress-bar">
+            <div
+              class="progress"
+              :style="{ width: (balance / 1000) * 100 + '%' }"
+            ></div>
+          </div>
         </div>
       </div>
-
-      <div class="box green">
+      <div
+        class="box green"
+        title="Saldo aún no disponible"
+        key="saldo-no-disponible"
+      >
         <i class="fas fa-hand-holding-usd"></i>
         <div>
           <p>S/. {{ _balance }}</p>
           <span>SALDO NO DISPONIBLE</span>
         </div>
       </div>
-
-      <div class="box green">
+      <div
+        class="box green"
+        title="Total ganado (incluye virtual)"
+        key="total-ganado"
+      >
         <i class="fas fa-hand-holding-usd"></i>
         <div>
           <p>S/. {{ Number(ins + insVirtual).toFixed(2) }}</p>
           <span>TOTAL GANADO</span>
         </div>
       </div>
-
-      <div class="box green">
+      <div class="box gold" title="Tus puntos acumulados" key="puntos">
         <i class="fas fa-medal"></i>
         <div>
           <p>{{ points }}</p>
           <span>PUNTOS</span>
         </div>
       </div>
-
-      <div class="box green" v-if="rank">
+      <div
+        class="box purple"
+        v-if="rank"
+        title="Tu paquete de afiliación"
+        key="paquete"
+      >
         <i class="fas fa-gem"></i>
         <div>
           <p>{{ plan }}</p>
           <span>PAQUETE DE AFILIACIÓN</span>
         </div>
       </div>
-
-      <div class="box green" v-if="rank">
+      <div
+        class="box purple"
+        v-if="rank"
+        title="Rango cerrado actual"
+        key="rango-cerrado"
+      >
         <i class="fas fa-gem"></i>
         <div>
           <p>{{ rank }}</p>
           <span>RANGO CERRADO</span>
         </div>
       </div>
-
-      <div class="box green" v-if="rank">
+      <div
+        class="box orange"
+        v-if="rank"
+        title="Cantidad de directos"
+        key="directos"
+      >
         <i class="fas fa-user-shield"></i>
         <div>
           <p>{{ directs.length }}</p>
           <span>DIRECTOS</span>
         </div>
       </div>
-
-      <div class="box green" v-if="node">
+      <div
+        class="box purple"
+        v-if="node"
+        title="Rango actual"
+        key="rango-actual"
+      >
         <i class="fas fa-gem"></i>
         <div>
           <p>{{ node.rank | _rank }}</p>
           <span>RANGO ACTUAL</span>
         </div>
       </div>
-
-      <div class="box green" v-if="node">
+      <div
+        class="box pink"
+        v-if="node"
+        title="Siguiente rango"
+        key="siguiente-rango"
+      >
         <i class="fa fa-tachometer"></i>
         <div>
           <p>{{ node.next_rank.name | _rank }}</p>
           <span>SIGUIENTE RANGO</span>
         </div>
       </div>
-    </div>
+    </transition-group>
   </App>
 </template>
 
@@ -247,3 +283,106 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.masonry {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  grid-auto-rows: 1fr;
+  gap: 1.5rem;
+  margin: 2rem 0;
+}
+.box {
+  border-radius: 18px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08), 0 1.5px 4px rgba(0, 0, 0, 0.06);
+  transition: transform 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+  padding: 1.5rem 1rem;
+  display: flex;
+  align-items: center;
+  min-height: 120px;
+  margin: 0;
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+}
+.box.blue {
+  background: linear-gradient(135deg, #2196f3 0%, #21cbf3 100%);
+}
+.box.green {
+  background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+}
+.box.gold {
+  background: linear-gradient(135deg, #f7971e 0%, #ffd200 100%);
+}
+.box.purple {
+  background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%);
+}
+.box.orange {
+  background: linear-gradient(135deg, #ff512f 0%, #f09819 100%);
+}
+.box.pink {
+  background: linear-gradient(135deg, #f953c6 0%, #b91d73 100%);
+}
+.box:hover {
+  transform: translateY(-6px) scale(1.03);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12), 0 3px 8px rgba(0, 0, 0, 0.09),
+    0 0 16px #21cbf3;
+}
+.box i {
+  font-size: 2.5rem;
+  margin-right: 1.2rem;
+  transition: color 0.2s, transform 0.2s;
+}
+.box:hover i {
+  animation: bounce 0.5s;
+}
+@keyframes bounce {
+  0% {
+    transform: scale(1);
+  }
+  30% {
+    transform: scale(1.2) rotate(-10deg);
+  }
+  50% {
+    transform: scale(0.95) rotate(10deg);
+  }
+  100% {
+    transform: scale(1) rotate(0);
+  }
+}
+.box p {
+  font-size: 1.6rem;
+  font-weight: bold;
+  margin: 0;
+}
+.box span {
+  font-size: 1rem;
+  color: #f3f3f3;
+}
+.progress-bar {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  height: 8px;
+  margin-top: 8px;
+  width: 100%;
+  overflow: hidden;
+}
+.progress {
+  background: #fff;
+  height: 100%;
+  border-radius: 8px;
+  transition: width 0.4s;
+}
+.card-fade-enter-active {
+  transition: all 0.5s cubic-bezier(0.55, 0, 0.1, 1);
+}
+.card-fade-enter-from {
+  opacity: 0;
+  transform: translateY(30px) scale(0.95);
+}
+.card-fade-enter-to {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+</style>
