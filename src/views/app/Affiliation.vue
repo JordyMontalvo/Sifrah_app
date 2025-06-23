@@ -1,6 +1,86 @@
 <template>
   <App :session="session" :office_id="office_id" :title="title">
-    <div class="affiliation-bg">
+    <div
+      v-if="affiliation && affiliation.status === 'pending'"
+      class="affiliation-bg"
+      style="position: relative; min-height: 80vh"
+    >
+      <transition name="fade">
+        <div class="pending-modal-local">
+          <div class="pending-modal-content-block">
+            <span class="pending-modal-icon-block">
+              <!-- Reloj de arena animado SVG -->
+              <svg
+                width="64"
+                height="64"
+                viewBox="0 0 64 64"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                class="hourglass-anim"
+              >
+                <g>
+                  <rect
+                    x="16"
+                    y="8"
+                    width="32"
+                    height="48"
+                    rx="8"
+                    fill="#fffbe6"
+                    stroke="#ff9800"
+                    stroke-width="3"
+                  />
+                  <path
+                    d="M20 12 Q32 32 44 12"
+                    stroke="#ff9800"
+                    stroke-width="3"
+                    fill="none"
+                  />
+                  <path
+                    d="M20 52 Q32 32 44 52"
+                    stroke="#ff9800"
+                    stroke-width="3"
+                    fill="none"
+                  />
+                  <ellipse
+                    class="sand-top"
+                    cx="32"
+                    cy="20"
+                    rx="7"
+                    ry="4"
+                    fill="#ff9800"
+                  />
+                  <ellipse
+                    class="sand-bottom"
+                    cx="32"
+                    cy="44"
+                    rx="7"
+                    ry="4"
+                    fill="#ff9800"
+                    opacity="0.2"
+                  />
+                  <rect
+                    class="sand-flow"
+                    x="30.5"
+                    y="20"
+                    width="3"
+                    height="24"
+                    rx="1.5"
+                    fill="#ff9800"
+                  />
+                </g>
+              </svg>
+            </span>
+            <h3>¡Solicitud enviada!</h3>
+            <p>Tu afiliación está pendiente de aprobación.</p>
+          </div>
+        </div>
+      </transition>
+    </div>
+    <div
+      v-else
+      class="affiliation-bg"
+      style="position: relative; min-height: 80vh"
+    >
       <h2 class="affiliation-title" v-if="!showMasterTrophy">
         Afíliate y elige tu kit
       </h2>
@@ -152,6 +232,16 @@
                   Afiliarme
                 </button>
               </div>
+            </div>
+            <!-- Botón Afiliarme solo para móvil, antes de boletas -->
+            <div
+              v-if="step === 1 && total === selec_plan.max_products"
+              class="afiliarme-mobile-btn"
+            >
+              <button class="main-action-btn" @click="handleGoToStep2">
+                <span class="fab-icon">🤝</span>
+                Afiliarme
+              </button>
             </div>
           </div>
           <!-- Paso 2: Datos de pago y confirmación -->
@@ -322,6 +412,7 @@ export default {
       date: null,
       voucher_number: null,
       selectError: "",
+      showPendingModal: false,
     };
   },
   computed: {
@@ -444,7 +535,7 @@ export default {
       this.$store.commit("SET_PHOTO", data.photo);
       this.$store.commit("SET_TREE", data.tree);
 
-      // Initialize plans
+      // Usar directamente los planes que llegan del backend
       this.plans = data.plans || [];
       if (this.plans.length > 0) {
         this.selec_plan = this.plans[0];
@@ -602,11 +693,17 @@ export default {
 
       this.sending = false;
       this.pending = true;
-
       this.affiliation = {
         plan: this.selec_plan,
         products: this.products,
+        status: "pending",
       };
+      // MODAL bonito de pendiente de aprobación y redirección
+      this.showPendingModal = true;
+      setTimeout(() => {
+        this.showPendingModal = false;
+        this.step = 1;
+      }, 2000);
     },
     goToStep(n) {
       this.step = n;
@@ -772,9 +869,9 @@ export default {
   transition opacity 0.3s
   @media (min-width: 900px)
     width 340px
-    right 32px
+    right 0px
     left auto
-    top 100px
+    top -25px
     bottom auto
     border-radius 18px
     position absolute
@@ -1195,4 +1292,91 @@ export default {
     transform translateY(-10px)
   100%
     transform translateY(0)
+
+@media (max-width: 900px)
+  .sticky-summary
+    display none !important
+  .afiliarme-mobile-btn
+    display flex
+    justify-content center
+    align-items center
+    margin 18px 0 0 0
+    .main-action-btn
+      max-width 400px
+      width 100%
+      font-size 1.15rem
+      padding 16px 0
+      border-radius 12px
+      box-shadow 0 2px 8px rgba(255,152,0,0.13)
+      display flex
+      align-items center
+      justify-content center
+      gap 10px
+      .fab-icon
+        font-size 1.4em
+@media (min-width: 900px)
+  .afiliarme-mobile-btn
+    display none !important
+
+.fade-enter-active, .fade-leave-active
+  transition opacity 0.4s
+.fade-enter, .fade-leave-to
+  opacity 0
+.pending-modal-local
+  position absolute
+  top 0
+  left 0
+  width 100%
+  height 100%
+  background rgba(30, 30, 30, 0.55)
+  display flex
+  align-items center
+  justify-content center
+  z-index 400
+  .pending-modal-content-block
+    background #fff
+    border-radius 18px
+    box-shadow 0 4px 32px rgba(255,152,0,0.18)
+    padding 38px 32px
+    text-align center
+    display flex
+    flex-direction column
+    align-items center
+    .pending-modal-icon-block
+      margin-bottom 18px
+      .hourglass-anim
+        display block
+        margin 0 auto
+        .sand-top {
+          animation: sandTopAnim 1.5s infinite alternate;
+        }
+        .sand-bottom {
+          animation: sandBottomAnim 1.5s infinite alternate;
+        }
+        .sand-flow {
+          animation: sandFlowAnim 1.5s infinite alternate;
+        }
+@keyframes sandTopAnim {
+  0% { opacity: 1; }
+  100% { opacity: 0.2; }
+}
+@keyframes sandBottomAnim {
+  0% { opacity: 0.2; }
+  100% { opacity: 1; }
+}
+@keyframes sandFlowAnim {
+  0% { opacity: 1; height: 24px; }
+  100% { opacity: 0.2; height: 2px; }
+}
+.affiliation-alert
+  background #fffbe6
+  color #ff9800
+  border 2px solid #ff9800
+  border-radius 14px
+  padding 24px 18px
+  margin 32px auto
+  max-width 500px
+  text-align center
+  font-size 1.15rem
+  font-weight 600
 </style>
