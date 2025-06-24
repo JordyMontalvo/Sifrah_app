@@ -85,7 +85,7 @@
       </div>
       <div
         class="box purple"
-        v-if="rank"
+        v-if="plan && plan !== ''"
         title="Tu paquete de afiliación"
         key="paquete"
       >
@@ -97,7 +97,7 @@
       </div>
       <div
         class="box purple"
-        v-if="rank"
+        v-if="rank && rank !== ''"
         title="Rango cerrado actual"
         key="rango-cerrado"
       >
@@ -109,7 +109,7 @@
       </div>
       <div
         class="box orange"
-        v-if="rank"
+        v-if="directs && Array.isArray(directs)"
         title="Cantidad de directos"
         key="directos"
       >
@@ -121,7 +121,7 @@
       </div>
       <div
         class="box purple"
-        v-if="node"
+        v-if="node && node.rank"
         title="Rango actual"
         key="rango-actual"
       >
@@ -133,7 +133,7 @@
       </div>
       <div
         class="box pink"
-        v-if="node"
+        v-if="node && node.next_rank && node.next_rank.name"
         title="Siguiente rango"
         key="siguiente-rango"
       >
@@ -163,15 +163,16 @@ export default {
       balance: null,
       _balance: null,
       team: null,
-      rank: null,
+      rank: "",
       points: null,
-      directs: null,
+      directs: [],
       frontals: [],
       loading: true,
 
       op: 1,
       op2: 0,
       op3: 0,
+      node: {},
     };
   },
   computed: {
@@ -232,16 +233,16 @@ export default {
     this.banner = data.banner;
     this.ins = data.ins;
     this.insVirtual = data.insVirtual;
-    this.outs = data.outs.toFixed(2);
-    this.balance = data.balance.toFixed(2);
-    this._balance = data._balance.toFixed(2);
+    this.outs = data.outs ? data.outs.toFixed(2) : "0.00";
+    this.balance = data.balance ? data.balance.toFixed(2) : "0.00";
+    this._balance = data._balance ? data._balance.toFixed(2) : "0.00";
     this.team = data.team;
-    this.rank = data.rank;
+    this.rank = data.rank || "";
     this.points = data.points;
-    this.node = data.node;
+    this.node = data.node || {};
     this.n_affiliates = data.n_affiliates;
-    this.directs = data.directs;
-    this.frontals = data.frontals;
+    this.directs = data.directs || [];
+    this.frontals = data.frontals || [];
 
     const time = 4000;
     let i = 0;
