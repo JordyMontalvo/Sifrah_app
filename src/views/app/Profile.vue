@@ -1,159 +1,155 @@
 <template>
   <App :session="session" :title="title">
-    <h4>PERFIL</h4>
-
-    <i class="load" v-if="loading"></i>
-
-    <section v-if="!loading">
-      <i class="icon fas fa-flag"></i>
-      <select class="input" v-model="country" @change="updateCities">
-        <option value="null" disabled>Selecciona un país</option>
-        <option value="Perú">Perú</option>
-      <!--  <option value="Argentina">Argentina</option>
-        <option value="Bolivia">Bolivia</option>
-        <option value="Brazil">Brasil</option>
-        <option value="Chile">Chile</option>
-        <option value="Colombia">Colombia</option>
-        <option value="Ecuador">Ecuador</option>
-        <option value="Paraguay">Paraguay</option>
-        <option value="Uruguay">Uruguay</option>
-        <option value="Venezuela">Venezuela</option>
-        <option value="United States">Estados Unidos</option> -->
-      </select>
-      <br />
-
-      <i class="icon fas fa-map-marker-alt"></i>
-      <select class="input" v-model="city">
-        <option value="null" disabled>Ciudad</option>
-        <option v-for="city in cities" :key="city" :value="city">
-          {{ city }}
-        </option>
-      </select>
-      <br />
-
-      <i class="icon fas fa-user"></i>
-      <input class="input" readonly placeholder="Nombre" v-model="name" />
-      <br />
-
-      <i class="icon fas fa-user"></i>
-      <input class="input" readonly placeholder="Apellido" v-model="lastName" />
-      <br />
-
-      <i class="icon far fa-id-card"></i>
-      <input
-        class="input"
-        readonly
-        placeholder="Documento de identidad"
-        v-model="dni"
-      />&nbsp;
-      <router-link
-        to="/password"
-        style="font-size: 12px; text-decoration: underline"
-      >
-        Cambiar contraseña
-      </router-link>
-      <br />
-
-      <div v-if="token">
-        <i class="icon fas fa-user-shield"></i>
-        <input
-          class="input"
-          readonly
-          @click="copy_token"
-          id="token"
-          v-model="token"
-        />
-        <i class="copy" v-if="c_token"
-          >código copiado <i class="fas fa-check"></i></i
-        ><br />
-
-        <i class="icon fas fa-share-alt"></i>
-        <input
-          class="input"
-          readonly
-          @click="copy_link"
-          id="link"
-          v-model="link"
-        />
-        <i class="copy" v-if="c_link"
-          >link copiado <i class="fas fa-check"></i
-        ></i>
-
-        &nbsp;<a v-bind:href="link"> <small> Registrar </small> </a> <br />
+    <div class="profile-glass-bg">
+      <div class="profile-glass-card">
+        <div class="profile-glass-header">
+          <div class="profile-glass-title">
+            <i class="fas fa-user-circle profile-glass-icon"></i>
+            <span>Perfil</span>
+          </div>
+          <button
+            class="profile-glass-save"
+            :disabled="sending"
+            @click="UPDATE"
+          >
+            <span v-if="!sending"><i class="fas fa-save"></i> Guardar</span>
+            <span v-else
+              ><i class="fas fa-spinner fa-spin"></i> Guardando...</span
+            >
+          </button>
+        </div>
+        <main class="profile-glass-main profile-glass-columns">
+          <div class="profile-glass-col">
+            <section class="profile-glass-section">
+              <h3>Datos personales</h3>
+              <div class="glass-form-group">
+                <label>Nombre</label>
+                <input v-model="name" type="text" />
+              </div>
+              <div class="glass-form-group">
+                <label>Apellido</label>
+                <input v-model="lastName" type="text" />
+              </div>
+              <div class="glass-form-group">
+                <label>DNI</label>
+                <input v-model="dni" type="text" readonly />
+              </div>
+              <div class="glass-form-group">
+                <label>Fecha de nacimiento</label>
+                <input v-model="birthdate" type="date" />
+              </div>
+            </section>
+            <hr class="glass-separator" />
+            <section class="profile-glass-section">
+              <h3>Contacto</h3>
+              <div class="glass-form-group">
+                <label>Email</label>
+                <input v-model="email" type="email" />
+              </div>
+              <div class="glass-form-group">
+                <label>Teléfono</label>
+                <input v-model="phone" type="text" />
+              </div>
+              <div class="glass-form-group">
+                <label>País</label>
+                <select v-model="country" @change="updateCities">
+                  <option value="null" disabled>Selecciona un país</option>
+                  <option value="Perú">Perú</option>
+                  <option value="Argentina">Argentina</option>
+                  <option value="Bolivia">Bolivia</option>
+                  <option value="Brazil">Brasil</option>
+                  <option value="Chile">Chile</option>
+                  <option value="Colombia">Colombia</option>
+                  <option value="Ecuador">Ecuador</option>
+                  <option value="Paraguay">Paraguay</option>
+                  <option value="Uruguay">Uruguay</option>
+                  <option value="Venezuela">Venezuela</option>
+                  <option value="United States">Estados Unidos</option>
+                </select>
+              </div>
+              <div class="glass-form-group">
+                <label>Ciudad</label>
+                <select v-model="city">
+                  <option value="null" disabled>Ciudad</option>
+                  <option v-for="city in cities" :key="city" :value="city">
+                    {{ city }}
+                  </option>
+                </select>
+              </div>
+              <div class="glass-form-group">
+                <label>Dirección</label>
+                <input v-model="address" type="text" />
+              </div>
+            </section>
+          </div>
+          <div class="profile-glass-col">
+            <section class="profile-glass-section">
+              <h3>Seguridad</h3>
+              <div class="profile-glass-links">
+                <router-link to="/password" class="profile-glass-link">
+                  <i class="fas fa-key"></i> Cambiar contraseña
+                </router-link>
+                <router-link to="/security" class="profile-glass-link">
+                  <i class="fas fa-user-shield"></i> Persona de confianza
+                </router-link>
+              </div>
+              <div v-if="token" class="profile-glass-invite">
+                <div class="glass-form-group">
+                  <label>Código de invitación</label>
+                  <input
+                    readonly
+                    @click="copy_token"
+                    id="token"
+                    v-model="token"
+                  />
+                  <span class="glass-copy" v-if="c_token"
+                    >copiado <i class="fas fa-check"></i
+                  ></span>
+                </div>
+                <div class="glass-form-group">
+                  <label>Link de registro</label>
+                  <input readonly @click="copy_link" id="link" v-model="link" />
+                  <span class="glass-copy" v-if="c_link"
+                    >copiado <i class="fas fa-check"></i
+                  ></span>
+                  <a v-bind:href="link" class="profile-glass-link">Registrar</a>
+                </div>
+              </div>
+            </section>
+            <hr class="glass-separator" />
+            <section class="profile-glass-section">
+              <h3>Datos bancarios</h3>
+              <div class="glass-form-group">
+                <label>Banco</label>
+                <select v-model="bank">
+                  <option value="null" disabled>Banco</option>
+                  <option value="BCP">BCP</option>
+                  <option value="INTERBANK">INTERBANK</option>
+                  <option value="BBVA">BBVA</option>
+                </select>
+              </div>
+              <div class="glass-form-group">
+                <label>Tipo de cuenta</label>
+                <select v-model="account_type">
+                  <option value="null" disabled>Tipo de cuenta</option>
+                  <option value="Ahorros">Ahorros</option>
+                  <option value="Corriente">Corriente</option>
+                </select>
+              </div>
+              <div class="glass-form-group">
+                <label>Número de cuenta</label>
+                <input v-model="account" type="text" />
+              </div>
+            </section>
+          </div>
+        </main>
+        <transition name="fade">
+          <div v-if="showToast" class="glass-toast">
+            ¡Datos guardados correctamente!
+          </div>
+        </transition>
       </div>
-
-      <i class="icon fas fa-envelope"></i>
-      <input class="input" placeholder="Correo electrónico" v-model="email" />
-      <br />
-
-      <i class="icon fas fa-mobile-alt"></i>
-      <input class="input" placeholder="Teléfono" v-model="phone" /> <br />
-
-      <!-- <i class="icon fas fa-user"></i>
-      <input class="input" placeholder="edad"
-      oninput="this.value=this.value.replace(/(?![0-9])./gmi,'')"
-      v-model="age"> <br> -->
-
-      <i class="icon fa fa-calendar"></i>
-      <input
-        type="date"
-        class="input"
-        placeholder="Fecha de Nacimiento"
-        v-model="birthdate"
-      />
-      <br />
-
-      <i class="icon fas fa-map-marker-alt"></i>
-      <input class="input" placeholder="Dirección" v-model="address" /> <br />
-
-      <router-link to="/security">
-        <button class="button">Persona de confianza</button>
-      </router-link>
-      <br />
-
-      <br />
-      <a class="route">Datos Bancarios</a> <br />
-
-      <i class="icon fas fa-university"></i>
-      <!-- <select class="input"
-      v-model="bank" :disabled="bank_disabled"> -->
-      <select class="input" v-model="bank">
-        <option value="null" disabled>Banco</option>
-        <option value="BCP">BCP</option>
-        <option value="INTERBANK">INTERBANK</option>
-        <option value="BBVA">BBVA</option>
-      </select>
-      <br />
-
-      <i class="icon fas fa-university"></i>
-      <!-- <select class="input"
-      v-model="account_type" :disabled="account_type_disabled"> -->
-      <select class="input" v-model="account_type">
-        <option value="null" disabled>Tipo de cuenta</option>
-        <option value="Ahorros">Ahorros</option>
-        <option value="Corriente">Corriente</option>
-      </select>
-      <br />
-
-      <i class="icon fas fa-user-circle"></i>
-      <!-- <input class="input" placeholder="Número de cuenta" :disabled="account_disabled"
-      v-model="account"> <br> -->
-      <input class="input" placeholder="Número de cuenta" v-model="account" />
-      <br />
-
-      <br />
-
-      <!-- <i class="icon far fa-user-circle"></i>
-      <input class="input" placeholder="Código interbancario" :disabled="ibk_disabled"
-      v-model="ibk"> <br> -->
-
-      <button class="button" v-show="!sending" @click="UPDATE">Guardar</button>
-      <button class="button" v-show="sending" disabled>
-        Guardando datos ...
-      </button>
-      <br />
-      <br />
-    </section>
+    </div>
   </App>
 </template>
 
@@ -163,12 +159,9 @@ import api from "@/api";
 import lib from "@/lib";
 
 const ROOT = process.env.VUE_APP_ROOT;
-console.log({ ROOT });
 
 export default {
-  components: {
-    App,
-  },
+  components: { App },
   data() {
     return {
       country: null,
@@ -181,22 +174,19 @@ export default {
       token: null,
       city: null,
       city_disabled: false,
-
       bank: null,
       account_type: null,
       account: null,
       ibk: null,
-
       bank_disabled: false,
       account_type_disabled: false,
       account_disabled: false,
       ibk_disabled: false,
-
       loading: true,
       sending: false,
-
       c_token: false,
       c_link: false,
+      showToast: false,
       cities: [],
     };
   },
@@ -209,19 +199,12 @@ export default {
     },
   },
   async created() {
-    // GET data
     const { data } = await api.Profile.GET(this.session);
-    console.log({ data });
-
     this.loading = false;
-
-    // error
     if (data.error && data.msg == "invalid session")
       this.$router.push("/login");
     if (data.error && data.msg == "unverified user")
       this.$router.push("/verify");
-
-    // success
     this.$store.commit("SET_NAME", data.name);
     this.$store.commit("SET_LAST_NAME", data.lastName);
     this.$store.commit("SET_AFFILIATED", data.affiliated);
@@ -234,7 +217,6 @@ export default {
     this.$store.commit("SET_CITY", data.city);
     this.$store.commit("SET_EMAIL", data.email);
     this.$store.commit("SET_BIRTHDATE", data.birthdate);
-
     this.country = data.country;
     this.dni = data.dni;
     this.name = data.name;
@@ -249,16 +231,13 @@ export default {
     this.account = data.account;
     this.ibk = data.ibk;
     this.city = data.city;
-
     this.updateCities();
-
     if (this.bank) this.bank_disabled = true;
     if (this.account_type) this.account_type_disabled = true;
     if (this.account) this.account_disabled = true;
     if (this.ibk) this.ibk_disabled = true;
   },
   methods: {
-    // ... existing methods ...
     updateCities() {
       const countryCities = {
         Argentina: ["Buenos Aires", "Córdoba", "Rosario"],
@@ -303,7 +282,6 @@ export default {
         Venezuela: ["Caracas", "Maracaibo", "Valencia"],
         "United States": ["New York", "Los Angeles", "Chicago"],
       };
-
       this.cities = countryCities[this.country] || [];
     },
     async UPDATE() {
@@ -319,10 +297,7 @@ export default {
         city,
         country,
       } = this;
-
-      // UPDATE Profile
       this.sending = true;
-
       const { data } = await api.Profile.UPDATE(this.session, {
         email,
         phone,
@@ -335,9 +310,9 @@ export default {
         city,
         country,
       });
-      console.log({ data });
-
       this.sending = false;
+      this.showToast = true;
+      setTimeout(() => (this.showToast = false), 3000);
     },
     copy_token() {
       lib.copy("token");
@@ -352,3 +327,220 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.profile-glass-bg {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+.profile-glass-card {
+  backdrop-filter: blur(18px) saturate(120%);
+  background: rgba(255, 255, 255, 0.65);
+  border-radius: 28px;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.1), 0 1.5px 6px rgba(0, 0, 0, 0.04);
+  max-width: 900px;
+  width: 100%;
+  padding: 36px 48px 48px 48px;
+  margin: 0;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: stretch;
+}
+.profile-glass-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+.profile-glass-title {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.profile-glass-icon {
+  font-size: 2.5rem;
+  color: #ff9800;
+  filter: drop-shadow(0 2px 8px rgba(255, 152, 0, 0.1));
+}
+.profile-glass-header span {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #222;
+  letter-spacing: 0.01em;
+}
+.profile-glass-save {
+  background: rgba(255, 152, 0, 0.12);
+  color: #ff9800;
+  border: none;
+  border-radius: 22px;
+  padding: 10px 28px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(255, 152, 0, 0.08);
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.profile-glass-save:disabled {
+  background: #e0e0e0;
+  color: #aaa;
+  cursor: not-allowed;
+}
+.profile-glass-main {
+  width: 100%;
+}
+.profile-glass-section {
+  margin-bottom: 32px;
+}
+.profile-glass-section h3 {
+  font-size: 1.08rem;
+  font-weight: 700;
+  color: #222;
+  margin-bottom: 18px;
+  margin-top: 0;
+  letter-spacing: 0.01em;
+}
+.glass-separator {
+  border: none;
+  border-top: 1.5px solid #e3e7ee;
+  margin: 0 0 32px 0;
+}
+.glass-form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 18px;
+}
+.glass-form-group label {
+  font-size: 1.08rem;
+  color: #444;
+  margin-bottom: 10px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+.glass-form-group input,
+.glass-form-group select {
+  background: rgba(255, 255, 255, 0.97);
+  border: 1.5px solid #e0e0e0;
+  border-radius: 14px;
+  font-size: 1.08rem;
+  color: #222;
+  padding: 14px 16px;
+  outline: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06) inset,
+    0 1.5px 8px rgba(255, 152, 0, 0.03);
+  transition: box-shadow 0.22s, background 0.22s, border 0.22s;
+}
+.glass-form-group input:focus,
+.glass-form-group select:focus {
+  background: #fff;
+  border: 2px solid #ff9800;
+  box-shadow: 0 4px 16px rgba(255, 152, 0, 0.13) inset,
+    0 2px 12px rgba(255, 152, 0, 0.09);
+}
+.profile-glass-links {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+.profile-glass-link {
+  color: #ff9800;
+  text-decoration: none;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+.profile-glass-link:hover {
+  color: #fb8c00;
+}
+.profile-glass-invite {
+  margin-top: 18px;
+}
+.glass-copy {
+  color: #43a047;
+  font-size: 0.9rem;
+  margin-left: 8px;
+}
+.glass-toast {
+  position: fixed;
+  left: 50%;
+  bottom: 32px;
+  transform: translateX(-50%);
+  background: rgba(255, 255, 255, 0.85);
+  color: #222;
+  padding: 14px 32px;
+  border-radius: 18px;
+  font-size: 1.1rem;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.12);
+  z-index: 300;
+  backdrop-filter: blur(8px);
+  border: 1.5px solid #e3e7ee;
+  animation: fadein 0.3s;
+}
+@keyframes fadein {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+@media (max-width: 700px) {
+  .profile-glass-card {
+    max-width: 98vw;
+    margin: 0;
+  }
+  .profile-glass-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .profile-glass-save {
+    align-self: flex-end;
+    padding: 8px 18px;
+    font-size: 1rem;
+  }
+  .glass-toast {
+    bottom: 12px;
+    padding: 10px 16px;
+    font-size: 1rem;
+  }
+}
+.profile-glass-columns {
+  display: flex;
+  flex-direction: row;
+  gap: 32px;
+}
+.profile-glass-col {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+@media (max-width: 900px) {
+  .profile-glass-columns {
+    flex-direction: column;
+    gap: 0;
+  }
+  .profile-glass-col {
+    width: 100%;
+  }
+  .profile-glass-card {
+    padding: 16px 4px 32px 4px;
+    max-width: 98vw;
+    margin: 0;
+  }
+}
+</style>
