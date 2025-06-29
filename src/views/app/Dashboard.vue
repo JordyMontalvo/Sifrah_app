@@ -2,9 +2,11 @@
   <App :session="session" :title="title">
     <div v-if="bannerImages.length > 0" class="banner-slider">
       <div class="slider-wrapper">
-        <div class="banner-slide">
-          <img :src="bannerImages[currentBanner]" class="banner-img" />
-        </div>
+        <transition name="carousel-3d" mode="out-in">
+          <div class="banner-slide" :key="currentBanner">
+            <img :src="bannerImages[currentBanner]" class="banner-img" />
+          </div>
+        </transition>
         <button
           v-if="bannerImages.length > 1"
           class="nav left"
@@ -505,5 +507,28 @@ export default {
   color: #888;
   margin: 24px 0;
   font-size: 1.2rem;
+}
+/* Animación tipo carousel 3D para el banner */
+.carousel-3d-enter-active,
+.carousel-3d-leave-active {
+  transition: opacity 1s cubic-bezier(0.4, 1.2, 0.6, 1),
+    transform 1s cubic-bezier(0.4, 1.2, 0.6, 1),
+    filter 1s cubic-bezier(0.4, 1.2, 0.6, 1);
+}
+.carousel-3d-enter-from {
+  opacity: 0;
+  transform: perspective(800px) translateX(80px) scale(0.92) rotateY(30deg);
+  filter: blur(8px) brightness(1.2);
+}
+.carousel-3d-leave-to {
+  opacity: 0;
+  transform: perspective(800px) translateX(-80px) scale(0.92) rotateY(-30deg);
+  filter: blur(8px) brightness(1.2);
+}
+.carousel-3d-enter-to,
+.carousel-3d-leave-from {
+  opacity: 1;
+  transform: perspective(800px) translateX(0) scale(1) rotateY(0);
+  filter: blur(0) brightness(1);
 }
 </style>
