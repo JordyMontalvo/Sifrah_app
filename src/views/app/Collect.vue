@@ -1,5 +1,6 @@
 <template>
   <App :session="session" :title="title">
+    <Spinner v-if="loading" :size="40" :color="'#086eb6'" />
     <h4 class="tabs">
       <router-link class="tab" to="/collect"> Nuevo Retiro </router-link>
       &nbsp;&nbsp;
@@ -9,7 +10,6 @@
     </h4>
     <div class="collect-soft-bg">
       <section class="collect-soft-section">
-        <i class="load" v-if="loading"></i>
         <form v-if="!loading" class="collect-soft-form" @submit.prevent="POST">
           <div class="collect-soft-col">
             <div class="collect-soft-radios">
@@ -121,10 +121,12 @@
 <script>
 import App from "@/views/layouts/App";
 import api from "@/api";
+import Spinner from "@/components/Spinner.vue";
 
 export default {
   components: {
     App,
+    Spinner,
   },
   data() {
     return {

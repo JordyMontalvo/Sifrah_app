@@ -1,5 +1,5 @@
 <template>
-  <App :session="session">
+  <App :session="session" :title="title">
     <h4 class="tabs">
       <router-link class="tab" to="/collect"> Nuevo Retiro </router-link>
       &nbsp;&nbsp;
@@ -7,8 +7,15 @@
         Historial de Retiros
       </router-link>
     </h4>
+    <Spinner v-if="loading" :size="40" :color="'#086eb6'" />
+    <SkeletonLoader
+      v-if="loading"
+      :lines="8"
+      width="100%"
+      height="32px"
+      style="margin: 24px 0"
+    />
     <div class="collects-bg">
-      <i class="load" v-if="loading"></i>
       <div class="scroll collects-table-wrap" v-if="!loading">
         <table class="collects-table">
           <thead>
@@ -52,10 +59,14 @@
 <script>
 import App from "@/views/layouts/App";
 import api from "@/api";
+import Spinner from "@/components/Spinner.vue";
+import SkeletonLoader from "@/components/SkeletonLoader.vue";
 
 export default {
   components: {
     App,
+    Spinner,
+    SkeletonLoader,
   },
   data() {
     return {

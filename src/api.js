@@ -26,6 +26,9 @@ class API {
   login(data) {
     return axios.post('/auth/login', data)
   }
+  loginWithGoogle(id_token) {
+    return axios.post('/auth/login-google', { id_token })
+  }
   logout(session) {
     return axios.post('/auxi/logout', { session })
   }

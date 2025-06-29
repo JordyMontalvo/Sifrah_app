@@ -20,10 +20,14 @@
       <img
         class="logo-auth"
         src="@/assets/img/logo/logo sifrah BLANCO LOGIN.svg"
-        style="width: auto; height: auto;  transition: all 0.3s ease;"
+        style="width: auto; height: auto; transition: all 0.3s ease"
       />
     </div>
-    <img class="logo-blanco" src="@/assets/img/logo/sifrah-blanco.png" style="width: 380px; height: auto" />
+    <img
+      class="logo-blanco"
+      src="@/assets/img/logo/sifrah-blanco.png"
+      style="width: 380px; height: auto"
+    />
     <!-- <header>
       <img class="logo" src="@/assets/img/logo-big.svg" style="width: 400px;">
       <p style="color: white; font-size: 14px; margin: 12px 0 8px 0;">Siguenos</p>
@@ -98,7 +102,7 @@ export default {
   width: fit-content;
   z-index: 1000;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  transition: all 0.10s ease;
+  transition: all 0.1s ease;
 }
 
 .tab {
@@ -113,16 +117,16 @@ export default {
   display: flex; /* Para centrar el texto */
   align-items: center; /* Centrar verticalmente */
   justify-content: center;
-  transition: all 0.10s ease;
- /* Centrar horizontalmente */
+  transition: all 0.1s ease;
+  /* Centrar horizontalmente */
 }
 .tab:first-child.active {
   border-bottom-left-radius: 30px;
-  transition: all 0.10s ease;
+  transition: all 0.1s ease;
 }
 .tab.active {
   border-bottom-right-radius: 30px;
-  transition: all 0.10s ease;
+  transition: all 0.1s ease;
 }
 .tab.active {
   background-color: #ffd8a3;
@@ -130,12 +134,12 @@ export default {
   transition: all 0.3s ease;
 }
 
-.form{
-  background:white;
+.form {
+  background: white;
   border-radius: 50px;
   padding: 16px;
-  width :469px;
-  height:671px;
+  width: 469px;
+  height: 671px;
 }
 @media (max-width: 1260px) {
   .logo-auth {
@@ -152,5 +156,4 @@ export default {
     display: none;
   }
 }
-
 </style>

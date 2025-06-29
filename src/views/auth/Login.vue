@@ -1,21 +1,21 @@
 <template>
-  <Auth >
+  <Auth>
     <section>
-      <div style="display: flex;justify-content: center;">
+      <div style="display: flex; justify-content: center">
         <router-link
-        to="/login"
-        class="tab-login"
-        :class="{ active: $route.path === '/login' }"
-      >
-        INICIO
-      </router-link>
-      <router-link
-        to="/register"
-        class="tab-login"
-        :class="{ active: $route.path === '/register' }"
-      >
-        REGISTRO
-      </router-link>
+          to="/login"
+          class="tab-login"
+          :class="{ active: $route.path === '/login' }"
+        >
+          INICIO
+        </router-link>
+        <router-link
+          to="/register"
+          class="tab-login"
+          :class="{ active: $route.path === '/register' }"
+        >
+          REGISTRO
+        </router-link>
       </div>
       <div class="logos">
         <h1
@@ -30,14 +30,16 @@
         </h1>
         <img
           src="@/assets/img/logo/logo 2 sifrah NARANJA LOGIN.svg"
-          style="width: 369px; height: auto; margin-top: -65px;  transition: all 0.3s ease;"
+          style="
+            width: 369px;
+            height: auto;
+            margin-top: -65px;
+            transition: all 0.3s ease;
+          "
         />
       </div>
       <div>
-        <label class="label-login-2"
-          for="dni"
-          >DNI:</label
-        >
+        <label class="label-login-2" for="dni">DNI:</label>
         <input
           id="dni"
           class="input"
@@ -64,10 +66,7 @@
       </div>
 
       <div v-if="!office_id">
-        <label class="label-login"
-          for="password"
-          >Contraseña:</label
-        >
+        <label class="label-login" for="password">Contraseña:</label>
         <input
           id="password"
           :type="show ? 'text' : 'password'"
@@ -88,6 +87,16 @@
       </button>
       <button class="button" v-show="sending" disabled>
         Validando datos ...
+      </button>
+      <br /><br />
+
+      <button class="google-login-btn" @click="loginWithGoogle">
+        <img
+          src="https://developers.google.com/identity/images/g-logo.png"
+          alt="Google"
+          class="google-logo-img"
+        />
+        <span>Iniciar con Google</span>
       </button>
       <br /><br />
 
@@ -248,6 +257,23 @@ export default {
       if (office_id) this.$router.push(`/${this.path}`);
       else this.$router.push("/dashboard");
     },
+    async loginWithGoogle() {
+      try {
+        const googleUser = await this.$gAuth.signIn();
+        const profile = googleUser.getBasicProfile();
+        const id_token = googleUser.getAuthResponse().id_token;
+        // Aquí puedes enviar el id_token a tu backend para autenticar/registrar al usuario
+        const { data } = await api.loginWithGoogle(id_token);
+        if (data.error) {
+          this.alert = data.msg;
+          return;
+        }
+        this.$store.commit("SET_SESSION", data.session);
+        this.$router.push("/dashboard");
+      } catch (e) {
+        alert("Error al iniciar sesión con Google");
+      }
+    },
     reset(name) {
       this.alert = null;
 
@@ -275,6 +301,40 @@ export default {
 .login-button:hover {
   background: rgb(255, 111, 0); /* Color de fondo al hacer hover */
 }
+
+/* Google Login Button Styles */
+.google-login-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 200px;
+  height: 40px;
+  margin: 0 auto 8px auto;
+  background: #fff;
+  color: #444;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 500;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  cursor: pointer;
+  transition: box-shadow 0.2s, border 0.2s;
+  padding: 0 10px;
+  margin-bottom: -22px;
+}
+
+.google-login-btn:hover {
+  box-shadow: 0 2px 6px rgba(66, 133, 244, 0.12);
+  border: 1px solid #bcbcbc;
+}
+
+.google-logo-img {
+  width: 18px;
+  height: 18px;
+  margin-right: 8px;
+  display: block;
+}
+
 .tab-login {
   font-size: 15px;
   color: rgba(137, 136, 141, 1);
@@ -286,7 +346,7 @@ export default {
   margin-bottom: 10%;
   transition: all 0.3s ease;
 }
-.label-login-2{
+.label-login-2 {
   font-size: 12px;
   color: rgba(137, 136, 141, 1);
   display: block;
@@ -309,7 +369,7 @@ export default {
 @media (max-width: 1260px) {
   .logos {
     display: none;
-  } 
+  }
 }
 @media (min-width: 1260px) {
   .tab-login {

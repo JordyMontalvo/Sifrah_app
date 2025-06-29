@@ -26,6 +26,7 @@
         alt=""
         class="logo"
       />
+      <ThemeToggle style="float: right; margin-left: 16px" />
       <i
         class="burger fas fa-bars"
         style="margin-left: 310px"
@@ -207,46 +208,46 @@
         <header>
           <p style="font-weight: bold; font-size: 20px">{{ title }}</p>
           <div
-            style="
+          style="
               display: flex;
               align-items: center;
               gap: 20px;
               margin-top: 25px;
-            "
+              "
           >
-            <img class="logo" style="height: 50px" />
-            <button class="share-button" @click="copy_affiliation_link">
-              <i class="fas fa-share-alt" style="margin-right: 8px"></i
+          <img class="logo" style="height: 50px" />
+          <button class="share-button" @click="copy_affiliation_link">
+            <i class="fas fa-share-alt" style="margin-right: 8px"></i
               >Compartir Afiliación
               <input
-                readonly
-                id="link-global"
-                @click="copy_affiliation_link"
-                v-model="affiliationLink"
-                style="opacity: 0; position: absolute"
+              readonly
+              id="link-global"
+              @click="copy_affiliation_link"
+              v-model="affiliationLink"
+              style="opacity: 0; position: absolute"
               />
             </button>
             <i class="copy" v-if="c_affiliation_link"
-              >link copiado <i class="fas fa-check"></i
-            ></i>
+            >link copiado <i class="fas fa-check"></i
+              ></i>
 
             <!-- <img class="logo-text" src="@/assets/img/logo/text.svg" style="margin-left: 12px;"> -->
-
+            
             <label v-if="office_id == null">
               <img
-                v-if="photoState == 'default'"
-                class="photo-header"
-                :src="photo"
+              v-if="photoState == 'default'"
+              class="photo-header"
+              :src="photo"
               />
               <img
-                v-if="photoState == 'changed'"
-                class="photo-header"
-                :src="newPhoto"
+              v-if="photoState == 'changed'"
+              class="photo-header"
+              :src="newPhoto"
               />
-
+              
               <input type="file" @change="changePhoto" />
             </label>
-
+            
             <div v-if="photoState == 'changed'" class="controls">
               <i @click="cancelNewPhoto" class="fas fa-times"></i>
               <i @click="changeNewPhoto" class="fas fa-check"></i>
@@ -259,6 +260,7 @@
                 {{ email }}
               </p>
             </div>
+            <ThemeToggle style="float: right;margin-left: 12px;margin-right: -25px;" />
             <router-link to="/profile" style="color: black; margin-left: 10px">
               <i class="fas fa-cog" style="font-size: 20px"></i>
             </router-link>
@@ -314,11 +316,13 @@
 <script>
 import api from "@/api";
 import lib from "@/lib";
+import ThemeToggle from "@/components/ThemeToggle.vue";
 
 const ROOT = process.env.VUE_APP_ROOT;
 console.log({ ROOT });
 
 export default {
+  components: { ThemeToggle },
   props: {
     session: String,
     office_id: String,

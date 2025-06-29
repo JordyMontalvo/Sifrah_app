@@ -10,7 +10,7 @@
     <div class="transfer-soft-bg">
       <section class="transfer-soft-section">
         <h4 class="transfer-title">MONEDERO SIFRAH</h4>
-        <i class="load" v-if="loading"></i>
+        <Spinner v-if="loading" :size="40" :color="'#086eb6'" />
         <div v-if="!loading">
           <form
             v-if="!confirmation"
@@ -115,10 +115,12 @@
 import App from "@/views/layouts/App";
 import api from "@/api";
 import lib from "@/lib";
+import Spinner from "@/components/Spinner.vue";
 
 export default {
   components: {
     App,
+    Spinner,
   },
   data() {
     return {

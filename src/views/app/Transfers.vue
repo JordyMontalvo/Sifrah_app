@@ -1,12 +1,12 @@
 <template>
-  <App :session="session">
+  <App :session="session" :title="title">
     <h4 class="tabs">
       <router-link class="tab" to="/transfer"> Monedero </router-link>
       &nbsp;&nbsp;
       <router-link class="tab" to="/transfers"> Transferencias </router-link>
     </h4>
 
-    <i class="load" v-if="loading"></i> <br />
+    <Spinner v-if="loading" :size="40" :color="'#086eb6'" /> <br />
 
     <div class="scroll" v-if="!loading">
       <table class="collects-table">
@@ -41,10 +41,12 @@
 <script>
 import App from "@/views/layouts/App";
 import api from "@/api";
+import Spinner from "@/components/Spinner.vue";
 
 export default {
   components: {
     App,
+    Spinner,
   },
   data() {
     return {

@@ -1,5 +1,6 @@
 <template>
-  <App :session="session">
+  <App :session="session" :title="title">
+    <Spinner v-if="loading" :size="40" :color="'#086eb6'" />
     <div class="activations-bg">
       <h2 class="activations-title" v-if="!showMasterTrophy">
         Historial de Activaciones
@@ -100,6 +101,7 @@
 <script>
 import App from "@/views/layouts/App";
 import api from "@/api";
+import Spinner from "@/components/Spinner.vue";
 
 const INVOICE_ROOT = process.env.VUE_APP_INVOICE_ROOT;
 console.log({ INVOICE_ROOT });
@@ -107,6 +109,7 @@ console.log({ INVOICE_ROOT });
 export default {
   components: {
     App,
+    Spinner,
   },
   data() {
     return {

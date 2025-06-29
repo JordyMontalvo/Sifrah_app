@@ -1,28 +1,21 @@
 <template>
   <App :session="session" :title="title">
-
-    <h4>BONIFICACIONES</h4>
-
-    <i class="load" v-if="loading"></i>
-
+    <Spinner v-if="loading" :size="40" :color="'#086eb6'" />
+    <SkeletonLoader
+      v-if="loading"
+      :lines="6"
+      width="100%"
+      height="28px"
+      style="margin: 24px 0"
+    />
     <div class="scroll" v-if="!loading">
-<!--
-      <i class="icon fa-solid fa-briefcase"></i>
-      <select class="input">
-        <option disabled selected>Periodo de cálculo</option>
-        <option>30 Septiembre</option>
-        <option>31 Agosto</option>
-        <option>31 Julio</option>
-      </select>
-      <br>
-      <br>
-      <button class="button">Reporte</button> -->
+      <h4>BONIFICACIONES</h4>
 
+      <i class="load" v-if="loading"></i>
 
       <h4>Bono Logro</h4>
 
       <div v-for="(pay, i) in pays">
-
         <spam v-if="pay.name == 'DOBLE DIAMANTE'">
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
           <i class="icon fas fa-gem" :class="{ green: pay.payed }"></i>
@@ -47,28 +40,18 @@
           <i class="icon fas fa-gem" :class="{ green: pay.payed }"></i>
         </spam>
 
-        <input class="input" readonly :value="pay._name" v-bind:style="{ width: 150 + 15 * i + 'px' }" :class="[pay.payed ? pay.name : '']"/> <br>
-
+        <input
+          class="input"
+          readonly
+          :value="pay._name"
+          v-bind:style="{ width: 150 + 15 * i + 'px' }"
+          :class="[pay.payed ? pay.name : '']"
+        />
+        <br />
       </div>
 
-      <br>
-      <br>
-
-      <!-- <table>
-        <thead>
-          <tr>
-            <th>Rango</th>
-            <th>Pagado</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="pay in pays">
-            <td>{{ pay.name }}</td>
-            <td>{{ pay.payed }}</td>
-          </tr>
-        </tbody>
-      </table> <br> -->
-
+      <br />
+      <br />
 
       <h4>Rango Zafiro: 6/9</h4>
       <table>
@@ -82,7 +65,8 @@
             <td v-for="bonus in sapphire">{{ bonus }}</td>
           </tr>
         </tbody>
-      </table> <br>
+      </table>
+      <br />
 
       <h4>Rango Rubi: 6/12</h4>
       <table>
@@ -96,7 +80,8 @@
             <td v-for="bonus in ruby">{{ bonus }}</td>
           </tr>
         </tbody>
-      </table> <br>
+      </table>
+      <br />
 
       <h4>Rango ORO: 21/24</h4>
       <table>
@@ -110,7 +95,8 @@
             <td v-for="bonus in gold">{{ bonus }}</td>
           </tr>
         </tbody>
-      </table> <br>
+      </table>
+      <br />
 
       <h4>Rango Diamante: 6/9</h4>
       <table>
@@ -124,19 +110,23 @@
             <td v-for="bonus in diamond">{{ bonus }}</td>
           </tr>
         </tbody>
-      </table> <br>
-
+      </table>
+      <br />
     </div>
   </App>
 </template>
 
 <script>
-import App from '@/views/layouts/App'
-import api from '@/api'
+import App from "@/views/layouts/App";
+import api from "@/api";
+import Spinner from "@/components/Spinner.vue";
+import SkeletonLoader from "@/components/SkeletonLoader.vue";
 
 export default {
   components: {
     App,
+    Spinner,
+    SkeletonLoader,
   },
   data() {
     return {
@@ -146,76 +136,79 @@ export default {
       ruby: [],
       gold: [],
       diamond: [],
-    }
+    };
   },
   computed: {
-    session() { return this.$store.state.session },
+    session() {
+      return this.$store.state.session;
+    },
   },
   async created() {
-    const { data } = await api.bonuses(this.session); console.log({ data })
-    let n
+    const { data } = await api.bonuses(this.session);
+    console.log({ data });
+    let n;
 
-    this.pays     = data.pays
+    this.pays = data.pays;
 
-    for(const pay of this.pays) {
-      if(pay.name == 'star')              pay._name = 'ESTRELLA $15'
-      if(pay.name == 'master')            pay._name = 'MASTER $30'
-      if(pay.name == 'silver')            pay._name = 'PLATA $45'
-      if(pay.name == 'gold')              pay._name = 'ORO $100'
-      if(pay.name == 'sapphire')          pay._name = 'ZAFIRO $200'
-      if(pay.name == 'RUBI')              pay._name = 'RUBI $300'
-      if(pay.name == 'DIAMANTE')          pay._name = 'DIAMANTE $5.000'
-      if(pay.name == 'DOBLE DIAMANTE')    pay._name = 'DOBLE DIAMANTE $10.000'
-      if(pay.name == 'TRIPLE DIAMANTE')   pay._name = 'TRIPLE DIAMANTE $15.000'
-      if(pay.name == 'DIAMANTE ESTRELLA') pay._name = 'DIAMANTE ESTRELLA $25.000'
+    for (const pay of this.pays) {
+      if (pay.name == "star") pay._name = "ESTRELLA $15";
+      if (pay.name == "master") pay._name = "MASTER $30";
+      if (pay.name == "silver") pay._name = "PLATA $45";
+      if (pay.name == "gold") pay._name = "ORO $100";
+      if (pay.name == "sapphire") pay._name = "ZAFIRO $200";
+      if (pay.name == "RUBI") pay._name = "RUBI $300";
+      if (pay.name == "DIAMANTE") pay._name = "DIAMANTE $5.000";
+      if (pay.name == "DOBLE DIAMANTE") pay._name = "DOBLE DIAMANTE $10.000";
+      if (pay.name == "TRIPLE DIAMANTE") pay._name = "TRIPLE DIAMANTE $15.000";
+      if (pay.name == "DIAMANTE ESTRELLA")
+        pay._name = "DIAMANTE ESTRELLA $25.000";
     }
 
-    this.sapphire = data.bonuses.sapphire
-    this.ruby     = data.bonuses.ruby
-    this.gold     = data.bonuses.gold
-    this.diamond  = data.bonuses.diamond
+    this.sapphire = data.bonuses.sapphire;
+    this.ruby = data.bonuses.ruby;
+    this.gold = data.bonuses.gold;
+    this.diamond = data.bonuses.diamond;
 
-    n = 9 - this.sapphire.length
-    for(let i = 0; i < n; i++) this.sapphire.push('-')
+    n = 9 - this.sapphire.length;
+    for (let i = 0; i < n; i++) this.sapphire.push("-");
 
-    n = 12 - this.ruby.length
-    for(let i = 0; i < n; i++) this.ruby.push('-')
+    n = 12 - this.ruby.length;
+    for (let i = 0; i < n; i++) this.ruby.push("-");
 
-    n = 24 - this.gold.length
-    for(let i = 0; i < n; i++) this.gold.push('-')
+    n = 24 - this.gold.length;
+    for (let i = 0; i < n; i++) this.gold.push("-");
 
-    n = 9 - this.diamond.length
-    for(let i = 0; i < n; i++) this.diamond.push('-')
+    n = 9 - this.diamond.length;
+    for (let i = 0; i < n; i++) this.diamond.push("-");
   },
-}
+};
 </script>
 
-
 <style>
-  .fa-gem.green {
-    color: #06d6a0;
-  }
+.fa-gem.green {
+  color: #06d6a0;
+}
 
-  .input.green {
-    background-color: #06d6a0;
-  }
+.input.green {
+  background-color: #06d6a0;
+}
 
-  .input.star {
-    background-color: yellow;
-  }
-  .input.master {
-    background-color: #06d6a0;
-  }
-  .input.silver {
-    background-color: #aaa;
-  }
-  .input.gold {
-    background-color: #D4AF37;
-  }
-  .input.sapphire {
-    background-color: blue;
-  }
-  /*.input.star {
+.input.star {
+  background-color: yellow;
+}
+.input.master {
+  background-color: #06d6a0;
+}
+.input.silver {
+  background-color: #aaa;
+}
+.input.gold {
+  background-color: #d4af37;
+}
+.input.sapphire {
+  background-color: blue;
+}
+/*.input.star {
     background-color: yellow;
   }
   .input.star {

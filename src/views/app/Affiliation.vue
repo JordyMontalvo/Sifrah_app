@@ -1,5 +1,6 @@
 <template>
   <App :session="session" :office_id="office_id" :title="title">
+    <Spinner v-if="loading" :size="40" :color="'#086eb6'" />
     <div
       v-if="affiliation && affiliation.status === 'pending'"
       class="affiliation-bg"
@@ -372,6 +373,7 @@
 import App from "@/views/layouts/App";
 import api from "@/api";
 import lib from "@/lib";
+import Spinner from "@/components/Spinner.vue";
 
 const INVOICE_ROOT = process.env.VUE_APP_INVOICE_ROOT;
 console.log({ INVOICE_ROOT });
@@ -379,6 +381,7 @@ console.log({ INVOICE_ROOT });
 export default {
   components: {
     App,
+    Spinner,
   },
   data() {
     return {

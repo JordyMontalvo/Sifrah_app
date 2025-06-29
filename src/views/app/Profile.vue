@@ -1,6 +1,7 @@
 <template>
   <App :session="session" :title="title">
-    <div class="profile-glass-bg">
+    <Spinner v-if="loading" :size="40" :color="'#086eb6'" />
+    <div class="profile-glass-bg" v-if="!loading">
       <div class="profile-glass-card">
         <div class="profile-glass-header">
           <div class="profile-glass-title">
@@ -157,11 +158,15 @@
 import App from "@/views/layouts/App";
 import api from "@/api";
 import lib from "@/lib";
+import Spinner from "@/components/Spinner.vue";
 
 const ROOT = process.env.VUE_APP_ROOT;
 
 export default {
-  components: { App },
+  components: {
+    App,
+    Spinner,
+  },
   data() {
     return {
       country: null,

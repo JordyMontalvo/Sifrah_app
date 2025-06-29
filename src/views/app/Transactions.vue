@@ -2,7 +2,14 @@
   <App :session="session" :title="title">
     <h4>MOVIMIENTOS</h4>
 
-    <i class="load" v-if="loading"></i>
+    <Spinner v-if="loading" :size="40" :color="'#086eb6'" />
+    <SkeletonLoader
+      v-if="loading"
+      :lines="8"
+      width="100%"
+      height="32px"
+      style="margin: 24px 0"
+    />
 
     <div class="scroll" v-if="!loading">
       <table v-if="transactions.length" class="collects-table">
@@ -44,10 +51,14 @@
 <script>
 import App from "@/views/layouts/App";
 import api from "@/api";
+import Spinner from "@/components/Spinner.vue";
+import SkeletonLoader from "@/components/SkeletonLoader.vue";
 
 export default {
   components: {
     App,
+    Spinner,
+    SkeletonLoader,
   },
   data() {
     return {

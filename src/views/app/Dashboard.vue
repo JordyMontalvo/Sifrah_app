@@ -33,7 +33,14 @@
 
     <h4>INICIO</h4>
 
-    <i class="load" v-if="loading"></i>
+    <Spinner v-if="loading" :size="48" :color="'#086eb6'" />
+    <SkeletonLoader
+      v-if="loading"
+      :lines="6"
+      width="100%"
+      height="60px"
+      style="margin: 24px 0"
+    />
 
     <transition-group
       name="card-fade"
@@ -150,10 +157,14 @@
 <script>
 import App from "@/views/layouts/App";
 import api from "@/api";
+import Spinner from "@/components/Spinner.vue";
+import SkeletonLoader from "@/components/SkeletonLoader.vue";
 
 export default {
   components: {
     App,
+    Spinner,
+    SkeletonLoader,
   },
   data() {
     return {

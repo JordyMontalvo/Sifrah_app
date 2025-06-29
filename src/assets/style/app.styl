@@ -1,3 +1,38 @@
+@import 'vars.styl'
+
+body, .app
+  font-family global-font
+  background app-bg
+  color app-text
+  transition background 0.3s, color 0.3s
+
+// Modo claro
+.light-mode, .light-mode .app
+  background light-bg
+  color light-text
+
+// Modo oscuro
+.dark-mode, .dark-mode .app
+  background dark-bg
+  color dark-text
+
+// Tarjetas y contenedores
+.card, .profile-glass-card
+  background app-bg-card
+  color app-text
+  border 1px solid app-border
+  transition background 0.3s, color 0.3s, border 0.3s
+
+.dark-mode .card, .dark-mode  .dark-mode .profile-glass-card
+  background dark-bg-card
+  color dark-text
+  border 1px solid dark-border
+
+.light-mode .card, .light-mode .light-mode .profile-glass-card
+  background light-bg-card
+  color light-text
+  border 1px solid light-border
+
 .app
   min-height 100vh
   display flex 
