@@ -1,34 +1,37 @@
 <template>
   <App :session="session" :title="title">
-    <figure class="slide" style="display: flex; margin: 0">
-      <img
-        :src="banner.img"
-        style="width: 100%; max-width: 850px; transition: all 2s"
-        :style="{ opacity: op }"
-      />
-      <img
-        :src="banner.img2"
-        style="
-          width: 100%;
-          max-width: 850px;
-          transition: all 2s;
-          transform: translate(-100%);
-          opacity: 0;
-        "
-        :style="{ opacity: op2 }"
-      />
-      <img
-        :src="banner.img3"
-        style="
-          width: 100%;
-          max-width: 850px;
-          transition: all 2s;
-          transform: translate(-200%);
-          opacity: 0;
-        "
-        :style="{ opacity: op3 }"
-      />
-    </figure>
+    <div v-if="bannerImages.length > 0" class="banner-slider">
+      <div class="slider-wrapper">
+        <div class="banner-slide">
+          <img :src="bannerImages[currentBanner]" class="banner-img" />
+        </div>
+        <button
+          v-if="bannerImages.length > 1"
+          class="nav left"
+          @click="prevBanner"
+        >
+          &#8592;
+        </button>
+        <button
+          v-if="bannerImages.length > 1"
+          class="nav right"
+          @click="nextBanner"
+        >
+          &#8594;
+        </button>
+      </div>
+      <div v-if="bannerImages.length > 1" class="dots">
+        <span
+          v-for="(img, idx) in bannerImages"
+          :key="'dot-' + idx"
+          :class="['dot', { active: currentBanner === idx }]"
+          @click="goToBanner(idx)"
+        ></span>
+      </div>
+    </div>
+    <div v-else class="no-banners-msg">
+      <p>No hay banners para mostrar.</p>
+    </div>
     <br />
 
     <h4>INICIO</h4>
@@ -184,6 +187,8 @@ export default {
       op2: 0,
       op3: 0,
       node: {},
+      currentBanner: 0,
+      bannerInterval: null,
     };
   },
   computed: {
@@ -200,6 +205,11 @@ export default {
     title() {
       return "Dashboard";
     },
+    bannerImages() {
+      return [this.banner.img, this.banner.img2, this.banner.img3].filter(
+        (img) => typeof img === "string" && img.trim() !== ""
+      );
+    },
   },
   filters: {
     _rank(val) {
@@ -215,6 +225,19 @@ export default {
       if (val == "DOBLE DIAMANTE") return "DIAMANTE DOS ESTRELLAS";
       if (val == "TRIPLE DIAMANTE") return "DIAMANTE TRES ESTRELLAS";
       if (val == "DIAMANTE ESTRELLA") return "DIAMANTE CBM";
+    },
+  },
+  methods: {
+    nextBanner() {
+      this.currentBanner = (this.currentBanner + 1) % this.bannerImages.length;
+    },
+    prevBanner() {
+      this.currentBanner =
+        (this.currentBanner - 1 + this.bannerImages.length) %
+        this.bannerImages.length;
+    },
+    goToBanner(idx) {
+      this.currentBanner = idx;
     },
   },
   async created() {
@@ -292,6 +315,15 @@ export default {
 
       if (i == n - 1) i = -1;
     }, time);
+
+    // Slider automático
+    if (this.bannerInterval) clearInterval(this.bannerInterval);
+    this.bannerInterval = setInterval(() => {
+      if (this.bannerImages.length > 1) this.nextBanner();
+    }, 4000);
+  },
+  beforeUnmount() {
+    if (this.bannerInterval) clearInterval(this.bannerInterval);
   },
 };
 </script>
@@ -396,5 +428,82 @@ export default {
 .card-fade-enter-to {
   opacity: 1;
   transform: translateY(0) scale(1);
+}
+.banner-slider {
+  position: relative;
+  width: 100%;
+  max-width: 850px;
+  margin: 0 auto 24px auto;
+}
+.slider-wrapper {
+  position: relative;
+  overflow: hidden;
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
+}
+.banner-slide {
+  width: 100%;
+  height: 260px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-start;
+}
+.banner-img {
+  width: 100%;
+  height: 260px;
+  border-radius: 16px;
+}
+.nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.3);
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  font-size: 1.5rem;
+  cursor: pointer;
+  z-index: 2;
+  transition: background 0.2s;
+}
+.nav.left {
+  left: 12px;
+}
+.nav.right {
+  right: 12px;
+}
+.nav:hover {
+  background: rgba(0, 0, 0, 0.6);
+}
+.dots {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+  gap: 8px;
+}
+.dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #bbb;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.dot.active {
+  background: #2196f3;
+}
+@media (max-width: 600px) {
+  .banner-slide,
+  .banner-img {
+    height: 140px;
+  }
+}
+.no-banners-msg {
+  text-align: center;
+  color: #888;
+  margin: 24px 0;
+  font-size: 1.2rem;
 }
 </style>
