@@ -29,7 +29,6 @@
       <ThemeToggle style="float: right; margin-left: 16px" />
       <i
         class="burger fas fa-bars"
-        style="margin-left: 310px"
         @click.stop="toggleMenu"
       ></i>
 
