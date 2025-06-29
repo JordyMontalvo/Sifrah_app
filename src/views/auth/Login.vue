@@ -90,14 +90,7 @@
       </button>
       <br /><br />
 
-      <button class="google-login-btn" @click="loginWithGoogle">
-        <img
-          src="https://developers.google.com/identity/images/g-logo.png"
-          alt="Google"
-          class="google-logo-img"
-        />
-        <span>Iniciar con Google</span>
-      </button>
+      <button class="google-login-btn" id="g_id_signin"></button>
       <br /><br />
 
       <small style="color: rgba(137, 136, 141, 1)"
@@ -222,7 +215,51 @@ export default {
       contentAuth.style.order = 1;
     }, 100);
   },
+  mounted() {
+    // Cargar el script de Google Identity Services si no está presente
+    if (!window.google || !window.google.accounts) {
+      const script = document.createElement("script");
+      script.src = "https://accounts.google.com/gsi/client";
+      script.async = true;
+      script.defer = true;
+      script.onload = this.renderGoogleButton;
+      document.head.appendChild(script);
+    } else {
+      this.renderGoogleButton();
+    }
+  },
   methods: {
+    renderGoogleButton() {
+      if (
+        window.google &&
+        window.google.accounts &&
+        window.google.accounts.id
+      ) {
+        window.google.accounts.id.initialize({
+          client_id:
+            "511469100162-s6f2f9qbkr533hbvaoevbr6m0mhfdrvk.apps.googleusercontent.com",
+          callback: this.handleGoogleCredentialResponse,
+        });
+        window.google.accounts.id.renderButton(
+          document.getElementById("g_id_signin"),
+          { theme: "outline", size: "large", text: "signin_with", width: 200 }
+        );
+      }
+    },
+    async handleGoogleCredentialResponse(response) {
+      try {
+        const id_token = response.credential;
+        const { data } = await api.loginWithGoogle(id_token);
+        if (data.error) {
+          this.alert = data.msg;
+          return;
+        }
+        this.$store.commit("SET_SESSION", data.session);
+        this.$router.push("/dashboard");
+      } catch (e) {
+        alert("Error al iniciar sesión con Google");
+      }
+    },
     async submit() {
       // const { username, password } = this
       const { dni, password, office_id, path } = this;
@@ -256,23 +293,6 @@ export default {
       // routing
       if (office_id) this.$router.push(`/${this.path}`);
       else this.$router.push("/dashboard");
-    },
-    async loginWithGoogle() {
-      try {
-        const googleUser = await this.$gAuth.signIn();
-        const profile = googleUser.getBasicProfile();
-        const id_token = googleUser.getAuthResponse().id_token;
-        // Aquí puedes enviar el id_token a tu backend para autenticar/registrar al usuario
-        const { data } = await api.loginWithGoogle(id_token);
-        if (data.error) {
-          this.alert = data.msg;
-          return;
-        }
-        this.$store.commit("SET_SESSION", data.session);
-        this.$router.push("/dashboard");
-      } catch (e) {
-        alert("Error al iniciar sesión con Google");
-      }
     },
     reset(name) {
       this.alert = null;
