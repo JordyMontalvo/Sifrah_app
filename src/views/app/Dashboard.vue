@@ -217,9 +217,9 @@ export default {
     _rank(val) {
       if (val == "none") return "Ninguno";
       if (val == "active") return "ACTIVO";
-      if (val == "star") return "MASTER";
-      if (val == "master") return "PLATA";
-      if (val == "silver") return "PLATINO";
+      if (val == "star") return "BRONCE";
+      if (val == "silver") return "PLATA";
+      if (val == "si") return "PLATINO";
       if (val == "gold") return "ORO";
       if (val == "sapphire") return "ZAFIRO";
       if (val == "ruby") return "RUBY";
