@@ -154,12 +154,6 @@
                       <span class="product-name-modern">{{
                         product.name
                       }}</span>
-                      <span class="product-price-modern"
-                        >S/. {{ product.price }}</span
-                      >
-                      <span class="product-points-modern"
-                        >{{ product.points }} pts</span
-                      >
                     </div>
                     <div class="product-controls-modern">
                       <button class="qty-btn" @click="less(product)">-</button>
@@ -824,13 +818,6 @@ export default {
 .product-name-modern
   color: #a05a2c;
   font-weight: 700;
-
-.product-price-modern
-  color: #ff9800;
-  font-weight: 600;
-
-.product-points-modern
-  color: #bdbdbd;
 
 .product-controls-modern
   display flex
