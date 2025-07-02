@@ -46,7 +46,9 @@
               <div class="product-info">
                 <p class="product-name">{{ product.name }}</p>
                 <div class="product-meta">
-                  <span class="product-price">S/. {{ product.price }}</span>
+                  <span class="product-price">
+                    S/. {{ getProductPrice(product) }}
+                  </span>
                   <span class="product-points">💎 {{ product.points }}</span>
                 </div>
                 <div class="product-controls">
@@ -232,9 +234,11 @@ export default {
     },
 
     price() {
-      console.log("price");
-      let price = this.products.reduce((a, b) => a + b.price * b.total, 0);
-      return price;
+      // Suma el precio correcto según el plan
+      return this.products.reduce(
+        (a, b) => a + this.getProductPrice(b) * b.total,
+        0
+      );
     },
     title() {
       return "Productos";
@@ -421,6 +425,22 @@ export default {
       this.success = true;
 
       this.reset();
+    },
+    getProductPrice(product) {
+      // Usa el precio por plan si existe, si no el general
+      const planId =
+        this.$store.state.plan && this.$store.state.plan.id
+          ? this.$store.state.plan.id
+          : this.$store.state.plan;
+      if (
+        product.prices &&
+        planId &&
+        product.prices[planId] != null &&
+        product.prices[planId] !== ""
+      ) {
+        return product.prices[planId];
+      }
+      return product.price;
     },
   },
 };
