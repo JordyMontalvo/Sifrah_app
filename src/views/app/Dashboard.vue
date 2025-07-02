@@ -115,7 +115,7 @@
       >
         <i class="fas fa-gem"></i>
         <div>
-          <p>{{ rank }}</p>
+          <p>{{ rank | _rank }}</p>
           <span>RANGO CERRADO</span>
         </div>
       </div>
@@ -222,11 +222,10 @@ export default {
       if (val == "silver") return "PLATINO";
       if (val == "gold") return "ORO";
       if (val == "sapphire") return "ZAFIRO";
-      if (val == "RUBI") return "DIAMANTE RUBI";
-      if (val == "DIAMANTE") return "DIAMANTE ESTRELLA";
-      if (val == "DOBLE DIAMANTE") return "DIAMANTE DOS ESTRELLAS";
-      if (val == "TRIPLE DIAMANTE") return "DIAMANTE TRES ESTRELLAS";
-      if (val == "DIAMANTE ESTRELLA") return "DIAMANTE CBM";
+      if (val == "ruby") return "RUBY";
+      if (val == "emerald") return "ESMERALDA";
+      if (val == "diamond") return "DIAMANTE";
+      if (val == "master") return "MASTER";
     },
   },
   methods: {
