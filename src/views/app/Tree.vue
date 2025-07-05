@@ -92,43 +92,51 @@
 
       <div class="modal" :class="{ open }" @click="closed">
         <div class="inner" @click.stop="">
+          <button class="close-btn" @click="closed">&times;</button>
           <img class="photo" :src="selec_node.photo" />
-          <p style="text-align: center">{{ selec_node.country }}</p>
-          <br />
-          <p>ID: {{ selec_node.dni }}</p>
-          <p>Nombre: {{ selec_node.name }}</p>
-          <p>Apellido: {{ selec_node.lastName }}</p>
-          <p>Teléfono: {{ selec_node.phone }}</p>
-          <p>Correo: {{ selec_node.email }}</p>
-          <p>Rango Cerrado: {{ selec_node._rank }}</p>
-          <!-- <p>Rango Actual:  {{ selec_node.rank | _rank }}</p> -->
-          <!-- <p>Siguiente Rango: {{ selec_node.next_rank.name | _rank }}</p> -->
-          <!-- <p>Rango Próximo: Hans Evanglelista</p> -->
-          <p>Puntos Personales: {{ selec_node.points }}</p>
-          <p>Puntos Grupales: {{ selec_node.closed_points_arr }}</p>
-          <br />
-          <p>Últimas compras:</p>
-          <br />
-          <table>
-            <thead>
-              <tr>
-                <th>Fecha</th>
-                <th>Monto</th>
-                <th>Puntos</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr
-                v-for="activation in selec_node.last_activations
-                  .slice()
-                  .reverse()"
-              >
-                <td>{{ activation.date | date }}</td>
-                <td>{{ activation.price }}</td>
-                <td>{{ activation.points }}</td>
-              </tr>
-            </tbody>
-          </table>
+          <div class="user-info">
+            <p class="country">{{ selec_node.country }}</p>
+            <div class="info-grid">
+              <div><strong>ID:</strong> {{ selec_node.dni }}</div>
+              <div><strong>Nombre:</strong> {{ selec_node.name }}</div>
+              <div><strong>Apellido:</strong> {{ selec_node.lastName }}</div>
+              <div><strong>Teléfono:</strong> {{ selec_node.phone }}</div>
+              <div><strong>Correo:</strong> {{ selec_node.email }}</div>
+              <div>
+                <strong>Rango Cerrado:</strong> {{ selec_node._rank | _rank }}
+              </div>
+              <div>
+                <strong>Puntos Personales:</strong> {{ selec_node.points }}
+              </div>
+              <div>
+                <strong>Puntos Grupales:</strong>
+                {{ selec_node.closed_points_arr }}
+              </div>
+            </div>
+          </div>
+          <div class="compras">
+            <p><strong>Últimas compras:</strong></p>
+            <table>
+              <thead>
+                <tr>
+                  <th>Fecha</th>
+                  <th>Monto</th>
+                  <th>Puntos</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  v-for="activation in selec_node.last_activations
+                    .slice()
+                    .reverse()"
+                >
+                  <td>{{ activation.date | date }}</td>
+                  <td>{{ activation.price }}</td>
+                  <td>{{ activation.points }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
@@ -181,16 +189,12 @@ export default {
     _rank(val) {
       if (val == "none") return "Ninguno";
       if (val == "active") return "ACTIVO";
-      if (val == "star") return "MASTER";
-      if (val == "master") return "PLATA";
-      if (val == "silver") return "PLATINO";
+      if (val == "star") return "BRONCE";
+      if (val == "silver") return "PLATA";
+      if (val == "ruby") return "RUBY";
       if (val == "gold") return "ORO";
-      if (val == "sapphire") return "ZAFIRO";
-      if (val == "RUBI") return "DIAMANTE RUBI";
-      if (val == "DIAMANTE") return "DIAMANTE ESTRELLA";
-      if (val == "DOBLE DIAMANTE") return "DIAMANTE DOS ESTRELLAS";
-      if (val == "TRIPLE DIAMANTE") return "DIAMANTE TRES ESTRELLAS";
-      if (val == "DIAMANTE ESTRELLA") return "DIAMANTE CBM";
+      if (val == "emerald") return "ESMERALDA";
+      return "Ninguno";
     },
   },
   async created() {
@@ -275,11 +279,69 @@ export default {
   &.open
     display block
   .inner
-    background #eaebec
+    background #fff
     border-radius 20px
-    padding 20px 20px 32px 20px
+    padding 32px 32px 32px 32px
     max-width 480px
     margin auto
+    box-shadow 0 8px 32px rgba(0,0,0,0.18)
+    position relative
+    display flex
+    flex-direction column
+    align-items center
+    .close-btn
+      position absolute
+      top 16px
+      right 16px
+      background transparent
+      border none
+      font-size 2rem
+      color #888
+      cursor pointer
+      transition color 0.2s
+      &:hover
+        color #ff5722
+    .photo
+      width 120px
+      height 120px
+      object-fit cover
+      border-radius 50%
+      margin 0 auto 16px auto
+      display block
+      box-shadow 0 2px 8px rgba(0,0,0,0.10)
+    .user-info
+      width 100%
+      .country
+        text-align center
+        font-weight 600
+        color #086eb6
+        margin-bottom 12px
+      .info-grid
+        display grid
+        grid-template-columns 1fr 1fr
+        gap 8px 16px
+        margin-bottom 16px
+        font-size 0.98rem
+        color #333
+    .compras
+      width 100%
+      p
+        margin-bottom 8px
+        font-weight 600
+        color #333
+      table
+        width 100%
+        border-collapse collapse
+        th, td
+          padding 6px 8px
+          text-align left
+        th
+          background #f5f5f5
+          color #333
+        tr:nth-child(even)
+          background #fafafa
+        tr:hover
+          background #e3f2fd
 </style>
 
 <style>
