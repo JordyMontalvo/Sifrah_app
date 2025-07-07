@@ -90,8 +90,8 @@
       </button>
       <br /><br />
 
-      <button class="google-login-btn" id="g_id_signin"></button>
-      <br /><br />
+     <!-- <button class="google-login-btn" id="g_id_signin"></button> -->
+     <!-- <br /><br /> -->
 
       <small style="color: rgba(137, 136, 141, 1)"
         >¿Olvidaste tu contraseña?
