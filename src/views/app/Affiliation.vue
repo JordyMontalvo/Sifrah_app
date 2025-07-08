@@ -106,6 +106,13 @@
           </div>
         </div>
         <div v-else>
+          <div v-if="upgradeMode" class="affiliation-alert">
+            <b>Estás realizando un UPGRADE de plan.</b><br />
+            Solo puedes elegir <b>{{ maxUpgradeProducts }}</b> productos
+            adicionales.<br />
+            Solo pagarás la diferencia: <b>S/. {{ upgradeDifference }}</b> y
+            obtendrás <b>{{ upgradePoints }}</b> puntos extra.
+          </div>
           <!-- Paso 1: Selección de productos -->
           <div v-if="step === 1">
             <div class="card-section plan-section">
@@ -134,7 +141,9 @@
                 <div class="product-grid">
                   <div
                     class="product-card-modern"
-                    v-for="(product, i) in products"
+                    v-for="(product, i) in upgradeMode
+                      ? upgradeProducts
+                      : products"
                     v-if="
                       product.type === category &&
                       product.plans &&
@@ -156,22 +165,42 @@
                       }}</span>
                     </div>
                     <div class="product-controls-modern">
-                      <button class="qty-btn" @click="less(product)">-</button>
+                      <button class="qty-btn" @click="less(i)">-</button>
                       <span class="product-qty-modern">{{
                         product.total
                       }}</span>
-                      <button class="qty-btn" @click="more(product)">+</button>
+                      <button
+                        class="qty-btn"
+                        @click="more(i)"
+                        :disabled="
+                          upgradeMode
+                            ? totalUpgradeProducts +
+                                (Number(product.weight) || 1) >
+                              maxUpgradeProducts
+                            : false
+                        "
+                      >
+                        +
+                      </button>
+                      <span v-if="upgradeMode" class="max-info"
+                        >/ {{ product.max }} máx.</span
+                      >
                     </div>
                   </div>
                 </div>
               </div>
             </div>
             <!-- Resumen sticky -->
-            <div class="sticky-summary" :class="{ show: total > 0 }">
+            <div
+              class="sticky-summary"
+              :class="{
+                show: (upgradeMode ? totalUpgradeProducts : total) > 0,
+              }"
+            >
               <div class="sticky-summary-content">
                 <div class="sticky-products">
                   <div
-                    v-for="product in products"
+                    v-for="product in upgradeMode ? upgradeProducts : products"
                     v-if="product.total > 0"
                     class="sticky-product-item"
                   >
@@ -189,7 +218,10 @@
                 <div class="sticky-summary-total">
                   <span>Total:</span>
                   <span class="sticky-total-amount"
-                    >S/. {{ selec_plan.amount }}</span
+                    >S/.
+                    {{
+                      upgradeMode ? upgradeDifference : selec_plan.amount
+                    }}</span
                   >
                 </div>
                 <small v-if="selectError" class="error-message">{{
@@ -197,23 +229,59 @@
                 }}</small>
                 <small
                   v-if="
-                    total !== selec_plan.max_products &&
-                    selec_plan.max_products > 0
+                    (upgradeMode ? totalUpgradeProducts : total) !==
+                      (upgradeMode
+                        ? maxUpgradeProducts
+                        : selec_plan.max_products) &&
+                    (upgradeMode
+                      ? maxUpgradeProducts
+                      : selec_plan.max_products) > 0
                   "
                   class="info-message"
                 >
-                  <template v-if="total < selec_plan.max_products">
+                  <template
+                    v-if="
+                      (upgradeMode ? totalUpgradeProducts : total) <
+                      (upgradeMode
+                        ? maxUpgradeProducts
+                        : selec_plan.max_products)
+                    "
+                  >
                     Te faltan
-                    {{ selec_plan.max_products - total }} producto<span
-                      v-if="selec_plan.max_products - total > 1"
+                    {{
+                      (upgradeMode
+                        ? maxUpgradeProducts
+                        : selec_plan.max_products) -
+                      (upgradeMode ? totalUpgradeProducts : total)
+                    }}
+                    producto<span
+                      v-if="
+                        (upgradeMode
+                          ? maxUpgradeProducts
+                          : selec_plan.max_products) -
+                          (upgradeMode ? totalUpgradeProducts : total) >
+                        1
+                      "
                       >s</span
                     >
                     para completar tu selección.
                   </template>
                   <template v-else>
                     Has seleccionado
-                    {{ total - selec_plan.max_products }} producto<span
-                      v-if="total - selec_plan.max_products > 1"
+                    {{
+                      (upgradeMode ? totalUpgradeProducts : total) -
+                      (upgradeMode
+                        ? maxUpgradeProducts
+                        : selec_plan.max_products)
+                    }}
+                    producto<span
+                      v-if="
+                        (upgradeMode ? totalUpgradeProducts : total) -
+                          (upgradeMode
+                            ? maxUpgradeProducts
+                            : selec_plan.max_products) >
+                        1
+                      "
                       >s</span
                     >
                     de más.
@@ -221,7 +289,10 @@
                 </small>
                 <button
                   class="main-action-btn sticky-btn"
-                  :disabled="total !== selec_plan.max_products"
+                  :disabled="
+                    (upgradeMode ? totalUpgradeProducts : total) !==
+                    (upgradeMode ? maxUpgradeProducts : selec_plan.max_products)
+                  "
                   @click="handleGoToStep2"
                 >
                   Afiliarme
@@ -230,7 +301,11 @@
             </div>
             <!-- Botón Afiliarme solo para móvil, antes de boletas -->
             <div
-              v-if="step === 1 && total === selec_plan.max_products"
+              v-if="
+                step === 1 &&
+                (upgradeMode ? totalUpgradeProducts : total) ===
+                  (upgradeMode ? maxUpgradeProducts : selec_plan.max_products)
+              "
               class="afiliarme-mobile-btn"
             >
               <button class="main-action-btn" @click="handleGoToStep2">
@@ -245,7 +320,7 @@
               <h4 class="section-title">Confirma tu afiliación</h4>
               <div class="summary-section confirm-summary">
                 <div
-                  v-for="product in products"
+                  v-for="product in upgradeMode ? upgradeProducts : products"
                   v-if="product.total > 0"
                   class="summary-item"
                 >
@@ -261,11 +336,22 @@
                 </div>
                 <div class="summary-total">
                   <span>Total productos:</span>
-                  <span>{{ total }} / {{ selec_plan.max_products }}</span>
+                  <span
+                    >{{ upgradeMode ? maxUpgradeProducts : total }} /
+                    {{
+                      upgradeMode ? maxUpgradeProducts : selec_plan.max_products
+                    }}</span
+                  >
                 </div>
                 <div class="summary-total">
                   <span>Total a pagar:</span>
-                  <span>S/. {{ remaining }}</span>
+                  <span
+                    >S/. {{ upgradeMode ? upgradeDifference : remaining }}</span
+                  >
+                </div>
+                <div class="summary-total" v-if="upgradeMode">
+                  <span>Puntos extra:</span>
+                  <span>{{ upgradePoints }}</span>
                 </div>
               </div>
               <div class="pay-section">
@@ -349,13 +435,59 @@
           </div>
           <!-- Boletas -->
           <div class="card-section invoices-section">
-            <a
+            <div
               v-for="(affiliation, i) in affiliations"
-              :href="`${INVOICE_ROOT}?id=${affiliation.id}`"
-              target="_blank"
-              class="invoice-link"
-              >Boleta {{ i + 1 }} &nbsp;&nbsp;</a
+              :key="affiliation.id"
+              class="invoice-history-block"
             >
+              <a
+                :href="`${INVOICE_ROOT}?id=${affiliation.id}`"
+                target="_blank"
+                class="invoice-link"
+              >
+                Boleta {{ i + 1 }}
+                <span v-if="affiliation.type === 'upgrade'" class="tag-upgrade"
+                  >Upgrade</span
+                >
+              </a>
+              <div
+                v-if="affiliation.type === 'upgrade'"
+                class="upgrade-details-block"
+              >
+                <div><b>Upgrade de plan</b></div>
+                <div>
+                  Plan anterior:
+                  <b>{{
+                    affiliation.previousPlan && affiliation.previousPlan.name
+                  }}</b>
+                </div>
+                <div>
+                  Diferencia pagada:
+                  <b
+                    >S/
+                    {{
+                      affiliation.difference && affiliation.difference.amount
+                    }}</b
+                  >
+                </div>
+                <div>
+                  Productos adicionales:
+                  <span
+                    v-if="
+                      affiliation.difference && affiliation.difference.products
+                    "
+                  >
+                    {{
+                      affiliation.difference.products
+                        .filter((p) => p.total > 0)
+                        .map((p) => `${p.total} ${p.name}`)
+                        .join(", ")
+                    }}
+                  </span>
+                  <span v-else>N/A</span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -410,6 +542,14 @@ export default {
       voucher_number: null,
       selectError: "",
       showPendingModal: false,
+      upgradeMode: false,
+      previousPlan: null,
+      previousProducts: [],
+      maxUpgradeProducts: 0,
+      upgradeDifference: 0,
+      upgradePoints: 0,
+      upgradeProducts: [],
+      affiliation: null,
     };
   },
   computed: {
@@ -498,13 +638,19 @@ export default {
       // Mostrar trofeo solo si la afiliación master fue aprobada o el usuario ya es master
       return this.isMasterPlanApproved;
     },
+    totalUpgradeProducts() {
+      // Total de peso seleccionados en upgrade
+      return this.upgradeProducts.reduce(
+        (a, b) => a + (Number(b.total) || 0) * (Number(b.weight) || 1),
+        0
+      );
+    },
   },
   watch: {
     selec_plan() {
       if (!this.selec_plan) return;
-      // this.prices()
-      // this.totals()
       this.reset_totals();
+      this.checkUpgradeMode();
     },
   },
   async created() {
@@ -599,20 +745,69 @@ export default {
       this.product = this.products[i];
     },
 
-    more(product) {
-      const productWeight = Number(product.weight);
-      if (isNaN(productWeight) || productWeight <= 0) return;
-      const currentTotal = this.products.reduce(
-        (a, b) => a + (Number(b.total) || 0) * Number(b.weight || 1),
-        0
-      );
-      const newTotal = currentTotal + productWeight;
-      if (newTotal > this.selec_plan.max_products) return;
-      product.total += 1;
+    checkUpgradeMode() {
+      if (
+        this.affiliation &&
+        this.affiliation.status === "approved" &&
+        this.selec_plan &&
+        this.selec_plan.amount > this.affiliation.plan.amount
+      ) {
+        this.upgradeMode = true;
+        this.previousPlan = this.affiliation.plan;
+        this.previousProducts = this.affiliation.products || [];
+        this.maxUpgradeProducts =
+          this.selec_plan.max_products - (this.previousPlan.max_products || 0);
+        this.upgradeDifference =
+          this.selec_plan.amount - this.previousPlan.amount;
+        this.upgradePoints =
+          (this.selec_plan.affiliation_points || 0) -
+          (this.previousPlan.affiliation_points || 0);
+        // No máximo individual, solo el global
+        this.upgradeProducts = this.products.map((p) => ({ ...p, total: 0 }));
+      } else {
+        this.upgradeMode = false;
+        this.previousPlan = null;
+        this.previousProducts = [];
+        this.maxUpgradeProducts = this.selec_plan.max_products;
+        this.upgradeDifference = this.selec_plan.amount;
+        this.upgradePoints = this.selec_plan.affiliation_points;
+        this.upgradeProducts = this.products.map((p) => ({
+          ...p,
+          max: p.max,
+          total: 0,
+        }));
+      }
     },
-    less(product) {
-      if (product.total == 0) return;
-      product.total -= 1;
+    more(idx) {
+      if (this.upgradeMode) {
+        const product = this.upgradeProducts[idx];
+        const nextTotal =
+          this.totalUpgradeProducts + (Number(product.weight) || 1);
+        if (nextTotal > this.maxUpgradeProducts) return;
+        this.upgradeProducts[idx].total += 1;
+      } else {
+        const product = this.products[idx];
+        const productWeight = Number(product.weight);
+        if (isNaN(productWeight) || productWeight <= 0) return;
+        const currentTotal = this.products.reduce(
+          (a, b) => a + (Number(b.total) || 0) * Number(b.weight || 1),
+          0
+        );
+        const newTotal = currentTotal + productWeight;
+        if (newTotal > this.selec_plan.max_products) return;
+        product.total += 1;
+      }
+    },
+    less(idx) {
+      if (this.upgradeMode) {
+        if (this.upgradeProducts[idx].total > 0) {
+          this.upgradeProducts[idx].total -= 1;
+        }
+      } else {
+        const product = this.products[idx];
+        if (product.total == 0) return;
+        product.total -= 1;
+      }
     },
 
     change(e) {
@@ -627,17 +822,15 @@ export default {
     },
 
     async POST() {
-      let {
-        products,
-        selec_plan,
-        voucher,
-        office,
-        check,
-        pay_method,
-        bank,
-        date,
-        voucher_number,
-      } = this;
+      let products = this.upgradeMode ? this.upgradeProducts : this.products;
+      let plan = this.selec_plan;
+      let voucher = this.voucher;
+      let office = this.office;
+      let check = this.check;
+      let pay_method = this.pay_method;
+      let bank = this.bank;
+      let date = this.date;
+      let voucher_number = this.voucher_number;
 
       if (pay_method == "bank") {
         if (!bank) {
@@ -677,7 +870,7 @@ export default {
 
       const { data } = await api.Afiliation.POST(this.session, {
         products,
-        plan: selec_plan,
+        plan,
         voucher,
         office: office.id,
         check,
@@ -706,9 +899,17 @@ export default {
       this.step = n;
     },
     handleGoToStep2() {
-      if (this.total !== this.selec_plan.max_products) {
-        this.selectError = `Debes seleccionar exactamente ${this.selec_plan.max_products} productos para continuar.`;
-        return;
+      if (this.upgradeMode) {
+        const total = this.totalUpgradeProducts;
+        if (total !== this.maxUpgradeProducts) {
+          this.selectError = `Debes seleccionar exactamente ${this.maxUpgradeProducts} productos adicionales para tu upgrade (considerando el peso de cada producto).`;
+          return;
+        }
+      } else {
+        if (this.total !== this.selec_plan.max_products) {
+          this.selectError = `Debes seleccionar exactamente ${this.selec_plan.max_products} productos para continuar.`;
+          return;
+        }
       }
       this.selectError = "";
       this.goToStep(2);
@@ -1369,4 +1570,31 @@ export default {
   text-align center
   font-size 1.15rem
   font-weight 600
+.tag-upgrade {
+  background: #ff9800;
+  color: #fff;
+  border-radius: 8px;
+  padding: 2px 10px;
+  font-size: 0.95em;
+  margin-left: 8px;
+  font-weight: 700;
+}
+.upgrade-details-block {
+  background: #fffbe6;
+  border: 1.5px solid #ff9800;
+  border-radius: 10px;
+  padding: 10px 16px;
+  margin: 8px 0 18px 0;
+  font-size: 1.05em;
+  color: #a05a2c;
+}
+.invoice-history-block {
+  margin-bottom: 18px;
+}
+.max-info {
+  color: #ff9800;
+  font-size: 0.95em;
+  margin-left: 6px;
+  font-weight: 600;
+}
 </style>
