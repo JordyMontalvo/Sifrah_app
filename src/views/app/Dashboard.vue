@@ -101,9 +101,9 @@
         title="Tu paquete de afiliación"
         key="paquete"
       >
-        <i class="fas fa-gem"></i>
+        <img v-if="userPlan && userPlan.img" :src="userPlan.img" alt="Imagen del plan" style="max-width: 60px; max-height: 60px; margin-right: 12px; border-radius: 8px; background: #fff;" />
         <div>
-          <p>{{ plan }}</p>
+          <p v-if="userPlan && userPlan.name" style="margin:0; font-weight:bold;">{{ userPlan.name }}</p>
           <span>PAQUETE DE AFILIACIÓN</span>
         </div>
       </div>
@@ -184,6 +184,8 @@ export default {
       directs: [],
       frontals: [],
       loading: true,
+      plans: null,
+      plan: null ,
 
       op: 1,
       op2: 0,
@@ -203,6 +205,11 @@ export default {
       if (this.$store.state.plan == "standard") return "DISTRIBUIDOR";
       if (this.$store.state.plan == "master") return "EMPRESARIO";
       return this.$store.state.plan;
+    },
+    userPlan() {
+      if (!this.plans) return null;
+      // Buscar por nombre o id según corresponda
+      return this.plans.find(p => p.name === this.plan || p.id === this.plan);
     },
     title() {
       return "Dashboard";
@@ -278,6 +285,9 @@ export default {
     this.n_affiliates = data.n_affiliates;
     this.directs = data.directs || [];
     this.frontals = data.frontals || [];
+
+    this.plans = data.plans.map((a) => ({ ...a, total: 0 }));
+    this.plan = data.plan;
 
     const time = 4000;
     let i = 0;

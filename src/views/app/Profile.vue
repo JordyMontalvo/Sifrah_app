@@ -25,11 +25,11 @@
               <h3>Datos personales</h3>
               <div class="glass-form-group">
                 <label>Nombre</label>
-                <input v-model="name" type="text" />
+                <input v-model="name" type="text" readonly/>
               </div>
               <div class="glass-form-group">
                 <label>Apellido</label>
-                <input v-model="lastName" type="text" />
+                <input v-model="lastName" type="text" readonly />
               </div>
               <div class="glass-form-group">
                 <label>DNI</label>
