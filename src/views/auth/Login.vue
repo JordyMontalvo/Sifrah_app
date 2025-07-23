@@ -127,7 +127,7 @@
           ></a>
           <a
             class="fab fa-whatsapp social-icon whatsapp"
-            :href="wsp"
+            :href="wsp_pe"
             target="_blank"
           ></a>
         </div>
@@ -184,6 +184,12 @@ export default {
     },
     yt() {
       return this.$store.state.yt;
+    },
+    wsp_pe() {
+      return this.$store.state.wsp_pe;
+    },
+    wsp_bo() {
+      return this.$store.state.wsp_bo;
     },
   },
   filters: {

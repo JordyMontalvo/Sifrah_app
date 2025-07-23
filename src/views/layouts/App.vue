@@ -452,7 +452,7 @@ export default {
     },
     checkAndShowNotification() {
       const missing = [];
-      if ( !this.birthdate || !this.city || !this.country) {
+      if ( !this.city || !this.country) {
         this.notification = "Por favor, completa tu perfil.";
 
         setTimeout(() => {

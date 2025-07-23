@@ -139,6 +139,15 @@
                   <input type="radio" :value="'cash'" v-model="pay_method" />
                   <span>Efectivo</span>
                 </label>
+                <!-- <button
+                  class="main-action-btn mp-btn"
+                  @click="pagarConMercadoPago"
+                  style="margin-top:10px; display: flex; align-items: center; gap: 10px;"
+                >
+                  <img src="https://http2.mlstatic.com/frontend-assets/ui-navigation/5.22.6/mercadopago/logo__large.png"
+                       alt="Mercado Pago" style="height: 24px; vertical-align: middle;" />
+                  Pagar con Mercado Pago
+                </button> -->
               </div>
               <div v-if="pay_method == 'bank'" class="bank-section">
                 <input class="input" v-model="bank" placeholder="Banco" />
@@ -187,6 +196,7 @@
 import App from "@/views/layouts/App";
 import api from "@/api";
 import lib from "@/lib";
+import axios from "axios";
 
 export default {
   components: {
@@ -426,6 +436,27 @@ export default {
 
       this.reset();
     },
+    // async pagarConMercadoPago() {
+    //   try {
+    //     const response = await axios.post(
+    //       "http://localhost:4000/api/app/mercadopago",
+    //       {
+    //         description: "Activación de productos",
+    //         price: this.price,
+    //         quantity: 1,
+    //         payer_email: "test_user_116744135@testuser.com"
+    //       }
+    //     );
+    //     const data = response.data;
+    //     if (data.ok && data.data && data.data.init_point) {
+    //       window.location.href = data.data.init_point;
+    //     } else {
+    //       this.error = data.msg || "Error al iniciar pago con Mercado Pago";
+    //     }
+    //   } catch (err) {
+    //     this.error = err.message || "Error al conectar con Mercado Pago";
+    //   }
+    // },
     getProductPrice(product) {
       // Usa el precio por plan si existe, si no el general
       const planId =
@@ -719,6 +750,23 @@ export default {
     background #ffe0b2
     color #ff9800
     cursor not-allowed
+
+.mp-btn {
+  background: linear-gradient(90deg, #009ee3 60%, #00d4ff 100%);
+  color: #fff;
+  font-weight: 700;
+  border: none;
+  border-radius: 10px;
+  padding: 12px 24px;
+  font-size: 1.1rem;
+  box-shadow: 0 2px 8px rgba(0,158,227,0.13);
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s;
+}
+.mp-btn:hover {
+  background: linear-gradient(90deg, #0077b6 60%, #00b4d8 100%);
+  box-shadow: 0 4px 16px rgba(0,158,227,0.18);
+}
 
 @media (max-width: 900px)
   .products-main

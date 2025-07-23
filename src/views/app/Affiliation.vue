@@ -1,3 +1,4 @@
+
 <template>
   <App :session="session" :office_id="office_id" :title="title">
     <Spinner v-if="loading" :size="40" :color="'#086eb6'" />
@@ -382,6 +383,15 @@
                     <input type="radio" :value="'cash'" v-model="pay_method" />
                     <small>Efectivo</small>
                   </label>
+                  <!-- <button
+                    class="main-action-btn mp-btn"
+                    @click="pagarConMercadoPago"
+                    style="margin-top:10px; display: flex; align-items: center; gap: 10px;"
+                  >
+                    <img src="https://http2.mlstatic.com/frontend-assets/ui-navigation/5.22.6/mercadopago/logo__large.png"
+                         alt="Mercado Pago" style="height: 24px; vertical-align: middle;" />
+                    Pagar con Mercado Pago
+                  </button> -->
                 </div>
                 <div v-if="pay_method == 'bank'" class="bank-fields">
                   <input
@@ -914,6 +924,24 @@ export default {
       this.selectError = "";
       this.goToStep(2);
     },
+    // async pagarConMercadoPago() {
+    //   try {
+    //     const response = await api.mercadopagoPreference({
+    //       description: `Afiliación ${this.selec_plan ? this.selec_plan.name : ''}`,
+    //       price: this.upgradeMode ? this.upgradeDifference : this.selec_plan.amount,
+    //       quantity: 1,
+    //       payer_email: "test_user_116744135@testuser.com" // email de test comprador
+    //     });
+    //     const data = response.data;
+    //     if (data.ok && data.data && data.data.init_point) {
+    //       window.location.href = data.data.init_point;
+    //     } else {
+    //       this.error = data.msg || "Error al iniciar pago con Mercado Pago";
+    //     }
+    //   } catch (err) {
+    //     this.error = err.message || "Error al conectar con Mercado Pago";
+    //   }
+    // },
   },
 };
 </script>

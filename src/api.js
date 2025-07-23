@@ -79,6 +79,11 @@ class API {
   coverage(session, data) {
     return axios.post(`/app/coverage?session=${session}`, data);
   }
+
+  // Mercado Pago
+//   mercadopagoPreference(data) {
+//     return axios.post("http://localhost:4000/api/app/mercadopago", data);
+//   }
 }
 
 class Profile {
