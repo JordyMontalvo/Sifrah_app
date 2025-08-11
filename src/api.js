@@ -79,6 +79,13 @@ class API {
   coverage(session, data) {
     return axios.post(`/app/coverage?session=${session}`, data);
   }
+  tree(session, id, depth) {
+    let url = `/app/tree?session=${session}`
+    if (id !== undefined && id !== null) url += `&&id=${id}`
+    if (depth !== undefined && depth !== null) url += `&&depth=${depth}`
+    return axios.get(url)
+  }
+
 
   // Mercado Pago
 //   mercadopagoPreference(data) {
