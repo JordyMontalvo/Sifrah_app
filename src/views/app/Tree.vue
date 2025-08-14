@@ -2,12 +2,12 @@
   <App :session="session" :office_id="office_id">
     <!-- Selector de modo - aparece primero -->
     <div v-if="!selectedMode" class="mode-selector">
-      <h2 class="mode-title">SELECCIONAR MODO</h2>
+      <h2 class="mode-title" :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }">SELECCIONAR MODO</h2>
       <div class="cards-container">
-        <div class="card" @click="selectMode('red')">
-          <p class="card-text">Red</p>
+        <div class="card" :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }" @click="selectMode('red')">
+          <p class="card-text" :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }">Red</p>
           <div class="card-icon">
-            <svg width="60" height="60" viewBox="0 0 60 60" fill="none">
+            <svg :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }" width="60" height="60" viewBox="0 0 60 60" fill="none">
               <!-- Icono de red jerárquica -->
               <circle cx="30" cy="10" r="3" fill="#e67e00"/>
               <line x1="30" y1="13" x2="15" y2="25" stroke="#e67e00" stroke-width="2"/>
@@ -23,10 +23,10 @@
             </svg>
           </div>
         </div>
-        <div class="card" @click="selectMode('frontales')">
-          <p class="card-text">Frontales</p>
+        <div class="card" :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }" @click="selectMode('frontales')">
+          <p class="card-text" :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }">Frontales</p>
           <div class="card-icon">
-            <svg width="60" height="60" viewBox="0 0 60 60" fill="none">
+            <svg :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }" width="60" height="60" viewBox="0 0 60 60" fill="none">
               <!-- Icono de frontales -->
               <circle cx="30" cy="15" r="3" fill="#e67e00"/>
               <line x1="30" y1="18" x2="15" y2="30" stroke="#e67e00" stroke-width="2"/>
@@ -38,10 +38,10 @@
             </svg>
           </div>
         </div>
-        <div class="card" @click="selectMode('niveles')">
-          <p class="card-text">Niveles</p>
+        <div class="card" :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }" @click="selectMode('niveles')">
+          <p class="card-text" :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }">Niveles</p>
           <div class="card-icon">
-            <svg width="60" height="60" viewBox="0 0 60 60" fill="none">
+            <svg :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }" width="60" height="60" viewBox="0 0 60 60" fill="none">
               <!-- Icono de niveles (donut chart) -->
               <circle cx="30" cy="30" r="20" fill="none" stroke="#e67e00" stroke-width="8"/>
               <circle cx="30" cy="30" r="12" fill="none" stroke="#e67e00" stroke-width="8"/>
@@ -50,10 +50,10 @@
             </svg>
           </div>
         </div>
-        <div class="card" @click="selectMode('actividad')">
-          <p class="card-text">Actividad</p>
+        <div class="card" :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }" @click="selectMode('actividad')">
+          <p class="card-text" :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }">Actividad</p>
           <div class="card-icon">
-            <svg width="60" height="60" viewBox="0 0 60 60" fill="none">
+            <svg :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }" width="60" height="60" viewBox="0 0 60 60" fill="none">
               <!-- Icono de actividad -->
               <circle cx="12" cy="15" r="2" fill="#e67e00"/>
               <line x1="20" y1="15" x2="48" y2="15" stroke="#e67e00" stroke-width="2"/>
@@ -274,6 +274,8 @@ export default {
       children_points: [],
       modal_children: [], // Para hijos del usuario seleccionado en el modal
       modal_children_points: [], // Para puntos de los hijos del usuario seleccionado
+      isMobile: false,
+      isMobileSmall: false,
     }
   },
   computed: {
@@ -310,6 +312,14 @@ export default {
   mounted() {
     // Detectar el modo desde la ruta al montar
     this.detectModeFromRoute();
+    // Detectar tamaño de pantalla
+    this.detectScreenSize();
+    // Agregar listener para cambios de tamaño
+    window.addEventListener('resize', this.detectScreenSize);
+  },
+  beforeDestroy() {
+    // Remover listener al destruir el componente
+    window.removeEventListener('resize', this.detectScreenSize);
   },
   watch: {
     // Cuando se navega a esta ruta, detectar el modo
@@ -336,6 +346,11 @@ export default {
       this.selectedId = data.node.id
       this.children = data.children || [] // <-- Guardar hijos completos
       this.children_points = data.children_points || []
+    },
+    detectScreenSize() {
+      const width = window.innerWidth;
+      this.isMobile = width <= 968;
+      this.isMobileSmall = width <= 400;
     },
     detectModeFromRoute() {
       const path = this.$route.path;
@@ -438,7 +453,7 @@ export default {
 
 /* Responsive para móviles */
 @media (max-width: 968px) {
-  .cards-container {
+  /* .cards-container {
     gap: 20px;
     max-width: 400px;
     margin: 0 auto 50px auto;
@@ -472,18 +487,18 @@ export default {
   .btn-orange {
     font-size: 14px;
     padding: 12px 24px;
-  }
+  } */
 }
 
 /* Para móviles muy pequeños */
 @media (max-width: 400px) {
-  .cards-container {
+  /* .cards-container {
 
   }
   
   .mode-selector .card {
-    width: 130px;
-    height: 130px;
+    width: 150px;
+    height: 150px;
     padding: 12px;
   }
   
@@ -499,7 +514,7 @@ export default {
   .card-icon svg {
     width: 40px;
     height: 40px;
-  }
+  } */
 }
 
 .mode-selector .card {
@@ -517,6 +532,50 @@ export default {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+}
+
+/* Clases específicas para móvil */
+.mode-selector .card.mobile {
+  width: 140px !important;
+  height: 140px !important;
+  padding: 15px !important;
+}
+
+.mode-selector .card.mobile-small {
+  width: 125px !important;
+  height: 125px !important;
+  padding: 12px !important;
+}
+
+/* Clases para texto en móvil */
+.card-text.mobile {
+  font-size: 20px !important;
+}
+
+.card-text.mobile-small {
+  font-size: 15px !important;
+}
+
+/* Clases para título en móvil */
+.mode-title.mobile {
+  font-size: 20px !important;
+  margin-bottom: 20px !important;
+}
+
+.mode-title.mobile-small {
+  font-size: 20px !important;
+  margin-bottom: 20px !important;
+}
+
+/* Clases para iconos en móvil */
+.card-icon svg.mobile {
+  width: 50px !important;
+  height: 50px !important;
+}
+
+.card-icon svg.mobile-small {
+  width: 40px !important;
+  height: 40px !important;
 }
 
 .mode-selector .card:hover {
