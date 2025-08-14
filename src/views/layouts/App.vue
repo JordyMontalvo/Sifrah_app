@@ -298,7 +298,7 @@
         <i class="fas fa-shopping-bag"></i>
         Plan
       </router-link>
-      <router-link to="/tree" v-if="tree">
+      <router-link to="/tree/red" v-if="tree">
         <i class="fas fa-project-diagram"></i>
         Red
       </router-link>

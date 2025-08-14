@@ -5,6 +5,7 @@
       <h2 class="mode-title">SELECCIONAR MODO</h2>
       <div class="cards-container">
         <div class="card" @click="selectMode('red')">
+          <p class="card-text">Red</p>
           <div class="card-icon">
             <svg width="60" height="60" viewBox="0 0 60 60" fill="none">
               <!-- Icono de red jerárquica -->
@@ -21,9 +22,9 @@
               <circle cx="38" cy="40" r="3" fill="#e67e00"/>
             </svg>
           </div>
-          <p class="card-text">Red</p>
         </div>
         <div class="card" @click="selectMode('frontales')">
+          <p class="card-text">Frontales</p>
           <div class="card-icon">
             <svg width="60" height="60" viewBox="0 0 60 60" fill="none">
               <!-- Icono de frontales -->
@@ -36,9 +37,9 @@
               <circle cx="45" cy="30" r="3" fill="#e67e00"/>
             </svg>
           </div>
-          <p class="card-text">Frontales</p>
         </div>
         <div class="card" @click="selectMode('niveles')">
+          <p class="card-text">Niveles</p>
           <div class="card-icon">
             <svg width="60" height="60" viewBox="0 0 60 60" fill="none">
               <!-- Icono de niveles (donut chart) -->
@@ -48,9 +49,9 @@
               <path d="M30 18 A12 12 0 0 1 42 30" stroke="#e67e00" stroke-width="8" fill="none"/>
             </svg>
           </div>
-          <p class="card-text">Niveles</p>
         </div>
         <div class="card" @click="selectMode('actividad')">
+          <p class="card-text">Actividad</p>
           <div class="card-icon">
             <svg width="60" height="60" viewBox="0 0 60 60" fill="none">
               <!-- Icono de actividad -->
@@ -64,7 +65,6 @@
               <line x1="20" y1="45" x2="35" y2="45" stroke="#e67e00" stroke-width="2"/>
             </svg>
           </div>
-          <p class="card-text">Actividad</p>
         </div>
       </div>
       <div class="buttons-container">
@@ -82,7 +82,7 @@
     <div v-if="selectedMode === 'red'">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
         <h4>EQUIPO</h4>
-        <button @click="selectedMode = null" style="padding: 8px 16px; background: #00bcd4; border: none; border-radius: 6px; color: white;">
+        <button @click="$router.push('/tree')" style="padding: 8px 16px; background: #00bcd4; border: none; border-radius: 6px; color: white;">
           Volver al selector
         </button>
       </div>
@@ -150,7 +150,7 @@
     <div v-if="['frontales','niveles','actividad'].includes(selectedMode)">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
         <h3 style="color: #666;">Vista "{{ selectedMode }}" en construcción 🚧</h3>
-        <button @click="selectedMode = null" style="padding: 8px 16px; background: #00bcd4; border: none; border-radius: 6px; color: white;">
+        <button @click="$router.push('/tree')" style="padding: 8px 16px; background: #00bcd4; border: none; border-radius: 6px; color: white;">
           Volver al selector
         </button>
       </div>
@@ -304,7 +304,22 @@ export default {
     },
   },
   async created() {
-    // No cargar datos automáticamente, esperar a que se seleccione un modo
+    // Detectar el modo desde la ruta
+    this.detectModeFromRoute();
+  },
+  mounted() {
+    // Detectar el modo desde la ruta al montar
+    this.detectModeFromRoute();
+  },
+  watch: {
+    // Cuando se navega a esta ruta, detectar el modo
+    '$route'() {
+      this.detectModeFromRoute();
+    }
+  },
+  beforeRouteEnter(to, from, next) {
+    // Permitir que el componente maneje la detección del modo
+    next();
   },
   methods: {
     async GET(id) {
@@ -322,10 +337,28 @@ export default {
       this.children = data.children || [] // <-- Guardar hijos completos
       this.children_points = data.children_points || []
     },
+    detectModeFromRoute() {
+      const path = this.$route.path;
+      if (path === '/tree/red') {
+        this.selectedMode = 'red';
+        this.GET(null);
+      } else if (path === '/tree/frontales') {
+        this.selectedMode = 'frontales';
+      } else if (path === '/tree/niveles') {
+        this.selectedMode = 'niveles';
+      } else if (path === '/tree/actividad') {
+        this.selectedMode = 'actividad';
+      } else {
+        // Si es /tree sin parámetros, mostrar selector
+        this.selectedMode = null;
+      }
+    },
     selectMode(mode) {
-      this.selectedMode = mode
+      this.selectedMode = mode;
+      // Navegar a la ruta correspondiente
+      this.$router.push(`/tree/${mode}`);
       if (mode === 'red') {
-        this.GET(null)
+        this.GET(null);
       }
     },
     // Método para cargar hijos de un nodo (usado por TreeNode)
@@ -374,7 +407,7 @@ export default {
 
 <style>
 .mode-selector {
-  padding: 60px 20px;
+  /* padding: 60px 20px;
   max-width: 900px;
   margin: 0 auto;
   background: #f5f2e9;
@@ -382,21 +415,22 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: center; */
 }
 
 .mode-title {
   text-align: center;
   margin-bottom: 40px;
   color: #4a4a4a;
-  font-size: 28px;
+  font-size: 32px;
   font-weight: bold;
   letter-spacing: 1px;
+  
 }
 
 .cards-container {
   display: flex;
-  gap: 30px;
+  gap: 40px;
   justify-content: center;
   flex-wrap: wrap;
   margin-bottom: 50px;
@@ -406,16 +440,17 @@ export default {
   background: white;
   border: none;
   border-radius: 16px;
-  padding: 30px 20px;
+  padding: 20px;
   text-align: center;
   cursor: pointer;
   transition: all 0.3s ease;
-  min-width: 140px;
+  width: 180px;
+  height: 180px;
   box-shadow: 0 4px 20px rgba(0,0,0,0.08);
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 15px;
+  justify-content: center;
 }
 
 .mode-selector .card:hover {
@@ -427,14 +462,14 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 5px;
+  margin-top: 10px;
 }
 
 .card-text {
   margin: 0;
-  color: #e67e00;
+  color: #333;
   font-weight: 600;
-  font-size: 16px;
+  font-size: 26px;
   letter-spacing: 0.5px;
 }
 

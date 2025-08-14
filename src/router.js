@@ -122,6 +122,26 @@ const routes = [
     meta: { requiresAuth: true }
   },
   {
+    path: '/tree/red',
+    component: Tree,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/tree/frontales',
+    component: Tree,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/tree/niveles',
+    component: Tree,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/tree/actividad',
+    component: Tree,
+    meta: { requiresAuth: true }
+  },
+  {
     path: '/bonuses',
     component: Bonuses,
     meta: { requiresAuth: true }
