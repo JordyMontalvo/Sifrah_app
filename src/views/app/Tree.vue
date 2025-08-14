@@ -437,7 +437,7 @@ export default {
 }
 
 /* Responsive para móviles */
-@media (max-width: 768px) {
+@media (max-width: 968px) {
   .cards-container {
     gap: 20px;
     max-width: 400px;
@@ -445,18 +445,18 @@ export default {
   }
   
   .mode-selector .card {
-    width: 160px;
-    height: 160px;
+    width: 140px;
+    height: 140px;
     padding: 15px;
   }
   
   .card-text {
-    font-size: 22px;
+    font-size: 20px;
   }
   
   .mode-title {
-    font-size: 28px;
-    margin-bottom: 30px;
+    font-size: 20px;
+    margin-bottom: 20px;
   }
   
   .top-buttons {
@@ -476,29 +476,29 @@ export default {
 }
 
 /* Para móviles muy pequeños */
-@media (max-width: 480px) {
+@media (max-width: 400px) {
   .cards-container {
 
   }
   
   .mode-selector .card {
-    width: 150px;
-    height: 150px;
+    width: 130px;
+    height: 130px;
     padding: 12px;
   }
   
   .card-text {
-    font-size: 20px;
+    font-size: 15px;
   }
   
   .mode-title {
-    font-size: 24px;
-    margin-bottom: 25px;
+    font-size: 20px;
+    margin-bottom: 20px;
   }
   
   .card-icon svg {
-    width: 50px;
-    height: 50px;
+    width: 40px;
+    height: 40px;
   }
 }
 
