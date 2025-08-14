@@ -439,7 +439,7 @@ export default {
 .mode-selector .card {
   background: white;
   border: none;
-  border-radius: 16px;
+  border-radius: 10px;
   padding: 20px;
   text-align: center;
   cursor: pointer;
