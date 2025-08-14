@@ -1,5 +1,6 @@
 <template>
   <App :session="session" :title="title">
+    <!-- Banner slider (mantener el existente) -->
     <div v-if="bannerImages.length > 0" class="banner-slider">
       <div class="slider-wrapper">
         <transition name="carousel-3d" mode="out-in">
@@ -34,9 +35,6 @@
     <div v-else class="no-banners-msg">
       <p>No hay banners para mostrar.</p>
     </div>
-    <br />
-
-    <h4>INICIO</h4>
 
     <Spinner v-if="loading" :size="48" :color="'#086eb6'" />
     <SkeletonLoader
@@ -47,115 +45,250 @@
       style="margin: 24px 0"
     />
 
-    <transition-group
-      name="card-fade"
-      tag="div"
-      class="boxes masonry"
-      v-if="!loading"
-    >
-      <div class="box blue" title="Saldo disponible para usar" key="saldo">
-        <i class="fas fa-wallet"></i>
-        <div>
-          <p>S/. {{ balance }}</p>
-          <span>SALDO</span>
-          <div class="progress-bar">
-            <div
-              class="progress"
-              :style="{ width: (balance / 1000) * 100 + '%' }"
-            ></div>
+    <!-- Nuevo Dashboard Design -->
+    <div v-if="!loading" class="dashboard-container">
+      <!-- Top Row -->
+      <div class="dashboard-row">
+        <!-- Nivel Actual -->
+        <div class="dashboard-section">
+          <div class="section-header">
+            <h3>Nivel Actual</h3>
+          </div>
+          <div class="level-card">
+            <div class="level-icon">
+              <div class="medal-icon">
+                <i class="fas fa-gem"></i>
+                <span class="medal-text">{{ rank | _rank }}</span>
+              </div>
+            </div>
+            <div class="level-info">
+              <h4>{{ plan }}</h4>
+            </div>
+          </div>
+          <div class="metrics-grid">
+            <div class="metric-card">
+              <i class="fas fa-user"></i>
+              <div class="metric-content">
+                <span class="metric-value">{{ points || 0 }}</span>
+                <span class="metric-label">Puntos Personales</span>
+              </div>
+            </div>
+            <div class="metric-card">
+              <i class="fas fa-users"></i>
+              <div class="metric-content">
+                <span class="metric-value">{{ directs ? directs.length : 0 }}</span>
+                <span class="metric-label">Directos</span>
+              </div>
+            </div>
+            <div class="metric-card">
+              <i class="fas fa-star"></i>
+              <div class="metric-content">
+                <span class="metric-value">{{ rank | _rank }}</span>
+                <span class="metric-label">Rango Actual</span>
+              </div>
+            </div>
+            <div class="metric-card">
+              <i class="fas fa-users"></i>
+              <div class="metric-content">
+                <span class="metric-value">{{ node && node.total_points ? node.total_points : 0 }}</span>
+                <span class="metric-label">Puntos Grupales</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Rango Diamante -->
+        <div class="dashboard-section">
+          <div class="section-header">
+            <h3>Rango Diamante</h3>
+          </div>
+          <div class="rank-progress">
+            <div class="circular-progress">
+              <div class="progress-circle">
+                <div class="progress-fill" :style="{ transform: `rotate(${68 * 3.6}deg)` }"></div>
+                <div class="progress-center">
+                  <i class="fas fa-medal"></i>
+                </div>
+              </div>
+              <div class="progress-text">
+                <span class="progress-percentage">68%</span>
+                <span class="progress-label">Avance actual</span>
+                <span class="progress-subtitle">a 32% de subir a Segundo Diamante</span>
+              </div>
+            </div>
+            <div class="rank-metrics">
+              <div class="metric-card">
+                <i class="fas fa-user"></i>
+                <div class="metric-content">
+                  <span class="metric-value">{{ points || 0 }}</span>
+                  <span class="metric-label">Puntos Personales</span>
+                  <div class="metric-progress">
+                    <div class="progress-bar" style="width: 60%"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="metric-card dark">
+                <i class="fas fa-users"></i>
+                <div class="metric-content">
+                  <span class="metric-value">{{ directs ? directs.length : 0 }}</span>
+                  <span class="metric-label">Directos</span>
+                  <div class="metric-progress">
+                    <div class="progress-bar" style="width: 75%"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="metric-card">
+                <i class="fas fa-star"></i>
+                <div class="metric-content">
+                  <span class="metric-value">{{ rank | _rank }}</span>
+                  <span class="metric-label">Rango Actual</span>
+                  <div class="metric-progress">
+                    <div class="progress-bar" style="width: 45%"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="metric-card dark">
+                <i class="fas fa-users"></i>
+                <div class="metric-content">
+                  <span class="metric-value">{{ node && node.total_points ? node.total_points : 0 }}</span>
+                  <span class="metric-label">Puntos Grupales</span>
+                  <div class="metric-progress">
+                    <div class="progress-bar" style="width: 80%"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-      <div
-        class="box green"
-        title="Saldo aún no disponible"
-        key="saldo-no-disponible"
-      >
-        <i class="fas fa-hand-holding-usd"></i>
-        <div>
-          <p>S/. {{ _balance }}</p>
-          <span>SALDO NO DISPONIBLE</span>
+
+      <!-- Middle Row -->
+      <div class="dashboard-row">
+        <!-- Pack de Afiliación -->
+        <div class="dashboard-section">
+          <div class="affiliation-pack">
+            <div class="pack-content">
+              <h4>Pack de Afiliación</h4>
+              <p v-if="userPlan && userPlan.name">{{ userPlan.name }}</p>
+              <p v-else>{{ plan }}</p>
+            </div>
+            <div class="pack-icon">
+              <img v-if="userPlan && userPlan.img" :src="userPlan.img" alt="Imagen del plan" style="width: 40px; height: 40px; border-radius: 50%; background: #fff; padding: 5px;" />
+              <i v-else class="fas fa-medal"></i>
+            </div>
+          </div>
+        </div>
+
+        <!-- Comisiones -->
+        <div class="dashboard-section">
+          <div class="section-header">
+            <h3>Comisiones</h3>
+            <p>Completa los porcentajes y ¡disfruta el viaje!</p>
+          </div>
+          <div class="commissions-grid">
+            <div class="commission-card">
+              <div class="commission-icon gold">
+                <i class="fas fa-medal"></i>
+              </div>
+              <div class="commission-content">
+                <span class="commission-value">{{ balance || 0 }}</span>
+                <span class="commission-label">Saldo Disponible</span>
+              </div>
+            </div>
+            <div class="commission-card">
+              <div class="commission-icon blue">
+                <i class="fas fa-medal"></i>
+              </div>
+              <div class="commission-content">
+                <span class="commission-value">{{ _balance || 0 }}</span>
+                <span class="commission-label">Saldo No Disponible</span>
+              </div>
+            </div>
+            <div class="commission-card">
+              <div class="commission-icon purple">
+                <i class="fas fa-medal"></i>
+              </div>
+              <div class="commission-content">
+                <span class="commission-value">{{ Number(ins + insVirtual).toFixed(2) }}</span>
+                <span class="commission-label">Total Ganado</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bono Viaje -->
+        <div class="dashboard-section">
+          <div class="section-header">
+            <h3>Bono Viaje</h3>
+            <p>Completa los porcentajes y ¡disfruta el viaje!</p>
+          </div>
+          <div class="travel-bonus">
+            <div class="travel-progress">
+              <div class="travel-circle">
+                <div class="travel-fill" :style="{ transform: `rotate(${15 * 3.6}deg)` }"></div>
+                <div class="travel-center">
+                  <span class="travel-percentage">15%</span>
+                </div>
+              </div>
+              <span class="travel-label">Internacional</span>
+            </div>
+            <div class="travel-progress">
+              <div class="travel-circle">
+                <div class="travel-fill orange" :style="{ transform: `rotate(${46 * 3.6}deg)` }"></div>
+                <div class="travel-center">
+                  <span class="travel-percentage">46%</span>
+                </div>
+              </div>
+              <span class="travel-label">Nacional</span>
+            </div>
+          </div>
         </div>
       </div>
-      <div
-        class="box green"
-        title="Total ganado (incluye virtual)"
-        key="total-ganado"
-      >
-        <i class="fas fa-hand-holding-usd"></i>
-        <div>
-          <p>S/. {{ Number(ins + insVirtual).toFixed(2) }}</p>
-          <span>TOTAL GANADO</span>
+
+      <!-- Bottom Row -->
+      <div class="dashboard-row">
+        <!-- Últimos Ingresos -->
+        <div class="dashboard-section">
+          <div class="section-header">
+            <h3>Últimos Ingresos</h3>
+          </div>
+          <div class="latest-incomes">
+            <div v-if="directs && directs.length > 0" v-for="direct in directs.slice(0, 4)" :key="direct.id" class="income-item">
+              <div class="income-avatar">
+                <img v-if="direct.photo" :src="direct.photo" alt="Avatar" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;" />
+                <i v-else class="fas fa-user"></i>
+              </div>
+              <div class="income-content">
+                <span class="income-name">{{ direct.name }} {{ direct.lastName }}</span>
+                <span class="income-pack">{{ direct.plan || 'Usuario' }}</span>
+              </div>
+            </div>
+            <div v-if="!directs || directs.length === 0" class="income-item">
+              <div class="income-avatar">
+                <i class="fas fa-user"></i>
+              </div>
+              <div class="income-content">
+                <span class="income-name">No hay directos</span>
+                <span class="income-pack">Aún no tienes afiliados</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Comisiones Card -->
+        <div class="dashboard-section">
+          <div class="commissions-summary">
+            <div class="summary-icon">
+              <i class="fas fa-bullseye"></i>
+            </div>
+            <div class="summary-content">
+              <span class="summary-value">{{ Number(ins + insVirtual).toFixed(2) }}</span>
+              <span class="summary-label">Total Ganado</span>
+            </div>
+          </div>
         </div>
       </div>
-      <div class="box gold" title="Tus puntos acumulados" key="puntos">
-        <i class="fas fa-medal"></i>
-        <div>
-          <p>{{ points }}</p>
-          <span>PUNTOS</span>
-        </div>
-      </div>
-      <div
-        class="box purple"
-        v-if="plan && plan !== ''"
-        title="Tu paquete de afiliación"
-        key="paquete"
-      >
-        <img v-if="userPlan && userPlan.img" :src="userPlan.img" alt="Imagen del plan" style="max-width: 60px; max-height: 60px; margin-right: 12px; border-radius: 8px; background: #fff;" />
-        <div>
-          <p v-if="userPlan && userPlan.name" style="margin:0; font-weight:bold;">{{ userPlan.name }}</p>
-          <span>PAQUETE DE AFILIACIÓN</span>
-        </div>
-      </div>
-      <div
-        class="box purple"
-        v-if="rank && rank !== ''"
-        title="Rango cerrado actual"
-        key="rango-cerrado"
-      >
-        <i class="fas fa-gem"></i>
-        <div>
-          <p>{{ rank | _rank }}</p>
-          <span>RANGO CERRADO</span>
-        </div>
-      </div>
-      <div
-        class="box orange"
-        v-if="directs && Array.isArray(directs)"
-        title="Cantidad de directos"
-        key="directos"
-      >
-        <i class="fas fa-user-shield"></i>
-        <div>
-          <p>{{ directs.length }}</p>
-          <span>DIRECTOS</span>
-        </div>
-      </div>
-      <div
-        class="box purple"
-        v-if="node && node.rank"
-        title="Rango actual"
-        key="rango-actual"
-      >
-        <i class="fas fa-gem"></i>
-        <div>
-          <p>{{ node.rank | _rank }}</p>
-          <span>RANGO ACTUAL</span>
-        </div>
-      </div>
-      <div
-        class="box pink"
-        v-if="node && node.next_rank && node.next_rank.name"
-        title="Siguiente rango"
-        key="siguiente-rango"
-      >
-        <i class="fa fa-tachometer"></i>
-        <div>
-          <p>{{ node.next_rank.name | _rank }}</p>
-          <span>SIGUIENTE RANGO</span>
-        </div>
-      </div>
-    </transition-group>
+    </div>
   </App>
 </template>
 
@@ -340,12 +473,493 @@ export default {
 </script>
 
 <style scoped>
-.masonry {
+/* Nuevo Dashboard Styles */
+.dashboard-container {
+  background: #f5f2e9;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.dashboard-row {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  grid-auto-rows: 1fr;
-  gap: 1.5rem;
-  margin: 2rem 0;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.dashboard-section {
+  background: white;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+}
+
+.section-header {
+  margin-bottom: 20px;
+}
+
+.section-header h3 {
+  color: #4a4a4a;
+  font-size: 20px;
+  font-weight: bold;
+  margin: 0 0 8px 0;
+}
+
+.section-header p {
+  color: #888;
+  font-size: 14px;
+  margin: 0;
+}
+
+/* Nivel Actual */
+.level-card {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  padding: 20px;
+  background: linear-gradient(135deg, #f7971e 0%, #ffd200 100%);
+  border-radius: 12px;
+  color: white;
+}
+
+.level-icon {
+  margin-right: 20px;
+}
+
+.medal-icon {
+  position: relative;
+  width: 60px;
+  height: 60px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.medal-icon i {
+  font-size: 24px;
+  color: white;
+}
+
+.medal-text {
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 10px;
+  font-weight: bold;
+  background: white;
+  color: #f7971e;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.level-info h4 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+}
+
+.metric-card {
+  display: flex;
+  align-items: center;
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+}
+
+.metric-card.dark {
+  background: #28a745;
+  color: white;
+}
+
+.metric-card i {
+  font-size: 20px;
+  margin-right: 12px;
+  color: #28a745;
+}
+
+.metric-card.dark i {
+  color: white;
+}
+
+.metric-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.metric-value {
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+}
+
+.metric-card.dark .metric-value {
+  color: white;
+}
+
+.metric-label {
+  font-size: 12px;
+  color: #666;
+  margin-top: 2px;
+}
+
+.metric-card.dark .metric-label {
+  color: rgba(255,255,255,0.8);
+}
+
+.metric-progress {
+  margin-top: 8px;
+  height: 4px;
+  background: rgba(0,0,0,0.1);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.metric-card.dark .metric-progress {
+  background: rgba(255,255,255,0.2);
+}
+
+.progress-bar {
+  height: 100%;
+  background: #28a745;
+  border-radius: 2px;
+  transition: width 0.3s ease;
+}
+
+/* Rango Diamante */
+.rank-progress {
+  display: flex;
+  gap: 20px;
+}
+
+.circular-progress {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-right: 20px;
+}
+
+.progress-circle {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: conic-gradient(#28a745 0deg 245deg, #e9ecef 245deg 360deg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.progress-center {
+  width: 60px;
+  height: 60px;
+  background: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.progress-center i {
+  font-size: 20px;
+  color: #28a745;
+}
+
+.progress-text {
+  text-align: center;
+  margin-top: 10px;
+}
+
+.progress-percentage {
+  display: block;
+  font-size: 18px;
+  font-weight: bold;
+  color: #28a745;
+}
+
+.progress-label {
+  display: block;
+  font-size: 12px;
+  color: #666;
+  margin-top: 2px;
+}
+
+.progress-subtitle {
+  display: block;
+  font-size: 10px;
+  color: #888;
+  margin-top: 4px;
+}
+
+.rank-metrics {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+/* Pack de Afiliación */
+.affiliation-pack {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px;
+  background: #28a745;
+  border-radius: 12px;
+  color: white;
+}
+
+.pack-content h4 {
+  margin: 0 0 5px 0;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.pack-content p {
+  margin: 0;
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+.pack-icon i {
+  font-size: 40px;
+  color: #ffd200;
+}
+
+/* Comisiones */
+.commissions-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+}
+
+.commission-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  background: #f8f9fa;
+  border-radius: 12px;
+  text-align: center;
+}
+
+.commission-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.commission-icon.gold {
+  background: linear-gradient(135deg, #f7971e 0%, #ffd200 100%);
+}
+
+.commission-icon.blue {
+  background: linear-gradient(135deg, #2196f3 0%, #21cbf3 100%);
+}
+
+.commission-icon.purple {
+  background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%);
+}
+
+.commission-icon i {
+  font-size: 20px;
+  color: white;
+}
+
+.commission-value {
+  display: block;
+  font-size: 20px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+.commission-label {
+  font-size: 12px;
+  color: #666;
+}
+
+/* Bono Viaje */
+.travel-bonus {
+  display: flex;
+  justify-content: space-around;
+  gap: 20px;
+}
+
+.travel-progress {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.travel-circle {
+  position: relative;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: conic-gradient(#28a745 0deg 54deg, #e9ecef 54deg 360deg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.travel-circle .orange {
+  background: conic-gradient(#ff512f 0deg 166deg, #e9ecef 166deg 360deg);
+}
+
+.travel-center {
+  width: 45px;
+  height: 45px;
+  background: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.travel-percentage {
+  font-size: 14px;
+  font-weight: bold;
+  color: #28a745;
+}
+
+.travel-label {
+  font-size: 12px;
+  color: #666;
+  text-align: center;
+}
+
+/* Últimos Ingresos */
+.latest-incomes {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.income-item {
+  display: flex;
+  align-items: center;
+  padding: 12px;
+  background: #f8f9fa;
+  border-radius: 8px;
+}
+
+.income-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #28a745;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 12px;
+}
+
+.income-avatar i {
+  font-size: 16px;
+  color: white;
+}
+
+.income-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.income-name {
+  font-size: 14px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 2px;
+}
+
+.income-pack {
+  font-size: 12px;
+  color: #666;
+}
+
+/* Comisiones Summary */
+.commissions-summary {
+  display: flex;
+  align-items: center;
+  padding: 20px;
+  background: #f8f9fa;
+  border-radius: 12px;
+  border: 1px solid #e9ecef;
+}
+
+.summary-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: #28a745;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 15px;
+}
+
+.summary-icon i {
+  font-size: 20px;
+  color: white;
+}
+
+.summary-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.summary-value {
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+.summary-label {
+  font-size: 14px;
+  color: #666;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .dashboard-row {
+    grid-template-columns: 1fr;
+  }
+  
+  .rank-progress {
+    flex-direction: column;
+  }
+  
+  .commissions-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .travel-bonus {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .metrics-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .rank-metrics {
+    grid-template-columns: 1fr;
+  }
 }
 .box {
   border-radius: 18px;
