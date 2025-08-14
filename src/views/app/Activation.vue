@@ -372,48 +372,56 @@ export default {
         voucher_number,
       } = this;
 
-      if (pay_method == "bank") {
-        if (!bank) {
-          this.error = "Nombre de banco";
-          return;
-        }
-        if (!date) {
-          this.error = "Fecha de voucher";
-          return;
-        }
-        if (!voucher_number) {
-          this.error = "Número de voucher";
-          return;
-        }
-        if (!voucher) {
-          this.error = "Voucher de pago";
-          return;
-        }
-      }
-
+      // Validación de productos y oficina
       if (!this.total) {
         this.error = "Seleccione productos";
         return;
       }
-
       if (!office) {
         this.error = "Seleccione oficina";
         return;
       }
 
-      if (!check && !pay_method) {
-        this.error = "Seleccione Medio de Pago";
-        return;
-      }
+      // Lógica de saldo y método de pago
+      const saldoTotal = (this.balance || 0) + (this._balance || 0);
+      const totalPagar = this.price;
+      const restante = check ? totalPagar - saldoTotal : totalPagar;
+      const saldoCubreTodo = check && saldoTotal >= totalPagar;
+      const saldoParcial = check && saldoTotal < totalPagar && saldoTotal > 0;
+      const noSaldo = !check;
 
-      if (check && this.remaining && !pay_method) {
-        this.error = "Seleccione Medio de Pago";
-        return;
+      if (saldoCubreTodo) {
+        // No requiere método de pago
+        pay_method = null;
+      } else if (saldoParcial || noSaldo) {
+        if (!pay_method) {
+          this.error = saldoParcial
+            ? "El saldo no cubre el total, seleccione un método de pago para el restante."
+            : "Seleccione un método de pago.";
+          return;
+        }
+        // Validaciones adicionales para banco
+        if (pay_method == "bank") {
+          if (!bank) {
+            this.error = "Nombre de banco";
+            return;
+          }
+          if (!date) {
+            this.error = "Fecha de voucher";
+            return;
+          }
+          if (!voucher_number) {
+            this.error = "Número de voucher";
+            return;
+          }
+          if (!voucher) {
+            this.error = "Voucher de pago";
+            return;
+          }
+        }
       }
 
       this.error = null;
-
-      // POST Affiliation
       this.sending = true;
 
       if (voucher)
@@ -431,9 +439,7 @@ export default {
       });
 
       this.sending = false;
-
       this.success = true;
-
       this.reset();
     },
     // async pagarConMercadoPago() {

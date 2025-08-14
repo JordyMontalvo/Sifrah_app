@@ -365,7 +365,7 @@
                 </select>
                 <label class="checkbox-label">
                   <input type="checkbox" v-model="check" />
-                  <small>No Deseo usar mi saldo</small>
+                  <small>Deseo usar mi saldo</small>
                 </label>
                 <div v-if="!check" class="balance-info">
                   <small>Saldo no disponible: S/. {{ _balance }}</small
@@ -842,33 +842,56 @@ export default {
       let date = this.date;
       let voucher_number = this.voucher_number;
 
-      if (pay_method == "bank") {
-        if (!bank) {
-          this.error = "Nombre de banco";
-          return;
-        }
-        if (!date) {
-          this.error = "Fecha de voucher";
-          return;
-        }
-        if (!voucher_number) {
-          this.error = "Número de voucher";
-          return;
-        }
-        if (!voucher) {
-          this.error = "Voucher de pago";
-          return;
-        }
+      // Validación de productos y oficina
+      if (!products.some(p => p.total > 0)) {
+        this.error = "Seleccione productos";
+        return;
       }
-
       if (!office) {
         this.error = "Seleccione oficina";
         return;
       }
 
-      this.error = null;
+      // Lógica de saldo y método de pago
+      const saldoTotal = (this.balance || 0) + (this._balance || 0);
+      const totalPagar = this.upgradeMode ? this.upgradeDifference : (this.selec_plan ? this.selec_plan.amount : 0);
+      const restante = check ? totalPagar - saldoTotal : totalPagar;
+      const saldoCubreTodo = check && saldoTotal >= totalPagar;
+      const saldoParcial = check && saldoTotal < totalPagar && saldoTotal > 0;
+      const noSaldo = !check;
 
-      // // POST Affiliation
+      if (saldoCubreTodo) {
+        // No requiere método de pago
+        pay_method = null;
+      } else if (saldoParcial || noSaldo) {
+        if (!pay_method) {
+          this.error = saldoParcial
+            ? "El saldo no cubre el total, seleccione un método de pago para el restante."
+            : "Seleccione un método de pago.";
+          return;
+        }
+        // Validaciones adicionales para banco
+        if (pay_method == "bank") {
+          if (!bank) {
+            this.error = "Nombre de banco";
+            return;
+          }
+          if (!date) {
+            this.error = "Fecha de voucher";
+            return;
+          }
+          if (!voucher_number) {
+            this.error = "Número de voucher";
+            return;
+          }
+          if (!voucher) {
+            this.error = "Voucher de pago";
+            return;
+          }
+        }
+      }
+
+      this.error = null;
       this.sending = true;
 
       if (voucher)
