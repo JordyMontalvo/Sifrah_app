@@ -430,10 +430,76 @@ export default {
 
 .cards-container {
   display: flex;
-  gap: 40px;
+  gap: 45px;
   justify-content: center;
   flex-wrap: wrap;
   margin-bottom: 50px;
+}
+
+/* Responsive para móviles */
+@media (max-width: 768px) {
+  .cards-container {
+    gap: 20px;
+    max-width: 400px;
+    margin: 0 auto 50px auto;
+  }
+  
+  .mode-selector .card {
+    width: 160px;
+    height: 160px;
+    padding: 15px;
+  }
+  
+  .card-text {
+    font-size: 22px;
+  }
+  
+  .mode-title {
+    font-size: 28px;
+    margin-bottom: 30px;
+  }
+  
+  .top-buttons {
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .btn {
+    padding: 10px 20px;
+    font-size: 13px;
+  }
+  
+  .btn-orange {
+    font-size: 14px;
+    padding: 12px 24px;
+  }
+}
+
+/* Para móviles muy pequeños */
+@media (max-width: 480px) {
+  .cards-container {
+
+  }
+  
+  .mode-selector .card {
+    width: 150px;
+    height: 150px;
+    padding: 12px;
+  }
+  
+  .card-text {
+    font-size: 20px;
+  }
+  
+  .mode-title {
+    font-size: 24px;
+    margin-bottom: 25px;
+  }
+  
+  .card-icon svg {
+    width: 50px;
+    height: 50px;
+  }
 }
 
 .mode-selector .card {
@@ -463,6 +529,11 @@ export default {
   align-items: center;
   justify-content: center;
   margin-top: 10px;
+}
+
+.card-icon svg {
+  width: 60px;
+  height: 60px;
 }
 
 .card-text {
