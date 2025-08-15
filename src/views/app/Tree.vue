@@ -83,29 +83,146 @@
           </div>
         </div>
 
+        <!-- Modal para detalles del afiliado -->
         <div class="modal" :class="{ open }" @click="closed">
-          <div class="inner" @click.stop="">
-            <img class="photo" :src="selec_node.photo" style="display:block; margin:auto; border-radius:50%; width:100px; height:100px; object-fit:cover; border:3px solid #00bcd4;">
-            <p style="text-align: center; font-size:18px; font-weight:bold; margin:8px 0 0 0;">{{ selec_node.name }} {{ selec_node.lastName }}</p>
-            <p style="text-align: center; color:#888; margin:0 0 8px 0;">{{ selec_node.country }}</p>
-            <p><b>ID:</b> {{ selec_node.dni }}</p>
-            <p><b>Teléfono:</b> {{ selec_node.phone }}</p>
-            <p><b>Correo:</b> {{ selec_node.email }}</p>
-            <p><b>Rango Cerrado:</b> {{ selec_node._rank | _rank }}</p>
-            <p><b>Puntos personales:</b> {{ selec_node.points }}</p>
-            <p><b>Puntos de afiliación:</b> {{ selec_node.affiliation_points || 0 }}</p>
-            <p><b>Puntos grupales:</b> {{ selec_node.total_points !== undefined ? selec_node.total_points : '—' }}</p>
-            <div v-if="modal_children && modal_children.length && modal_children_points && modal_children_points.length">
-              <p style="font-weight:bold; margin-bottom: 8px;">Puntos por cada hijo directo:</p>
-              <div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;">
-                <div v-for="(child, idx) in modal_children" :key="child.id" style="background: #f0f7fa; border-radius: 12px; box-shadow: 0 2px 8px #00bcd420; padding: 12px 18px; min-width: 180px; display: flex; align-items: center; gap: 10px;">
-                  <i class="fas fa-user-circle" style="font-size: 28px; color: #00bcd4;"></i>
-                  <div style="flex:1;">
-                    <div style="font-weight: bold; color: #333; font-size: 15px;">{{ child.name }}</div>
-                    <div style="color: #888; font-size: 13px;">Puntos grupales: <span style="color: #00bcd4; font-weight: bold;">{{ modal_children_points[idx] }}</span></div>
+          <div class="modal-content" @click.stop="">
+            <div class="modal-header">
+              <h3 class="modal-title">Detalles del Afiliado</h3>
+              <button class="modal-close" @click="closed">
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+            
+            <div class="modal-body">
+              <div class="user-profile">
+                <div class="profile-avatar">
+                  <img v-if="selec_node.photo" :src="selec_node.photo" :alt="selec_node.name" class="user-photo">
+                  <i v-else class="fas fa-user-circle"></i>
+                </div>
+                <div class="profile-info">
+                  <h2 class="profile-name">{{ selec_node.name }} {{ selec_node.lastName }}</h2>
+                  <div class="profile-badges">
+                    <span class="membership-badge" :class="getMembershipClass(selec_node)">
+                      {{ getMembershipText(selec_node) }}
+                    </span>
+                    <span class="status-badge" :class="getStatusClass(selec_node)">
+                      {{ getStatusText(selec_node) }}
+                    </span>
                   </div>
                 </div>
               </div>
+              
+              <div class="info-grid">
+                <div class="info-section">
+                  <h4 class="section-title">
+                    <i class="fas fa-id-card"></i>
+                    Información Personal
+                  </h4>
+                  <div class="info-item">
+                    <span class="info-label">ID:</span>
+                    <span class="info-value">{{ selec_node.dni || 'No disponible' }}</span>
+                  </div>
+                  <div class="info-item">
+                    <span class="info-label">País:</span>
+                    <span class="info-value">{{ selec_node.country || 'No disponible' }}</span>
+                  </div>
+                  <div class="info-item">
+                    <span class="info-label">Teléfono:</span>
+                    <span class="info-value">{{ selec_node.phone || 'No disponible' }}</span>
+                  </div>
+                  <div class="info-item">
+                    <span class="info-label">Correo:</span>
+                    <span class="info-value">{{ selec_node.email || 'No disponible' }}</span>
+                  </div>
+                </div>
+                
+                <div class="info-section">
+                  <h4 class="section-title">
+                    <i class="fas fa-chart-line"></i>
+                    Puntos y Rendimiento
+                  </h4>
+                  <div class="points-display">
+                    <div class="point-card">
+                      <div class="point-icon">
+                        <i class="fas fa-user"></i>
+                      </div>
+                      <div class="point-details">
+                        <span class="point-label">Puntos Personales</span>
+                        <span class="point-value">{{ selec_node.points || 0 }}</span>
+                      </div>
+                    </div>
+                    <div class="point-card">
+                      <div class="point-icon">
+                        <i class="fas fa-users"></i>
+                      </div>
+                      <div class="point-details">
+                        <span class="point-label">Puntos de Afiliación</span>
+                        <span class="point-value">{{ selec_node.affiliation_points || 0 }}</span>
+                      </div>
+                    </div>
+                    <div class="point-card">
+                      <div class="point-icon">
+                        <i class="fas fa-network-wired"></i>
+                      </div>
+                      <div class="point-details">
+                        <span class="point-label">Puntos Grupales</span>
+                        <span class="point-value">{{ selec_node.total_points !== undefined ? selec_node.total_points : '—' }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="info-section">
+                  <h4 class="section-title">
+                    <i class="fas fa-crown"></i>
+                    Rango y Estatus
+                  </h4>
+                  <div class="info-item">
+                    <span class="info-label">Rango Cerrado:</span>
+                    <span class="info-value">{{ selec_node._rank | _rank }}</span>
+                  </div>
+                  <div class="info-item">
+                    <span class="info-label">Estado:</span>
+                    <span class="info-value">{{ selec_node.activated ? 'Activado' : 'No activado' }}</span>
+                  </div>
+                  <div class="info-item">
+                    <span class="info-label">Afiliado:</span>
+                    <span class="info-value">{{ selec_node.affiliated ? 'Sí' : 'No' }}</span>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Hijos directos del afiliado -->
+              <div v-if="modal_children && modal_children.length && modal_children_points && modal_children_points.length" class="children-section">
+                <h4 class="section-title">
+                  <i class="fas fa-sitemap"></i>
+                  Hijos Directos ({{ modal_children.length }})
+                </h4>
+                <div class="children-grid">
+                  <div v-for="(child, idx) in modal_children" :key="child.id" class="child-card">
+                    <div class="child-avatar">
+                      <i class="fas fa-user-circle"></i>
+                    </div>
+                    <div class="child-info">
+                      <h5 class="child-name">{{ child.name }}</h5>
+                      <div class="child-points">
+                        <span class="child-point-label">PG:</span>
+                        <span class="child-point-value">{{ modal_children_points[idx] || 0 }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="modal-footer">
+              <button class="btn-whatsapp-large" @click="openWhatsApp(selec_node)">
+                <i class="fab fa-whatsapp"></i>
+                Contactar por WhatsApp
+              </button>
+              <button class="btn-close" @click="closed">
+                Cerrar
+              </button>
             </div>
           </div>
         </div>
@@ -126,39 +243,213 @@
     </div>
    <!-- vista frontales-->
    <div v-if="selectedMode === 'frontales'">
-     <!-- <p style="font-weight:bold; font-size:18px; margin-bottom:10px;">Total de puntos grupal: {{ node.total_points }}</p>  -->
+     <div class="frontales-header">
+       <h2 class="frontales-title">Frontales</h2>
+       <button @click="$router.push('/tree')" class="btn-volver">
+         <i class="fas fa-arrow-left"></i>
+         Volver al selector
+       </button>
+     </div>
      
      <div v-if="children && children.length && children_points && children_points.length">
-       <button @click="$router.push('/tree')" style="padding: 8px 16px; background: #00bcd4; border: none; border-radius: 6px; color: white; float: right;">
-         Volver al selector
-        </button>
-        <i class="load" v-if="loading"></i>
+       <div class="loading-container" v-if="loading">
+         <i class="load"></i>
+         <p>Cargando frontales...</p>
+       </div>
       
-      <div v-if="!loading">
-    <!-- <p style="margin-bottom: 8px; font-weight: bold;">Puntos por cada hijo:</p> -->
-    <div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;">
-      <div v-for="(child, idx) in children" :key="child.id"
-           style="background: #f0f7fa; border-radius: 12px; box-shadow: 0 2px 8px #00bcd420; padding: 12px 18px; min-width: 180px; display: flex; align-items: center; gap: 10px;">
-        <i class="fas fa-user-circle" style="font-size: 28px; color: #00bcd4;"></i>
-        <div style="flex:1;">
-          <div style="font-weight: bold; color: #333; font-size: 15px;">{{ child.name }}</div>
-          <div style="color: #888; font-size: 13px;">
-            Puntos grupales: <span style="color: #00bcd4; font-weight: bold;">{{ children_points[idx] }}</span>
+       <div v-if="!loading" class="frontales-grid">
+         <div v-for="(child, idx) in children" :key="child.id" class="frontal-card">
+           <div class="card-header">
+             <div class="user-avatar">
+               <i class="fas fa-user-circle"></i>
+             </div>
+             <div class="user-info">
+               <h3 class="user-name">{{ child.name }}</h3>
+               <div class="points-container">
+                 <div class="point-item">
+                   <i class="fas fa-user"></i>
+                   <span class="point-label">PP</span>
+                   <span class="point-value">{{ child.points || 120 }}</span>
+                 </div>
+                 <div class="point-item">
+                   <i class="fas fa-users"></i>
+                   <span class="point-label">PG</span>
+                   <span class="point-value">{{ children_points[idx] || 1450 }}</span>
+                 </div>
+               </div>
+             </div>
+           </div>
+           
+           <div class="card-body">
+             <div class="membership-badge" :class="getMembershipClass(child)">
+               {{ getMembershipText(child) }}
+             </div>
+             
+             <div class="card-actions">
+               <button class="btn-ver-detalle" @click="openUserDetail(child)">
+                 Ver detalle
+               </button>
+               <div class="status-badge" :class="getStatusClass(child)">
+                 {{ getStatusText(child) }}
+               </div>
+               <button class="btn-whatsapp" @click="openWhatsApp(child)">
+                 <i class="fab fa-whatsapp"></i>
+               </button>
+             </div>
+           </div>
+         </div>
+       </div>
+     </div>
+     
+           <div v-else-if="!loading" class="no-data">
+        <i class="fas fa-users" style="font-size: 48px; color: #ccc; margin-bottom: 16px;"></i>
+        <p>No hay frontales disponibles</p>
+      </div>
+      
+      <!-- Modal para detalles del afiliado en vista frontales -->
+      <div class="modal" :class="{ open }" @click="closed">
+        <div class="modal-content" @click.stop="">
+          <div class="modal-header">
+            <h3 class="modal-title">Detalles del Afiliado</h3>
+            <button class="modal-close" @click="closed">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+          
+          <div class="modal-body">
+            <div class="user-profile">
+              <div class="profile-avatar">
+                <img v-if="selec_node.photo" :src="selec_node.photo" :alt="selec_node.name" class="user-photo">
+                <i v-else class="fas fa-user-circle"></i>
+              </div>
+              <div class="profile-info">
+                <h2 class="profile-name">{{ selec_node.name }} {{ selec_node.lastName }}</h2>
+                <div class="profile-badges">
+                  <span class="membership-badge" :class="getMembershipClass(selec_node)">
+                    {{ getMembershipText(selec_node) }}
+                  </span>
+                  <span class="status-badge" :class="getStatusClass(selec_node)">
+                    {{ getStatusText(selec_node) }}
+                  </span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="info-grid">
+              <div class="info-section">
+                <h4 class="section-title">
+                  <i class="fas fa-id-card"></i>
+                  Información Personal
+                </h4>
+                <div class="info-item">
+                  <span class="info-label">ID:</span>
+                  <span class="info-value">{{ selec_node.dni || 'No disponible' }}</span>
+                </div>
+                <div class="info-item">
+                  <span class="info-label">País:</span>
+                  <span class="info-value">{{ selec_node.country || 'No disponible' }}</span>
+                </div>
+                <div class="info-item">
+                  <span class="info-label">Teléfono:</span>
+                  <span class="info-value">{{ selec_node.phone || 'No disponible' }}</span>
+                </div>
+                <div class="info-item">
+                  <span class="info-label">Correo:</span>
+                  <span class="info-value">{{ selec_node.email || 'No disponible' }}</span>
+                </div>
+              </div>
+              
+              <div class="info-section">
+                <h4 class="section-title">
+                  <i class="fas fa-chart-line"></i>
+                  Puntos y Rendimiento
+                </h4>
+                <div class="points-display">
+                  <div class="point-card">
+                    <div class="point-icon">
+                      <i class="fas fa-user"></i>
+                    </div>
+                    <div class="point-details">
+                      <span class="point-label">Puntos Personales</span>
+                      <span class="point-value">{{ selec_node.points || 0 }}</span>
+                    </div>
+                  </div>
+                  <div class="point-card">
+                    <div class="point-icon">
+                      <i class="fas fa-users"></i>
+                    </div>
+                    <div class="point-details">
+                      <span class="point-label">Puntos de Afiliación</span>
+                      <span class="point-value">{{ selec_node.affiliation_points || 0 }}</span>
+                    </div>
+                  </div>
+                  <div class="point-card">
+                    <div class="point-icon">
+                      <i class="fas fa-network-wired"></i>
+                    </div>
+                    <div class="point-details">
+                      <span class="point-label">Puntos Grupales</span>
+                      <span class="point-value">{{ selec_node.total_points !== undefined ? selec_node.total_points : '—' }}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="info-section">
+                <h4 class="section-title">
+                  <i class="fas fa-crown"></i>
+                  Rango y Estatus
+                </h4>
+                <div class="info-item">
+                  <span class="info-label">Rango Cerrado:</span>
+                  <span class="info-value">{{ selec_node._rank | _rank }}</span>
+                </div>
+                <div class="info-item">
+                  <span class="info-label">Estado:</span>
+                  <span class="info-value">{{ selec_node.activated ? 'Activado' : 'No activado' }}</span>
+                </div>
+                <div class="info-item">
+                  <span class="info-label">Afiliado:</span>
+                  <span class="info-value">{{ selec_node.affiliated ? 'Sí' : 'No' }}</span>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Hijos directos del afiliado -->
+            <div v-if="modal_children && modal_children.length && modal_children_points && modal_children_points.length" class="children-section">
+              <h4 class="section-title">
+                <i class="fas fa-sitemap"></i>
+                Hijos Directos ({{ modal_children.length }})
+              </h4>
+              <div class="children-grid">
+                <div v-for="(child, idx) in modal_children" :key="child.id" class="child-card">
+                  <div class="child-avatar">
+                    <i class="fas fa-user-circle"></i>
+                  </div>
+                  <div class="child-info">
+                    <h5 class="child-name">{{ child.name }}</h5>
+                    <div class="child-points">
+                      <span class="child-point-label">PG:</span>
+                      <span class="child-point-value">{{ modal_children_points[idx] || 0 }}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="modal-footer">
+            <button class="btn-whatsapp-large" @click="openWhatsApp(selec_node)">
+              <i class="fab fa-whatsapp"></i>
+              Contactar por WhatsApp
+            </button>
+            <button class="btn-close" @click="closed">
+              Cerrar
+            </button>
           </div>
         </div>
-      </div> 
+      </div>
     </div>
-  </div>
-
-
-    <div class="tree-container" style="display: none;">
-      <i v-if="node.parent && node.id != id"class="fas fa-arrow-left" @click="GET(node.parent) " style="position: absolute; right: 0; margin-right: 80px; z-index: 1;"></i>
-      <ul class="tree">
-        <tree-node :node="node" :session="session" :get-node="GET_NODE" :selected-id="selectedId" @select="click" />
-      </ul>
-    </div>
-  </div>
-</div>
 
 
   </App>
@@ -404,20 +695,92 @@ export default {
     //   this.selec_node = child; // Asignar el hijo seleccionado
     //   this.open = true; // Abrir el modal
     // },
-    // loadFrontalesData() {
-    //   this.loading = true; // Mostrar carga
-    //   // Simulación de llamada a la API para obtener datos de frontales
-    //   api.getFrontales(this.session)
-    //     .then(response => {
-    //       this.children = response.data.children || []; // Asignar hijos
-    //       this.children_points = response.data.children_points || []; // Asignar puntos
-    //       this.loading = false; // Ocultar carga
-    //     })
-    //     .catch(error => {
-    //       console.error("Error al cargar datos de frontales:", error);
-    //       this.loading = false; // Ocultar carga en caso de error
-    //     });
-    // }
+    // Métodos para la vista de frontales
+    getMembershipClass(child) {
+      const rank = child._rank || child.rank || 'none';
+      const membershipMap = {
+        'none': 'bronze',
+        'active': 'bronze', 
+        'star': 'silver',
+        'master': 'silver',
+        'silver': 'gold',
+        'gold': 'ruby',
+        'sapphire': 'ruby',
+        'RUBI': 'ruby',
+        'DIAMANTE': 'ruby',
+        'DOBLE DIAMANTE': 'ruby',
+        'TRIPLE DIAMANTE': 'ruby',
+        'DIAMANTE ESTRELLA': 'ruby'
+      };
+      return membershipMap[rank] || 'bronze';
+    },
+    
+    getMembershipText(child) {
+      const rank = child._rank || child.rank || 'none';
+      const membershipMap = {
+        'none': 'Bronce',
+        'active': 'Bronce',
+        'star': 'Plata', 
+        'master': 'Plata',
+        'silver': 'Oro',
+        'gold': 'Rubí',
+        'sapphire': 'Rubí',
+        'RUBI': 'Rubí',
+        'DIAMANTE': 'Rubí',
+        'DOBLE DIAMANTE': 'Rubí',
+        'TRIPLE DIAMANTE': 'Rubí',
+        'DIAMANTE ESTRELLA': 'Rubí'
+      };
+      return membershipMap[rank] || 'Bronce';
+    },
+    
+    getStatusClass(child) {
+      // Simular estado activo/inactivo basado en puntos o activación
+      const isActive = (child.points && child.points > 0) || child.activated;
+      return isActive ? 'status-active' : 'status-inactive';
+    },
+    
+    getStatusText(child) {
+      const isActive = (child.points && child.points > 0) || child.activated;
+      return isActive ? 'ACTIVO' : 'INACTIVO';
+    },
+    
+    async openUserDetail(child) {
+      this.selec_node = child;
+      this.open = true;
+      
+      // Cargar datos completos del usuario seleccionado
+      try {
+        const { data } = await this.GET_NODE(child.id, this.session);
+        this.modal_children = data.children || [];
+        this.modal_children_points = data.children_points || [];
+      } catch (error) {
+        console.error("Error al cargar detalles del usuario:", error);
+        this.modal_children = [];
+        this.modal_children_points = [];
+      }
+    },
+    
+    openWhatsApp(child) {
+      const phone = child.phone || '';
+      const message = `Hola ${child.name}, te contacto desde Sifrah`;
+      const whatsappUrl = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+      window.open(whatsappUrl, '_blank');
+    },
+    
+    async loadFrontalesData() {
+      this.loading = true;
+      try {
+        // Cargar datos del usuario actual para obtener sus frontales
+        const { data } = await api.tree(this.session, null);
+        this.children = data.children || [];
+        this.children_points = data.children_points || [];
+        this.loading = false;
+      } catch (error) {
+        console.error("Error al cargar datos de frontales:", error);
+        this.loading = false;
+      }
+    }
   }
 };
 </script>
@@ -425,23 +788,37 @@ export default {
 <style lang="stylus">
   .modal
     background rgba(#000, 0.72)
-    position absolute
+    position fixed
     top 0
     bottom 0
     left 0
     right 0
-    padding 80px 20px
+    padding 20px
     display none
-    z-index 2
+    z-index 1000
     overflow auto
+    backdrop-filter blur(5px)
     &.open
-      display block
-    .inner
-      background #eaebec
+      display flex
+      align-items center
+      justify-content center
+    .modal-content
+      background #ffffff
       border-radius 20px
-      padding 20px 20px 32px 20px
-      max-width 480px
-      margin auto
+      max-width 800px
+      width 100%
+      max-height 90vh
+      overflow hidden
+      box-shadow 0 20px 60px rgba(0, 0, 0, 0.3)
+      animation modalSlideIn 0.3s ease-out
+      
+  @keyframes modalSlideIn
+    from
+      opacity 0
+      transform translateY(-50px) scale(0.9)
+    to
+      opacity 1
+      transform translateY(0) scale(1)
 
 </style>
 
@@ -913,6 +1290,617 @@ https://codepen.io/team/amcharts/pen/poPxojR */
   box-shadow: 0 0 8px #00bcd4 !important;
   border: 2px solid #00bcd4 !important;
   background: #e0f7fa !important;
+}
+
+/* Estilos para la vista de Frontales */
+.frontales-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  padding: 0 20px;
+}
+
+.frontales-title {
+  font-size: 28px;
+  font-weight: bold;
+  color: #333;
+  margin: 0;
+}
+
+.btn-volver {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background: #00bcd4;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-volver:hover {
+  background: #0097a7;
+  transform: translateY(-2px);
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  color: #666;
+}
+
+.loading-container p {
+  margin-top: 16px;
+  font-size: 16px;
+}
+
+.frontales-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  padding: 0 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.frontal-card {
+  background: #f5f2e9;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  border: 1px solid #e0d8c0;
+}
+
+.frontal-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.user-avatar {
+  flex-shrink: 0;
+}
+
+.user-avatar i {
+  font-size: 48px;
+  color: #00bcd4;
+}
+
+.user-info {
+  flex: 1;
+}
+
+.user-name {
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+  margin: 0 0 12px 0;
+  line-height: 1.2;
+}
+
+.points-container {
+  display: flex;
+  gap: 16px;
+}
+
+.point-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.point-item i {
+  font-size: 16px;
+  color: #666;
+}
+
+.point-label {
+  font-size: 12px;
+  font-weight: bold;
+  color: #666;
+  text-transform: uppercase;
+}
+
+.point-value {
+  font-size: 14px;
+  font-weight: bold;
+  color: #333;
+}
+
+.card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.membership-badge {
+  display: inline-block;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  align-self: flex-start;
+}
+
+.membership-badge.bronze {
+  background: #cd7f32;
+  color: white;
+}
+
+.membership-badge.silver {
+  background: #c0c0c0;
+  color: white;
+}
+
+.membership-badge.gold {
+  background: #d4af37;
+  color: white;
+}
+
+.membership-badge.ruby {
+  background: #e0115f;
+  color: white;
+}
+
+.card-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.btn-ver-detalle {
+  padding: 8px 16px;
+  background: #28a745;
+  border: none;
+  border-radius: 6px;
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  flex: 1;
+  min-width: 100px;
+}
+
+.btn-ver-detalle:hover {
+  background: #218838;
+  transform: translateY(-1px);
+}
+
+.status-badge {
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.status-badge.status-active {
+  background: #d4edda;
+  color: #155724;
+}
+
+.status-badge.status-inactive {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.btn-whatsapp {
+  width: 36px;
+  height: 36px;
+  background: #25d366;
+  border: none;
+  border-radius: 50%;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-whatsapp:hover {
+  background: #128c7e;
+  transform: scale(1.1);
+}
+
+.no-data {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 20px;
+  color: #999;
+  text-align: center;
+}
+
+.no-data p {
+  font-size: 16px;
+  margin: 0;
+}
+
+/* Responsive para móviles */
+@media (max-width: 768px) {
+  .frontales-header {
+    flex-direction: column;
+    gap: 20px;
+    text-align: center;
+  }
+  
+  .frontales-title {
+    font-size: 24px;
+  }
+  
+  .frontales-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    padding: 0 16px;
+  }
+  
+  .frontal-card {
+    padding: 16px;
+  }
+  
+  .user-name {
+    font-size: 16px;
+  }
+  
+  .points-container {
+    gap: 12px;
+  }
+  
+  .card-actions {
+    gap: 8px;
+  }
+  
+  .btn-ver-detalle {
+    font-size: 11px;
+    padding: 6px 12px;
+  }
+}
+
+/* Estilos para el Modal de Detalles */
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 30px;
+  border-bottom: 1px solid #e0e0e0;
+  background: linear-gradient(135deg, #00bcd4, #0097a7);
+  color: white;
+}
+
+.modal-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin: 0;
+}
+
+.modal-close {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  color: white;
+  font-size: 18px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-close:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(1.1);
+}
+
+.modal-body {
+  padding: 30px;
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 30px;
+  padding: 20px;
+  background: #f8f9fa;
+  border-radius: 12px;
+}
+
+.profile-avatar {
+  flex-shrink: 0;
+}
+
+.user-photo {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #00bcd4;
+}
+
+.profile-avatar i {
+  font-size: 80px;
+  color: #00bcd4;
+}
+
+.profile-info {
+  flex: 1;
+}
+
+.profile-name {
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+  margin: 0 0 12px 0;
+}
+
+.profile-badges {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+  margin-bottom: 30px;
+}
+
+.info-section {
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+  margin: 0 0 16px 0;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #00bcd4;
+}
+
+.section-title i {
+  color: #00bcd4;
+}
+
+.info-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.info-item:last-child {
+  border-bottom: none;
+}
+
+.info-label {
+  font-weight: 600;
+  color: #666;
+  font-size: 14px;
+}
+
+.info-value {
+  font-weight: bold;
+  color: #333;
+  font-size: 14px;
+}
+
+.points-display {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.point-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: white;
+  border-radius: 8px;
+  border-left: 4px solid #00bcd4;
+}
+
+.point-icon {
+  width: 40px;
+  height: 40px;
+  background: #e0f7fa;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #00bcd4;
+  font-size: 18px;
+}
+
+.point-details {
+  flex: 1;
+}
+
+.point-details .point-label {
+  display: block;
+  font-size: 12px;
+  color: #666;
+  font-weight: 600;
+  text-transform: uppercase;
+  margin-bottom: 2px;
+}
+
+.point-details .point-value {
+  display: block;
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+}
+
+.children-section {
+  margin-top: 30px;
+}
+
+.children-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.child-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  background: white;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+  transition: all 0.3s ease;
+}
+
+.child-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-color: #00bcd4;
+}
+
+.child-avatar i {
+  font-size: 32px;
+  color: #00bcd4;
+}
+
+.child-info {
+  flex: 1;
+}
+
+.child-name {
+  font-size: 14px;
+  font-weight: bold;
+  color: #333;
+  margin: 0 0 4px 0;
+}
+
+.child-points {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.child-point-label {
+  font-size: 11px;
+  color: #666;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.child-point-value {
+  font-size: 14px;
+  font-weight: bold;
+  color: #00bcd4;
+}
+
+.modal-footer {
+  display: flex;
+  gap: 16px;
+  padding: 24px 30px;
+  border-top: 1px solid #e0e0e0;
+  background: #f8f9fa;
+}
+
+.btn-whatsapp-large {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: #25d366;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  flex: 1;
+}
+
+.btn-whatsapp-large:hover {
+  background: #128c7e;
+  transform: translateY(-2px);
+}
+
+.btn-close {
+  padding: 12px 24px;
+  background: #6c757d;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-close:hover {
+  background: #5a6268;
+  transform: translateY(-2px);
+}
+
+/* Responsive para el modal */
+@media (max-width: 768px) {
+  .modal-body {
+    padding: 20px;
+  }
+  
+  .user-profile {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .info-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  
+  .children-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .modal-footer {
+    flex-direction: column;
+  }
+  
+  .btn-whatsapp-large,
+  .btn-close {
+    width: 100%;
+  }
 }
 </style>
 
