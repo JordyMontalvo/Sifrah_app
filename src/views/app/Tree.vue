@@ -2,81 +2,47 @@
   <App :session="session" :office_id="office_id">
     <!-- Selector de modo - aparece primero -->
     <div v-if="!selectedMode" class="mode-selector">
-      <h2 class="mode-title" :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }">SELECCIONAR MODO</h2>
-      <div class="cards-container">
-        <div class="card" :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }" @click="selectMode('red')">
-          <p class="card-text" :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }">Red</p>
-          <div class="card-icon">
-            <svg :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }" width="60" height="60" viewBox="0 0 60 60" fill="none">
-              <!-- Icono de red jerárquica -->
-              <circle cx="30" cy="10" r="3" fill="#e67e00"/>
-              <line x1="30" y1="13" x2="15" y2="25" stroke="#e67e00" stroke-width="2"/>
-              <line x1="30" y1="13" x2="30" y2="25" stroke="#e67e00" stroke-width="2"/>
-              <line x1="30" y1="13" x2="45" y2="25" stroke="#e67e00" stroke-width="2"/>
-              <circle cx="15" cy="25" r="3" fill="#e67e00"/>
-              <circle cx="30" cy="25" r="3" fill="#e67e00"/>
-              <circle cx="45" cy="25" r="3" fill="#e67e00"/>
-              <line x1="30" y1="28" x2="22" y2="40" stroke="#e67e00" stroke-width="2"/>
-              <line x1="30" y1="28" x2="38" y2="40" stroke="#e67e00" stroke-width="2"/>
-              <circle cx="22" cy="40" r="3" fill="#e67e00"/>
-              <circle cx="38" cy="40" r="3" fill="#e67e00"/>
-            </svg>
+        <h2 class="mode-title" :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }">SELECCIONAR MODO</h2>
+        <div class="cards-container">
+          <div class="card" :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }" @click="selectMode('red')">
+            <p class="card-text" :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }">Red</p>
+            <div class="card-icon">
+              <!-- Nueva imagen de red jerárquica -->
+              <img src="@/assets/img/arbol.svg" alt="Red" :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }" style="width: 140px; height: 140px; object-fit: contain;">
+            </div>
+          </div>
+          <div class="card" :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }" @click="selectMode('frontales')">
+            <p class="card-text" :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }">Frontales</p>
+            <div class="card-icon">
+              <!-- Nueva imagen de frontales -->
+              <img src="@/assets/img/arbol2.svg" alt="Frontales" :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }" style="width: 140px; height: 140px; object-fit: contain;">
+            </div>
+          </div>
+          <div class="card" :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }" @click="selectMode('niveles')">
+            <p class="card-text" :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }">Niveles</p>
+            <div class="card-icon">
+              <!-- Nueva imagen de niveles -->
+              <img src="@/assets/img/actividad.svg" alt="Niveles" :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }" style="width: 140px; height: 140px; object-fit: contain;">
+            </div>
+          </div>
+          <div class="card" :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }" @click="selectMode('actividad')">
+            <p class="card-text" :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }">Actividad</p>
+            <div class="card-icon">
+              <!-- Nueva imagen de actividad -->
+              <img src="@/assets/img/activdad2.svg" alt="Actividad" :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }" style="width: 140px; height: 140px; object-fit: contain;">
+            </div>
           </div>
         </div>
-        <div class="card" :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }" @click="selectMode('frontales')">
-          <p class="card-text" :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }">Frontales</p>
-          <div class="card-icon">
-            <svg :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }" width="60" height="60" viewBox="0 0 60 60" fill="none">
-              <!-- Icono de frontales -->
-              <circle cx="30" cy="15" r="3" fill="#e67e00"/>
-              <line x1="30" y1="18" x2="15" y2="30" stroke="#e67e00" stroke-width="2"/>
-              <line x1="30" y1="18" x2="30" y2="30" stroke="#e67e00" stroke-width="2"/>
-              <line x1="30" y1="18" x2="45" y2="30" stroke="#e67e00" stroke-width="2"/>
-              <circle cx="15" cy="30" r="3" fill="#e67e00"/>
-              <circle cx="30" cy="30" r="3" fill="#e67e00"/>
-              <circle cx="45" cy="30" r="3" fill="#e67e00"/>
-            </svg>
+        <div class="buttons-container">
+          <div class="top-buttons">
+            <button class="btn btn-green">Periodos Históricos</button>
+            <button class="btn btn-green">Recuperar Historial</button>
           </div>
-        </div>
-        <div class="card" :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }" @click="selectMode('niveles')">
-          <p class="card-text" :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }">Niveles</p>
-          <div class="card-icon">
-            <svg :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }" width="60" height="60" viewBox="0 0 60 60" fill="none">
-              <!-- Icono de niveles (donut chart) -->
-              <circle cx="30" cy="30" r="20" fill="none" stroke="#e67e00" stroke-width="8"/>
-              <circle cx="30" cy="30" r="12" fill="none" stroke="#e67e00" stroke-width="8"/>
-              <path d="M30 10 A20 20 0 0 1 50 30" stroke="#e67e00" stroke-width="8" fill="none"/>
-              <path d="M30 18 A12 12 0 0 1 42 30" stroke="#e67e00" stroke-width="8" fill="none"/>
-            </svg>
-          </div>
-        </div>
-        <div class="card" :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }" @click="selectMode('actividad')">
-          <p class="card-text" :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }">Actividad</p>
-          <div class="card-icon">
-            <svg :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }" width="60" height="60" viewBox="0 0 60 60" fill="none">
-              <!-- Icono de actividad -->
-              <circle cx="12" cy="15" r="2" fill="#e67e00"/>
-              <line x1="20" y1="15" x2="48" y2="15" stroke="#e67e00" stroke-width="2"/>
-              <circle cx="12" cy="25" r="2" fill="#e67e00"/>
-              <line x1="20" y1="25" x2="40" y2="25" stroke="#e67e00" stroke-width="2"/>
-              <circle cx="12" cy="35" r="2" fill="#e67e00"/>
-              <line x1="20" y1="35" x2="45" y2="35" stroke="#e67e00" stroke-width="2"/>
-              <circle cx="12" cy="45" r="2" fill="#e67e00"/>
-              <line x1="20" y1="45" x2="35" y2="45" stroke="#e67e00" stroke-width="2"/>
-            </svg>
+          <div class="bottom-button">
+            <button class="btn btn-orange">MAPA DE LA RED</button>
           </div>
         </div>
       </div>
-      <div class="buttons-container">
-        <div class="top-buttons">
-          <button class="btn btn-green">Periodos Históricos</button>
-          <button class="btn btn-green">Recuperar Historial</button>
-        </div>
-        <div class="bottom-button">
-          <button class="btn btn-orange">MAPA DE LA RED</button>
-        </div>
-      </div>
-    </div>
 
     <!-- Vista de Red - árbol de afiliados -->
     <div v-if="selectedMode === 'red'">
