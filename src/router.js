@@ -30,6 +30,7 @@ import Profile      from './views/app/Profile.vue'
 import Password     from './views/app/Password.vue'
 import Security     from './views/app/Security.vue'
 import Resume       from './views/app/Resume.vue'
+import frontales from './views/app/frontales.vue'
 
 
 Vue.use(Router)
@@ -191,6 +192,11 @@ const routes = [
     component: Resume,
     meta: { requiresAuth: true }
   },
+  {
+    path: '/frontales',
+    component: frontales,
+    meta: { requiresAuth: true }
+  }
 ]
 
 const router = new Router({

@@ -1,175 +1,13 @@
 <template>
-  <App :session="session" :office_id="office_id">
-    <!-- Selector de modo - aparece primero -->
-    <div v-if="!selectedMode" class="mode-selector">
-      <h2 class="mode-title" :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }">SELECCIONAR MODO</h2>
-      <div class="cards-container">
-        <div class="card" :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }" @click="selectMode('red')">
-          <p class="card-text" :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }">Red</p>
-          <div class="card-icon">
-            <svg :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }" width="60" height="60" viewBox="0 0 60 60" fill="none">
-              <!-- Icono de red jerárquica -->
-              <circle cx="30" cy="10" r="3" fill="#e67e00"/>
-              <line x1="30" y1="13" x2="15" y2="25" stroke="#e67e00" stroke-width="2"/>
-              <line x1="30" y1="13" x2="30" y2="25" stroke="#e67e00" stroke-width="2"/>
-              <line x1="30" y1="13" x2="45" y2="25" stroke="#e67e00" stroke-width="2"/>
-              <circle cx="15" cy="25" r="3" fill="#e67e00"/>
-              <circle cx="30" cy="25" r="3" fill="#e67e00"/>
-              <circle cx="45" cy="25" r="3" fill="#e67e00"/>
-              <line x1="30" y1="28" x2="22" y2="40" stroke="#e67e00" stroke-width="2"/>
-              <line x1="30" y1="28" x2="38" y2="40" stroke="#e67e00" stroke-width="2"/>
-              <circle cx="22" cy="40" r="3" fill="#e67e00"/>
-              <circle cx="38" cy="40" r="3" fill="#e67e00"/>
-            </svg>
-          </div>
-        </div>
-        <div class="card" :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }" @click="selectMode('frontales')">
-          <p class="card-text" :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }">Frontales</p>
-          <div class="card-icon">
-            <svg :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }" width="60" height="60" viewBox="0 0 60 60" fill="none">
-              <!-- Icono de frontales -->
-              <circle cx="30" cy="15" r="3" fill="#e67e00"/>
-              <line x1="30" y1="18" x2="15" y2="30" stroke="#e67e00" stroke-width="2"/>
-              <line x1="30" y1="18" x2="30" y2="30" stroke="#e67e00" stroke-width="2"/>
-              <line x1="30" y1="18" x2="45" y2="30" stroke="#e67e00" stroke-width="2"/>
-              <circle cx="15" cy="30" r="3" fill="#e67e00"/>
-              <circle cx="30" cy="30" r="3" fill="#e67e00"/>
-              <circle cx="45" cy="30" r="3" fill="#e67e00"/>
-            </svg>
-          </div>
-        </div>
-        <div class="card" :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }" @click="selectMode('niveles')">
-          <p class="card-text" :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }">Niveles</p>
-          <div class="card-icon">
-            <svg :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }" width="60" height="60" viewBox="0 0 60 60" fill="none">
-              <!-- Icono de niveles (donut chart) -->
-              <circle cx="30" cy="30" r="20" fill="none" stroke="#e67e00" stroke-width="8"/>
-              <circle cx="30" cy="30" r="12" fill="none" stroke="#e67e00" stroke-width="8"/>
-              <path d="M30 10 A20 20 0 0 1 50 30" stroke="#e67e00" stroke-width="8" fill="none"/>
-              <path d="M30 18 A12 12 0 0 1 42 30" stroke="#e67e00" stroke-width="8" fill="none"/>
-            </svg>
-          </div>
-        </div>
-        <div class="card" :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }" @click="selectMode('actividad')">
-          <p class="card-text" :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }">Actividad</p>
-          <div class="card-icon">
-            <svg :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }" width="60" height="60" viewBox="0 0 60 60" fill="none">
-              <!-- Icono de actividad -->
-              <circle cx="12" cy="15" r="2" fill="#e67e00"/>
-              <line x1="20" y1="15" x2="48" y2="15" stroke="#e67e00" stroke-width="2"/>
-              <circle cx="12" cy="25" r="2" fill="#e67e00"/>
-              <line x1="20" y1="25" x2="40" y2="25" stroke="#e67e00" stroke-width="2"/>
-              <circle cx="12" cy="35" r="2" fill="#e67e00"/>
-              <line x1="20" y1="35" x2="45" y2="35" stroke="#e67e00" stroke-width="2"/>
-              <circle cx="12" cy="45" r="2" fill="#e67e00"/>
-              <line x1="20" y1="45" x2="35" y2="45" stroke="#e67e00" stroke-width="2"/>
-            </svg>
-          </div>
-        </div>
-      </div>
-      <div class="buttons-container">
-        <div class="top-buttons">
-          <button class="btn btn-green">Periodos Históricos</button>
-          <button class="btn btn-green">Recuperar Historial</button>
-        </div>
-        <div class="bottom-button">
-          <button class="btn btn-orange">MAPA DE LA RED</button>
-        </div>
-      </div>
-    </div>
+      <App :session="session" :office_id="office_id">
 
-    <!-- Vista de Red - árbol de afiliados -->
-    <div v-if="selectedMode === 'red'">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-        <h4>EQUIPO</h4>
-        <button @click="$router.push('/tree')" style="padding: 8px 16px; background: #00bcd4; border: none; border-radius: 6px; color: white;">
-          Volver al selector
-        </button>
-      </div>
-      
-      <i class="load" v-if="loading"></i>
-
-      <div v-if="!loading">
-        <!-- <p style="font-weight:bold; font-size:18px; margin-bottom:10px;">Total de puntos grupal: {{ node.total_points }}</p> -->
-
-        <!-- <div v-if="children && children.length && children_points && children_points.length">
-          <p style="margin-bottom: 8px; font-weight: bold;">Puntos por cada hijo:</p>
-          <div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;">
-            <div v-for="(child, idx) in children" :key="child.id"
-                 style="background: #f0f7fa; border-radius: 12px; box-shadow: 0 2px 8px #00bcd420; padding: 12px 18px; min-width: 180px; display: flex; align-items: center; gap: 10px;">
-              <i class="fas fa-user-circle" style="font-size: 28px; color: #00bcd4;"></i>
-              <div style="flex:1;">
-                <div style="font-weight: bold; color: #333; font-size: 15px;">{{ child.name }}</div>
-                <div style="color: #888; font-size: 13px;">
-                  Puntos grupales: <span style="color: #00bcd4; font-weight: bold;">{{ children_points[idx] }}</span>
-                </div>
-              </div>
-            </div> -->
-          <!-- </div>
-        </div> -->
-
-        <div id="body">
-          <div class="tree-container">
-            <i v-if="node.parent && node.id != id" class="fas fa-arrow-left" @click="GET(node.parent)" style="position: absolute; right: 0; margin-right: 80px; z-index: 1;"></i>
-            <ul class="tree">
-              <tree-node :node="node" :session="session" :get-node="GET_NODE" :selected-id="selectedId" @select="click" />
-            </ul>
-          </div>
-        </div>
-
-        <div class="modal" :class="{ open }" @click="closed">
-          <div class="inner" @click.stop="">
-            <img class="photo" :src="selec_node.photo" style="display:block; margin:auto; border-radius:50%; width:100px; height:100px; object-fit:cover; border:3px solid #00bcd4;">
-            <p style="text-align: center; font-size:18px; font-weight:bold; margin:8px 0 0 0;">{{ selec_node.name }} {{ selec_node.lastName }}</p>
-            <p style="text-align: center; color:#888; margin:0 0 8px 0;">{{ selec_node.country }}</p>
-            <p><b>ID:</b> {{ selec_node.dni }}</p>
-            <p><b>Teléfono:</b> {{ selec_node.phone }}</p>
-            <p><b>Correo:</b> {{ selec_node.email }}</p>
-            <p><b>Rango Cerrado:</b> {{ selec_node._rank | _rank }}</p>
-            <p><b>Puntos personales:</b> {{ selec_node.points }}</p>
-            <p><b>Puntos de afiliación:</b> {{ selec_node.affiliation_points || 0 }}</p>
-            <p><b>Puntos grupales:</b> {{ selec_node.total_points !== undefined ? selec_node.total_points : '—' }}</p>
-            <div v-if="modal_children && modal_children.length && modal_children_points && modal_children_points.length">
-              <p style="font-weight:bold; margin-bottom: 8px;">Puntos por cada hijo directo:</p>
-              <div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;">
-                <div v-for="(child, idx) in modal_children" :key="child.id" style="background: #f0f7fa; border-radius: 12px; box-shadow: 0 2px 8px #00bcd420; padding: 12px 18px; min-width: 180px; display: flex; align-items: center; gap: 10px;">
-                  <i class="fas fa-user-circle" style="font-size: 28px; color: #00bcd4;"></i>
-                  <div style="flex:1;">
-                    <div style="font-weight: bold; color: #333; font-size: 15px;">{{ child.name }}</div>
-                    <div style="color: #888; font-size: 13px;">Puntos grupales: <span style="color: #00bcd4; font-weight: bold;">{{ modal_children_points[idx] }}</span></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Placeholder para otros modos -->
-    <div v-if="['niveles','actividad'].includes(selectedMode)">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-        <h3 style="color: #666;">Vista "{{ selectedMode }}" en construcción 🚧</h3>
-        <button @click="$router.push('/tree')" style="padding: 8px 16px; background: #00bcd4; border: none; border-radius: 6px; color: white;">
-          Volver al selector
-        </button>
-      </div>
-      <div style="text-align:center; margin-top:20px;">
-        <p>Esta funcionalidad estará disponible próximamente</p>
-      </div>
-    </div>
-   <!-- vista frontales-->
-   <div v-if="selectedMode === 'frontales'">
-     <!-- <p style="font-weight:bold; font-size:18px; margin-bottom:10px;">Total de puntos grupal: {{ node.total_points }}</p>  -->
-     
-     <div v-if="children && children.length && children_points && children_points.length">
-       <button @click="$router.push('/tree')" style="padding: 8px 16px; background: #00bcd4; border: none; border-radius: 6px; color: white; float: right;">
-         Volver al selector
-        </button>
         <i class="load" v-if="loading"></i>
-      
-      <div v-if="!loading">
-    <!-- <p style="margin-bottom: 8px; font-weight: bold;">Puntos por cada hijo:</p> -->
+
+<div v-if="!loading">
+  <p style="font-weight:bold; font-size:18px; margin-bottom:10px;">Total de puntos grupal: {{ node.total_points }}</p> 
+
+<div v-if="children && children.length && children_points && children_points.length">
+    <p style="margin-bottom: 8px; font-weight: bold;">Puntos por cada hijo:</p>
     <div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;">
       <div v-for="(child, idx) in children" :key="child.id"
            style="background: #f0f7fa; border-radius: 12px; box-shadow: 0 2px 8px #00bcd420; padding: 12px 18px; min-width: 180px; display: flex; align-items: center; gap: 10px;">
@@ -184,24 +22,53 @@
     </div>
   </div>
 
-
+  <div id="body">
     <div class="tree-container">
-      <i v-if="node.parent && node.id != id"class="fas fa-arrow-left" @click="GET(node.parent) " style="position: absolute; right: 0; margin-right: 80px; z-index: 1;"></i>
+      <i v-if="node.parent && node.id != id" class="fas fa-arrow-left" @click="GET(node.parent)" style="position: absolute; right: 0; margin-right: 80px; z-index: 1;"></i>
       <ul class="tree">
         <tree-node :node="node" :session="session" :get-node="GET_NODE" :selected-id="selectedId" @select="click" />
       </ul>
     </div>
   </div>
+
+  <div class="modal" :class="{ open }" @click="closed">
+    <div class="inner" @click.stop="">
+      <img class="photo" :src="selec_node.photo" style="display:block; margin:auto; border-radius:50%; width:100px; height:100px; object-fit:cover; border:3px solid #00bcd4;">
+      <p style="text-align: center; font-size:18px; font-weight:bold; margin:8px 0 0 0;">{{ selec_node.name }} {{ selec_node.lastName }}</p>
+      <p style="text-align: center; color:#888; margin:0 0 8px 0;">{{ selec_node.country }}</p>
+      <p><b>ID:</b> {{ selec_node.dni }}</p>
+      <p><b>Teléfono:</b> {{ selec_node.phone }}</p>
+      <p><b>Correo:</b> {{ selec_node.email }}</p>
+      <p><b>Rango Cerrado:</b> {{ selec_node._rank | _rank }}</p>
+      <p><b>Puntos personales:</b> {{ selec_node.points }}</p>
+      <p><b>Puntos de afiliación:</b> {{ selec_node.affiliation_points || 0 }}</p>
+      <p><b>Puntos grupales:</b> {{ selec_node.total_points !== undefined ? selec_node.total_points : '—' }}</p>
+      <div v-if="modal_children && modal_children.length && modal_children_points && modal_children_points.length">
+        <p style="font-weight:bold; margin-bottom: 8px;">Puntos por cada hijo directo:</p>
+        <div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;">
+          <div v-for="(child, idx) in modal_children" :key="child.id" style="background: #f0f7fa; border-radius: 12px; box-shadow: 0 2px 8px #00bcd420; padding: 12px 18px; min-width: 180px; display: flex; align-items: center; gap: 10px;">
+            <i class="fas fa-user-circle" style="font-size: 28px; color: #00bcd4;"></i>
+            <div style="flex:1;">
+              <div style="font-weight: bold; color: #333; font-size: 15px;">{{ child.name }}</div>
+              <div style="color: #888; font-size: 13px;">Puntos grupales: <span style="color: #00bcd4; font-weight: bold;">{{ modal_children_points[idx] }}</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 
-  </App>
+
+</App>
+
+
 </template>
 
 <script>
 import App from '@/views/layouts/App'
 import api from '@/api'
-import router from '../../router'
 
 // Componente recursivo para renderizar el árbol
 const TreeNode = {
@@ -410,12 +277,6 @@ export default {
       this.selectedMode = mode;
       // Navegar a la ruta correspondiente
       this.$router.push(`/tree/${mode}`);
-      
-      if (mode === 'red') {
-        this.GET(null); // Cargar datos de la red
-      } else if (mode === 'frontales') {
-        this.loadFrontalesData(); // Cargar datos de frontales
-      }
     },
     // Método para cargar hijos de un nodo (usado por TreeNode)
     async GET_NODE(id, session) {
@@ -949,4 +810,3 @@ https://codepen.io/team/amcharts/pen/poPxojR */
   background: #e0f7fa !important;
 }
 </style>
-

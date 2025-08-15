@@ -62,7 +62,7 @@
               </div>
             </div>
             <div class="level-info">
-              <h4>{{ plan }}</h4>
+              <!-- <h4>{{ plan }}</h4> -->
             </div>
           </div>
           <div class="metrics-grid">
@@ -90,7 +90,7 @@
             <div class="metric-card">
               <i class="fas fa-users"></i>
               <div class="metric-content">
-                <span class="metric-value">{{ node && node.total_points ? node.total_points : 0 }}</span>
+                <span class="metric-value">{{ total_points }}</span>
                 <span class="metric-label">Puntos Grupales</span>
               </div>
             </div>
@@ -105,13 +105,13 @@
           <div class="rank-progress">
             <div class="circular-progress">
               <div class="progress-circle">
-                <div class="progress-fill" :style="{ transform: `rotate(${68 * 3.6}deg)` }"></div>
+                <div class="progress-fill" :style="{ transform: `rotate(${75 * 4.6}deg)` }"></div>
                 <div class="progress-center">
                   <i class="fas fa-medal"></i>
                 </div>
               </div>
               <div class="progress-text">
-                <span class="progress-percentage">68%</span>
+                <span class="progress-percentage">75%</span>
                 <span class="progress-label">Avance actual</span>
                 <span class="progress-subtitle">a 32% de subir a Segundo Diamante</span>
               </div>
@@ -150,7 +150,7 @@
               <div class="metric-card dark">
                 <i class="fas fa-users"></i>
                 <div class="metric-content">
-                  <span class="metric-value">{{ node && node.total_points ? node.total_points : 0 }}</span>
+                  <span class="metric-value">{{ total_points }}</span>
                   <span class="metric-label">Puntos Grupales</span>
                   <div class="metric-progress">
                     <div class="progress-bar" style="width: 80%"></div>
@@ -319,6 +319,7 @@ export default {
       loading: true,
       plans: null,
       plan: null ,
+      total_points: null,
 
       op: 1,
       op2: 0,
@@ -404,6 +405,7 @@ export default {
     this.$store.commit("SET_TREE", data.tree);
     this.$store.commit("SET_EMAIL", data.email);
     this.$store.commit("SET_TOKEN", data.token);
+    this.$store.commit("SET_TOTAL_POINTS", data.total_points);
 
     this.banner = data.banner;
     this.ins = data.ins;
@@ -418,6 +420,7 @@ export default {
     this.n_affiliates = data.n_affiliates;
     this.directs = data.directs || [];
     this.frontals = data.frontals || [];
+    this.total_points = data.total_points;
 
     this.plans = data.plans.map((a) => ({ ...a, total: 0 }));
     this.plan = data.plan;
