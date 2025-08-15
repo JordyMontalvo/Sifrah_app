@@ -185,7 +185,7 @@
   </div>
 
 
-    <div class="tree-container">
+    <div class="tree-container" style="display: none;">
       <i v-if="node.parent && node.id != id"class="fas fa-arrow-left" @click="GET(node.parent) " style="position: absolute; right: 0; margin-right: 80px; z-index: 1;"></i>
       <ul class="tree">
         <tree-node :node="node" :session="session" :get-node="GET_NODE" :selected-id="selectedId" @select="click" />
