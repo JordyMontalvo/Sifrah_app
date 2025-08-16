@@ -269,12 +269,12 @@
                  <div class="point-item">
                    <i class="fas fa-user"></i>
                    <span class="point-label">PP</span>
-                   <span class="point-value">{{ child.points || 120 }}</span>
+                   <span class="point-value">{{ selec_node.points || 0  }}</span>
                  </div>
                  <div class="point-item">
                    <i class="fas fa-users"></i>
                    <span class="point-label">PG</span>
-                   <span class="point-value">{{ children_points[idx] || 1450 }}</span>
+                   <span class="point-value">{{ children_points[idx] }}</span>
                  </div>
                </div>
              </div>
@@ -699,37 +699,37 @@ export default {
     getMembershipClass(child) {
       const rank = child._rank || child.rank || 'none';
       const membershipMap = {
-        'none': 'bronze',
-        'active': 'bronze', 
-        'star': 'silver',
-        'master': 'silver',
-        'silver': 'gold',
-        'gold': 'ruby',
-        'sapphire': 'ruby',
-        'RUBI': 'ruby',
-        'DIAMANTE': 'ruby',
-        'DOBLE DIAMANTE': 'ruby',
-        'TRIPLE DIAMANTE': 'ruby',
-        'DIAMANTE ESTRELLA': 'ruby'
-      };
+        'none'   :       'Ninguno',
+       'active'       :     'ACTIVO',
+       'star'         :     'BRONCE',
+       'master'       :     'PLATA',
+       'silver'       :     'PLATA',
+       'gold'         :    'ORO',
+       'RUBI'         :    'DIAMANTE RUBI',
+       'sapphire'     :      'ZAFIRO',
+       'DIAMANTE'     :     'DIAMANTE ESTRELLA',
+       'DOBLE DIAMANTE'    :'DIAMANTE DOS ESTRELLAS',
+      'TRIPLE DIAMANTE' : 'DIAMANTE TRES ESTRELLAS',
+     'DIAMANTE ESTRELLA'  :'DIAMANTE CBM',
+    };
       return membershipMap[rank] || 'bronze';
     },
     
     getMembershipText(child) {
       const rank = child._rank || child.rank || 'none';
       const membershipMap = {
-        'none': 'Bronce',
-        'active': 'Bronce',
-        'star': 'Plata', 
-        'master': 'Plata',
-        'silver': 'Oro',
-        'gold': 'Rubí',
-        'sapphire': 'Rubí',
-        'RUBI': 'Rubí',
-        'DIAMANTE': 'Rubí',
-        'DOBLE DIAMANTE': 'Rubí',
-        'TRIPLE DIAMANTE': 'Rubí',
-        'DIAMANTE ESTRELLA': 'Rubí'
+        'none'   :       'Ninguno',
+       'active'       :     'ACTIVO',
+       'star'         :     'BRONCE',
+       'master'       :     'PLATA',
+       'silver'       :     'PLATA',
+       'gold'         :    'ORO',
+       'RUBI'         :    'DIAMANTE RUBI',
+       'sapphire'     :      'ZAFIRO',
+       'DIAMANTE'     :     'DIAMANTE ESTRELLA',
+       'DOBLE DIAMANTE'    :'DIAMANTE DOS ESTRELLAS',
+      'TRIPLE DIAMANTE' : 'DIAMANTE TRES ESTRELLAS',
+     'DIAMANTE ESTRELLA'  :'DIAMANTE CBM',
       };
       return membershipMap[rank] || 'Bronce';
     },
