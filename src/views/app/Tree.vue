@@ -269,7 +269,7 @@
                  <div class="point-item">
                    <i class="fas fa-user"></i>
                    <span class="point-label">PP</span>
-                   <span class="point-value">{{ selec_node.points || 0  }}</span>
+                   <span class="point-value">{{ selec_node.points }}</span>
                  </div>
                  <div class="point-item">
                    <i class="fas fa-users"></i>
@@ -389,7 +389,7 @@
                     </div>
                     <div class="point-details">
                       <span class="point-label">Puntos Grupales</span>
-                      <span class="point-value">{{ selec_node.total_points !== undefined ? selec_node.total_points : '—' }}</span>
+                      <span class="point-value">{{ totalPoints}}</span>
                     </div>
                   </div>
                 </div>
@@ -475,7 +475,7 @@ const TreeNode = {
   computed: {
     isSelected() {
       return this.selectedId === this.node.id
-    }
+    },
   },
   methods: {
     async expandNode(e) {
@@ -578,6 +578,10 @@ export default {
     office_id() { return this.$store.state.office_id },
     name()      { return this.$store.state.name },
     activated() { return this.$store.state.activated },
+    totalPoints() {
+    const childrenPointsTotal = this.modal_children_points.reduce((total, points) => total + points, 0);
+    return childrenPointsTotal + (this.selec_node.points || 0); // Suma los puntos personales
+  },
   },
 
   filters: {
@@ -588,9 +592,9 @@ export default {
     _rank(val) {
       if(val == 'none')              return 'Ninguno'
       if(val == 'active')            return 'ACTIVO'
-      if(val == 'star')              return 'MASTER'
+      if(val == 'star')              return 'BRONCE'
       if(val == 'master')            return 'PLATA'
-      if(val == 'silver')            return 'PLATINO'
+      if(val == 'silver')            return 'PLATA'
       if(val == 'gold')              return 'ORO'
       if(val == 'sapphire')          return 'ZAFIRO'
       if(val == 'RUBI')              return 'DIAMANTE RUBI'
@@ -641,6 +645,8 @@ export default {
       this.selectedId = data.node.id
       this.children = data.children || [] // <-- Guardar hijos completos
       this.children_points = data.children_points || []
+      this.selec_node = data.node;
+      console.log("selec_node:", this.children_points); 
     },
     detectScreenSize() {
       const width = window.innerWidth;
@@ -780,6 +786,7 @@ export default {
         console.error("Error al cargar datos de frontales:", error);
         this.loading = false;
       }
+// Verifica que total_points esté presente
     }
   }
 };
