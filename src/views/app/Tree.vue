@@ -39,7 +39,7 @@
             <button class="btn btn-green">Recuperar Historial</button>
           </div>
           <div class="bottom-button">
-            <button class="btn btn-orange">MAPA DE LA RED</button>
+            <button class="btn btn-orange" @click="goToRedMap">MAPA DE LA RED</button>
           </div>
         </div>
       </div>
@@ -266,11 +266,11 @@
              <div class="user-info">
                <h3 class="user-name">{{ child.name }}</h3>
                <div class="points-container">
-                 <div class="point-item">
-                   <i class="fas fa-user"></i>
-                   <span class="point-label">PP</span>
-                   <span class="point-value">{{ selec_node.points }}</span>
-                 </div>
+                                   <div class="point-item">
+                    <i class="fas fa-user"></i>
+                    <span class="point-label">PP</span>
+                    <span class="point-value">{{ child.points || 0 }}</span>
+                  </div>
                  <div class="point-item">
                    <i class="fas fa-users"></i>
                    <span class="point-label">PG</span>
@@ -489,6 +489,14 @@ const TreeNode = {
         const { data } = await this.getNode(this.node.id, this.session)
         this.children = data.children || []
         this.children_points = data.children_points || [] // Guardar los puntos por hijo
+        
+        // Asignar los puntos grupales a cada hijo
+        this.children.forEach((child, index) => {
+          if (this.children_points[index] !== undefined) {
+            child.total_points = this.children_points[index]
+          }
+        })
+        
         this.loading = false
       }
       this.expanded = true
@@ -578,10 +586,15 @@ export default {
     office_id() { return this.$store.state.office_id },
     name()      { return this.$store.state.name },
     activated() { return this.$store.state.activated },
-    totalPoints() {
-    const childrenPointsTotal = this.modal_children_points.reduce((total, points) => total + points, 0);
-    return childrenPointsTotal + (this.selec_node.points || 0); // Suma los puntos personales
-  },
+         totalPoints() {
+       // Si estamos en la vista de frontales, usar los puntos grupales del usuario seleccionado
+       if (this.selectedMode === 'frontales' && this.selec_node.total_points !== undefined) {
+         return this.selec_node.total_points;
+       }
+       // Para otros casos, calcular la suma de puntos personales + puntos de hijos
+       const childrenPointsTotal = this.modal_children_points.reduce((total, points) => total + points, 0);
+       return childrenPointsTotal + (this.selec_node.points || 0);
+     },
   },
 
   filters: {
@@ -751,21 +764,34 @@ export default {
       return isActive ? 'ACTIVO' : 'INACTIVO';
     },
     
-    async openUserDetail(child) {
-      this.selec_node = child;
-      this.open = true;
-      
-      // Cargar datos completos del usuario seleccionado
-      try {
-        const { data } = await this.GET_NODE(child.id, this.session);
-        this.modal_children = data.children || [];
-        this.modal_children_points = data.children_points || [];
-      } catch (error) {
-        console.error("Error al cargar detalles del usuario:", error);
-        this.modal_children = [];
-        this.modal_children_points = [];
-      }
-    },
+         async openUserDetail(child) {
+       this.selec_node = child;
+       this.open = true;
+       
+       // Cargar datos completos del usuario seleccionado
+       try {
+         const { data } = await this.GET_NODE(child.id, this.session);
+         this.modal_children = data.children || [];
+         this.modal_children_points = data.children_points || [];
+         
+         // Asegurar que el usuario seleccionado tenga sus puntos personales
+         if (child.points !== undefined) {
+           this.selec_node.points = child.points;
+         }
+         
+         // Si estamos en frontales, usar los puntos grupales del hijo
+         if (this.selectedMode === 'frontales') {
+           const childIndex = this.children.findIndex(c => c.id === child.id);
+           if (childIndex !== -1 && this.children_points[childIndex] !== undefined) {
+             this.selec_node.total_points = this.children_points[childIndex];
+           }
+         }
+       } catch (error) {
+         console.error("Error al cargar detalles del usuario:", error);
+         this.modal_children = [];
+         this.modal_children_points = [];
+       }
+     },
     
     openWhatsApp(child) {
       const phone = child.phone || '';
@@ -787,6 +813,11 @@ export default {
         this.loading = false;
       }
 // Verifica que total_points esté presente
+    },
+    
+    goToRedMap() {
+      // Redirigir a la vista de red
+      this.selectMode('red');
     }
   }
 };

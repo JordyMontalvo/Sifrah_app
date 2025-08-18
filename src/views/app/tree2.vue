@@ -39,7 +39,7 @@
             <button class="btn btn-green">Recuperar Historial</button>
           </div>
           <div class="bottom-button">
-            <button class="btn btn-orange">MAPA DE LA RED</button>
+            <button class="btn btn-orange" @click="goToRedMap">MAPA DE LA RED</button>
           </div>
         </div>
       </div>
@@ -160,6 +160,14 @@
           const { data } = await this.getNode(this.node.id, this.session)
           this.children = data.children || []
           this.children_points = data.children_points || [] // Guardar los puntos por hijo
+          
+          // Asignar los puntos grupales a cada hijo
+          this.children.forEach((child, index) => {
+            if (this.children_points[index] !== undefined) {
+              child.total_points = this.children_points[index]
+            }
+          })
+          
           this.loading = false
         }
         this.expanded = true
@@ -359,6 +367,10 @@
       closed() {
         this.open = false
       },
+      goToRedMap() {
+        // Redirigir a la vista de red
+        this.selectMode('red');
+      }
     }
   };
   </script>
