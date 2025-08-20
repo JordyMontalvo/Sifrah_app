@@ -230,7 +230,81 @@
     </div>
 
     <!-- Placeholder para otros modos -->
-    <div v-if="['niveles','actividad'].includes(selectedMode)">
+    <div v-if="selectedMode === 'niveles'">
+      <div class="niveles-header">
+        <h2 class="niveles-title">Resumen de Jerarquía</h2>
+        <button @click="$router.push('/tree')" class="btn-volver">
+          <i class="fas fa-arrow-left"></i>
+          Volver al selector
+        </button>
+      </div>
+      
+      <div v-if="loading" class="loading-container">
+        <i class="load"></i>
+        <p>Cargando resumen de jerarquía...</p>
+      </div>
+      
+      <div v-if="!loading" class="hierarchy-summary">
+        <!-- Tarjetas de resumen -->
+        <div class="summary-cards">
+          <div class="summary-card">
+            <div class="card-icon">
+              <i class="fas fa-users"></i>
+            </div>
+            <div class="card-content">
+              <div class="card-value">{{ hierarchyStats.totalMembers }}</div>
+              <div class="card-label">Miembros Totales</div>
+            </div>
+          </div>
+          
+          <div class="summary-card">
+            <div class="card-icon">
+              <i class="fas fa-user-plus"></i>
+            </div>
+            <div class="card-content">
+              <div class="card-value">{{ hierarchyStats.directAffiliates }}</div>
+              <div class="card-label">Afiliados Directos</div>
+            </div>
+          </div>
+          
+          <div class="summary-card">
+            <div class="card-icon">
+              <i class="fas fa-layer-group"></i>
+            </div>
+            <div class="card-content">
+              <div class="card-value">{{ hierarchyStats.maxDepth }}</div>
+              <div class="card-label">Niveles de Profundidad</div>
+            </div>
+          </div>
+          
+          <div class="summary-card">
+            <div class="card-icon">
+              <i class="fas fa-star"></i>
+            </div>
+            <div class="card-content">
+              <div class="card-value">{{ hierarchyStats.highPerformance }}</div>
+              <div class="card-label">Alto Rendimiento</div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Distribución por niveles -->
+        <div class="levels-distribution">
+          <h3 class="distribution-title">Distribución por Niveles</h3>
+          <div class="levels-chart">
+            <div v-for="(count, level) in hierarchyStats.levelDistribution" :key="level" class="level-row">
+              <div class="level-label">Nivel {{ level }}</div>
+              <div class="level-bar-container">
+                <div class="level-bar" :style="{ width: getBarWidth(count) }"></div>
+              </div>
+              <div class="level-count">{{ count }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div v-if="selectedMode === 'actividad'">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
         <h3 style="color: #666;">Vista "{{ selectedMode }}" en construcción 🚧</h3>
         <button @click="$router.push('/tree')" style="padding: 8px 16px; background: #00bcd4; border: none; border-radius: 6px; color: white;">
@@ -579,6 +653,13 @@ export default {
       modal_children_points: [], // Para puntos de los hijos del usuario seleccionado
       isMobile: false,
       isMobileSmall: false,
+      hierarchyStats: { // Nuevo: para almacenar los datos del resumen de jerarquía
+        totalMembers: 0,
+        directAffiliates: 0,
+        maxDepth: 0,
+        highPerformance: 0,
+        levelDistribution: {}
+      }
     }
   },
   computed: {
@@ -673,8 +754,10 @@ export default {
         this.GET(null);
       } else if (path === '/tree/frontales') {
         this.selectedMode = 'frontales';
+        this.loadFrontalesData();
       } else if (path === '/tree/niveles') {
         this.selectedMode = 'niveles';
+        this.loadHierarchyStats();
       } else if (path === '/tree/actividad') {
         this.selectedMode = 'actividad';
       } else {
@@ -691,6 +774,8 @@ export default {
         this.GET(null); // Cargar datos de la red
       } else if (mode === 'frontales') {
         this.loadFrontalesData(); // Cargar datos de frontales
+      } else if (mode === 'niveles') {
+        this.loadHierarchyStats(); // Cargar estadísticas de jerarquía
       }
     },
     // Método para cargar hijos de un nodo (usado por TreeNode)
@@ -818,7 +903,142 @@ export default {
     goToRedMap() {
       // Redirigir a la vista de red
       this.selectMode('red');
-    }
+    },
+         async loadHierarchyStats() {
+       this.loading = true;
+       try {
+         // Siempre cargar datos del árbol completo para el usuario logueado
+         await this.GET(null);
+         
+         // Cargar todos los niveles del árbol recursivamente
+         await this.loadAllTreeLevels(this.node);
+         
+         // Depurar la estructura del árbol
+         console.log('Estructura del árbol cargada:');
+         this.debugTreeStructure(this.node);
+         
+         // Calcular estadísticas basándose en los datos del árbol completo
+         this.calculateHierarchyStats();
+         this.loading = false;
+       } catch (error) {
+         console.error("Error al cargar estadísticas de jerarquía:", error);
+         this.loading = false;
+       }
+     },
+     
+     async loadAllTreeLevels(node, maxDepth = 10) {
+       if (!node || !node.childs || node.childs.length === 0) return;
+       
+       // Cargar hijos del nodo actual
+       if (!node._childs) {
+         try {
+           const { data } = await this.GET_NODE(node.id, this.session);
+           node._childs = data.children || [];
+           
+           // Recursivamente cargar hijos de los hijos (hasta maxDepth)
+           for (let i = 0; i < node._childs.length && maxDepth > 0; i++) {
+             await this.loadAllTreeLevels(node._childs[i], maxDepth - 1);
+           }
+         } catch (error) {
+           console.error(`Error cargando hijos del nodo ${node.id}:`, error);
+         }
+       }
+     },
+     
+     // Método para depurar la estructura del árbol
+     debugTreeStructure(node, level = 0) {
+       if (!node) return;
+       
+       const indent = '  '.repeat(level);
+       console.log(`${indent}Nivel ${level}: ${node.name} (ID: ${node.id})`);
+       
+       if (node._childs && node._childs.length > 0) {
+         node._childs.forEach(child => {
+           this.debugTreeStructure(child, level + 1);
+         });
+       }
+     },
+     
+     calculateHierarchyStats() {
+       if (!this.node) return;
+       
+       // Inicializar estadísticas
+       const stats = {
+         totalMembers: 0,
+         directAffiliates: 0,
+         maxDepth: 0,
+         highPerformance: 0,
+         levelDistribution: {}
+       };
+       
+       // Contar miembros totales y distribución por niveles
+       this.countMembersByLevel(this.node, 0, stats);
+       
+       // Calcular afiliados directos (hijos directos del usuario logueado)
+       stats.directAffiliates = this.children ? this.children.length : 0;
+       
+       // Calcular alto rendimiento (usuarios con más de 1000 puntos)
+       stats.highPerformance = this.countHighPerformanceUsers(this.node);
+       
+       // Asegurar que el nivel 0 tenga al menos 1 (el usuario logueado)
+       if (!stats.levelDistribution[0]) {
+         stats.levelDistribution[0] = 1;
+       }
+       
+       // Actualizar las estadísticas
+       this.hierarchyStats = stats;
+       
+       console.log('Estadísticas calculadas:', stats);
+       console.log('Distribución por niveles:', stats.levelDistribution);
+     },
+     
+     countMembersByLevel(node, level, stats) {
+       if (!node) return;
+       
+       // Incrementar contador total
+       stats.totalMembers++;
+       
+       // Incrementar contador del nivel
+       if (!stats.levelDistribution[level]) {
+         stats.levelDistribution[level] = 0;
+       }
+       stats.levelDistribution[level]++;
+       
+       // Actualizar profundidad máxima
+       stats.maxDepth = Math.max(stats.maxDepth, level);
+       
+       // Contar hijos recursivamente
+       if (node._childs && node._childs.length > 0) {
+         node._childs.forEach(child => {
+           this.countMembersByLevel(child, level + 1, stats);
+         });
+       }
+     },
+     
+     countHighPerformanceUsers(node) {
+       if (!node) return 0;
+       
+       let count = 0;
+       
+       // Contar si el usuario actual tiene alto rendimiento
+       if ((node.points && node.points > 1000) || (node.total_points && node.total_points > 1000)) {
+         count++;
+       }
+       
+       // Recursivamente contar hijos
+       if (node._childs) {
+         node._childs.forEach(child => {
+           count += this.countHighPerformanceUsers(child);
+         });
+       }
+       
+       return count;
+     },
+         getBarWidth(count) {
+       const maxCount = Math.max(...Object.values(this.hierarchyStats.levelDistribution));
+       if (maxCount === 0 || !count) return '0%';
+       return `${(count / maxCount) * 100}%`;
+     }
   }
 };
 </script>
@@ -1938,6 +2158,270 @@ https://codepen.io/team/amcharts/pen/poPxojR */
   .btn-whatsapp-large,
   .btn-close {
     width: 100%;
+  }
+}
+</style>
+
+<style>
+.niveles-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  padding: 0 20px;
+}
+
+.niveles-title {
+  font-size: 28px;
+  font-weight: bold;
+  color: #333;
+  margin: 0;
+}
+
+.hierarchy-summary {
+  padding: 20px;
+  background: #f8f9fa;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
+}
+
+.summary-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.summary-card {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e0e0e0;
+}
+
+ .summary-card .card-icon {
+   width: 60px;
+   height: 60px;
+   background: #fff3e0;
+   border-radius: 50%;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   color: #ff9800;
+   font-size: 28px;
+   margin-bottom: 15px;
+ }
+
+.summary-card .card-content {
+  flex: 1;
+}
+
+.summary-card .card-value {
+  font-size: 28px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.summary-card .card-label {
+  font-size: 14px;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.levels-distribution {
+  margin-top: 30px;
+}
+
+ .distribution-title {
+   font-size: 20px;
+   font-weight: bold;
+   color: #333;
+   margin-bottom: 15px;
+   padding-bottom: 8px;
+   border-bottom: 2px solid #ff9800;
+ }
+
+ .levels-chart {
+   display: flex;
+   flex-direction: column;
+   gap: 8px;
+   padding: 20px;
+   background: white;
+   border-radius: 12px;
+   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+ }
+
+ .level-row {
+   display: flex;
+   align-items: center;
+   gap: 15px;
+   padding: 8px 0;
+   border-bottom: 1px solid #f0f0f0;
+ }
+
+ .level-row:last-child {
+   border-bottom: none;
+ }
+
+ .level-label {
+   font-size: 14px;
+   color: #666;
+   font-weight: 600;
+   min-width: 80px;
+   text-align: left;
+ }
+
+ .level-bar-container {
+   flex: 1;
+   height: 20px;
+   background: #f5f5f5;
+   border-radius: 10px;
+   overflow: hidden;
+   position: relative;
+   border: 1px solid #e0e0e0;
+ }
+
+ .level-bar {
+   height: 100%;
+   background: linear-gradient(90deg, #ff9800, #f57c00);
+   border-radius: 10px;
+   transition: width 0.8s ease-in-out;
+   position: relative;
+   overflow: hidden;
+ }
+
+ .level-bar::after {
+   content: '';
+   position: absolute;
+   top: 0;
+   left: 0;
+   right: 0;
+   bottom: 0;
+   background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+   animation: shimmer 2s infinite;
+ }
+
+ @keyframes shimmer {
+   0% { transform: translateX(-100%); }
+   100% { transform: translateX(100%); }
+ }
+
+ .level-count {
+   font-size: 16px;
+   font-weight: bold;
+   color: #333;
+   min-width: 50px;
+   text-align: right;
+   background: #f8f9fa;
+   padding: 4px 8px;
+   border-radius: 6px;
+   border: 1px solid #e9ecef;
+ }
+
+/* Responsive para móviles */
+@media (max-width: 768px) {
+  .niveles-header {
+    flex-direction: column;
+    gap: 20px;
+    text-align: center;
+  }
+  
+  .niveles-title {
+    font-size: 24px;
+  }
+  
+  .summary-cards {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+  }
+  
+  .summary-card {
+    padding: 15px;
+  }
+  
+  .summary-card .card-icon {
+    width: 50px;
+    height: 50px;
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+  
+  .summary-card .card-value {
+    font-size: 24px;
+  }
+  
+  .summary-card .card-label {
+    font-size: 12px;
+  }
+  
+  .levels-chart {
+    padding: 15px;
+  }
+  
+  .level-row {
+    gap: 10px;
+  }
+  
+  .level-label {
+    font-size: 12px;
+    min-width: 60px;
+  }
+  
+  .level-count {
+    font-size: 14px;
+    min-width: 40px;
+    padding: 3px 6px;
+  }
+}
+
+@media (max-width: 480px) {
+  .summary-cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .summary-card {
+    padding: 12px;
+  }
+  
+  .summary-card .card-icon {
+    width: 45px;
+    height: 45px;
+    font-size: 20px;
+  }
+  
+  .summary-card .card-value {
+    font-size: 20px;
+  }
+  
+  .levels-chart {
+    padding: 10px;
+  }
+  
+  .level-row {
+    gap: 8px;
+  }
+  
+  .level-label {
+    font-size: 11px;
+    min-width: 50px;
+  }
+  
+  .level-bar-container {
+    height: 16px;
+  }
+  
+  .level-count {
+    font-size: 12px;
+    min-width: 35px;
+    padding: 2px 4px;
   }
 }
 </style>
