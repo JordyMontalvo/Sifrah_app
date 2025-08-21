@@ -6,6 +6,7 @@ import Welcome  from './views/auth/Welcome.vue'
 import Login    from './views/auth/Login.vue'
 import Register from './views/auth/Register.vue'
 import Remember from './views/auth/Remember.vue'
+import ResetPassword from './views/auth/ResetPassword.vue'
 // Aux
 import Logout from './views/auxi/Logout.vue'
 // import Verify from './views/iaux/Verify.vue'
@@ -61,6 +62,11 @@ const routes = [
   {
     path: '/remember',
     component: Remember,
+    meta: { requiresNoAuth: true }
+  },
+  {
+    path: '/reset-password',
+    component: ResetPassword,
     meta: { requiresNoAuth: true }
   },
   // Aux

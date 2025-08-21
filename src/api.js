@@ -1,6 +1,20 @@
 import axios from "axios";
 
-axios.defaults.baseURL = process.env.VUE_APP_SERVER + "/api";
+// Configuración para diferentes entornos
+const getBaseURL = () => {
+  // Si hay una variable de entorno específica, usarla
+  if (process.env.VUE_APP_SERVER) {
+    return process.env.VUE_APP_SERVER + "/api";
+  }
+  
+  // Si no, usar la configuración por defecto según el entorno
+  const isDevelopment = process.env.NODE_ENV === 'development';
+  return isDevelopment 
+    ? "http://localhost:3000/api" 
+    : "https://tu-app-backend.herokuapp.com/api"; // URL de ejemplo de Heroku
+};
+
+axios.defaults.baseURL = getBaseURL();
 
 class API {
   constructor({
@@ -91,6 +105,35 @@ class API {
 //   mercadopagoPreference(data) {
 //     return axios.post("http://localhost:4000/api/app/mercadopago", data);
 //   }
+
+  // Email System
+  sendPasswordReset(data) {
+    return axios.post("/email/password-reset", data);
+  }
+
+  validateEmail(email) {
+    return axios.post("/auth/validate-email", { email });
+  }
+  
+  sendContactEmail(data) {
+    return axios.post("/email/contact", data);
+  }
+  
+  sendWelcomeEmail(data) {
+    return axios.post("/email/welcome", data);
+  }
+  
+  sendActivationEmail(data) {
+    return axios.post("/email/activation", data);
+  }
+  
+  sendCommissionEmail(data) {
+    return axios.post("/email/commission", data);
+  }
+  
+  testEmailService() {
+    return axios.get("/email/test");
+  }
 }
 
 class Profile {

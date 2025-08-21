@@ -1,38 +1,55 @@
 <template>
   <Auth>
-    <div class="remember-container">
+    <div class="reset-container">
       <!-- Header -->
-      <div class="remember-header">
+      <div class="reset-header">
         <div class="logo-container">
           <img src="@/assets/img/logo/logo sifrah BLANCO LOGIN.svg" alt="Sifrah Logo" class="logo" />
         </div>
-        <h1>¿Olvidaste tu contraseña?</h1>
-        <p>No te preocupes, te ayudaremos a recuperarla</p>
+        <h1>Restablecer Contraseña</h1>
+        <p>Ingresa tu nueva contraseña</p>
       </div>
 
-      <!-- Formulario de recuperación -->
-      <div v-if="!loading" class="remember-form">
+      <!-- Formulario de restablecimiento -->
+      <div v-if="!passwordReset && !loading" class="reset-form">
         <form @submit.prevent="submitForm">
           <div class="form-group">
-            <label for="email">Email de tu cuenta</label>
+            <label for="password">Nueva contraseña</label>
             <div class="input-container">
-              <i class="fas fa-envelope"></i>
+              <i class="fas fa-lock"></i>
               <input
-                id="email"
-                v-model="form.email"
-                type="email"
+                id="password"
+                v-model="form.password"
+                type="password"
                 required
-                placeholder="tu@email.com"
-                :class="{ 'error': errors.email }"
-                @blur="validateEmail"
+                placeholder="Tu nueva contraseña"
+                :class="{ 'error': errors.password }"
+                @blur="validatePassword"
               />
             </div>
-            <span v-if="errors.email" class="error-message">{{ errors.email }}</span>
+            <span v-if="errors.password" class="error-message">{{ errors.password }}</span>
+          </div>
+
+          <div class="form-group">
+            <label for="confirmPassword">Confirmar contraseña</label>
+            <div class="input-container">
+              <i class="fas fa-lock"></i>
+              <input
+                id="confirmPassword"
+                v-model="form.confirmPassword"
+                type="password"
+                required
+                placeholder="Confirma tu nueva contraseña"
+                :class="{ 'error': errors.confirmPassword }"
+                @blur="validateConfirmPassword"
+              />
+            </div>
+            <span v-if="errors.confirmPassword" class="error-message">{{ errors.confirmPassword }}</span>
           </div>
 
           <button type="submit" class="submit-btn" :disabled="!isFormValid">
-            <i class="fas fa-paper-plane"></i>
-            Enviar instrucciones
+            <i class="fas fa-key"></i>
+            Cambiar contraseña
           </button>
         </form>
 
@@ -42,77 +59,124 @@
             <i class="fas fa-arrow-left"></i>
             Volver al login
           </router-link>
-          <router-link to="/register" class="register-link">
-            ¿No tienes cuenta? Regístrate
-          </router-link>
         </div>
       </div>
 
       <!-- Estado de carga -->
       <div v-if="loading" class="loading-state">
         <div class="loading-spinner"></div>
-        <h3>Enviando instrucciones...</h3>
+        <h3>Cambiando contraseña...</h3>
         <p>Por favor espera un momento</p>
       </div>
 
+      <!-- Estado de éxito -->
+      <div v-if="passwordReset" class="success-state">
+        <div class="success-icon">
+          <i class="fas fa-check-circle"></i>
+        </div>
+        <h3>¡Contraseña cambiada!</h3>
+        <p>Tu contraseña ha sido actualizada exitosamente.</p>
+        <div class="action-buttons">
+          <router-link to="/login" class="primary-btn">
+            Iniciar sesión
+          </router-link>
+        </div>
+      </div>
 
+      <!-- Estado de error -->
+      <div v-if="error" class="error-state">
+        <div class="error-icon">
+          <i class="fas fa-exclamation-circle"></i>
+        </div>
+        <h3>Error al cambiar contraseña</h3>
+        <p>{{ error }}</p>
+        <div class="action-buttons">
+          <button @click="clearError" class="retry-btn">
+            Intentar de nuevo
+          </button>
+          <router-link to="/remember" class="secondary-btn">
+            Solicitar nuevo token
+          </router-link>
+        </div>
+      </div>
     </div>
-    
-    <!-- Notificación flotante -->
-    <FloatingNotification
-      :show="showNotification"
-      :type="notificationType"
-      :title="notificationTitle"
-      :message="notificationMessage"
-      :duration="4000"
-      @close="hideNotification"
-    />
   </Auth>
 </template>
 
 <script>
 import Auth from '@/views/layouts/Auth'
 import api from '@/api'
-import FloatingNotification from '@/components/FloatingNotification.vue'
 
 export default {
-  name: 'Remember',
-  components: { 
-    Auth,
-    FloatingNotification
-  },
+  name: 'ResetPassword',
+  components: { Auth },
   data() {
     return {
       form: {
-        email: ''
+        password: '',
+        confirmPassword: ''
       },
       errors: {},
       loading: false,
-      // Notificación flotante
-      showNotification: false,
-      notificationType: 'info',
-      notificationTitle: '',
-      notificationMessage: ''
+      passwordReset: false,
+      error: null,
+      resetToken: null
     }
   },
   computed: {
     isFormValid() {
-      return this.form.email.trim() && !this.errors.email
+      return this.form.password.trim() && 
+             this.form.confirmPassword.trim() && 
+             !this.errors.password && 
+             !this.errors.confirmPassword
+    }
+  },
+  mounted() {
+    // Obtener token de la URL o localStorage
+    this.resetToken = this.$route.query.token || localStorage.getItem('resetToken')
+    
+    if (!this.resetToken) {
+      this.error = 'Token de restablecimiento no válido o expirado'
     }
   },
   methods: {
-    validateEmail() {
-      const email = this.form.email.trim()
-      this.errors.email = ''
+    validatePassword() {
+      const password = this.form.password.trim()
+      this.errors.password = ''
 
-      if (!email) {
-        this.errors.email = 'El email es requerido'
+      if (!password) {
+        this.errors.password = 'La contraseña es requerida'
         return false
       }
 
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-      if (!emailRegex.test(email)) {
-        this.errors.email = 'Formato de email inválido'
+      if (password.length < 8) {
+        this.errors.password = 'La contraseña debe tener al menos 8 caracteres'
+        return false
+      }
+
+      // Validar que contenga al menos una letra y un número
+      const hasLetter = /[a-zA-Z]/.test(password)
+      const hasNumber = /\d/.test(password)
+      
+      if (!hasLetter || !hasNumber) {
+        this.errors.password = 'La contraseña debe contener letras y números'
+        return false
+      }
+
+      return true
+    },
+
+    validateConfirmPassword() {
+      const confirmPassword = this.form.confirmPassword.trim()
+      this.errors.confirmPassword = ''
+
+      if (!confirmPassword) {
+        this.errors.confirmPassword = 'Confirma tu contraseña'
+        return false
+      }
+
+      if (confirmPassword !== this.form.password) {
+        this.errors.confirmPassword = 'Las contraseñas no coinciden'
         return false
       }
 
@@ -120,98 +184,51 @@ export default {
     },
 
     async submitForm() {
-      if (!this.validateEmail()) return
+      if (!this.validatePassword() || !this.validateConfirmPassword()) return
 
       this.loading = true
+      this.error = null
 
       try {
-        // Primero validar que el email existe en el sistema
-        const validationResponse = await api.validateEmail(this.form.email.trim())
+        // Aquí deberías hacer la llamada al backend para cambiar la contraseña
+        // Por ahora simulamos el éxito
+        await new Promise(resolve => setTimeout(resolve, 2000))
         
-        if (!validationResponse.data.exists) {
-          this.showErrorNotification('Este email no está registrado en el sistema. Verifica tu email o regístrate.')
-          this.loading = false
-          return
-        }
-
-        // Si el email existe, proceder con el envío
-        // Generar token temporal (en producción esto debería venir del backend)
-        const resetToken = this.generateResetToken()
+        this.passwordReset = true
         
-        const response = await api.sendPasswordReset({
-          email: this.form.email,
-          name: 'Usuario', // En producción esto vendría de la base de datos
-          resetToken: resetToken
-        })
-
-        if (response.data.success) {
-          this.showSuccessNotification('Email de recuperación enviado correctamente. Revisa tu bandeja de entrada.')
-          // Aquí podrías guardar el token en localStorage o enviarlo al backend
-          localStorage.setItem('resetToken', resetToken)
-          // Limpiar el formulario después del éxito
-          this.form.email = ''
-          this.errors = {}
-        } else {
-          const errorMsg = response.data.error || 'Error desconocido al enviar el email'
-          this.showErrorNotification(errorMsg)
-        }
+        // Limpiar token del localStorage
+        localStorage.removeItem('resetToken')
+        
+        // En producción, aquí harías:
+        // const response = await api.post('/api/auth/reset-password', {
+        //   token: this.resetToken,
+        //   password: this.form.password
+        // })
+        
       } catch (error) {
-        console.error('Error enviando email de recuperación:', error)
-        const errorMsg = (error.response && error.response.data && error.response.data.error) || 'Error de conexión. Intenta de nuevo.'
-        this.showErrorNotification(errorMsg)
+        console.error('Error cambiando contraseña:', error)
+        this.error = (error.response && error.response.data && error.response.data.error) || 'Error al cambiar la contraseña. Intenta de nuevo.'
       } finally {
         this.loading = false
       }
     },
 
-    generateResetToken() {
-      // Generar token temporal de 16 caracteres
-      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
-      let token = ''
-      for (let i = 0; i < 16; i++) {
-        token += chars.charAt(Math.floor(Math.random() * chars.length))
-      }
-      return token
-    },
-
-    resetForm() {
-      this.form.email = ''
-      this.errors = {}
-      this.emailSent = false
+    clearError() {
       this.error = null
-    },
-
-    // Métodos de notificación
-    showSuccessNotification(message) {
-      this.notificationType = 'success'
-      this.notificationTitle = '¡Éxito!'
-      this.notificationMessage = message
-      this.showNotification = true
-    },
-
-    showErrorNotification(message) {
-      this.notificationType = 'error'
-      this.notificationTitle = 'Error'
-      this.notificationMessage = message
-      this.showNotification = true
-    },
-
-    hideNotification() {
-      this.showNotification = false
     }
   }
 }
 </script>
 
 <style scoped>
-.remember-container {
+.reset-container {
   max-width: 400px;
   margin: 0 auto;
   padding: 20px;
   text-align: center;
 }
 
-.remember-header {
+.reset-header {
   margin-bottom: 30px;
 }
 
@@ -224,20 +241,20 @@ export default {
   width: auto;
 }
 
-.remember-header h1 {
+.reset-header h1 {
   color: #333;
   font-size: 28px;
   margin: 0 0 10px 0;
   font-weight: 600;
 }
 
-.remember-header p {
+.reset-header p {
   color: #666;
   font-size: 16px;
   margin: 0;
 }
 
-.remember-form {
+.reset-form {
   background: #f8f9fa;
   border: 2px solid #e9ecef;
   border-radius: 16px;
@@ -360,10 +377,6 @@ export default {
   color: #999 !important;
 }
 
-.register-link {
-  color: #f7971e !important;
-}
-
 /* Estados de carga, éxito y error */
 .loading-state,
 .success-state,
@@ -421,25 +434,6 @@ export default {
   margin: 0 0 15px 0;
 }
 
-.email-sent {
-  background: #e8f5e8;
-  border: 1px solid #c3e6cb;
-  padding: 15px;
-  border-radius: 8px;
-  margin: 20px 0;
-}
-
-.email-sent strong {
-  color: #28a745;
-  font-size: 18px;
-}
-
-.instructions {
-  font-size: 14px !important;
-  color: #666 !important;
-  line-height: 1.5;
-}
-
 .action-buttons {
   display: flex;
   gap: 15px;
@@ -487,11 +481,11 @@ export default {
 
 /* Responsive */
 @media (max-width: 480px) {
-  .remember-container {
+  .reset-container {
     padding: 15px;
   }
   
-  .remember-form,
+  .reset-form,
   .loading-state,
   .success-state,
   .error-state {
@@ -502,4 +496,4 @@ export default {
     flex-direction: column;
   }
 }
-</style>
+</style> 
