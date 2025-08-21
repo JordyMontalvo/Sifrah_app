@@ -250,19 +250,19 @@
           <span class="progress-text">{{ loadingProgress }}% completado</span>
         </div>
       </div>
-      
-      <div v-if="!loading" class="hierarchy-summary">
+<div v-if="!loading" class="hierarchy-summary">
+  
         <!-- Mensaje informativo -->
-        <div class="info-message">
+        <!-- <div class="info-message">
           <i class="fas fa-info-circle"></i>
           <span>Se cargan todos los niveles de la red en una sola consulta para mostrar estadísticas completas y precisas.</span>
-        </div>
+        </div> -->
         
         <!-- Mensaje de éxito cuando se completa la carga -->
-        <div v-if="!loading && loadingProgress === 100" class="success-message">
+        <!-- <div v-if="!loading && loadingProgress === 100" class="success-message">
           <i class="fas fa-check-circle"></i>
           <span>Árbol completo cargado exitosamente. Las estadísticas muestran información completa de toda la jerarquía.</span>
-        </div>
+        </div>  -->
         
         <!-- Tarjetas de resumen -->
         <div class="summary-cards">
