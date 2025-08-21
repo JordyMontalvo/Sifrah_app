@@ -115,62 +115,62 @@ const routes = [
   {
     path: '/directs',
     component: Directs,
-    meta: { requiresAuth: true }
+    meta: { requiresAuth: true, requiresAffiliation: true }
   },
   {
     path: '/tree',
     component: Tree,
-    meta: { requiresAuth: true }
+    meta: { requiresAuth: true, requiresAffiliation: true }
   },
   {
     path: '/tree/red',
     component: Tree,
-    meta: { requiresAuth: true }
+    meta: { requiresAuth: true, requiresAffiliation: true }
   },
   {
     path: '/tree/frontales',
     component: Tree,
-    meta: { requiresAuth: true }
+    meta: { requiresAuth: true, requiresAffiliation: true }
   },
   {
     path: '/tree/niveles',
     component: Tree,
-    meta: { requiresAuth: true }
+    meta: { requiresAuth: true, requiresAffiliation: true }
   },
   {
     path: '/tree/actividad',
     component: Tree,
-    meta: { requiresAuth: true }
+    meta: { requiresAuth: true, requiresAffiliation: true }
   },
   {
     path: '/bonuses',
     component: Bonuses,
-    meta: { requiresAuth: true }
+    meta: { requiresAuth: true, requiresAffiliation: true }
   },
   {
     path: '/transactions',
     component: Transactions,
-    meta: { requiresAuth: true }
+    meta: { requiresAuth: true, requiresAffiliation: true }
   },
   {
     path: '/collect',
     component: Collect,
-    meta: { requiresAuth: true }
+    meta: { requiresAuth: true, requiresAffiliation: true }
   },
   {
     path: '/collects',
     component: Collects,
-    meta: { requiresAuth: true }
+    meta: { requiresAuth: true, requiresAffiliation: true }
   },
   {
     path: '/closeds',
     component: Closeds,
-    meta: { requiresAuth: true }
+    meta: { requiresAuth: true, requiresAffiliation: true }
   },
   {
     path: '/tools',
     component: Tools,
-    meta: { requiresAuth: true }
+    meta: { requiresAuth: true, requiresAffiliation: true }
   },
   {
     path: '/profile',
@@ -190,7 +190,7 @@ const routes = [
   {
     path: '/resume',
     component: Resume,
-    meta: { requiresAuth: true }
+    meta: { requiresAuth: true, requiresAffiliation: true }
   },
   {
     path: '/frontales',
@@ -209,18 +209,29 @@ router.beforeEach((to, from, next) => {
 
   const requiresNoAuth = to.matched.some(record => record.meta.requiresNoAuth)
   const requiresAuth   = to.matched.some(record => record.meta.requiresAuth)
+  const requiresAffiliation = to.matched.some(record => record.meta.requiresAffiliation)
 
   const session   = localStorage.getItem('session')
   const office_id = localStorage.getItem('office_id')
   const path      = localStorage.getItem('path')
+  const affiliated = localStorage.getItem('affiliated') === 'true'
   // console.log({ session, office })
 
   if (requiresNoAuth &&  session && !office_id) { next({ path: '/dashboard' }) }
   if (requiresNoAuth &&  session &&  office_id) { next({ path: `/${path}`   }) }
 
   if (requiresAuth   && !session) { next({ path: '/login' }) }
+  
+  // Verificar afiliación para rutas que la requieren
+  if (requiresAffiliation && !affiliated) {
+    // Redirigir inmediatamente a afiliación
+    next({ path: '/affiliation', query: { redirected: 'true' } });
+    return;
+  }
 
   next()
 })
+
+
 
 export default router

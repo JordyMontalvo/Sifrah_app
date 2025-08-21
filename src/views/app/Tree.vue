@@ -41,6 +41,7 @@
           <div class="bottom-button">
             <button class="btn btn-orange" @click="goToRedMap">MAPA DE LA RED</button>
           </div>
+
         </div>
       </div>
 
@@ -288,19 +289,21 @@
           </div>
         </div>
         
-        <!-- Distribución por niveles -->
-        <div class="levels-distribution">
-          <h3 class="distribution-title">Distribución por Niveles</h3>
-          <div class="levels-chart">
-            <div v-for="(count, level) in hierarchyStats.levelDistribution" :key="level" class="level-row">
-              <div class="level-label">Nivel {{ level }}</div>
-              <div class="level-bar-container">
-                <div class="level-bar" :style="{ width: getBarWidth(count) }"></div>
-              </div>
-              <div class="level-count">{{ count }}</div>
+                 <!-- Distribución por niveles -->
+         <div class="levels-distribution">
+                       <div class="distribution-header">
+              <h3 class="distribution-title">Distribución por Niveles</h3>
             </div>
-          </div>
-        </div>
+           <div class="levels-chart">
+             <div v-for="(count, level) in hierarchyStats.levelDistribution" :key="level" class="level-row">
+               <div class="level-label">Nivel {{ level }}</div>
+               <div class="level-bar-container">
+                 <div class="level-bar" :style="{ width: getBarWidth(count) }"></div>
+               </div>
+               <div class="level-count">{{ count }}</div>
+             </div>
+           </div>
+         </div>
       </div>
     </div>
     
@@ -659,7 +662,9 @@ export default {
         maxDepth: 0,
         highPerformance: 0,
         levelDistribution: {}
-      }
+      },
+      loadingAdditional: false, // Para controlar la carga adicional de niveles
+             loadedLevels: 10 // Contador de niveles cargados
     }
   },
   computed: {
@@ -667,6 +672,7 @@ export default {
     office_id() { return this.$store.state.office_id },
     name()      { return this.$store.state.name },
     activated() { return this.$store.state.activated },
+    affiliated() { return this.$store.state.affiliated },
          totalPoints() {
        // Si estamos en la vista de frontales, usar los puntos grupales del usuario seleccionado
        if (this.selectedMode === 'frontales' && this.selec_node.total_points !== undefined) {
@@ -910,14 +916,10 @@ export default {
          // Siempre cargar datos del árbol completo para el usuario logueado
          await this.GET(null);
          
-         // Cargar todos los niveles del árbol recursivamente
-         await this.loadAllTreeLevels(this.node);
+         // Cargar todos los niveles desde el inicio (como estaba antes)
+         await this.loadOptimizedTreeLevels(this.node, 10);
          
-         // Depurar la estructura del árbol
-         console.log('Estructura del árbol cargada:');
-         this.debugTreeStructure(this.node);
-         
-         // Calcular estadísticas basándose en los datos del árbol completo
+         // Calcular estadísticas con todos los niveles
          this.calculateHierarchyStats();
          this.loading = false;
        } catch (error) {
@@ -926,24 +928,30 @@ export default {
        }
      },
      
-     async loadAllTreeLevels(node, maxDepth = 10) {
-       if (!node || !node.childs || node.childs.length === 0) return;
-       
-       // Cargar hijos del nodo actual
-       if (!node._childs) {
-         try {
-           const { data } = await this.GET_NODE(node.id, this.session);
-           node._childs = data.children || [];
-           
-           // Recursivamente cargar hijos de los hijos (hasta maxDepth)
-           for (let i = 0; i < node._childs.length && maxDepth > 0; i++) {
-             await this.loadAllTreeLevels(node._childs[i], maxDepth - 1);
-           }
-         } catch (error) {
-           console.error(`Error cargando hijos del nodo ${node.id}:`, error);
-         }
-       }
-     },
+           async loadOptimizedTreeLevels(node, maxDepth = 10) {
+        if (!node || !node.childs || node.childs.length === 0) return;
+        
+        // Cargar hijos del nodo actual solo si no están ya cargados
+        if (!node._childs) {
+          try {
+            const { data } = await this.GET_NODE(node.id, this.session);
+            node._childs = data.children || [];
+            
+            // Cargar todos los niveles hasta maxDepth
+            if (maxDepth > 0) {
+              // Usar Promise.all para cargar hijos en paralelo (más rápido)
+              // Cargar todos los hijos, no limitar a 15
+              const childPromises = node._childs.map(async (child) => {
+                await this.loadOptimizedTreeLevels(child, maxDepth - 1);
+              });
+              
+              await Promise.all(childPromises);
+            }
+          } catch (error) {
+            console.error(`Error cargando hijos del nodo ${node.id}:`, error);
+          }
+        }
+      },
      
      // Método para depurar la estructura del árbol
      debugTreeStructure(node, level = 0) {
@@ -992,6 +1000,64 @@ export default {
        console.log('Distribución por niveles:', stats.levelDistribution);
      },
      
+     // Método para cargar datos adicionales bajo demanda (lazy loading)
+     async loadAdditionalLevelsOnDemand() {
+       if (this.loadingAdditional) return; // Evitar múltiples cargas simultáneas
+       
+       this.loadingAdditional = true;
+       try {
+         // Cargar niveles adicionales solo cuando se necesiten
+         const newMaxDepth = this.loadedLevels + 2; // Incrementar en 2 niveles
+         await this.loadOptimizedTreeLevels(this.node, newMaxDepth);
+         this.loadedLevels = newMaxDepth; // Actualizar contador
+         this.calculateHierarchyStats(); // Recalcular estadísticas
+       } catch (error) {
+         console.error("Error cargando niveles adicionales:", error);
+       } finally {
+         this.loadingAdditional = false;
+       }
+     },
+     
+     // Método para cargar todos los niveles en segundo plano (optimizado)
+     async loadAllLevelsInBackground() {
+       this.loadingAdditional = true;
+       try {
+         // Cargar todos los niveles de manera optimizada
+         await this.loadOptimizedTreeLevels(this.node, 10); // Máximo 10 niveles
+         
+         // Recalcular estadísticas con todos los niveles
+         this.calculateHierarchyStats();
+         
+         console.log('Todos los niveles cargados en segundo plano');
+       } catch (error) {
+         console.error("Error cargando todos los niveles:", error);
+       } finally {
+         this.loadingAdditional = false;
+       }
+     },
+     
+     // Método para limpiar caché y recargar datos (útil para debugging)
+     clearCacheAndReload() {
+       // Limpiar caché de hijos cargados
+       if (this.node) {
+         this.clearNodeCache(this.node);
+       }
+       
+       // Recargar estadísticas
+       this.loadHierarchyStats();
+     },
+     
+     // Método recursivo para limpiar caché
+     clearNodeCache(node) {
+       if (node._childs) {
+         delete node._childs;
+         // Limpiar caché de hijos recursivamente
+         if (node.childs) {
+           node.childs.forEach(child => this.clearNodeCache(child));
+         }
+       }
+     },
+     
      countMembersByLevel(node, level, stats) {
        if (!node) return;
        
@@ -1038,7 +1104,9 @@ export default {
        const maxCount = Math.max(...Object.values(this.hierarchyStats.levelDistribution));
        if (maxCount === 0 || !count) return '0%';
        return `${(count / maxCount) * 100}%`;
-     }
+     },
+     
+
   }
 };
 </script>
@@ -2423,6 +2491,28 @@ https://codepen.io/team/amcharts/pen/poPxojR */
     min-width: 35px;
     padding: 2px 4px;
   }
+}
+
+/* Estilos para el indicador de carga */
+.distribution-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.loading-indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #666;
+  font-size: 14px;
+  font-style: italic;
+}
+
+.loading-indicator i {
+  color: #4CAF50;
+  font-size: 16px;
 }
 </style>
 

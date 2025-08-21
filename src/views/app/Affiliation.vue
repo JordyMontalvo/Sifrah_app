@@ -83,10 +83,26 @@
       class="affiliation-bg"
       style="position: relative; min-height: 80vh"
     >
-      <h2 class="affiliation-title" v-if="!showMasterTrophy">
-        Afíliate y elige tu kit
-      </h2>
-      <section v-if="!loading">
+                    <h2 class="affiliation-title" v-if="!showMasterTrophy">
+         Afíliate y elige tu kit
+       </h2>
+       
+       <!-- Mensaje que aparece cuando se redirige desde opciones bloqueadas -->
+       <div v-if="showRedirectMessage" class="affiliation-notification">
+         <div class="affiliation-notification-content">
+           <div class="affiliation-notification-header">
+             <i class="fas fa-star" style="color: #ffd700; margin-right: 10px;"></i>
+             <span style="font-weight: bold; font-size: 16px;">¡Desbloquea tu potencial!</span>
+           </div>
+           <div class="affiliation-notification-body">
+             Afíliate ahora y accede a todas las funcionalidades
+           </div>
+         </div>
+       </div>
+        
+       
+        
+        <section v-if="!loading">
         <div v-if="showMasterTrophy">
           <div class="master-trophy-container">
             <img
@@ -559,9 +575,10 @@ export default {
       upgradeDifference: 0,
       upgradePoints: 0,
       upgradeProducts: [],
-      affiliation: null,
-    };
-  },
+             affiliation: null,
+       showRedirectMessage: false, // Controla si mostrar el mensaje de redirección
+     };
+   },
   computed: {
     session() {
       return this.$store.state.session;
@@ -571,6 +588,9 @@ export default {
     },
     plan() {
       return this.$store.state.plan;
+    },
+    affiliated() {
+      return this.$store.state.affiliated;
     },
 
     categories() {
@@ -734,10 +754,19 @@ export default {
         this.congrats = true;
       }
 
-      // Set pending state
-      if (this.affiliation && this.affiliation.status == "pending") {
-        this.pending = true;
-      }
+             // Set pending state
+       if (this.affiliation && this.affiliation.status == "pending") {
+         this.pending = true;
+       }
+       
+       // Verificar si viene de una redirección desde opciones bloqueadas
+       if (this.$route.query.redirected === 'true') {
+         this.showRedirectMessage = true;
+         // El mensaje desaparece automáticamente después de 4 segundos
+         setTimeout(() => {
+           this.showRedirectMessage = false;
+         }, 4000);
+       }
     } catch (error) {
       console.error("Error loading data:", error);
       this.loading = false;
@@ -970,6 +999,54 @@ export default {
 </script>
 
 <style lang="stylus">
+/* Estilos para el mensaje verde de afiliación */
+.affiliation-notification
+  background linear-gradient(135deg, #4CAF50, #45a049)
+  color white
+  padding 20px
+  border-radius 12px
+  position fixed
+  top 20px
+  right 20px
+  z-index 9999
+  box-shadow 0 8px 25px rgba(0, 0, 0, 0.2)
+  animation slideInFromRight 0.5s ease-out
+  max-width 350px
+  text-align left
+  font-family Arial, sans-serif
+  
+.affiliation-notification-content
+  position relative
+  
+.affiliation-notification-header
+  margin-bottom 10px
+  font-size 16px
+  display flex
+  align-items center
+  justify-content flex-start
+  
+.affiliation-notification-body
+  font-size 14px
+  line-height 1.4
+  margin-bottom 15px
+  opacity 0.9
+  
+@keyframes slideInFromTop
+  from
+    opacity 0
+    transform translateY(-20px)
+  to
+    opacity 1
+    transform translateY(0)
+
+@keyframes slideInFromRight
+  from
+    opacity 0
+    transform translateX(50px)
+  to
+    opacity 1
+    transform translateX(0)
+
 .affiliation-bg
   min-height 100vh
   padding-bottom 80px

@@ -58,6 +58,7 @@ export default new Vuex.Store({
       state.lastName = lastName
     },
     SET_AFFILIATED: (state, affiliated) => {
+      if(affiliated !== null) localStorage.setItem('affiliated', affiliated)
       state.affiliated = affiliated
     },
     SET_ACTIVATED: (state, activated) => {

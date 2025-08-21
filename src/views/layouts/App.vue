@@ -480,6 +480,18 @@ export default {
       }
     },
     actived(i) {
+      // Verificar afiliación antes de permitir acceso a opciones restringidas
+      if (!this.affiliated && (i === 1 || i === 2 || i === 3)) {
+        // Si estamos en la página de afiliación, mostrar el mensaje directamente
+        if (this.$route.path === '/affiliation') {
+          this.showAffiliationMessageInAffiliationPage();
+        } else {
+          // Si estamos en otra página, redirigir a afiliación
+          this.$router.push({ path: '/affiliation', query: { redirected: 'true' } });
+        }
+        return;
+      }
+      
       if (this.activeProduct === i) {
         this.activeProduct = false;
       } else {
@@ -490,6 +502,7 @@ export default {
       if (i == 2) this.$store.commit("SET_COMMISSIONS");
       if (i == 3) this.$store.commit("SET_RESUME");
     },
+
     close() {
       this.$store.commit("SET_OPEN");
     },
@@ -544,6 +557,80 @@ export default {
         this.closeMenu();
       }
     },
+    showAffiliationMessageInAffiliationPage() {
+      // Primero, eliminar cualquier mensaje existente
+      const existingNotifications = document.querySelectorAll('.affiliation-notification');
+      existingNotifications.forEach(notification => {
+        if (notification.parentElement) {
+          notification.remove();
+        }
+      });
+      
+      // Crear y mostrar el mensaje de notificación en la esquina derecha superior
+      const notification = document.createElement('div');
+      notification.className = 'affiliation-notification';
+      notification.innerHTML = `
+        <div class="affiliation-notification-content">
+          <div class="affiliation-notification-header">
+            <i class="fas fa-star" style="color: #ffd700; margin-right: 10px;"></i>
+            <span style="font-weight: bold; font-size: 16px;">¡Desbloquea tu potencial!</span>
+          </div>
+          <div class="affiliation-notification-body">
+            Afíliate ahora y accede a todas las funcionalidades
+          </div>
+        </div>
+      `;
+      
+      // Agregar estilos inline para el mensaje en la esquina derecha superior
+      notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: linear-gradient(135deg, #4CAF50, #45a049);
+        color: white;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        z-index: 9999;
+        max-width: 350px;
+        text-align: left;
+        font-family: Arial, sans-serif;
+        animation: slideInFromRight 0.5s ease-out;
+      `;
+      
+      // Agregar estilos para el contenido interno
+      const content = notification.querySelector('.affiliation-notification-content');
+      content.style.cssText = `
+        position: relative;
+      `;
+      
+      const header = notification.querySelector('.affiliation-notification-header');
+      header.style.cssText = `
+        margin-bottom: 10px;
+        font-size: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+      `;
+      
+      const body = notification.querySelector('.affiliation-notification-body');
+      body.style.cssText = `
+        font-size: 14px;
+        line-height: 1.4;
+        margin-bottom: 15px;
+        opacity: 0.9;
+      `;
+      
+      // Agregar el mensaje al DOM
+      document.body.appendChild(notification);
+      
+      // El mensaje desaparece automáticamente después de 4 segundos
+      setTimeout(() => {
+        if (notification.parentElement) {
+          notification.remove();
+        }
+      }, 4000);
+    },
   },
 };
 </script>
@@ -588,4 +675,18 @@ export default {
     transform: translateX(100%);
   }
 }
+
+/* Animación para el mensaje de afiliación */
+@keyframes slideInFromRight {
+  from {
+    opacity: 0;
+    transform: translateX(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+
 </style>
