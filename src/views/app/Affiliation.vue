@@ -1,4 +1,3 @@
-
 <template>
   <App :session="session" :office_id="office_id" :title="title">
     <Spinner v-if="loading" :size="40" :color="'#086eb6'" />
@@ -149,75 +148,178 @@
             </div>
             <div class="catalog-section">
               <h4 class="section-title">2. Elige tus productos</h4>
-              <div
-                v-for="category in categories"
-                :key="category"
-                class="category-block"
-              >
-                <h5 class="category-title">{{ category }}</h5>
-                <div class="product-grid">
-                  <div
-                    class="product-card-modern"
-                    v-for="(product, i) in upgradeMode
-                      ? upgradeProducts
-                      : products"
-                    v-if="
-                      product.type === category &&
-                      product.plans &&
-                      product.plans[selec_plan.id] &&
-                      Object.values(product.plans).some((plan) => plan === true)
-                    "
-                    :key="product.id || product.name"
-                  >
-                    <div class="product-img-modern-wrap">
-                      <img
-                        :src="product.img"
-                        :alt="product.name"
-                        class="product-img-modern"
+              
+              <!-- Nuevo catálogo de productos con carrito -->
+              <div class="catalog-container">
+                <!-- Área principal de productos -->
+                <div class="products-main-area">
+                  <!-- Filtros y búsqueda -->
+                  <div class="catalog-filters">
+                    <div class="search-filter">
+                      <i class="fas fa-search search-icon"></i>
+                      <input 
+                        v-model="searchTerm" 
+                        type="text" 
+                        placeholder="Busqueda..." 
+                        class="search-input"
                       />
                     </div>
-                    <div class="product-info-modern">
-                      <span class="product-name-modern">{{
-                        product.name
-                      }}</span>
+                    
+                    <div class="category-filters">
+                      <span>Puedes utilizar estos filtros.</span>
+                      <div class="category-buttons">
+                        <button 
+                          v-for="category in categories" 
+                          :key="category"
+                          @click="toggleCategory(category)"
+                          :class="{ active: selectedCategories.includes(category) }"
+                          class="category-btn"
+                        >
+                          {{ category }}
+                        </button>
+                      </div>
                     </div>
-                    <div class="product-controls-modern">
-                      <button class="qty-btn" @click="less(i)">-</button>
-                      <span class="product-qty-modern">{{
-                        product.total
-                      }}</span>
-                      <button
-                        class="qty-btn"
-                        @click="more(i)"
-                        :disabled="
-                          upgradeMode
-                            ? totalUpgradeProducts +
-                                (Number(product.weight) || 1) >
-                              maxUpgradeProducts
-                            : false
+                  </div>
+
+                  <!-- Grid de productos -->
+                  <div 
+                    v-for="category in categories"
+                    :key="category"
+                    class="category-block"
+                  >
+                    <h5 class="category-title">{{ category }}</h5>
+                    <div class="products-catalog-grid" :class="viewMode">
+                      <div 
+                        v-for="(product, i) in filteredCatalogProducts" 
+                        :key="product.id || i"
+                        class="product-catalog-card"
+                        @click="openProductModal(product)"
+                        v-if="
+                          product.type === category &&
+                          product.plans &&
+                          product.plans[selec_plan.id] &&
+                          Object.values(product.plans).some((plan) => plan === true)
                         "
                       >
-                        +
-                      </button>
-                      <span v-if="upgradeMode" class="max-info"
-                        >/ {{ product.max }} máx.</span
-                      >
+                      <!-- Badge de puntos -->
+                      <div class="points-badge">
+                        <i class="fas fa-star"></i>
+                        {{ product.points }} pts
+                      </div>
+                      
+                      <!-- Imagen del producto -->
+                      <div class="product-image-container">
+                        <img 
+                          :src="product.img" 
+                          :alt="product.name"
+                          class="product-catalog-img"
+                        />
+                      </div>
+                      
+                      <!-- Información del producto -->
+                      <div class="product-catalog-info">
+                        <h4 class="product-catalog-name">{{ product.name }}</h4>
+                        <div class="product-catalog-price">
+                          Precio Socio: <span class="price-amount">S/ {{ getProductPrice(product) }}</span>
+                        </div>
+                      </div>
+                      
+                      <!-- Controles de cantidad -->
+                      <div class="product-controls-modern">
+                        <button 
+                          v-if="upgradeMode ? upgradeProducts[i].total > 0 : products[i].total > 0"
+                          class="qty-btn" 
+                          @click.stop="less(i)"
+                        >
+                          -
+                        </button>
+                        <span class="product-qty-modern">
+                          {{ upgradeMode ? upgradeProducts[i].total : products[i].total }}
+                        </span>
+                        <button
+                          class="qty-btn"
+                          @click.stop="more(i)"
+                          :disabled="
+                            upgradeMode
+                              ? totalUpgradeProducts +
+                                  (Number(product.weight) || 1) >
+                                maxUpgradeProducts
+                              : false
+                          "
+                        >
+                          +
+                        </button>
+                        <span v-if="upgradeMode" class="max-info">/ {{ product.max }} máx.</span>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-            <!-- Resumen sticky -->
-            <div
-              class="sticky-summary"
-              :class="{
-                show: (upgradeMode ? totalUpgradeProducts : total) > 0,
-              }"
-            >
+
+
+              </div>
+
+
+
+              <!-- Modal de producto -->
+              <div v-if="selectedProduct" class="product-modal" @click="closeProductModal">
+                <div class="product-modal-content" @click.stop>
+                  <div class="product-modal-header">
+                    <h2>{{ selectedProduct.name }}</h2>
+                  </div>
+                  
+                  <div class="product-modal-body">
+                    <!-- X para cerrar dentro del modal -->
+                    <button @click="closeProductModal" class="close-product-btn-inside">
+                      <i class="fas fa-times"></i>
+                    </button>
+                    
+                    <!-- Panel izquierdo - Imagen -->
+                    <div class="product-modal-left">
+                      <div class="product-modal-image">
+                        <img 
+                          :src="selectedProduct.img" 
+                          :alt="selectedProduct.name"
+                          class="modal-product-img"
+                          @load="imageLoaded = true"
+                          v-show="imageLoaded"
+                        />
+                        <!-- Carga de imagen -->
+                        <div v-if="!imageLoaded" class="image-loading">
+                          <div class="loading-spinner"></div>
+                          <span>Cargando imagen...</span>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <!-- Panel derecho - Información -->
+                    <div class="product-modal-right">
+                      <div class="product-modal-info">
+                        <div class="modal-product-price">S/ {{ getProductPrice(selectedProduct) }}</div>
+                        <div class="modal-product-points">{{ selectedProduct.points }} pts</div>
+                        
+                        <div class="product-description">
+                          <h4>Descripción:</h4>
+                          <p>{{ getProductDescription(selectedProduct) }}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Resumen sticky -->
+              <div
+                class="sticky-summary"
+                :class="{
+                  show: (upgradeMode ? totalUpgradeProducts : total) > 0,
+                }"
+              >
               <div class="sticky-summary-content">
                 <div class="sticky-products">
                   <div
-                    v-for="product in upgradeMode ? upgradeProducts : products"
+                    v-for="product in (upgradeMode ? upgradeProducts : products) || []"
                     v-if="product.total > 0"
                     class="sticky-product-item"
                   >
@@ -237,7 +339,7 @@
                   <span class="sticky-total-amount"
                     >S/.
                     {{
-                      upgradeMode ? upgradeDifference : selec_plan.amount
+                      upgradeMode ? upgradeDifference : (selec_plan ? selec_plan.amount : 0)
                     }}</span
                   >
                 </div>
@@ -249,10 +351,10 @@
                     (upgradeMode ? totalUpgradeProducts : total) !==
                       (upgradeMode
                         ? maxUpgradeProducts
-                        : selec_plan.max_products) &&
+                        : (selec_plan ? selec_plan.max_products : 0)) &&
                     (upgradeMode
                       ? maxUpgradeProducts
-                      : selec_plan.max_products) > 0
+                      : (selec_plan ? selec_plan.max_products : 0)) > 0
                   "
                   class="info-message"
                 >
@@ -261,21 +363,21 @@
                       (upgradeMode ? totalUpgradeProducts : total) <
                       (upgradeMode
                         ? maxUpgradeProducts
-                        : selec_plan.max_products)
+                        : (selec_plan ? selec_plan.max_products : 0))
                     "
                   >
                     Te faltan
                     {{
                       (upgradeMode
                         ? maxUpgradeProducts
-                        : selec_plan.max_products) -
+                        : (selec_plan ? selec_plan.max_products : 0)) -
                       (upgradeMode ? totalUpgradeProducts : total)
                     }}
                     producto<span
                       v-if="
                         (upgradeMode
                           ? maxUpgradeProducts
-                          : selec_plan.max_products) -
+                          : (selec_plan ? selec_plan.max_products : 0)) -
                           (upgradeMode ? totalUpgradeProducts : total) >
                         1
                       "
@@ -289,14 +391,14 @@
                       (upgradeMode ? totalUpgradeProducts : total) -
                       (upgradeMode
                         ? maxUpgradeProducts
-                        : selec_plan.max_products)
+                        : (selec_plan ? selec_plan.max_products : 0))
                     }}
                     producto<span
                       v-if="
                         (upgradeMode ? totalUpgradeProducts : total) -
                           (upgradeMode
                             ? maxUpgradeProducts
-                            : selec_plan.max_products) >
+                            : (selec_plan ? selec_plan.max_products : 0)) >
                         1
                       "
                       >s</span
@@ -308,7 +410,7 @@
                   class="main-action-btn sticky-btn"
                   :disabled="
                     (upgradeMode ? totalUpgradeProducts : total) !==
-                    (upgradeMode ? maxUpgradeProducts : selec_plan.max_products)
+                    (upgradeMode ? maxUpgradeProducts : (selec_plan ? selec_plan.max_products : 0))
                   "
                   @click="handleGoToStep2"
                 >
@@ -321,7 +423,7 @@
               v-if="
                 step === 1 &&
                 (upgradeMode ? totalUpgradeProducts : total) ===
-                  (upgradeMode ? maxUpgradeProducts : selec_plan.max_products)
+                  (upgradeMode ? maxUpgradeProducts : (selec_plan ? selec_plan.max_products : 0))
               "
               class="afiliarme-mobile-btn"
             >
@@ -356,14 +458,14 @@
                   <span
                     >{{ upgradeMode ? maxUpgradeProducts : total }} /
                     {{
-                      upgradeMode ? maxUpgradeProducts : selec_plan.max_products
+                      upgradeMode ? maxUpgradeProducts : (selec_plan ? selec_plan.max_products : 0)
                     }}</span
                   >
                 </div>
                 <div class="summary-total">
                   <span>Total a pagar:</span>
                   <span
-                    >S/. {{ upgradeMode ? upgradeDifference : remaining }}</span
+                    >S/. {{ upgradeMode ? upgradeDifference : (selec_plan ? selec_plan.amount : 0) }}</span
                   >
                 </div>
                 <div class="summary-total" v-if="upgradeMode">
@@ -577,6 +679,15 @@ export default {
       upgradeProducts: [],
              affiliation: null,
        showRedirectMessage: false, // Controla si mostrar el mensaje de redirección
+       // Nuevas propiedades para la selección de productos
+       searchTerm: '',
+       sortBy: 'name', // 'name', 'weight', 'popularity'
+       viewMode: 'grid', // 'grid', 'list'
+       
+       // Nuevas propiedades para el catálogo de productos
+       selectedCategories: [],
+       selectedProduct: null,
+       imageLoaded: false,
      };
    },
   computed: {
@@ -670,11 +781,34 @@ export default {
     },
     totalUpgradeProducts() {
       // Total de peso seleccionados en upgrade
+      if (!this.upgradeProducts) return 0;
       return this.upgradeProducts.reduce(
         (a, b) => a + (Number(b.total) || 0) * (Number(b.weight) || 1),
         0
       );
     },
+
+    // Nuevas propiedades computadas para el catálogo de productos
+    catalogProducts() {
+      if (!this.products) return [];
+      
+      return this.products.filter(product => {
+        // Solo filtrar por búsqueda y categoría
+        const matchesSearch = !this.searchTerm || product.name.toLowerCase().includes(this.searchTerm.toLowerCase());
+        const matchesCategory = this.selectedCategories.length === 0 || this.selectedCategories.includes(product.type);
+        
+        return matchesSearch && matchesCategory;
+      });
+    },
+
+    filteredCatalogProducts() {
+      // Si no hay productos filtrados, mostrar todos los productos
+      const productsToShow = this.catalogProducts.length > 0 ? this.catalogProducts : this.products;
+      
+      return productsToShow || [];
+    },
+
+
   },
   watch: {
     selec_plan() {
@@ -733,6 +867,8 @@ export default {
             this.tab = this.categories[0];
           }
         }
+        
+
       } else {
         console.error("No products data received or invalid format");
         this.products = [];
@@ -743,6 +879,11 @@ export default {
       this.offices = data.offices || [];
       this.affiliation = data.affiliation || null;
       this.affiliations = data.affiliations || [];
+
+      // Llamar checkUpgradeMode después de que todo esté cargado
+      if (this.selec_plan) {
+        this.checkUpgradeMode();
+      }
 
       // Set congrats state
       if (
@@ -775,16 +916,86 @@ export default {
 
   methods: {
     reset_totals() {
+      if (!this.products) return;
       this.products.forEach((p) => {
         p.total = 0;
       });
     },
 
+    clearSearch() {
+      this.searchTerm = "";
+    },
+
+    // Métodos para el catálogo de productos
+    toggleCategory(category) {
+      const index = this.selectedCategories.indexOf(category);
+      if (index > -1) {
+        this.selectedCategories.splice(index, 1);
+      } else {
+        this.selectedCategories.push(category);
+      }
+    },
+
+    openProductModal(product) {
+      this.selectedProduct = product;
+      this.imageLoaded = false; // Resetear la carga de imagen al abrir el modal
+      // Prevenir scroll del body cuando el modal está abierto
+      document.body.style.overflow = 'hidden';
+    },
+
+    closeProductModal() {
+      this.selectedProduct = null;
+      this.imageLoaded = false; // Resetear la carga de imagen al cerrar el modal
+      // Restaurar scroll del body
+      document.body.style.overflow = 'auto';
+    },
+
+
+
+
+
+
+
+    getProductPrice(product) {
+      // Implementar lógica de precio según el plan
+      return product.price || 0;
+    },
+
+    getProductDescription(product) {
+      // Usar la descripción de la base de datos si existe
+      if (product.description && product.description.trim() !== '') {
+        return product.description;
+      }
+      
+      // Descripciones personalizadas como fallback para productos sin descripción
+      const descriptions = {
+        'Luce Force': 'Descubre el poder de la belleza total con el mejor colágeno hidrolizado Luce Force. Rejuvenece tu piel, fortalece uñas, cabello y articulaciones. Diseñado para el cuidado completo de tu cuerpo, con ingredientes como cartílago de tiburón (fuente de glucosamina), magnesio, zinc, cúrcuma, frutos rojos y Stevia. ¡Dale a tu belleza el impulso que se merece! ❤️✨',
+        'Luce Al100': 'Suplemento nutricional premium con vitamina A y antioxidantes naturales. Fortalece el sistema inmunológico, mejora la salud visual y promueve la regeneración celular. Ideal para mantener una salud óptima y vitalidad diaria.',
+        'Luce Exquisito': 'Combinación única de ingredientes naturales para el cuidado de la piel. Hidrata profundamente, reduce líneas de expresión y proporciona un brillo natural. Formulado con aceites esenciales y vitaminas para una piel radiante.',
+        'Luce Lu Kids': 'Suplemento especialmente formulado para niños con vitaminas y minerales esenciales. Promueve el crecimiento saludable, fortalece el sistema inmunológico y mejora el desarrollo cognitivo. Sabor agradable que los niños amarán.',
+        'Luce Activo': 'Energizante natural que mejora el rendimiento físico y mental. Aumenta la resistencia, reduce la fatiga y promueve la recuperación muscular. Ideal para deportistas y personas activas.',
+        'Luce Ligera': 'Suplemento para el control de peso y bienestar general. Acelera el metabolismo, reduce la retención de líquidos y proporciona energía sostenida. Formulado con ingredientes naturales para resultados seguros y efectivos.'
+      };
+      
+      // Buscar descripción por nombre del producto
+      for (const [key, description] of Object.entries(descriptions)) {
+        if (product.name.includes(key)) {
+          return description;
+        }
+      }
+      
+      // Descripción genérica si no hay una específica
+      return 'Producto de alta calidad con ingredientes naturales seleccionados cuidadosamente. Diseñado para mejorar tu bienestar y calidad de vida. ¡Experimenta la diferencia con nuestros productos premium!';
+    },
+
     touch(i) {
+      if (!this.products || !this.products[i]) return;
       this.product = this.products[i];
     },
 
     checkUpgradeMode() {
+      if (!this.products) return;
+      
       if (
         this.affiliation &&
         this.affiliation.status === "approved" &&
@@ -807,9 +1018,9 @@ export default {
         this.upgradeMode = false;
         this.previousPlan = null;
         this.previousProducts = [];
-        this.maxUpgradeProducts = this.selec_plan.max_products;
-        this.upgradeDifference = this.selec_plan.amount;
-        this.upgradePoints = this.selec_plan.affiliation_points;
+        this.maxUpgradeProducts = this.selec_plan ? this.selec_plan.max_products : 0;
+        this.upgradeDifference = this.selec_plan ? this.selec_plan.amount : 0;
+        this.upgradePoints = this.selec_plan ? this.selec_plan.affiliation_points : 0;
         this.upgradeProducts = this.products.map((p) => ({
           ...p,
           max: p.max,
@@ -819,12 +1030,14 @@ export default {
     },
     more(idx) {
       if (this.upgradeMode) {
+        if (!this.upgradeProducts || !this.upgradeProducts[idx]) return;
         const product = this.upgradeProducts[idx];
         const nextTotal =
           this.totalUpgradeProducts + (Number(product.weight) || 1);
         if (nextTotal > this.maxUpgradeProducts) return;
         this.upgradeProducts[idx].total += 1;
       } else {
+        if (!this.products || !this.products[idx]) return;
         const product = this.products[idx];
         const productWeight = Number(product.weight);
         if (isNaN(productWeight) || productWeight <= 0) return;
@@ -839,10 +1052,12 @@ export default {
     },
     less(idx) {
       if (this.upgradeMode) {
+        if (!this.upgradeProducts || !this.upgradeProducts[idx]) return;
         if (this.upgradeProducts[idx].total > 0) {
           this.upgradeProducts[idx].total -= 1;
         }
       } else {
+        if (!this.products || !this.products[idx]) return;
         const product = this.products[idx];
         if (product.total == 0) return;
         product.total -= 1;
@@ -862,6 +1077,11 @@ export default {
 
     async POST() {
       let products = this.upgradeMode ? this.upgradeProducts : this.products;
+      if (!products) {
+        this.error = "No hay productos disponibles";
+        return;
+      }
+      
       let plan = this.selec_plan;
       let voucher = this.voucher;
       let office = this.office;
@@ -968,6 +1188,10 @@ export default {
           return;
         }
       } else {
+        if (!this.selec_plan) {
+          this.selectError = "Debes seleccionar un plan";
+          return;
+        }
         if (this.total !== this.selec_plan.max_products) {
           this.selectError = `Debes seleccionar exactamente ${this.selec_plan.max_products} productos para continuar.`;
           return;
@@ -1149,28 +1373,58 @@ export default {
   font-weight: 700;
 
 .product-controls-modern
-  display flex
-  align-items center
-  gap 10px
-  margin-top 8px
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: auto; /* Empujar al final */
+  width: 100%;
 
-.qty-btn
+.qty-btn {
   background: #ff9800;
   color: #fff;
   border: none;
-  border-radius: 8px;
-  width: 32px;
-  height: 32px;
-  font-size: 1.3rem;
+  border-radius: 6px;
+  width: 28px;
+  height: 28px;
+  font-size: 1rem;
   font-weight: 700;
   cursor: pointer;
-  transition: background 0.2s;
-  &:hover
-    background: #fb8c00;
+  transition: background 0.2s, transform 0.18s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
-.product-qty-modern
-  color: #a05a2c;
-  font-weight: 700;
+.qty-btn:hover {
+  background: #fb8c00;
+  transform: scale(1.05);
+}
+
+.qty-btn:disabled {
+  background: #ffe0b2;
+  color: #ff9800;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.product-qty-modern {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #333;
+  min-width: 20px;
+  text-align: center;
+  background: #f5f5f5;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.max-info {
+  color: #ff9800;
+  font-size: 0.75rem;
+  margin-left: 4px;
+  font-weight: 600;
+}
 
 .sticky-summary
   position fixed
@@ -1633,6 +1887,47 @@ export default {
       gap 10px
       .fab-icon
         font-size 1.4em
+  .product-selection-tools
+    padding 16px
+    margin 0 10px 20px 10px
+  .filters-container
+    flex-direction column
+    gap 12px
+  .filter-group
+    justify-content space-between
+  
+  /* Responsive para el catálogo */
+  .catalog-container
+    flex-direction column
+    gap 15px
+  
+  .products-catalog-grid
+    grid-template-columns repeat(auto-fit, minmax(240px, 1fr))
+    gap 15px
+  
+  .catalog-filters
+    flex-direction column
+    gap 12px
+  
+  .search-filter
+    min-width 100%
+  
+  .category-buttons
+    justify-content center
+  
+  .cart-sidebar
+    order -1
+  
+  .product-modal-body
+    flex-direction column
+    gap 20px
+  
+  .modal-product-name
+    font-size 1.5rem
+  
+  .modal-product-price
+    font-size 1.4rem
+
 @media (min-width: 900px)
   .afiliarme-mobile-btn
     display none !important
@@ -1724,5 +2019,896 @@ export default {
   font-size: 0.95em;
   margin-left: 6px;
   font-weight: 600;
+}
+
+/* Estilos para el nuevo catálogo de productos */
+.catalog-container {
+  display: flex;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.products-main-area {
+  flex: 2;
+  background: #f9f9f9;
+  border-radius: 12px;
+  padding: 18px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+}
+
+.catalog-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #eee;
+}
+
+.search-filter {
+  position: relative;
+  flex: 1;
+  min-width: 200px;
+}
+
+.search-input {
+  width: 100%;
+  padding: 10px 15px 10px 40px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  background-color: #fff;
+  transition: border-color 0.2s;
+}
+
+.search-input:focus {
+  border-color: #ff9800;
+  outline: none;
+}
+
+.search-icon {
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #999;
+  font-size: 1.1rem;
+}
+
+.country-filter, .category-filters {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.country-select, .category-btn {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  background-color: #fff;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.country-select:focus, .category-btn:focus {
+  border-color: #ff9800;
+  outline: none;
+}
+
+.category-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.category-btn {
+  background: #ffe0b2;
+  color: #ff9800;
+  border: 1px solid #ff9800;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.category-btn.active {
+  background: #ff9800;
+  color: #fff;
+  border-color: #ff9800;
+}
+
+.products-catalog-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); /* Más pequeño para 4 columnas */
+  gap: 15px; /* Menos espacio entre cards */
+}
+
+.product-catalog-card {
+  background: #fff;
+  border-radius: 12px; /* Más pequeño */
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  padding: 12px; /* Menos padding */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  transition: box-shadow 0.18s, transform 0.18s;
+  cursor: pointer;
+  border: 2px solid transparent;
+  min-height: 280px; /* Altura fija más pequeña */
+}
+
+.product-catalog-card:hover {
+  box-shadow: 0 4px 16px rgba(255,152,0,0.13);
+  border: 2px solid #ff9800;
+  transform: scale(1.02); /* Menos escala */
+}
+
+.points-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: #ff9800;
+  color: #fff;
+  border-radius: 10px;
+  padding: 3px 8px;
+  font-size: 0.75rem; /* Más pequeño */
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  box-shadow: 0 2px 6px rgba(255,152,0,0.15);
+}
+
+.product-image-container {
+  width: 80px; /* Más pequeño */
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+
+.product-catalog-img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.product-catalog-info {
+  width: 100%;
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.product-catalog-name {
+  font-size: 0.95rem; /* Más pequeño */
+  font-weight: 700;
+  color: #ff9800;
+  margin-bottom: 3px;
+  line-height: 1.2;
+}
+
+.product-catalog-price {
+  font-size: 0.85rem; /* Más pequeño */
+  color: #388e3c;
+  font-weight: 600;
+}
+
+.product-quantity-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: auto; /* Empujar al final */
+  width: 100%;
+}
+
+.qty-control-btn {
+  background: #ff9800;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  width: 28px;
+  height: 28px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.18s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.qty-control-btn:hover {
+  background: #fb8c00;
+  transform: scale(1.05);
+}
+
+.quantity-display {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #333;
+  min-width: 20px;
+  text-align: center;
+  background: #f5f5f5;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.add-to-cart-btn {
+  background: linear-gradient(90deg, #ff9800 60%, #ffb74d 100%);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s, transform 0.18s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 2px 6px rgba(255,152,0,0.13);
+}
+
+.add-to-cart-btn:hover {
+  background: linear-gradient(90deg, #fb8c00 60%, #ffe0b2 100%);
+  box-shadow: 0 4px 12px rgba(255,152,0,0.18);
+  transform: scale(1.04);
+}
+
+.add-to-cart-btn:disabled {
+  background: #ffe0b2;
+  color: #ff9800;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.cart-sidebar {
+  flex: 1;
+  background: #fff;
+  border-radius: 12px;
+  padding: 18px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.cart-summary {
+  background: #f9f9f9;
+  border-radius: 10px;
+  padding: 15px;
+  text-align: center;
+}
+
+.cart-summary h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #ff9800;
+  margin-bottom: 10px;
+}
+
+.cart-totals {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 15px;
+}
+
+.cart-total-item {
+  display: flex;
+  justify-content: space-between;
+  font-size: 1.05rem;
+  color: #b26a00;
+}
+
+.total-amount {
+  font-weight: 600;
+  color: #388e3c;
+}
+
+.total-points {
+  font-weight: 600;
+  color: #ff9800;
+}
+
+.view-cart-btn {
+  background: linear-gradient(90deg, #ff9800 60%, #ffb74d 100%);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 1rem;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s, transform 0.18s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 2px 8px rgba(255,152,0,0.13);
+}
+
+.view-cart-btn:hover {
+  background: linear-gradient(90deg, #fb8c00 60%, #ffe0b2 100%);
+  box-shadow: 0 4px 16px rgba(255,152,0,0.18);
+  transform: scale(1.04);
+}
+
+/* Estilos para modales */
+.cart-modal, .product-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  /* Prevenir scroll del body */
+  overflow: hidden;
+}
+
+.cart-modal-content, .product-modal-content {
+  background: #fff;
+  border-radius: 15px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+  width: 90%;
+  max-width: 600px;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  /* Mantener el modal en la posición del scroll */
+  position: relative;
+}
+
+.product-modal-content {
+  max-width: 800px;
+  max-height: 90vh;
+}
+
+.cart-modal-header, .product-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  border-bottom: 1px solid #eee;
+  background: #f9f9f9;
+  border-radius: 15px 15px 0 0;
+}
+
+.cart-modal-header h2, .product-modal-header h2 {
+  font-size: 1.4rem; /* Más pequeño */
+  font-weight: 700;
+  color: #ff9800;
+  margin: 0;
+}
+
+.cart-modal-header p {
+  font-size: 0.95rem;
+  color: #666;
+  margin-top: 5px;
+}
+
+.close-cart-btn, .close-product-btn {
+  background: none;
+  border: none;
+  font-size: 1.5rem; /* Más pequeño */
+  color: #999;
+  cursor: pointer;
+  transition: color 0.2s;
+  padding: 5px;
+}
+
+.close-cart-btn:hover, .close-product-btn:hover {
+  color: #ff9800;
+}
+
+.close-product-btn {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+}
+
+.cart-items-container {
+  padding: 15px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.cart-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  background: #fdfdfd;
+  border-radius: 10px;
+  padding: 12px 15px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.cart-item-img {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+.cart-item-info {
+  flex: 1;
+}
+
+.cart-item-info h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 4px;
+}
+
+.cart-item-info p {
+  font-size: 0.9rem;
+  color: #666;
+  margin-bottom: 4px;
+}
+
+.cart-item-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.remove-btn {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  color: #e53935;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.remove-btn:hover {
+  color: #c62828;
+}
+
+.cart-summary-section {
+  padding: 15px 20px;
+  border-top: 1px solid #eee;
+  background: #f9f9f9;
+  border-radius: 0 0 15px 15px;
+}
+
+.summary-details {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 1.05rem;
+  color: #b26a00;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.summary-row span:first-child {
+  font-weight: 600;
+  color: #333;
+}
+
+.total-row {
+  font-weight: 700;
+  color: #388e3c;
+}
+
+.cart-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 15px 20px;
+  border-top: 1px solid #eee;
+  background: #f9f9f9;
+  border-radius: 0 0 15px 15px;
+}
+
+.pay-btn, .add-more-btn {
+  padding: 12px 25px;
+  border: none;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s, transform 0.18s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.pay-btn {
+  background: linear-gradient(90deg, #ff9800 60%, #ffb74d 100%);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(255,152,0,0.13);
+}
+
+.pay-btn:hover {
+  background: linear-gradient(90deg, #fb8c00 60%, #ffe0b2 100%);
+  box-shadow: 0 4px 16px rgba(255,152,0,0.18);
+  transform: scale(1.04);
+}
+
+.add-more-btn {
+  background: #ffe0b2;
+  color: #ff9800;
+  box-shadow: none;
+}
+
+.add-more-btn:hover {
+  background: #ffd5b2;
+  box-shadow: none;
+}
+
+/* Estilos para modal de producto */
+.product-modal-body {
+  display: flex;
+  gap: 20px; /* Menos espacio */
+  padding: 15px 20px; /* Menos padding */
+  overflow-y: auto;
+  max-height: 60vh; /* Más pequeño */
+}
+
+.product-modal-left {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-width: 250px; /* Más pequeño */
+}
+
+.product-modal-image {
+  max-width: 100%;
+  max-height: 200px; /* Más pequeño */
+  object-fit: contain;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.product-modal-right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  min-width: 0;
+}
+
+.product-modal-info {
+  display: flex;
+  flex-direction: column;
+  gap: 12px; /* Menos espacio */
+  margin-bottom: 15px;
+}
+
+.modal-product-price {
+  font-size: 1.4rem; /* Más pequeño */
+  font-weight: 700;
+  color: #388e3c;
+  margin-bottom: 5px;
+}
+
+.modal-product-points {
+  font-size: 1rem; /* Más pequeño */
+  font-weight: 600;
+  color: #ff9800;
+  margin-bottom: 10px;
+}
+
+.product-description {
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid #eee;
+  flex: 1;
+}
+
+.product-description h4 {
+  font-size: 1.1rem; /* Más pequeño */
+  font-weight: 600;
+  color: #ff9800;
+  margin-bottom: 10px;
+}
+
+.product-description p {
+  font-size: 0.95rem; /* Más pequeño */
+  color: #555;
+  line-height: 1.6;
+  max-height: 150px; /* Más pequeño */
+  overflow-y: auto;
+  padding-right: 10px;
+}
+
+.modal-product-actions {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.quantity-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 5px 10px;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.qty-control-btn {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  color: #999;
+  cursor: pointer;
+  transition: color 0.2s;
+  padding: 5px 10px;
+}
+
+.qty-control-btn:hover {
+  color: #ff9800;
+}
+
+.quantity-display {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333;
+  min-width: 30px;
+  text-align: center;
+}
+
+.add-to-cart-modal-btn {
+  background: linear-gradient(90deg, #ff9800 60%, #ffb74d 100%);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 1rem;
+  padding: 12px 25px;
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s, transform 0.18s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 2px 8px rgba(255,152,0,0.13);
+}
+
+.add-to-cart-modal-btn:hover {
+  background: linear-gradient(90deg, #fb8c00 60%, #ffe0b2 100%);
+  box-shadow: 0 4px 16px rgba(255,152,0,0.18);
+  transform: scale(1.04);
+}
+
+.add-to-cart-modal-btn:disabled {
+  background: #ffe0b2;
+  color: #ff9800;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+@media (max-width: 600px)
+  .product-selection-tools
+    padding 12px
+    margin 0 8px 16px 8px
+  .search-input
+    padding 12px 16px 12px 44px
+    font-size 0.9rem
+  .filter-select
+    padding 6px 10px
+    font-size 0.85rem
+  .view-btn
+    width 32px
+    height 32px
+    font-size 0.9rem
+  
+  /* Responsive para móviles muy pequeños */
+  .products-catalog-grid
+    grid-template-columns repeat(auto-fit, minmax(200px, 1fr))
+    gap 12px
+  
+  .product-catalog-card
+    padding 12px
+  
+  .product-catalog-name
+    font-size 0.95rem
+  
+  .cart-modal-content
+    width 95%
+    margin 10px
+  
+  .product-modal-content
+    width 95%
+    margin 10px
+  
+  .modal-product-name
+    font-size 1.3rem
+  
+  .modal-product-price
+    font-size 1.2rem
+  
+  .modal-product-actions
+    flex-direction column
+    gap 12px
+
+.modal-product-img {
+  max-width: 100%;
+  max-height: 180px; /* Más pequeño */
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+@media (max-width: 768px) {
+  .product-modal-body {
+    flex-direction: column;
+    gap: 15px;
+    max-height: 70vh;
+  }
+  
+  .product-modal-left {
+    max-width: 100%;
+    max-height: 150px;
+  }
+  
+  .product-modal-image {
+    max-height: 130px;
+  }
+  
+  .modal-product-img {
+    max-height: 120px;
+  }
+  
+  .product-description p {
+    max-height: 120px;
+  }
+  
+  .product-modal-header h2 {
+    font-size: 1.2rem;
+  }
+  
+  .modal-product-price {
+    font-size: 1.2rem;
+  }
+}
+
+.close-product-btn-inside {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(255, 255, 255, 0.9);
+  border: none;
+  font-size: 1.2rem;
+  color: #999;
+  cursor: pointer;
+  transition: all 0.2s;
+  padding: 8px;
+  border-radius: 50%;
+  width: 35px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.close-product-btn-inside:hover {
+  color: #ff9800;
+  background: rgba(255, 255, 255, 1);
+  transform: scale(1.1);
+}
+
+.product-modal-body {
+  display: flex;
+  gap: 20px;
+  padding: 15px 20px;
+  overflow-y: auto;
+  max-height: 60vh;
+  position: relative; /* Para posicionar la X */
+}
+
+.image-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+  color: #999;
+  font-size: 0.9rem;
+}
+
+.loading-spinner {
+  width: 30px;
+  height: 30px;
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid #ff9800;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 10px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@media (max-width: 1200px) {
+  .products-catalog-grid {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .products-catalog-grid {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+  }
+  
+  .product-catalog-card {
+    padding: 10px;
+    min-height: 260px;
+  }
+  
+  .product-image-container {
+    width: 70px;
+    height: 70px;
+  }
+  
+  .product-catalog-name {
+    font-size: 0.9rem;
+  }
+  
+  .product-catalog-price {
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .products-catalog-grid {
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 10px;
+  }
+  
+  .product-catalog-card {
+    padding: 8px;
+    min-height: 240px;
+  }
+  
+  .product-image-container {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .product-catalog-name {
+    font-size: 0.85rem;
+  }
+  
+  .product-catalog-price {
+    font-size: 0.75rem;
+  }
+  
+  .qty-control-btn {
+    width: 24px;
+    height: 24px;
+    font-size: 0.9rem;
+  }
+  
+  .add-to-cart-btn {
+    font-size: 0.8rem;
+    padding: 6px 12px;
+  }
 }
 </style>
