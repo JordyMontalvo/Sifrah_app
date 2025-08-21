@@ -22,6 +22,7 @@ export default new Vuex.Store({
     city:       null,
     birthdate:   null,
     total_points: null,
+    cartItems: [],
 
     fb:   'https://www.facebook.com/profile.php?id=61555335617817',
     is:   'https://www.instagram.com/sifrahcorp',
@@ -125,6 +126,9 @@ export default new Vuex.Store({
     },
     SET_TOTAL_POINTS: (state, total_points) => {
       state.total_points = total_points
+    },
+    setCartItems: (state, cartItems) => {
+      state.cartItems = cartItems
     },
   },
 })

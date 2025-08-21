@@ -31,6 +31,7 @@ import Password     from './views/app/Password.vue'
 import Security     from './views/app/Security.vue'
 import Resume       from './views/app/Resume.vue'
 import frontales from './views/app/frontales.vue'
+import Checkout from './views/app/Checkout.vue'
 
 
 Vue.use(Router)
@@ -195,6 +196,11 @@ const routes = [
   {
     path: '/frontales',
     component: frontales,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/checkout',
+    component: Checkout,
     meta: { requiresAuth: true }
   }
 ]

@@ -1,265 +1,275 @@
 <template>
   <App :session="session" :office_id="office_id" :title="title">
-    <h4 class="tabs">
-      <router-link class="tab" to="/activation">
-        <span class="tab-icon">🛒</span> Comprar
-      </router-link>
-      &nbsp;&nbsp;
-      <router-link class="tab" to="/activations" v-if="!office_id">
-        <span class="tab-icon">📜</span> Historial
-      </router-link>
-    </h4>
+    <div v-cloak>
+      <h4 class="tabs">
+        <router-link class="tab" to="/activation">
+          <span class="tab-icon">🛒</span> Comprar
+        </router-link>
+        &nbsp;&nbsp;
+        <router-link class="tab" to="/activations" v-if="!office_id">
+          <span class="tab-icon">📜</span> Historial
+        </router-link>
+      </h4>
 
-    <div class="points-bar">
-      <span class="points-icon">💎</span> Puntos: <b>{{ current_points }}</b>
-    </div>
-    <h4 class="products-title">Catálogo de Productos</h4>
+      <div class="points-bar">
+        <span class="points-icon">💎</span> Puntos: <b>{{ current_points }}</b>
+      </div>
+      <h4 class="products-title">Catálogo de Productos</h4>
 
-    <!-- Nuevo catálogo de productos con carrito -->
-    <div class="catalog-container">
-      <!-- Área principal de productos -->
-      <div class="products-main-area">
-        <!-- Filtros y búsqueda -->
-        <div class="catalog-filters">
-          <div class="search-filter">
-            <i class="fas fa-search search-icon"></i>
-            <input 
-              v-model="searchTerm" 
-              type="text" 
-              placeholder="Busqueda..." 
-              class="search-input"
-            />
-          </div>
-          
-          <div class="category-filters">
-            <span>Puedes utilizar estos filtros.</span>
-            <div class="category-buttons">
-              <button 
-                v-for="category in categories" 
-                :key="category"
-                @click="toggleCategory(category)"
-                :class="{ active: selectedCategories.includes(category) }"
-                class="category-btn"
-              >
-                {{ category }}
-              </button>
-            </div>
-          </div>
+      <!-- Nuevo catálogo de productos con carrito -->
+      <div v-if="loading" class="loading-container">
+        <div class="loading-spinner-large"></div>
+        <p>Cargando productos...</p>
+      </div>
+      
+      <div v-else-if="!products || products.length === 0" class="loading-container">
+        <div class="loading-spinner-large"></div>
+        <p v-if="!products">Inicializando catálogo...</p>
+        <p v-else>No hay productos disponibles</p>
+        <div v-if="error" class="error-message">
+          {{ error }}
         </div>
-
-        <!-- Grid de productos -->
-        <div class="products-catalog-grid">
-          <div 
-            v-for="(product, i) in filteredCatalogProducts" 
-            :key="product.id || i"
-            class="product-catalog-card"
-            @click="openProductModal(product)"
-          >
-            <!-- Badge de puntos -->
-            <div class="points-badge">
-              <i class="fas fa-star"></i>
-              {{ product.points }} pts
-            </div>
-            
-            <!-- Imagen del producto -->
-            <div class="product-image-container">
-              <img
-                :src="product.img"
-                :alt="product.name"
-                class="product-catalog-img"
-              />
-            </div>
-            
-            <!-- Información del producto -->
-            <div class="product-catalog-info">
-              <h4 class="product-catalog-name">{{ product.name }}</h4>
-              <div class="product-catalog-price">
-                Precio Socio: <span class="price-amount">S/ {{ getProductPrice(product) }}</span>
-              </div>
-            </div>
-            
-            <!-- Controles de cantidad -->
-            <div class="product-quantity-controls">
-              <button 
-                v-if="getProductQuantity(product) > 0"
-                @click.stop="decreaseQuantity(product)"
-                class="qty-control-btn"
-              >
-                -
-              </button>
-              <span v-if="getProductQuantity(product) > 0" class="quantity-display">
-                {{ getProductQuantity(product) }}
-              </span>
-              <button 
-                @click.stop="addToCart(product)"
-                :class="getProductQuantity(product) > 0 ? 'qty-control-btn' : 'add-to-cart-btn'"
-                :disabled="getProductQuantity(product) >= 10"
-              >
-                <i v-if="getProductQuantity(product) === 0" class="fas fa-shopping-cart"></i>
-                {{ getProductQuantity(product) > 0 ? '+' : 'Agregar' }}
-              </button>
+      </div>
+      
+      <div v-else-if="loading" class="skeleton-container">
+        <div class="skeleton-header">
+          <div class="skeleton-title"></div>
+          <div class="skeleton-subtitle"></div>
+        </div>
+        <div class="skeleton-grid">
+          <div v-for="i in 6" :key="i" class="skeleton-card">
+            <div class="skeleton-image"></div>
+            <div class="skeleton-content">
+              <div class="skeleton-line"></div>
+              <div class="skeleton-line short"></div>
             </div>
           </div>
         </div>
       </div>
-
-      <!-- Sidebar del carrito -->
-      <div class="cart-sidebar" :class="{ 'cart-sidebar-open': showCart }">
-        <div class="cart-header">
-          <h3>Carrito de compras</h3>
-          <p>Puedes hacer scroll para ver todos tus productos.</p>
-          <button @click="toggleCart" class="close-cart-btn">
-            <i class="fas fa-times"></i>
-          </button>
-        </div>
-        
-        <div class="cart-items-container">
-          <div 
-            v-for="(item, index) in cartItems" 
-            :key="index"
-            class="cart-item"
-          >
-            <img :src="item.img" :alt="item.name" class="cart-item-img" />
-            <div class="cart-item-info">
-              <h4>{{ item.name }}</h4>
-              <div class="cart-item-details">
-                <span class="cart-item-price">S/ {{ getProductPrice(item) }}</span>
-                <span class="cart-item-points">{{ item.points }}pts</span>
+      
+      <div v-else class="catalog-container">
+        <!-- Área principal de productos -->
+        <div class="products-main-area">
+          <!-- Filtros y búsqueda -->
+          <div class="catalog-filters">
+            <div class="search-filter">
+              <i class="fas fa-search search-icon"></i>
+              <input 
+                v-model="searchTerm" 
+                type="text" 
+                placeholder="Busqueda..." 
+                class="search-input"
+              />
+            </div>
+            
+            <div class="category-filters">
+              <span>Puedes utilizar estos filtros.</span>
+              <div class="category-buttons">
+                <button 
+                  v-for="category in categories" 
+                  :key="category"
+                  @click="toggleCategory(category)"
+                  :class="{ active: selectedCategories.includes(category) }"
+                  class="category-btn"
+                >
+                  {{ category }}
+                </button>
               </div>
             </div>
-            <div class="cart-item-controls">
-              <div class="cart-item-quantity-controls">
-                <button @click="decreaseQuantity(item)" class="qty-control-btn">
+          </div>
+
+          <!-- Grid de productos -->
+          <div v-if="loading" class="products-loading">
+            <div class="loading-spinner-medium"></div>
+            <p>Cargando catálogo...</p>
+          </div>
+          
+          <div v-else class="products-catalog-grid">
+            <div 
+              v-for="(product, i) in filteredCatalogProducts" 
+              :key="product.id || i"
+              class="product-catalog-card"
+              @click="openProductModal(product)"
+            >
+              <!-- Badge de puntos -->
+              <div class="points-badge">
+                <i class="fas fa-star"></i>
+                {{ product.points }} pts
+              </div>
+              
+              <!-- Imagen del producto -->
+              <div class="product-image-container">
+                <img
+                  :src="product.img"
+                  :alt="product.name"
+                  class="product-catalog-img"
+                />
+              </div>
+              
+              <!-- Información del producto -->
+              <div class="product-catalog-info">
+                <h4 class="product-catalog-name">{{ product.name }}</h4>
+                <div class="product-catalog-price">
+                  Precio Socio: <span class="price-amount">S/ {{ getProductPrice(product) }}</span>
+                </div>
+              </div>
+              
+              <!-- Controles de cantidad -->
+              <div class="product-quantity-controls">
+                <button 
+                  v-if="getProductQuantity(product) > 0"
+                  @click.stop="decreaseQuantity(product)"
+                  class="qty-control-btn"
+                >
                   -
                 </button>
-                <span class="quantity-display">{{ item.total }}</span>
-                <button @click="increaseQuantity(item)" class="qty-control-btn">
-                  +
+                <span v-if="getProductQuantity(product) > 0" class="quantity-display">
+                  {{ getProductQuantity(product) }}
+                </span>
+                <button 
+                  @click.stop="addToCart(product)"
+                  :class="getProductQuantity(product) > 0 ? 'qty-control-btn' : 'add-to-cart-btn'"
+                  :disabled="getProductQuantity(product) >= 10"
+                >
+                  <i v-if="getProductQuantity(product) === 0" class="fas fa-shopping-cart"></i>
+                  {{ getProductQuantity(product) > 0 ? '+' : 'Agregar' }}
                 </button>
               </div>
-              <div class="cart-item-remove-control">
-              <button @click="removeFromCart(index)" class="remove-btn">
-                <i class="fas fa-trash"></i>
-              </button>
             </div>
+          </div>
+        </div>
+
+        <!-- Sidebar del carrito -->
+        <div class="cart-sidebar" :class="{ 'cart-sidebar-open': showCart }">
+          <div class="cart-header">
+            <h3>Carrito de compras</h3>
+            <p>Puedes hacer scroll para ver todos tus productos.</p>
+            <button @click="toggleCart" class="close-cart-btn">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+          
+          <div class="cart-items-container">
+            <div 
+              v-for="(item, index) in cartItems" 
+              :key="index"
+              class="cart-item"
+            >
+              <img :src="item.img" :alt="item.name" class="cart-item-img" />
+              <div class="cart-item-info">
+                <h4>{{ item.name }}</h4>
+                <div class="cart-item-details">
+                  <span class="cart-item-price">S/ {{ getProductPrice(item) }}</span>
+                  <span class="cart-item-points">{{ item.points }}pts</span>
+                </div>
+              </div>
+              <div class="cart-item-controls">
+                <div class="cart-item-quantity-controls">
+                  <button @click="decreaseQuantity(item)" class="qty-control-btn">
+                    -
+                  </button>
+                  <span class="quantity-display">{{ item.total }}</span>
+                  <button @click="increaseQuantity(item)" class="qty-control-btn">
+                    +
+                  </button>
+                </div>
+                <div class="cart-item-remove-control">
+                <button @click="removeFromCart(index)" class="remove-btn">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </div>
+              </div>
+            </div>
+            
+            <div v-if="cartItems.length === 0" class="empty-cart">
+              <i class="fas fa-shopping-cart"></i>
+              <p>Tu carrito está vacío</p>
+              <span>Agrega productos para comenzar</span>
             </div>
           </div>
           
-          <div v-if="cartItems.length === 0" class="empty-cart">
-            <i class="fas fa-shopping-cart"></i>
-            <p>Tu carrito está vacío</p>
-            <span>Agrega productos para comenzar</span>
-          </div>
-        </div>
-        
-        <div class="cart-summary-section">
-          <h3>Resumen</h3>
-          <div class="summary-details">
-            <div class="summary-row">
-              <span>Concepto:</span>
-              <span>Sin Pack</span>
-            </div>
-            <div class="summary-row">
-              <span>Puntos:</span>
-              <span>{{ cartPoints.toFixed(2) }}</span>
-            </div>
-            <div class="summary-row total-row">
-              <span>Total:</span>
-              <span>S/ {{ cartTotal.toFixed(2) }}</span>
-            </div>
-          </div>
-        </div>
-        
-        <div class="cart-actions">
-          <button class="pay-btn" @click="proceedToCheckout" :disabled="cartItems.length === 0">
-            IR A PAGAR
-          </button>
-          <button class="add-more-btn" @click="scrollToProducts">
-            AÑADIR MÁS PRODUCTOS
-          </button>
-        </div>
-      </div>
-    </div>
-
-
-
-    <!-- Modal de producto -->
-    <div v-if="selectedProduct" class="product-modal" @click="closeProductModal">
-      <div class="product-modal-content" @click.stop>
-        <div class="product-modal-header">
-          <h2>{{ selectedProduct.name }}</h2>
-        </div>
-        
-        <div class="product-modal-body">
-          <!-- X para cerrar dentro del modal -->
-          <button @click="closeProductModal" class="close-product-btn-inside">
-            <i class="fas fa-times"></i>
-          </button>
-          
-          <!-- Panel izquierdo - Imagen -->
-          <div class="product-modal-left">
-            <div class="product-modal-image">
-              <img 
-                :src="selectedProduct.img" 
-                :alt="selectedProduct.name"
-                class="modal-product-img"
-                @load="imageLoaded = true"
-                v-show="imageLoaded"
-              />
-              <!-- Carga de imagen -->
-              <div v-if="!imageLoaded" class="image-loading">
-                <div class="loading-spinner"></div>
-                <span>Cargando imagen...</span>
+          <div class="cart-summary-section">
+            <h3>Resumen</h3>
+            <div class="summary-details">
+              <div class="summary-row">
+                <span>Concepto:</span>
+                <span>Sin Pack</span>
+              </div>
+              <div class="summary-row">
+                <span>Puntos:</span>
+                <span>{{ cartPoints.toFixed(2) }}</span>
+              </div>
+              <div class="summary-row total-row">
+                <span>Total:</span>
+                <span>S/ {{ cartTotal.toFixed(2) }}</span>
               </div>
             </div>
           </div>
           
-          <!-- Panel derecho - Información -->
-          <div class="product-modal-right">
-            <div class="product-modal-info">
-              <div class="modal-product-price">S/ {{ getProductPrice(selectedProduct) }}</div>
-              <div class="modal-product-points">{{ selectedProduct.points }} pts</div>
-              
-              <div class="product-description">
-                <h4>Descripción:</h4>
-                <p>{{ getProductDescription(selectedProduct) }}</p>
+          <div class="cart-actions">
+            <button class="pay-btn" @click="goToCheckout" :disabled="cartItems.length === 0">
+              IR A PAGAR
+            </button>
+            <button class="add-more-btn" @click="scrollToProducts">
+              AÑADIR MÁS PRODUCTOS
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal de producto -->
+      <div v-if="selectedProduct" class="product-modal" @click="closeProductModal">
+        <div class="product-modal-content" @click.stop>
+          <div class="product-modal-header">
+            <h2>{{ selectedProduct.name }}</h2>
+          </div>
+          
+          <div class="product-modal-body">
+            <!-- X para cerrar dentro del modal -->
+            <button @click="closeProductModal" class="close-product-btn-inside">
+              <i class="fas fa-times"></i>
+            </button>
+            
+            <!-- Panel izquierdo - Imagen -->
+            <div class="product-modal-left">
+              <div class="product-modal-image">
+                <img 
+                  :src="selectedProduct.img" 
+                  :alt="selectedProduct.name"
+                  class="modal-product-img"
+                  @load="imageLoaded = true"
+                  v-show="imageLoaded"
+                />
+                <!-- Carga de imagen -->
+                <div v-if="!imageLoaded" class="image-loading">
+                  <div class="loading-spinner"></div>
+                  <span>Cargando imagen...</span>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Panel derecho - Información -->
+            <div class="product-modal-right">
+              <div class="product-modal-info">
+                <div class="modal-product-price">S/ {{ getProductPrice(selectedProduct) }}</div>
+                <div class="modal-product-points">{{ selectedProduct.points }} pts</div>
+                
+                <div class="product-description">
+                  <h4>Descripción:</h4>
+                  <p>{{ getProductDescription(selectedProduct) }}</p>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- Botón flotante del carrito -->
-    <div v-if="!showCart" class="cart-toggle-btn" @click="toggleCart">
-      <i class="fas fa-shopping-cart"></i>
-      <span v-if="cartItems.length > 0" class="cart-badge">{{ cartItems.length }}</span>
-    </div>
-<!-- 
-    <div class="summary-box">
-      <div class="summary-title">Resumen de compra</div>
-      <div class="summary-chips">
-        <span
-          class="summary-chip"
-          v-for="(product, i) in products"
-          v-if="product.total > 0"
-          :key="product.name"
-        >
-          {{ product.total }} x {{ product.name }}
-        </span>
-      </div> -->
-      <!-- <div class="summary-totals">
-        <span
-          >Impuesto: <b>{{ IGV.toFixed(2) }}</b></span
-        >
-        <span
-          >Total: <b>S/. {{ price }}</b></span
-        >
-        <span
-          >Puntos: <b>{{ points }}</b></span
-        >
+      <!-- Botón flotante del carrito -->
+      <div v-if="!showCart" class="cart-toggle-btn" @click="toggleCart">
+        <i class="fas fa-shopping-cart"></i>
+        <span v-if="cartItems.length > 0" class="cart-badge">{{ cartItems.length }}</span>
       </div>
-    </div> -->
+    </div>
 
     <!-- Sección de checkout mejorada -->
     <div class="checkout-section">
@@ -481,44 +491,39 @@ export default {
   },
   data() {
     return {
-      current_points: null,
-      current_profit: null,
+      loading: true,
       products: null,
       product: null,
-      balance: null,
-      _balance: null,
-      //  office:   null,
+      offices: [],
+      office: null,
       check: false,
       voucher: null,
-
-      error: null,
-
       file: null,
-      office: null,
-      offices: null,
-
-      loading: true,
-      sending: false,
+      bank: "",
+      date: "",
+      voucher_number: "",
+      pay_method: "",
+      error: null,
       success: false,
-
+      sending: false,
       pending: false,
-
-      tab: null,
-
-      pay_method: null,
-
-      bank: null,
-      date: null,
-      voucher_number: null,
-
-      // Nuevo estado para el catálogo de productos
-      searchTerm: '',
-      selectedCountry: 'peru',
-      selectedCategories: [],
-      showCart: false,
       selectedProduct: null,
-      cartItems: [],
       imageLoaded: false,
+      showCart: false,
+      cartItems: [],
+      searchTerm: "",
+      selectedCategories: [],
+      categories: ["Todos", "Suplementos", "Belleza", "Salud", "Energía"],
+      current_points: 0,
+      current_profit: 0,
+      balance: 0,
+      _balance: 0,
+      tab: "Todos",
+      total: 0,
+      price: 0,
+      points: 0,
+      IGV: 0,
+      remaining: 0,
     };
   },
   computed: {
@@ -585,18 +590,27 @@ export default {
 
     // Computed properties para el catálogo de productos
     catalogProducts() {
-      if (!this.products) return [];
+      // Si está cargando o no hay productos, retornar array vacío
+      if (this.loading || !this.products) {
+        return [];
+      }
       
       return this.products.filter(product => {
-        // Solo filtrar por búsqueda y categoría
-        const matchesSearch = !this.searchTerm || product.name.toLowerCase().includes(this.searchTerm.toLowerCase());
-        const matchesCategory = this.selectedCategories.length === 0 || this.selectedCategories.includes(product.type);
+        const matchesSearch = !this.searchTerm || 
+          product.name.toLowerCase().includes(this.searchTerm.toLowerCase());
+        const matchesCategory = this.selectedCategories.length === 0 || 
+          this.selectedCategories.includes(product.type);
         
         return matchesSearch && matchesCategory;
       });
     },
 
     filteredCatalogProducts() {
+      // Si está cargando o no hay productos, retornar array vacío
+      if (this.loading || !this.products || this.products.length === 0) {
+        return [];
+      }
+      
       // Si no hay productos filtrados, mostrar todos los productos
       const productsToShow = this.catalogProducts.length > 0 ? this.catalogProducts : this.products;
       
@@ -626,40 +640,47 @@ export default {
     },
   },
   async created() {
-    // GET data
-    const { data } = await api.Activation.GET(this.session);
-    console.log({ data });
+    try {
+      // GET data
+      const { data } = await api.Activation.GET(this.session);
+      console.log({ data });
 
-    this.loading = false;
+      // error
+      if (data.error && data.msg == "invalid session") {
+        this.$router.push("/login");
+        return;
+      }
 
-    // error
-    if (data.error && data.msg == "invalid session")
-      this.$router.push("/login");
+      // success
+      this.$store.commit("SET_NAME", data.name);
+      this.$store.commit("SET_LAST_NAME", data.lastName);
+      this.$store.commit("SET_AFFILIATED", data.affiliated);
+      this.$store.commit("SET_ACTIVATED", data.activated);
+      this.$store.commit("SET__ACTIVATED", data._activated);
+      this.$store.commit("SET_PLAN", data.plan);
+      this.$store.commit("SET_COUNTRY", data.country);
+      this.$store.commit("SET_PHOTO", data.photo);
+      this.$store.commit("SET_TREE", data.tree);
 
-    // success
-    this.$store.commit("SET_NAME", data.name);
-    this.$store.commit("SET_LAST_NAME", data.lastName);
-    this.$store.commit("SET_AFFILIATED", data.affiliated);
-    this.$store.commit("SET_ACTIVATED", data.activated);
-    this.$store.commit("SET__ACTIVATED", data._activated);
-    this.$store.commit("SET_PLAN", data.plan);
-    this.$store.commit("SET_COUNTRY", data.country);
-    this.$store.commit("SET_PHOTO", data.photo);
-    this.$store.commit("SET_TREE", data.tree);
+      this.current_points = data.points || 0;
+      this.current_profit = data.profit || 0;
+      this.products = data.products ? data.products.map((a) => ({ ...a, total: 0 })) : [];
+      this.product = this.products.length > 0 ? this.products[0] : null;
 
-    this.current_points = data.points;
-    this.current_profit = data.profit;
-    this.products = data.products.map((a) => ({ ...a, total: 0 }));
-    this.product = this.products[0];
+      this.balance = data.balance || 0;
+      this._balance = data._balance || 0;
 
-    this.balance = data.balance;
-    this._balance = data._balance;
+      if (this.office_id) this.office = this.office_id;
 
-    if (this.office_id) this.office = this.office_id;
-
-    this.offices = data.offices;
-
-    this.tab = this.categories[0];
+      this.offices = data.offices || [];
+      this.tab = this.categories[0];
+      
+    } catch (error) {
+      console.error('Error loading activation data:', error);
+      this.error = "Error al cargar los datos. Por favor, intenta de nuevo.";
+    } finally {
+      this.loading = false;
+    }
   },
   methods: {
     touch(i) {
@@ -966,6 +987,13 @@ export default {
         productsSection.scrollIntoView({ behavior: 'smooth' });
       }
     },
+    
+    goToCheckout() {
+      // Guardar los productos del carrito en el store para el checkout
+      this.$store.commit('setCartItems', this.cartItems);
+      // Redirigir al checkout
+      this.$router.push('/checkout');
+    },
 
     getProductDescription(product) {
       // Usar la descripción de la base de datos si existe
@@ -993,6 +1021,24 @@ export default {
       // Descripción genérica si no hay una específica
       return 'Producto de alta calidad con ingredientes naturales seleccionados cuidadosamente. Diseñado para mejorar tu bienestar y calidad de vida. ¡Experimenta la diferencia con nuestros productos premium!';
     }
+  },
+  
+  beforeRouteEnter(to, from, next) {
+    next(vm => {
+      // Restaurar el carrito desde el store si existe
+      const savedCartItems = vm.$store.state.cartItems;
+      if (savedCartItems && savedCartItems.length > 0) {
+        vm.cartItems = [...savedCartItems];
+      }
+    });
+  },
+  
+  beforeRouteLeave(to, from, next) {
+    // Guardar el estado del carrito en el store antes de salir
+    if (this.cartItems.length > 0) {
+      this.$store.commit('setCartItems', this.cartItems);
+    }
+    next();
   },
 };
 </script>
@@ -3124,4 +3170,90 @@ export default {
     padding: 6px 12px;
   }
 }
+
+// Estilos para el loading container
+.loading-container
+  display flex
+  flex-direction column
+  align-items center
+  justify-content center
+  min-height 400px
+  padding 40px
+  animation fadeIn 0.3s ease-in
+  
+  .loading-spinner-large
+    width 60px
+    height 60px
+    border 4px solid #f3f3f3
+    border-top 4px solid #ff9800
+    border-radius 50%
+    animation spin 1s linear infinite
+    margin-bottom 20px
+  
+  p
+    color #666
+    font-size 1.1rem
+    margin 0 0 15px 0
+  
+  .error-message
+    background #ffebee
+    color #c62828
+    padding 12px 20px
+    border-radius 8px
+    border 1px solid #ffcdd2
+    font-size 0.9rem
+    text-align center
+    max-width 400px
+
+@keyframes fadeIn
+  from
+    opacity 0
+    transform translateY(10px)
+  to
+    opacity 1
+    transform translateY(0)
+
+@keyframes spin
+  0%
+    transform rotate(0deg)
+  100%
+    transform rotate(360deg)
+
+// Estilos para el loading sutil del grid de productos
+.products-loading
+  display flex
+  flex-direction column
+  align-items center
+  justify-content center
+  min-height 300px
+  padding 40px
+  
+  .loading-spinner-medium
+    width 40px
+    height 40px
+    border 3px solid #f3f3f3
+    border-top 3px solid #ff9800
+    border-radius 50%
+    animation spin 1s linear infinite
+    margin-bottom 15px
+  
+  p
+    color #666
+    font-size 1rem
+    margin 0
+
+// Estilos para el catálogo con transición
+.catalog-container
+  animation fadeInUp 0.5s ease-out
+  transition all 0.3s ease
+
+@keyframes fadeInUp
+  from
+    opacity 0
+    transform translateY(20px)
+  to
+    opacity 1
+    transform translateY(0)
+
+
 </style>

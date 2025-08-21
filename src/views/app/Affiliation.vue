@@ -1,88 +1,89 @@
 <template>
   <App :session="session" :office_id="office_id" :title="title">
-    <Spinner v-if="loading" :size="40" :color="'#086eb6'" />
-    <div
-      v-if="affiliation && affiliation.status === 'pending'"
-      class="affiliation-bg"
-      style="position: relative; min-height: 80vh"
-    >
-      <transition name="fade">
-        <div class="pending-modal-local">
-          <div class="pending-modal-content-block">
-            <span class="pending-modal-icon-block">
-              <!-- Reloj de arena animado SVG -->
-              <svg
-                width="64"
-                height="64"
-                viewBox="0 0 64 64"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                class="hourglass-anim"
-              >
-                <g>
-                  <rect
-                    x="16"
-                    y="8"
-                    width="32"
-                    height="48"
-                    rx="8"
-                    fill="#fffbe6"
-                    stroke="#ff9800"
-                    stroke-width="3"
-                  />
-                  <path
-                    d="M20 12 Q32 32 44 12"
-                    stroke="#ff9800"
-                    stroke-width="3"
-                    fill="none"
-                  />
-                  <path
-                    d="M20 52 Q32 32 44 52"
-                    stroke="#ff9800"
-                    stroke-width="3"
-                    fill="none"
-                  />
-                  <ellipse
-                    class="sand-top"
-                    cx="32"
-                    cy="20"
-                    rx="7"
-                    ry="4"
-                    fill="#ff9800"
-                  />
-                  <ellipse
-                    class="sand-bottom"
-                    cx="32"
-                    cy="44"
-                    rx="7"
-                    ry="4"
-                    fill="#ff9800"
-                    opacity="0.2"
-                  />
-                  <rect
-                    class="sand-flow"
-                    x="30.5"
-                    y="20"
-                    width="3"
-                    height="24"
-                    rx="1.5"
-                    fill="#ff9800"
-                  />
-                </g>
-              </svg>
-            </span>
-            <h3>¡Solicitud enviada!</h3>
-            <p>Tu afiliación está pendiente de aprobación.</p>
-          </div>
+    <div v-cloak>
+      <div v-if="loading" class="loading-container">
+        <div class="loading-spinner-large"></div>
+        <p>Cargando afiliación...</p>
+        <div v-if="error" class="error-message">
+          {{ error }}
         </div>
-      </transition>
-    </div>
-    <div
-      v-else
-      class="affiliation-bg"
-      style="position: relative; min-height: 80vh"
-    >
-                    <h2 class="affiliation-title" v-if="!showMasterTrophy">
+      </div>
+      
+      <div v-else-if="affiliation && affiliation.status === 'pending'" class="affiliation-bg" style="position: relative; min-height: 80vh">
+        <transition name="fade">
+          <div class="pending-modal-local">
+            <div class="pending-modal-content-block">
+              <span class="pending-modal-icon-block">
+                <!-- Reloj de arena animado SVG -->
+                <svg
+                  width="64"
+                  height="64"
+                  viewBox="0 0 64 64"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="hourglass-anim"
+                >
+                  <g>
+                    <rect
+                      x="16"
+                      y="8"
+                      width="32"
+                      height="48"
+                      rx="8"
+                      fill="#fffbe6"
+                      stroke="#ff9800"
+                      stroke-width="3"
+                    />
+                    <path
+                      d="M20 12 Q32 32 44 12"
+                      stroke="#ff9800"
+                      stroke-width="3"
+                      fill="none"
+                    />
+                    <path
+                      d="M20 52 Q32 32 44 52"
+                      stroke="#ff9800"
+                      stroke-width="3"
+                      fill="none"
+                    />
+                    <ellipse
+                      class="sand-top"
+                      cx="32"
+                      cy="20"
+                      rx="7"
+                      ry="4"
+                      fill="#ff9800"
+                    />
+                    <ellipse
+                      class="sand-bottom"
+                      cx="32"
+                      cy="44"
+                      rx="7"
+                      ry="4"
+                      fill="#ff9800"
+                      opacity="0.2"
+                    />
+                    <rect
+                      class="sand-flow"
+                      x="30.5"
+                      y="20"
+                      width="3"
+                      height="24"
+                      rx="1.5"
+                      fill="#ff9800"
+                    />
+                  </g>
+                </svg>
+              </span>
+              <h3>¡Solicitud enviada!</h3>
+              <p>Tu afiliación está pendiente de aprobación.</p>
+            </div>
+          </div>
+        </transition>
+      </div>
+      
+      <div v-else class="affiliation-bg" style="position: relative; min-height: 80vh">
+        <h2 class="affiliation-title" v-if="!showMasterTrophy">
          Afíliate y elige tu kit
        </h2>
        
@@ -619,6 +620,7 @@
           </div>
         </div>
       </section>
+      </div>
     </div>
   </App>
 </template>
@@ -823,8 +825,6 @@ export default {
       const { data } = await api.Afiliation.GET(this.session);
       console.log("API Response:", data);
 
-      this.loading = false;
-
       // error
       if (data.error && data.msg == "invalid session") {
         this.$router.push("/login");
@@ -910,6 +910,8 @@ export default {
        }
     } catch (error) {
       console.error("Error loading data:", error);
+      this.error = "Error al cargar los datos. Por favor, intenta de nuevo.";
+    } finally {
       this.loading = false;
     }
   },
@@ -2911,4 +2913,53 @@ export default {
     padding: 6px 12px;
   }
 }
+
+// Estilos para el loading container
+.loading-container
+  display flex
+  flex-direction column
+  align-items center
+  justify-content center
+  min-height 400px
+  padding 40px
+  animation fadeIn 0.3s ease-in
+  
+  .loading-spinner-large
+    width 60px
+    height 60px
+    border 4px solid #f3f3f3
+    border-top 4px solid #ff9800
+    border-radius 50%
+    animation spin 1s linear infinite
+    margin-bottom 20px
+  
+  p
+    color #666
+    font-size 1.1rem
+    margin 0
+  
+  .error-message
+    background #ffebee
+    color #c62828
+    padding 12px 20px
+    border-radius 8px
+    border 1px solid #ffcdd2
+    font-size 0.9rem
+    text-align center
+    max-width 400px
+    margin-top 15px
+
+@keyframes fadeIn
+  from
+    opacity 0
+    transform translateY(10px)
+  to
+    opacity 1
+    transform translateY(0)
+
+@keyframes spin
+  0%
+    transform rotate(0deg)
+  100%
+    transform rotate(360deg)
 </style>

@@ -1,99 +1,103 @@
 <template>
   <App :session="session" :title="title">
-    <Spinner v-if="loading" :size="40" :color="'#086eb6'" />
-    <div class="activations-bg">
-      <h2 class="activations-title" v-if="!showMasterTrophy">
-        Historial de Activaciones
-      </h2>
-      <section v-if="!loading">
-        <div></div>
-        <div>
-          <h4 class="tabs">
-            <router-link class="tab" to="/activation">
-              <span class="tab-icon">🛒</span> Comprar
-            </router-link>
-            &nbsp;&nbsp;
-            <router-link class="tab" to="/activations">
-              <span class="tab-icon">📜</span> Historial
-            </router-link>
-          </h4>
+    <div v-cloak>
+      <div v-if="loading" class="loading-container">
+        <div class="loading-spinner-large"></div>
+        <p>Cargando historial...</p>
+      </div>
+      
+      <div v-else class="activations-bg">
+        <h2 class="activations-title" v-if="!showMasterTrophy">
+          Historial de Activaciones
+        </h2>
+        <section>
+          <div></div>
+          <div>
+            <h4 class="tabs">
+              <router-link class="tab" to="/activation">
+                <span class="tab-icon">🛒</span> Comprar
+              </router-link>
+              &nbsp;&nbsp;
+              <router-link class="tab" to="/activations">
+                <span class="tab-icon">📜</span> Historial
+              </router-link>
+            </h4>
 
-          <i class="load" v-if="loading"></i> <br />
-
-          <div class="scroll">
-            <table class="activations-table">
-              <thead>
-                <tr>
-                  <th>Fecha</th>
-                  <th>Productos</th>
-                  <th>Monto</th>
-                  <th>Puntos</th>
-                  <th>Voucher</th>
-                  <th>Estado</th>
-                  <th>Boleta</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="activation in activations" :key="activation.id">
-                  <td>{{ activation.date | date }}</td>
-                  <td>
-                    <div class="product-chips">
-                      <span
-                        v-for="product in activation.products"
-                        v-if="product.total != 0"
-                        class="product-chip"
-                        :key="product.name"
-                      >
-                        {{ product.name }}
-                        <span class="product-chip-total"
-                          >x{{ product.total }}</span
+            <div class="scroll">
+              <table class="activations-table">
+                <thead>
+                  <tr>
+                    <th>Fecha</th>
+                    <th>Productos</th>
+                    <th>Monto</th>
+                    <th>Puntos</th>
+                    <th>Voucher</th>
+                    <th>Estado</th>
+                    <th>Boleta</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="activation in activations" :key="activation.id">
+                    <td>{{ activation.date | date }}</td>
+                    <td>
+                      <div class="product-chips">
+                        <span
+                          v-for="product in activation.products"
+                          v-if="product.total != 0"
+                          class="product-chip"
+                          :key="product.name"
                         >
+                          {{ product.name }}
+                          <span class="product-chip-total"
+                            >x{{ product.total }}</span
+                          >
+                        </span>
+                      </div>
+                    </td>
+                    <td>{{ activation.price | price }}</td>
+                    <td>{{ activation.points }}</td>
+                    <td>
+                      <a :href="activation.voucher" target="_blank">
+                        <img :src="activation.voucher" class="voucher-img" />
+                      </a>
+                    </td>
+                    <td>
+                      <span :class="['status-badge', activation.status]">
+                        <span
+                          v-if="activation.status === 'pending'"
+                          class="status-icon"
+                          >⏳</span
+                        >
+                        <span
+                          v-else-if="activation.status === 'approved'"
+                          class="status-icon"
+                          >✔️</span
+                        >
+                        <span
+                          v-else-if="activation.status === 'rejected'"
+                          class="status-icon"
+                          >❌</span
+                        >
+                        {{ activation.status | status }}
                       </span>
-                    </div>
-                  </td>
-                  <td>{{ activation.price | price }}</td>
-                  <td>{{ activation.points }}</td>
-                  <td>
-                    <a :href="activation.voucher" target="_blank">
-                      <img :src="activation.voucher" class="voucher-img" />
-                    </a>
-                  </td>
-                  <td>
-                    <span :class="['status-badge', activation.status]">
-                      <span
-                        v-if="activation.status === 'pending'"
-                        class="status-icon"
-                        >⏳</span
+                    </td>
+                    <td>
+                      <a
+                        :href="`${INVOICE_ROOT}?id=${activation.id}`"
+                        target="_blank"
+                        class="invoice-link-btn"
+                        v-if="activation.status == 'approved'"
                       >
-                      <span
-                        v-else-if="activation.status === 'approved'"
-                        class="status-icon"
-                        >✔️</span
-                      >
-                      <span
-                        v-else-if="activation.status === 'rejected'"
-                        class="status-icon"
-                        >❌</span
-                      >
-                      {{ activation.status | status }}
-                    </span>
-                  </td>
-                  <td>
-                    <a
-                      :href="`${INVOICE_ROOT}?id=${activation.id}`"
-                      target="_blank"
-                      class="invoice-link-btn"
-                      v-if="activation.status == 'approved'"
-                    >
-                      <span class="invoice-icon">🧾</span> Boleta
-                    </a>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+                        <span class="invoice-icon">🧾</span> Boleta
+                      </a>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </div>
     </div>
   </App>
 </template>
@@ -401,4 +405,51 @@ export default {
     min-width 700px
   .scroll
     padding 0 8px
+
+/* Estilos para el loading container */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  padding: 40px;
+  animation: fadeIn 0.3s ease-in;
+}
+
+.loading-container .loading-spinner-large {
+  width: 60px;
+  height: 60px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #ff9800;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 20px;
+}
+
+.loading-container p {
+  color: #666;
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
 </style>

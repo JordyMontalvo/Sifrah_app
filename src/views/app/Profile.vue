@@ -1,154 +1,160 @@
 <template>
   <App :session="session" :title="title">
-    <Spinner v-if="loading" :size="40" :color="'#086eb6'" />
-    <div class="profile-glass-bg" v-if="!loading">
-      <div class="profile-glass-card">
-        <div class="profile-glass-header">
-          <div class="profile-glass-title">
-            <i class="fas fa-user-circle profile-glass-icon"></i>
-            <span>Perfil</span>
-          </div>
-          <button
-            class="profile-glass-save"
-            :disabled="sending"
-            @click="UPDATE"
-          >
-            <span v-if="!sending"><i class="fas fa-save"></i> Guardar</span>
-            <span v-else
-              ><i class="fas fa-spinner fa-spin"></i> Guardando...</span
+    <div v-cloak>
+      <div v-if="loading" class="loading-container">
+        <div class="loading-spinner-large"></div>
+        <p>Cargando perfil...</p>
+      </div>
+      
+      <div v-else class="profile-glass-bg">
+        <div class="profile-glass-card">
+          <div class="profile-glass-header">
+            <div class="profile-glass-title">
+              <i class="fas fa-user-circle profile-glass-icon"></i>
+              <span>Perfil</span>
+            </div>
+            <button
+              class="profile-glass-save"
+              :disabled="sending"
+              @click="UPDATE"
             >
-          </button>
+              <span v-if="!sending"><i class="fas fa-save"></i> Guardar</span>
+              <span v-else
+                ><i class="fas fa-spinner fa-spin"></i> Guardando...</span
+              >
+            </button>
+          </div>
+          <main class="profile-glass-main profile-glass-columns">
+            <div class="profile-glass-col">
+              <section class="profile-glass-section">
+                <h3>Datos personales</h3>
+                <div class="glass-form-group">
+                  <label>Nombre</label>
+                  <input v-model="name" type="text" readonly/>
+                </div>
+                <div class="glass-form-group">
+                  <label>Apellido</label>
+                  <input v-model="lastName" type="text" readonly />
+                </div>
+                <div class="glass-form-group">
+                  <label>DNI</label>
+                  <input v-model="dni" type="text" readonly />
+                </div>
+                <div class="glass-form-group">
+                  <label>Fecha de nacimiento</label>
+                  <input v-model="birthdate" type="date" />
+                </div>
+              </section>
+              <hr class="glass-separator" />
+              <section class="profile-glass-section">
+                <h3>Contacto</h3>
+                <div class="glass-form-group">
+                  <label>Email</label>
+                  <input v-model="email" type="email" />
+                </div>
+                <div class="glass-form-group">
+                  <label>Teléfono</label>
+                  <input v-model="phone" type="text" />
+                </div>
+                <div class="glass-form-group">
+                  <label>País</label>
+                  <select v-model="country" @change="updateCities">
+                    <option value="null" disabled>Selecciona un país</option>
+                    <option value="Perú">Perú</option>
+                    <option value="Argentina">Argentina</option>
+                    <option value="Bolivia">Bolivia</option>
+                    <option value="Brazil">Brasil</option>
+                    <option value="Chile">Chile</option>
+                    <option value="Colombia">Colombia</option>
+                    <option value="Ecuador">Ecuador</option>
+                    <option value="Paraguay">Paraguay</option>
+                    <option value="Uruguay">Uruguay</option>
+                    <option value="Venezuela">Venezuela</option>
+                    <option value="United States">Estados Unidos</option>
+                  </select>
+                </div>
+                <div class="glass-form-group">
+                  <label>Ciudad</label>
+                  <select v-model="city">
+                    <option value="null" disabled>Ciudad</option>
+                    <option v-for="city in cities" :key="city" :value="city">
+                      {{ city }}
+                    </option>
+                  </select>
+                </div>
+                <div class="glass-form-group">
+                  <label>Dirección</label>
+                  <input v-model="address" type="text" />
+                </div>
+              </section>
+            </div>
+            <div class="profile-glass-col">
+              <section class="profile-glass-section">
+                <h3>Seguridad</h3>
+                <div class="profile-glass-links">
+                  <router-link to="/password" class="profile-glass-link">
+                    <i class="fas fa-key"></i> Cambiar contraseña
+                  </router-link>
+                  <router-link to="/security" class="profile-glass-link">
+                    <i class="fas fa-user-shield"></i> Persona de confianza
+                  </router-link>
+                </div>
+                <div v-if="token" class="profile-glass-invite">
+                  <div class="glass-form-group">
+                    <label>Código de invitación</label>
+                    <input
+                      readonly
+                      @click="copy_token"
+                      id="token"
+                      v-model="token"
+                    />
+                    <span class="glass-copy" v-if="c_token"
+                      >copiado <i class="fas fa-check"></i
+                    ></span>
+                  </div>
+                  <div class="glass-form-group">
+                    <label>Link de registro</label>
+                    <input readonly @click="copy_link" id="link" v-model="link" />
+                    <span class="glass-copy" v-if="c_link"
+                      >copiado <i class="fas fa-check"></i
+                    ></span>
+                    <a v-bind:href="link" class="profile-glass-link">Registrar</a>
+                  </div>
+                </div>
+              </section>
+              <hr class="glass-separator" />
+              <section class="profile-glass-section">
+                <h3>Datos bancarios</h3>
+                <div class="glass-form-group">
+                  <label>Banco</label>
+                  <select v-model="bank">
+                    <option value="null" disabled>Banco</option>
+                    <option value="BCP">BCP</option>
+                    <option value="INTERBANK">INTERBANK</option>
+                    <option value="BBVA">BBVA</option>
+                  </select>
+                </div>
+                <div class="glass-form-group">
+                  <label>Tipo de cuenta</label>
+                  <select v-model="account_type">
+                    <option value="null" disabled>Tipo de cuenta</option>
+                    <option value="Ahorros">Ahorros</option>
+                    <option value="Corriente">Corriente</option>
+                  </select>
+                </div>
+                <div class="glass-form-group">
+                  <label>Número de cuenta</label>
+                  <input v-model="account" type="text" />
+                </div>
+              </section>
+            </div>
+          </main>
+          <transition name="fade">
+            <div v-if="showToast" class="glass-toast">
+              ¡Datos guardados correctamente!
+            </div>
+          </transition>
         </div>
-        <main class="profile-glass-main profile-glass-columns">
-          <div class="profile-glass-col">
-            <section class="profile-glass-section">
-              <h3>Datos personales</h3>
-              <div class="glass-form-group">
-                <label>Nombre</label>
-                <input v-model="name" type="text" readonly/>
-              </div>
-              <div class="glass-form-group">
-                <label>Apellido</label>
-                <input v-model="lastName" type="text" readonly />
-              </div>
-              <div class="glass-form-group">
-                <label>DNI</label>
-                <input v-model="dni" type="text" readonly />
-              </div>
-              <div class="glass-form-group">
-                <label>Fecha de nacimiento</label>
-                <input v-model="birthdate" type="date" />
-              </div>
-            </section>
-            <hr class="glass-separator" />
-            <section class="profile-glass-section">
-              <h3>Contacto</h3>
-              <div class="glass-form-group">
-                <label>Email</label>
-                <input v-model="email" type="email" />
-              </div>
-              <div class="glass-form-group">
-                <label>Teléfono</label>
-                <input v-model="phone" type="text" />
-              </div>
-              <div class="glass-form-group">
-                <label>País</label>
-                <select v-model="country" @change="updateCities">
-                  <option value="null" disabled>Selecciona un país</option>
-                  <option value="Perú">Perú</option>
-                  <option value="Argentina">Argentina</option>
-                  <option value="Bolivia">Bolivia</option>
-                  <option value="Brazil">Brasil</option>
-                  <option value="Chile">Chile</option>
-                  <option value="Colombia">Colombia</option>
-                  <option value="Ecuador">Ecuador</option>
-                  <option value="Paraguay">Paraguay</option>
-                  <option value="Uruguay">Uruguay</option>
-                  <option value="Venezuela">Venezuela</option>
-                  <option value="United States">Estados Unidos</option>
-                </select>
-              </div>
-              <div class="glass-form-group">
-                <label>Ciudad</label>
-                <select v-model="city">
-                  <option value="null" disabled>Ciudad</option>
-                  <option v-for="city in cities" :key="city" :value="city">
-                    {{ city }}
-                  </option>
-                </select>
-              </div>
-              <div class="glass-form-group">
-                <label>Dirección</label>
-                <input v-model="address" type="text" />
-              </div>
-            </section>
-          </div>
-          <div class="profile-glass-col">
-            <section class="profile-glass-section">
-              <h3>Seguridad</h3>
-              <div class="profile-glass-links">
-                <router-link to="/password" class="profile-glass-link">
-                  <i class="fas fa-key"></i> Cambiar contraseña
-                </router-link>
-                <router-link to="/security" class="profile-glass-link">
-                  <i class="fas fa-user-shield"></i> Persona de confianza
-                </router-link>
-              </div>
-              <div v-if="token" class="profile-glass-invite">
-                <div class="glass-form-group">
-                  <label>Código de invitación</label>
-                  <input
-                    readonly
-                    @click="copy_token"
-                    id="token"
-                    v-model="token"
-                  />
-                  <span class="glass-copy" v-if="c_token"
-                    >copiado <i class="fas fa-check"></i
-                  ></span>
-                </div>
-                <div class="glass-form-group">
-                  <label>Link de registro</label>
-                  <input readonly @click="copy_link" id="link" v-model="link" />
-                  <span class="glass-copy" v-if="c_link"
-                    >copiado <i class="fas fa-check"></i
-                  ></span>
-                  <a v-bind:href="link" class="profile-glass-link">Registrar</a>
-                </div>
-              </div>
-            </section>
-            <hr class="glass-separator" />
-            <section class="profile-glass-section">
-              <h3>Datos bancarios</h3>
-              <div class="glass-form-group">
-                <label>Banco</label>
-                <select v-model="bank">
-                  <option value="null" disabled>Banco</option>
-                  <option value="BCP">BCP</option>
-                  <option value="INTERBANK">INTERBANK</option>
-                  <option value="BBVA">BBVA</option>
-                </select>
-              </div>
-              <div class="glass-form-group">
-                <label>Tipo de cuenta</label>
-                <select v-model="account_type">
-                  <option value="null" disabled>Tipo de cuenta</option>
-                  <option value="Ahorros">Ahorros</option>
-                  <option value="Corriente">Corriente</option>
-                </select>
-              </div>
-              <div class="glass-form-group">
-                <label>Número de cuenta</label>
-                <input v-model="account" type="text" />
-              </div>
-            </section>
-          </div>
-        </main>
-        <transition name="fade">
-          <div v-if="showToast" class="glass-toast">
-            ¡Datos guardados correctamente!
-          </div>
-        </transition>
       </div>
     </div>
   </App>
@@ -546,6 +552,53 @@ export default {
     padding: 16px 4px 32px 4px;
     max-width: 98vw;
     margin: 0;
+  }
+}
+
+/* Estilos para el loading container */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  padding: 40px;
+  animation: fadeIn 0.3s ease-in;
+}
+
+.loading-container .loading-spinner-large {
+  width: 60px;
+  height: 60px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #ff9800;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 20px;
+}
+
+.loading-container p {
+  color: #666;
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
   }
 }
 </style>

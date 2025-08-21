@@ -1,140 +1,88 @@
 <template>
   <App :session="session" :title="title">
-    <!-- Banner slider (mantener el existente) -->
-    <div v-if="bannerImages.length > 0" class="banner-slider">
-      <div class="slider-wrapper">
-        <transition name="carousel-3d" mode="out-in">
-          <div class="banner-slide" :key="currentBanner">
-            <img :src="bannerImages[currentBanner]" class="banner-img" />
-          </div>
-        </transition>
-        <button
-          v-if="bannerImages.length > 1"
-          class="nav left"
-          @click="prevBanner"
-        >
-          &#8592;
-        </button>
-        <button
-          v-if="bannerImages.length > 1"
-          class="nav right"
-          @click="nextBanner"
-        >
-          &#8594;
-        </button>
-      </div>
-      <div v-if="bannerImages.length > 1" class="dots">
-        <span
-          v-for="(img, idx) in bannerImages"
-          :key="'dot-' + idx"
-          :class="['dot', { active: currentBanner === idx }]"
-          @click="goToBanner(idx)"
-        ></span>
-      </div>
-    </div>
-    <div v-else class="no-banners-msg">
-      <p>No hay banners para mostrar.</p>
-    </div>
-
-    <Spinner v-if="loading" :size="48" :color="'#086eb6'" />
-    <SkeletonLoader
-      v-if="loading"
-      :lines="6"
-      width="100%"
-      height="60px"
-      style="margin: 24px 0"
-    />
-
-    <!-- Nuevo Dashboard Design -->
-    <div v-if="!loading" class="dashboard-container">
-      <!-- Top Row -->
-      <div class="dashboard-row">
-        <!-- Nivel Actual -->
-        <div class="dashboard-section">
-          <div class="section-header">
-            <h3>Nivel Actual</h3>
-          </div>
-          <div class="level-card">
-            <div class="level-icon">
-              <div class="medal-icon">
-                <i class="fas fa-gem"></i>
-                <span class="medal-text">{{ rank | _rank }}</span>
-              </div>
+    <div v-cloak>
+      <!-- Banner slider (mantener el existente) -->
+      <div v-if="!loading && bannerImages.length > 0" class="banner-slider">
+        <div class="slider-wrapper">
+          <transition name="carousel-3d" mode="out-in">
+            <div class="banner-slide" :key="currentBanner">
+              <img :src="bannerImages[currentBanner]" class="banner-img" />
             </div>
-            <div class="level-info">
-              <!-- <h4>{{ plan }}</h4> -->
-            </div>
-          </div>
-          <div class="metrics-grid">
-            <div class="metric-card">
-              <i class="fas fa-user"></i>
-              <div class="metric-content">
-                <span class="metric-value">{{ points || 0 }}</span>
-                <span class="metric-label">Puntos Personales</span>
-              </div>
-            </div>
-            <div class="metric-card">
-              <i class="fas fa-users"></i>
-              <div class="metric-content">
-                <span class="metric-value">{{ directs ? directs.length : 0 }}</span>
-                <span class="metric-label">Directos</span>
-              </div>
-            </div>
-            <div class="metric-card">
-              <i class="fas fa-star"></i>
-              <div class="metric-content">
-                <span class="metric-value">{{ rank | _rank }}</span>
-                <span class="metric-label">Rango Actual</span>
-              </div>
-            </div>
-            <div class="metric-card">
-              <i class="fas fa-users"></i>
-              <div class="metric-content">
-                <span class="metric-value">{{ total_points }}</span>
-                <span class="metric-label">Puntos Grupales</span>
-              </div>
-            </div>
-          </div>
+          </transition>
+          <button
+            v-if="bannerImages.length > 1"
+            class="nav left"
+            @click="prevBanner"
+          >
+            &#8592;
+          </button>
+          <button
+            v-if="bannerImages.length > 1"
+            class="nav right"
+            @click="nextBanner"
+          >
+            &#8594;
+          </button>
         </div>
+        <div v-if="bannerImages.length > 1" class="dots">
+          <span
+            v-for="(img, idx) in bannerImages"
+            :key="'dot-' + idx"
+            :class="['dot', { active: currentBanner === idx }]"
+            @click="goToBanner(idx)"
+          ></span>
+        </div>
+      </div>
+      <div v-else-if="!loading" class="no-banners-msg">
+        <p>No hay banners para mostrar.</p>
+      </div>
 
-        <!-- Rango Diamante -->
-        <div class="dashboard-section">
-          <div class="section-header">
-            <h3>Rango Diamante</h3>
-          </div>
-          <div class="rank-progress">
-            <div class="circular-progress">
-              <div class="progress-circle">
-                <div class="progress-fill" :style="{ transform: `rotate(${75 * 4.6}deg)` }"></div>
-                <div class="progress-center">
-                  <i class="fas fa-medal"></i>
+      <div v-if="loading" class="loading-container">
+        <div class="loading-spinner-large"></div>
+        <p>Cargando dashboard...</p>
+      </div>
+      
+      <SkeletonLoader
+        v-if="loading"
+        :lines="6"
+        width="100%"
+        height="60px"
+        style="margin: 24px 0"
+      />
+
+      <!-- Nuevo Dashboard Design -->
+      <div v-else class="dashboard-container">
+        <!-- Top Row -->
+        <div class="dashboard-row">
+          <!-- Nivel Actual -->
+          <div class="dashboard-section">
+            <div class="section-header">
+              <h3>Nivel Actual</h3>
+            </div>
+            <div class="level-card">
+              <div class="level-icon">
+                <div class="medal-icon">
+                  <i class="fas fa-gem"></i>
+                  <span class="medal-text">{{ rank | _rank }}</span>
                 </div>
               </div>
-              <div class="progress-text">
-                <span class="progress-percentage">75%</span>
-                <span class="progress-label">Avance actual</span>
-                <span class="progress-subtitle">a 32% de subir a Segundo Diamante</span>
+              <div class="level-info">
+                <!-- <h4>{{ plan }}</h4> -->
               </div>
             </div>
-            <div class="rank-metrics">
+            <div class="metrics-grid">
               <div class="metric-card">
                 <i class="fas fa-user"></i>
                 <div class="metric-content">
                   <span class="metric-value">{{ points || 0 }}</span>
                   <span class="metric-label">Puntos Personales</span>
-                  <div class="metric-progress">
-                    <div class="progress-bar" style="width: 60%"></div>
-                  </div>
                 </div>
               </div>
-              <div class="metric-card dark">
+              <div class="metric-card">
                 <i class="fas fa-users"></i>
                 <div class="metric-content">
                   <span class="metric-value">{{ directs ? directs.length : 0 }}</span>
                   <span class="metric-label">Directos</span>
-                  <div class="metric-progress">
-                    <div class="progress-bar" style="width: 75%"></div>
-                  </div>
                 </div>
               </div>
               <div class="metric-card">
@@ -142,148 +90,206 @@
                 <div class="metric-content">
                   <span class="metric-value">{{ rank | _rank }}</span>
                   <span class="metric-label">Rango Actual</span>
-                  <div class="metric-progress">
-                    <div class="progress-bar" style="width: 45%"></div>
-                  </div>
                 </div>
               </div>
-              <div class="metric-card dark">
+              <div class="metric-card">
                 <i class="fas fa-users"></i>
                 <div class="metric-content">
                   <span class="metric-value">{{ total_points }}</span>
                   <span class="metric-label">Puntos Grupales</span>
-                  <div class="metric-progress">
-                    <div class="progress-bar" style="width: 80%"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Rango Diamante -->
+          <div class="dashboard-section">
+            <div class="section-header">
+              <h3>Rango Diamante</h3>
+            </div>
+            <div class="rank-progress">
+              <div class="circular-progress">
+                <div class="progress-circle">
+                  <div class="progress-fill" :style="{ transform: `rotate(${75 * 4.6}deg)` }"></div>
+                  <div class="progress-center">
+                    <i class="fas fa-medal"></i>
+                  </div>
+                </div>
+                <div class="progress-text">
+                  <span class="progress-percentage">75%</span>
+                  <span class="progress-label">Avance actual</span>
+                  <span class="progress-subtitle">a 32% de subir a Segundo Diamante</span>
+                </div>
+              </div>
+              <div class="rank-metrics">
+                <div class="metric-card">
+                  <i class="fas fa-user"></i>
+                  <div class="metric-content">
+                    <span class="metric-value">{{ points || 0 }}</span>
+                    <span class="metric-label">Puntos Personales</span>
+                    <div class="metric-progress">
+                      <div class="progress-bar" style="width: 60%"></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="metric-card dark">
+                  <i class="fas fa-users"></i>
+                  <div class="metric-content">
+                    <span class="metric-value">{{ directs ? directs.length : 0 }}</span>
+                    <span class="metric-label">Directos</span>
+                    <div class="metric-progress">
+                      <div class="progress-bar" style="width: 75%"></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="metric-card">
+                  <i class="fas fa-star"></i>
+                  <div class="metric-content">
+                    <span class="metric-value">{{ rank | _rank }}</span>
+                    <span class="metric-label">Rango Actual</span>
+                    <div class="metric-progress">
+                      <div class="progress-bar" style="width: 45%"></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="metric-card dark">
+                  <i class="fas fa-users"></i>
+                  <div class="metric-content">
+                    <span class="metric-value">{{ total_points }}</span>
+                    <span class="metric-label">Puntos Grupales</span>
+                    <div class="metric-progress">
+                      <div class="progress-bar" style="width: 80%"></div>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <!-- Middle Row -->
-      <div class="dashboard-row">
-        <!-- Pack de Afiliación -->
-        <div class="dashboard-section">
-          <div class="affiliation-pack">
-            <div class="pack-content">
-              <h4>Pack de Afiliación</h4>
-              <p v-if="userPlan && userPlan.name">{{ userPlan.name }}</p>
-              <p v-else>{{ plan }}</p>
-            </div>
-            <div class="pack-icon">
-              <img v-if="userPlan && userPlan.img" :src="userPlan.img" alt="Imagen del plan" style="width: 40px; height: 40px; border-radius: 50%; background: #fff; padding: 5px;" />
-              <i v-else class="fas fa-medal"></i>
+        <!-- Middle Row -->
+        <div class="dashboard-row">
+          <!-- Pack de Afiliación -->
+          <div class="dashboard-section">
+            <div class="affiliation-pack">
+              <div class="pack-content">
+                <h4>Pack de Afiliación</h4>
+                <p v-if="userPlan && userPlan.name">{{ userPlan.name }}</p>
+                <p v-else>{{ plan }}</p>
+              </div>
+              <div class="pack-icon">
+                <img v-if="userPlan && userPlan.img" :src="userPlan.img" alt="Imagen del plan" style="width: 40px; height: 40px; border-radius: 50%; background: #fff; padding: 5px;" />
+                <i v-else class="fas fa-medal"></i>
+              </div>
             </div>
           </div>
-        </div>
 
-        <!-- Comisiones -->
-        <div class="dashboard-section">
-          <div class="section-header">
-            <h3>Comisiones</h3>
-            <p>Completa los porcentajes y ¡disfruta el viaje!</p>
-          </div>
-          <div class="commissions-grid">
-            <div class="commission-card">
-              <div class="commission-icon gold">
-                <i class="fas fa-medal"></i>
-              </div>
-              <div class="commission-content">
-                <span class="commission-value">{{ balance || 0 }}</span>
-                <span class="commission-label">Saldo Disponible</span>
-              </div>
+          <!-- Comisiones -->
+          <div class="dashboard-section">
+            <div class="section-header">
+              <h3>Comisiones</h3>
+              <p>Completa los porcentajes y ¡disfruta el viaje!</p>
             </div>
-            <div class="commission-card">
-              <div class="commission-icon blue">
-                <i class="fas fa-medal"></i>
-              </div>
-              <div class="commission-content">
-                <span class="commission-value">{{ _balance || 0 }}</span>
-                <span class="commission-label">Saldo No Disponible</span>
-              </div>
-            </div>
-            <div class="commission-card">
-              <div class="commission-icon purple">
-                <i class="fas fa-medal"></i>
-              </div>
-              <div class="commission-content">
-                <span class="commission-value">{{ Number(ins + insVirtual).toFixed(2) }}</span>
-                <span class="commission-label">Total Ganado</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Bono Viaje -->
-        <div class="dashboard-section">
-          <div class="section-header">
-            <h3>Bono Viaje</h3>
-            <p>Completa los porcentajes y ¡disfruta el viaje!</p>
-          </div>
-          <div class="travel-bonus">
-            <div class="travel-progress">
-              <div class="travel-circle">
-                <div class="travel-fill" :style="{ transform: `rotate(${15 * 3.6}deg)` }"></div>
-                <div class="travel-center">
-                  <span class="travel-percentage">15%</span>
+            <div class="commissions-grid">
+              <div class="commission-card">
+                <div class="commission-icon gold">
+                  <i class="fas fa-medal"></i>
+                </div>
+                <div class="commission-content">
+                  <span class="commission-value">{{ balance || 0 }}</span>
+                  <span class="commission-label">Saldo Disponible</span>
                 </div>
               </div>
-              <span class="travel-label">Internacional</span>
-            </div>
-            <div class="travel-progress">
-              <div class="travel-circle">
-                <div class="travel-fill orange" :style="{ transform: `rotate(${46 * 3.6}deg)` }"></div>
-                <div class="travel-center">
-                  <span class="travel-percentage">46%</span>
+              <div class="commission-card">
+                <div class="commission-icon blue">
+                  <i class="fas fa-medal"></i>
+                </div>
+                <div class="commission-content">
+                  <span class="commission-value">{{ _balance || 0 }}</span>
+                  <span class="commission-label">Saldo No Disponible</span>
                 </div>
               </div>
-              <span class="travel-label">Nacional</span>
+              <div class="commission-card">
+                <div class="commission-icon purple">
+                  <i class="fas fa-medal"></i>
+                </div>
+                <div class="commission-content">
+                  <span class="commission-value">{{ Number(ins + insVirtual).toFixed(2) }}</span>
+                  <span class="commission-label">Total Ganado</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bono Viaje -->
+          <div class="dashboard-section">
+            <div class="section-header">
+              <h3>Bono Viaje</h3>
+              <p>Completa los porcentajes y ¡disfruta el viaje!</p>
+            </div>
+            <div class="travel-bonus">
+              <div class="travel-progress">
+                <div class="travel-circle">
+                  <div class="travel-fill" :style="{ transform: `rotate(${15 * 3.6}deg)` }"></div>
+                  <div class="travel-center">
+                    <span class="travel-percentage">15%</span>
+                  </div>
+                </div>
+                <span class="travel-label">Internacional</span>
+              </div>
+              <div class="travel-progress">
+                <div class="travel-circle">
+                  <div class="travel-fill orange" :style="{ transform: `rotate(${46 * 3.6}deg)` }"></div>
+                  <div class="travel-center">
+                    <span class="travel-percentage">46%</span>
+                  </div>
+                </div>
+                <span class="travel-label">Nacional</span>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <!-- Bottom Row -->
-      <div class="dashboard-row">
-        <!-- Últimos Ingresos -->
-        <div class="dashboard-section">
-          <div class="section-header">
-            <h3>Últimos Ingresos</h3>
-          </div>
-          <div class="latest-incomes">
-            <div v-if="directs && directs.length > 0" v-for="direct in directs.slice(0, 4)" :key="direct.id" class="income-item">
-              <div class="income-avatar">
-                <img v-if="direct.photo" :src="direct.photo" alt="Avatar" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;" />
-                <i v-else class="fas fa-user"></i>
+        <!-- Bottom Row -->
+        <div class="dashboard-row">
+          <!-- Últimos Ingresos -->
+          <div class="dashboard-section">
+            <div class="section-header">
+              <h3>Últimos Ingresos</h3>
+            </div>
+            <div class="latest-incomes">
+              <div v-if="directs && directs.length > 0" v-for="direct in directs.slice(0, 4)" :key="direct.id" class="income-item">
+                <div class="income-avatar">
+                  <img v-if="direct.photo" :src="direct.photo" alt="Avatar" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;" />
+                  <i v-else class="fas fa-user"></i>
+                </div>
+                <div class="income-content">
+                  <span class="income-name">{{ direct.name }} {{ direct.lastName }}</span>
+                  <span class="income-pack">{{ direct.plan || 'Usuario' }}</span>
+                </div>
               </div>
-              <div class="income-content">
-                <span class="income-name">{{ direct.name }} {{ direct.lastName }}</span>
-                <span class="income-pack">{{ direct.plan || 'Usuario' }}</span>
+              <div v-if="!directs || directs.length === 0" class="income-item">
+                <div class="income-avatar">
+                  <i class="fas fa-user"></i>
+                </div>
+                <div class="income-content">
+                  <span class="income-name">No hay directos</span>
+                  <span class="income-pack">Aún no tienes afiliados</span>
+                </div>
               </div>
             </div>
-            <div v-if="!directs || directs.length === 0" class="income-item">
-              <div class="income-avatar">
-                <i class="fas fa-user"></i>
-              </div>
-              <div class="income-content">
-                <span class="income-name">No hay directos</span>
-                <span class="income-pack">Aún no tienes afiliados</span>
-              </div>
-            </div>
           </div>
-        </div>
 
-        <!-- Comisiones Card -->
-        <div class="dashboard-section">
-          <div class="commissions-summary">
-            <div class="summary-icon">
-              <i class="fas fa-bullseye"></i>
-            </div>
-            <div class="summary-content">
-              <span class="summary-value">{{ Number(ins + insVirtual).toFixed(2) }}</span>
-              <span class="summary-label">Total Ganado</span>
+          <!-- Comisiones Card -->
+          <div class="dashboard-section">
+            <div class="commissions-summary">
+              <div class="summary-icon">
+                <i class="fas fa-bullseye"></i>
+              </div>
+              <div class="summary-content">
+                <span class="summary-value">{{ Number(ins + insVirtual).toFixed(2) }}</span>
+                <span class="summary-label">Total Ganado</span>
+              </div>
             </div>
           </div>
         </div>
@@ -1156,5 +1162,52 @@ export default {
   opacity: 1;
   transform: perspective(800px) translateX(0) scale(1) rotateY(0);
   filter: blur(0) brightness(1);
+}
+
+/* Estilos para el loading container */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  padding: 40px;
+  animation: fadeIn 0.3s ease-in;
+}
+
+.loading-container .loading-spinner-large {
+  width: 60px;
+  height: 60px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #ff9800;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 20px;
+}
+
+.loading-container p {
+  color: #666;
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 </style>
