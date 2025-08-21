@@ -86,6 +86,12 @@ class API {
     return axios.get(url)
   }
 
+  treeComplete(session, id) {
+    let url = `/app/tree-complete?session=${session}`
+    if (id !== undefined && id !== null) url += `&&id=${id}`
+    return axios.get(url)
+  }
+
 
   // Mercado Pago
 //   mercadopagoPreference(data) {

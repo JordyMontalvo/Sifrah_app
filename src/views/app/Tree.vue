@@ -243,9 +243,27 @@
       <div v-if="loading" class="loading-container">
         <i class="load"></i>
         <p>Cargando resumen de jerarquía...</p>
+        <div class="loading-progress">
+          <div class="progress-bar">
+            <div class="progress-fill" :style="{ width: loadingProgress + '%' }"></div>
+          </div>
+          <span class="progress-text">{{ loadingProgress }}% completado</span>
+        </div>
       </div>
       
       <div v-if="!loading" class="hierarchy-summary">
+        <!-- Mensaje informativo -->
+        <div class="info-message">
+          <i class="fas fa-info-circle"></i>
+          <span>Se cargan todos los niveles de la red en una sola consulta para mostrar estadísticas completas y precisas.</span>
+        </div>
+        
+        <!-- Mensaje de éxito cuando se completa la carga -->
+        <div v-if="!loading && loadingProgress === 100" class="success-message">
+          <i class="fas fa-check-circle"></i>
+          <span>Árbol completo cargado exitosamente. Las estadísticas muestran información completa de toda la jerarquía.</span>
+        </div>
+        
         <!-- Tarjetas de resumen -->
         <div class="summary-cards">
           <div class="summary-card">
@@ -291,9 +309,9 @@
         
                  <!-- Distribución por niveles -->
          <div class="levels-distribution">
-                       <div class="distribution-header">
-              <h3 class="distribution-title">Distribución por Niveles</h3>
-            </div>
+           <div class="distribution-header">
+             <h3 class="distribution-title">Distribución por Niveles</h3>
+           </div>
            <div class="levels-chart">
              <div v-for="(count, level) in hierarchyStats.levelDistribution" :key="level" class="level-row">
                <div class="level-label">Nivel {{ level }}</div>
@@ -663,8 +681,7 @@ export default {
         highPerformance: 0,
         levelDistribution: {}
       },
-      loadingAdditional: false, // Para controlar la carga adicional de niveles
-             loadedLevels: 10 // Contador de niveles cargados
+      loadingProgress: 0 // Progreso de carga en porcentaje
     }
   },
   computed: {
@@ -911,63 +928,51 @@ export default {
       this.selectMode('red');
     },
          async loadHierarchyStats() {
-       this.loading = true;
-       try {
-         // Siempre cargar datos del árbol completo para el usuario logueado
-         await this.GET(null);
-         
-         // Cargar todos los niveles desde el inicio (como estaba antes)
-         await this.loadOptimizedTreeLevels(this.node, 10);
-         
-         // Calcular estadísticas con todos los niveles
-         this.calculateHierarchyStats();
-         this.loading = false;
-       } catch (error) {
-         console.error("Error al cargar estadísticas de jerarquía:", error);
-         this.loading = false;
-       }
-     },
-     
-           async loadOptimizedTreeLevels(node, maxDepth = 10) {
-        if (!node || !node.childs || node.childs.length === 0) return;
+      this.loading = true;
+      this.loadingProgress = 0;
+      try {
+        // Usar el nuevo endpoint que carga TODO el árbol de una vez (como admin)
+        this.loadingProgress = 20;
+        const { data } = await api.treeComplete(this.session, null);
         
-        // Cargar hijos del nodo actual solo si no están ya cargados
-        if (!node._childs) {
-          try {
-            const { data } = await this.GET_NODE(node.id, this.session);
-            node._childs = data.children || [];
-            
-            // Cargar todos los niveles hasta maxDepth
-            if (maxDepth > 0) {
-              // Usar Promise.all para cargar hijos en paralelo (más rápido)
-              // Cargar todos los hijos, no limitar a 15
-              const childPromises = node._childs.map(async (child) => {
-                await this.loadOptimizedTreeLevels(child, maxDepth - 1);
-              });
-              
-              await Promise.all(childPromises);
-            }
-          } catch (error) {
-            console.error(`Error cargando hijos del nodo ${node.id}:`, error);
-          }
+        if (data.error) {
+          throw new Error(data.msg || 'Error loading tree');
         }
-      },
-     
-     // Método para depurar la estructura del árbol
-     debugTreeStructure(node, level = 0) {
-       if (!node) return;
-       
-       const indent = '  '.repeat(level);
-       console.log(`${indent}Nivel ${level}: ${node.name} (ID: ${node.id})`);
-       
-       if (node._childs && node._childs.length > 0) {
-         node._childs.forEach(child => {
-           this.debugTreeStructure(child, level + 1);
-         });
-       }
-     },
-     
-     calculateHierarchyStats() {
+        
+        this.loadingProgress = 80;
+        
+        // El nodo ya viene con todos los niveles cargados
+        this.node = data.node;
+        
+        // Calcular estadísticas con todos los niveles ya cargados
+        this.calculateHierarchyStats();
+        this.loadingProgress = 100;
+        this.loading = false;
+        
+        console.log('Árbol completo cargado exitosamente en una sola consulta');
+      } catch (error) {
+        console.error("Error al cargar estadísticas de jerarquía:", error);
+        this.loading = false;
+      }
+    },
+    
+
+    
+    // Método para depurar la estructura del árbol
+    debugTreeStructure(node, level = 0) {
+      if (!node) return;
+      
+      const indent = '  '.repeat(level);
+      console.log(`${indent}Nivel ${level}: ${node.name} (ID: ${node.id})`);
+      
+      if (node._childs && node._childs.length > 0) {
+        node._childs.forEach(child => {
+          this.debugTreeStructure(child, level + 1);
+        });
+      }
+    },
+    
+         calculateHierarchyStats() {
        if (!this.node) return;
        
        // Inicializar estadísticas
@@ -979,11 +984,11 @@ export default {
          levelDistribution: {}
        };
        
-       // Contar miembros totales y distribución por niveles
+       // Contar miembros totales y distribución por niveles (optimizado)
        this.countMembersByLevel(this.node, 0, stats);
        
        // Calcular afiliados directos (hijos directos del usuario logueado)
-       stats.directAffiliates = this.children ? this.children.length : 0;
+       stats.directAffiliates = this.node._childs ? this.node._childs.length : 0;
        
        // Calcular alto rendimiento (usuarios con más de 1000 puntos)
        stats.highPerformance = this.countHighPerformanceUsers(this.node);
@@ -996,69 +1001,40 @@ export default {
        // Actualizar las estadísticas
        this.hierarchyStats = stats;
        
-       console.log('Estadísticas calculadas:', stats);
-       console.log('Distribución por niveles:', stats.levelDistribution);
-     },
-     
-     // Método para cargar datos adicionales bajo demanda (lazy loading)
-     async loadAdditionalLevelsOnDemand() {
-       if (this.loadingAdditional) return; // Evitar múltiples cargas simultáneas
-       
-       this.loadingAdditional = true;
-       try {
-         // Cargar niveles adicionales solo cuando se necesiten
-         const newMaxDepth = this.loadedLevels + 2; // Incrementar en 2 niveles
-         await this.loadOptimizedTreeLevels(this.node, newMaxDepth);
-         this.loadedLevels = newMaxDepth; // Actualizar contador
-         this.calculateHierarchyStats(); // Recalcular estadísticas
-       } catch (error) {
-         console.error("Error cargando niveles adicionales:", error);
-       } finally {
-         this.loadingAdditional = false;
+       // Solo mostrar logs en desarrollo
+       if (process.env.NODE_ENV === 'development') {
+         console.log('Estadísticas calculadas:', stats);
+         console.log('Distribución por niveles:', stats.levelDistribution);
        }
      },
+    
+    
      
-     // Método para cargar todos los niveles en segundo plano (optimizado)
-     async loadAllLevelsInBackground() {
-       this.loadingAdditional = true;
-       try {
-         // Cargar todos los niveles de manera optimizada
-         await this.loadOptimizedTreeLevels(this.node, 10); // Máximo 10 niveles
-         
-         // Recalcular estadísticas con todos los niveles
-         this.calculateHierarchyStats();
-         
-         console.log('Todos los niveles cargados en segundo plano');
-       } catch (error) {
-         console.error("Error cargando todos los niveles:", error);
-       } finally {
-         this.loadingAdditional = false;
-       }
-     },
-     
-     // Método para limpiar caché y recargar datos (útil para debugging)
-     clearCacheAndReload() {
-       // Limpiar caché de hijos cargados
-       if (this.node) {
-         this.clearNodeCache(this.node);
-       }
-       
-       // Recargar estadísticas
-       this.loadHierarchyStats();
-     },
-     
-     // Método recursivo para limpiar caché
-     clearNodeCache(node) {
-       if (node._childs) {
-         delete node._childs;
-         // Limpiar caché de hijos recursivamente
-         if (node.childs) {
-           node.childs.forEach(child => this.clearNodeCache(child));
-         }
-       }
-     },
-     
-     countMembersByLevel(node, level, stats) {
+
+    
+    // Método para limpiar caché y recargar datos (útil para debugging)
+    clearCacheAndReload() {
+      // Limpiar caché de hijos cargados
+      if (this.node) {
+        this.clearNodeCache(this.node);
+      }
+      
+      // Recargar estadísticas
+      this.loadHierarchyStats();
+    },
+    
+    // Método recursivo para limpiar caché
+    clearNodeCache(node) {
+      if (node._childs) {
+        delete node._childs;
+        // Limpiar caché de hijos recursivamente
+        if (node.childs) {
+          node.childs.forEach(child => this.clearNodeCache(child));
+        }
+      }
+    },
+    
+         countMembersByLevel(node, level, stats) {
        if (!node) return;
        
        // Incrementar contador total
@@ -1073,15 +1049,15 @@ export default {
        // Actualizar profundidad máxima
        stats.maxDepth = Math.max(stats.maxDepth, level);
        
-       // Contar hijos recursivamente
+       // Contar hijos recursivamente (sin limitaciones)
        if (node._childs && node._childs.length > 0) {
          node._childs.forEach(child => {
            this.countMembersByLevel(child, level + 1, stats);
          });
        }
      },
-     
-     countHighPerformanceUsers(node) {
+    
+         countHighPerformanceUsers(node) {
        if (!node) return 0;
        
        let count = 0;
@@ -1091,7 +1067,7 @@ export default {
          count++;
        }
        
-       // Recursivamente contar hijos
+       // Recursivamente contar hijos (sin limitaciones)
        if (node._childs) {
          node._childs.forEach(child => {
            count += this.countHighPerformanceUsers(child);
@@ -1101,11 +1077,12 @@ export default {
        return count;
      },
          getBarWidth(count) {
-       const maxCount = Math.max(...Object.values(this.hierarchyStats.levelDistribution));
-       if (maxCount === 0 || !count) return '0%';
-       return `${(count / maxCount) * 100}%`;
-     },
-     
+      const maxCount = Math.max(...Object.values(this.hierarchyStats.levelDistribution));
+      if (maxCount === 0 || !count) return '0%';
+      return `${(count / maxCount) * 100}%`;
+    },
+    
+    
 
   }
 };
@@ -1665,6 +1642,34 @@ https://codepen.io/team/amcharts/pen/poPxojR */
 .loading-container p {
   margin-top: 16px;
   font-size: 16px;
+}
+
+.loading-progress {
+  margin-top: 20px;
+  width: 100%;
+  max-width: 300px;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background: #e0e0e0;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #00bcd4, #0097a7);
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.progress-text {
+  font-size: 14px;
+  color: #666;
+  font-weight: 500;
 }
 
 .frontales-grid {
@@ -2254,6 +2259,44 @@ https://codepen.io/team/amcharts/pen/poPxojR */
   margin-top: 20px;
 }
 
+.info-message {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  background: #e3f2fd;
+  border: 1px solid #2196f3;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  color: #1976d2;
+  font-size: 14px;
+}
+
+.info-message i {
+  color: #2196f3;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.success-message {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  background: #e8f5e8;
+  border: 1px solid #4caf50;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  color: #2e7d32;
+  font-size: 14px;
+}
+
+.success-message i {
+  color: #4caf50;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
 .summary-cards {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -2499,20 +2542,6 @@ https://codepen.io/team/amcharts/pen/poPxojR */
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
-}
-
-.loading-indicator {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: #666;
-  font-size: 14px;
-  font-style: italic;
-}
-
-.loading-indicator i {
-  color: #4CAF50;
-  font-size: 16px;
 }
 </style>
 
