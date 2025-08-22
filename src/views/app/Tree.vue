@@ -763,7 +763,7 @@ export default {
       this.children = data.children || [] // <-- Guardar hijos completos
       this.children_points = data.children_points || []
       this.selec_node = data.node;
-      console.log("selec_node:", this.children_points); 
+/*       console.log("selec_node:", this.children_points);  */
     },
     detectScreenSize() {
       const width = window.innerWidth;
@@ -895,7 +895,7 @@ export default {
            }
          }
        } catch (error) {
-         console.error("Error al cargar detalles del usuario:", error);
+/*          console.error("Error al cargar detalles del usuario:", error); */
          this.modal_children = [];
          this.modal_children_points = [];
        }
@@ -963,7 +963,7 @@ export default {
       if (!node) return;
       
       const indent = '  '.repeat(level);
-      console.log(`${indent}Nivel ${level}: ${node.name} (ID: ${node.id})`);
+/*       console.log(`${indent}Nivel ${level}: ${node.name} (ID: ${node.id})`); */
       
       if (node._childs && node._childs.length > 0) {
         node._childs.forEach(child => {
@@ -1003,8 +1003,8 @@ export default {
        
        // Solo mostrar logs en desarrollo
        if (process.env.NODE_ENV === 'development') {
-         console.log('Estadísticas calculadas:', stats);
-         console.log('Distribución por niveles:', stats.levelDistribution);
+        //  console.log('Estadísticas calculadas:', stats);
+        //  console.log('Distribución por niveles:', stats.levelDistribution);
        }
      },
     
