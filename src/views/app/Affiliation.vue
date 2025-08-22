@@ -84,18 +84,21 @@
       
       <div v-else class="affiliation-bg" style="position: relative; min-height: 80vh">
         <h2 class="affiliation-title" v-if="!showMasterTrophy">
-         Afíliate y elige tu kit
+         ¡Comienza tu viaje con Sifrah!
        </h2>
+       <p class="affiliation-subtitle" v-if="!showMasterTrophy">
+         Elige tu plan de afiliación y descubre un mundo de oportunidades
+       </p>
        
        <!-- Mensaje que aparece cuando se redirige desde opciones bloqueadas -->
        <div v-if="showRedirectMessage" class="affiliation-notification">
          <div class="affiliation-notification-content">
            <div class="affiliation-notification-header">
              <i class="fas fa-star" style="color: #ffd700; margin-right: 10px;"></i>
-             <span style="font-weight: bold; font-size: 16px;">¡Desbloquea tu potencial!</span>
+             <span style="font-weight: bold; font-size: 16px;">¡Bienvenido a Sifrah!</span>
            </div>
            <div class="affiliation-notification-body">
-             Afíliate ahora y accede a todas las funcionalidades
+             Para comenzar tu experiencia, elige tu plan de afiliación y accede a todas las funcionalidades
            </div>
          </div>
        </div>
@@ -1284,6 +1287,14 @@ export default {
   color #ff9800
   margin 32px 0 18px 0
   letter-spacing 1px
+
+.affiliation-subtitle
+  text-align center
+  font-size 1.1rem
+  color #666
+  margin 0 0 32px 0
+  font-weight 400
+  line-height 1.5
 
 .plan-section
   margin-bottom 32px

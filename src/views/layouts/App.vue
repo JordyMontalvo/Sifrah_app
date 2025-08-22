@@ -71,9 +71,9 @@
           class="photo-logo"
         />
 
-        <router-link to="/dashboard" @click.stop v-if="office_id == null">
+        <a @click="handleInicioClick" v-if="office_id == null">
           <i class="fas fa-home"></i> INICIO
-        </router-link>
+        </a>
         <!-- <router-link to="/status" @click.native="close">
           <i class="fas fa-tachometer-alt"></i> ESTADO
         </router-link> -->
@@ -286,10 +286,10 @@
     </section>
 
     <footer class="footer-Dashboard">
-      <router-link to="/dashboard">
+      <a @click="handleInicioClick">
         <i class="fa-solid fa-house"></i>
         Inicio
-      </router-link>
+      </a>
       <router-link to="/activation" v-if="affiliated">
         <i class="fas fa-shopping-bag"></i>
         Compras
@@ -474,6 +474,22 @@ export default {
         this.$store.commit("SET_OPEN");
       }
     },
+    handleInicioClick() {
+      // Verificar afiliación antes de permitir acceso a INICIO
+      if (!this.affiliated) {
+        // Si estamos en la página de afiliación, mostrar el mensaje directamente
+        if (this.$route.path === '/affiliation') {
+          this.showAffiliationMessageInAffiliationPage();
+        } else {
+          // Si estamos en otra página, redirigir a afiliación
+          this.$router.push({ path: '/affiliation', query: { redirected: 'true' } });
+        }
+        return;
+      }
+      
+      // Si está afiliado, ir al dashboard
+      this.$router.push('/dashboard');
+    },
     actived(i) {
       // Verificar afiliación antes de permitir acceso a opciones restringidas
       if (!this.affiliated && (i === 1 || i === 2 || i === 3)) {
@@ -568,10 +584,10 @@ export default {
         <div class="affiliation-notification-content">
           <div class="affiliation-notification-header">
             <i class="fas fa-star" style="color: #ffd700; margin-right: 10px;"></i>
-            <span style="font-weight: bold; font-size: 16px;">¡Desbloquea tu potencial!</span>
+            <span style="font-weight: bold; font-size: 16px;">¡Bienvenido a Sifrah!</span>
           </div>
           <div class="affiliation-notification-body">
-            Afíliate ahora y accede a todas las funcionalidades
+            Para comenzar tu experiencia, elige tu plan de afiliación y accede a todas las funcionalidades
           </div>
         </div>
       `;

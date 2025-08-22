@@ -43,6 +43,22 @@ const routes = [
     path: '*',
     redirect: '/login'
   },
+  // Redirección por defecto para usuarios autenticados
+  {
+    path: '/',
+    redirect: to => {
+      const session = localStorage.getItem('session');
+      const affiliated = localStorage.getItem('affiliated') === 'true';
+      
+      if (!session) {
+        return '/login';
+      } else if (!affiliated) {
+        return '/affiliation';
+      } else {
+        return '/dashboard';
+      }
+    }
+  },
   // Auth
   {
     path: '/welcome',
@@ -233,6 +249,13 @@ router.beforeEach((to, from, next) => {
   if (requiresNoAuth &&  session &&  office_id) { next({ path: `/${path}`   }) }
 
   if (requiresAuth   && !session) { next({ path: '/login' }) }
+  
+  // Si el usuario está autenticado pero no afiliado, redirigir a afiliación
+  // excepto si ya está en la página de afiliación o en rutas que no requieren afiliación
+  if (session && !affiliated && to.path !== '/affiliation' && to.path !== '/profile' && to.path !== '/password' && to.path !== '/security') {
+    next({ path: '/affiliation', query: { redirected: 'true' } });
+    return;
+  }
   
   // Verificar afiliación para rutas que la requieren
   if (requiresAffiliation && !affiliated) {

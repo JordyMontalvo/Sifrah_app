@@ -261,7 +261,12 @@ export default {
           return;
         }
         this.$store.commit("SET_SESSION", data.session);
-        this.$router.push("/dashboard");
+        // Verificar si el usuario está afiliado
+        if (data.affiliated) {
+          this.$router.push("/dashboard");
+        } else {
+          this.$router.push("/affiliation");
+        }
       } catch (e) {
         alert("Error al iniciar sesión con Google");
       }
@@ -297,8 +302,16 @@ export default {
       if (office_id) this.$store.commit("SET_OFFICE_ID", { office_id, path });
 
       // routing
-      if (office_id) this.$router.push(`/${this.path}`);
-      else this.$router.push("/dashboard");
+      if (office_id) {
+        this.$router.push(`/${this.path}`);
+      } else {
+        // Verificar si el usuario está afiliado
+        if (data.affiliated) {
+          this.$router.push("/dashboard");
+        } else {
+          this.$router.push("/affiliation");
+        }
+      }
     },
     reset(name) {
       this.alert = null;

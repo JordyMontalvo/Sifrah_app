@@ -435,7 +435,12 @@ export default {
         }
 
         this.$store.commit("SET_SESSION", data.session);
-        this.$router.push("/dashboard");
+        // Verificar si el usuario está afiliado
+        if (data.affiliated) {
+          this.$router.push("/dashboard");
+        } else {
+          this.$router.push("/affiliation");
+        }
       } catch (err) {
         this.sending = false;
       }

@@ -413,6 +413,12 @@ export default {
     this.$store.commit("SET_TOKEN", data.token);
     this.$store.commit("SET_TOTAL_POINTS", data.total_points);
 
+    // Si el usuario no está afiliado, redirigir a la página de afiliación
+    if (!data.affiliated) {
+      this.$router.push({ path: '/affiliation', query: { redirected: 'true' } });
+      return;
+    }
+
     this.banner = data.banner;
     this.ins = data.ins;
     this.insVirtual = data.insVirtual;
