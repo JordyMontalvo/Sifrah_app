@@ -465,11 +465,6 @@ export default {
     beforeDestroy() {
       if (this.notificationTimer) clearInterval(this.notificationTimer);
     },
-    computed: {
-      email() {
-        return this.$store.state.email;
-      },
-    },
 
     toggleMenu() {
       this.$store.commit("SET_OPEN");

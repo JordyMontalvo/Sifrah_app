@@ -1034,56 +1034,54 @@ export default {
       }
     },
     
-         countMembersByLevel(node, level, stats) {
-       if (!node) return;
-       
-       // Incrementar contador total
-       stats.totalMembers++;
-       
-       // Incrementar contador del nivel
-       if (!stats.levelDistribution[level]) {
-         stats.levelDistribution[level] = 0;
-       }
-       stats.levelDistribution[level]++;
-       
-       // Actualizar profundidad máxima
-       stats.maxDepth = Math.max(stats.maxDepth, level);
-       
-       // Contar hijos recursivamente (sin limitaciones)
-       if (node._childs && node._childs.length > 0) {
-         node._childs.forEach(child => {
-           this.countMembersByLevel(child, level + 1, stats);
-         });
-       }
-     },
+    countMembersByLevel(node, level, stats) {
+      if (!node) return;
+      
+      // Incrementar contador total
+      stats.totalMembers++;
+      
+      // Incrementar contador del nivel
+      if (!stats.levelDistribution[level]) {
+        stats.levelDistribution[level] = 0;
+      }
+      stats.levelDistribution[level]++;
+      
+      // Actualizar profundidad máxima
+      stats.maxDepth = Math.max(stats.maxDepth, level);
+      
+      // Contar hijos recursivamente (sin limitaciones)
+      if (node._childs && node._childs.length > 0) {
+        node._childs.forEach(child => {
+          this.countMembersByLevel(child, level + 1, stats);
+        });
+      }
+    },
     
-         countHighPerformanceUsers(node) {
-       if (!node) return 0;
-       
-       let count = 0;
-       
-       // Contar si el usuario actual tiene alto rendimiento
-       if ((node.points && node.points > 1000) || (node.total_points && node.total_points > 1000)) {
-         count++;
-       }
-       
-       // Recursivamente contar hijos (sin limitaciones)
-       if (node._childs) {
-         node._childs.forEach(child => {
-           count += this.countHighPerformanceUsers(child);
-         });
-       }
-       
-       return count;
-     },
-         getBarWidth(count) {
+    countHighPerformanceUsers(node) {
+      if (!node) return 0;
+      
+      let count = 0;
+      
+      // Contar si el usuario actual tiene alto rendimiento
+      if ((node.points && node.points > 1000) || (node.total_points && node.total_points > 1000)) {
+        count++;
+      }
+      
+      // Recursivamente contar hijos (sin limitaciones)
+      if (node._childs) {
+        node._childs.forEach(child => {
+          count += this.countHighPerformanceUsers(child);
+        });
+      }
+      
+      return count;
+    },
+    
+    getBarWidth(count) {
       const maxCount = Math.max(...Object.values(this.hierarchyStats.levelDistribution));
       if (maxCount === 0 || !count) return '0%';
       return `${(count / maxCount) * 100}%`;
-    },
-    
-    
-
+    }
   }
 };
 </script>
