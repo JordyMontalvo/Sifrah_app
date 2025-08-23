@@ -74,6 +74,13 @@
                 >
                   {{ category }}
                 </button>
+                <button 
+                  @click="clearAllFilters"
+                  class="clear-filters-btn"
+                  v-if="searchTerm || (selectedCategories.length > 0 && !selectedCategories.includes('Todos'))"
+                >
+                  <i class="fas fa-times"></i> Limpiar
+                </button>
               </div>
             </div>
           </div>
@@ -85,6 +92,14 @@
           </div>
           
           <div v-else class="products-catalog-grid">
+            <!-- Indicador de productos mostrados -->
+            <div class="products-count-indicator">
+              <span>Mostrando {{ filteredCatalogProducts.length }} de {{ products.length }} productos</span>
+              <span v-if="searchTerm || (selectedCategories.length > 0 && !selectedCategories.includes('Todos'))" class="filter-active">
+                (filtros activos)
+              </span>
+            </div>
+            
             <div 
               v-for="(product, i) in filteredCatalogProducts" 
               :key="product.id || i"
@@ -135,6 +150,16 @@
                   {{ getProductQuantity(product) > 0 ? '+' : 'Agregar' }}
                 </button>
               </div>
+            </div>
+            
+            <!-- Mensaje cuando no hay productos que coincidan con los filtros -->
+            <div v-if="filteredCatalogProducts.length === 0 && !loading" class="no-products-message">
+              <i class="fas fa-search"></i>
+              <h4>No se encontraron productos</h4>
+              <p>No hay productos que coincidan con los filtros seleccionados.</p>
+              <button @click="clearAllFilters" class="clear-filters-btn">
+                <i class="fas fa-times"></i> Limpiar filtros
+              </button>
             </div>
           </div>
         </div>
@@ -535,7 +560,6 @@ export default {
       cartItems: [],
       searchTerm: "",
       selectedCategories: [],
-      categories: ["Todos", "Suplementos", "Belleza", "Salud", "Energía"],
       current_points: 0,
       current_profit: 0,
       balance: 0,
@@ -597,7 +621,7 @@ export default {
     },
 
     categories() {
-      if (!this.products) return [];
+      if (!this.products) return ["Todos"];
       
       const arr = this.products.map(function (x) {
         return x.type;
@@ -607,7 +631,8 @@ export default {
         return i == self.indexOf(v);
       });
 
-      return ret;
+      // Agregar "Todos" al inicio del array
+      return ["Todos", ...ret];
     },
 
     // Computed properties para el catálogo de productos
@@ -618,10 +643,15 @@ export default {
       }
       
       return this.products.filter(product => {
+        // Filtro por búsqueda
         const matchesSearch = !this.searchTerm || 
           product.name.toLowerCase().includes(this.searchTerm.toLowerCase());
-        const matchesCategory = this.selectedCategories.length === 0 || 
-          this.selectedCategories.includes(product.type);
+        
+        // Filtro por categoría
+        let matchesCategory = true;
+        if (this.selectedCategories.length > 0 && !this.selectedCategories.includes("Todos")) {
+          matchesCategory = this.selectedCategories.includes(product.type);
+        }
         
         return matchesSearch && matchesCategory;
       });
@@ -673,6 +703,15 @@ export default {
         this.$store.commit('setCartItems', [...newItems]);
       },
       deep: true
+    },
+    products: {
+      handler(newProducts) {
+        if (newProducts && newProducts.length > 0) {
+          // Reinicializar categorías cuando cambien los productos
+          this.initializeDefaultCategories();
+        }
+      },
+      immediate: true
     }
   },
   async created() {
@@ -709,13 +748,16 @@ export default {
       if (this.office_id) this.office = this.office_id;
 
       this.offices = data.offices || [];
-      this.tab = this.categories[0];
+      // Remover la dependencia de categories aquí
       
       // Restaurar el carrito desde el store si existe
       const savedCartItems = this.$store.state.cartItems;
       if (savedCartItems && savedCartItems.length > 0) {
         this.cartItems = [...savedCartItems];
       }
+      
+      // Inicializar categorías seleccionadas por defecto
+      this.initializeDefaultCategories();
       
     } catch (error) {
       console.error('Error loading activation data:', error);
@@ -910,11 +952,24 @@ export default {
 
     // Métodos para el catálogo de productos
     toggleCategory(category) {
-      const index = this.selectedCategories.indexOf(category);
-      if (index > -1) {
-        this.selectedCategories.splice(index, 1);
+      if (category === "Todos") {
+        // Si se hace clic en "Todos", limpiar todas las selecciones
+        this.selectedCategories = [];
       } else {
-        this.selectedCategories.push(category);
+        // Si se hace clic en otra categoría, remover "Todos" si está seleccionado
+        this.selectedCategories = this.selectedCategories.filter(cat => cat !== "Todos");
+        
+        const index = this.selectedCategories.indexOf(category);
+        if (index > -1) {
+          this.selectedCategories.splice(index, 1);
+        } else {
+          this.selectedCategories.push(category);
+        }
+        
+        // Si no hay categorías seleccionadas, mostrar todos
+        if (this.selectedCategories.length === 0) {
+          this.selectedCategories = [];
+        }
       }
     },
     openProductModal(product) {
@@ -1109,6 +1164,15 @@ export default {
         message: `Carrito listo con ${productosConCantidad.length} productos.`,
         canProceed: true
       };
+    },
+    initializeDefaultCategories() {
+      // Inicializar categorías seleccionadas por defecto
+      this.selectedCategories = ["Todos"];
+    },
+    
+    clearAllFilters() {
+      this.searchTerm = "";
+      this.selectedCategories = ["Todos"];
     }
   },
   
@@ -2403,6 +2467,30 @@ export default {
   border-color: #ff9800;
 }
 
+.clear-filters-btn {
+  background: #f5f5f5;
+  color: #666;
+  border: 1px solid #ddd;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.clear-filters-btn:hover {
+  background: #e0e0e0;
+  color: #333;
+  border-color: #ccc;
+}
+
+.clear-filters-btn i {
+  font-size: 0.8rem;
+}
+
 .products-catalog-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); /* Más pequeño para 4 columnas */
@@ -3378,5 +3466,54 @@ export default {
     opacity 1
     transform translateY(0)
 
+.clear-filters-btn i {
+  font-size: 0.8rem;
+}
+
+.products-count-indicator {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 12px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  font-size: 0.9rem;
+  color: #666;
+  border: 1px solid #e9ecef;
+}
+
+.products-count-indicator .filter-active {
+  color: #ff9800;
+  font-weight: 600;
+  margin-left: 8px;
+}
+
+.no-products-message {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 40px 20px;
+  background: #f8f9fa;
+  border-radius: 12px;
+  border: 2px dashed #dee2e6;
+  margin: 20px 0;
+}
+
+.no-products-message i {
+  font-size: 3rem;
+  color: #adb5bd;
+  margin-bottom: 15px;
+}
+
+.no-products-message h4 {
+  font-size: 1.2rem;
+  color: #495057;
+  margin: 0 0 10px 0;
+}
+
+.no-products-message p {
+  color: #6c757d;
+  margin: 0 0 20px 0;
+  font-size: 0.95rem;
+}
 
 </style>
