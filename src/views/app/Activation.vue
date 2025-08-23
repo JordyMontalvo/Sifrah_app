@@ -466,14 +466,36 @@
 
       <!-- Botón de ordenar -->
       <div class="order-actions">
-        <button class="order-btn" v-show="!sending" @click="proceedToCheckout" :disabled="!office || (!check && !pay_method) || cartItems.length === 0">
+        <!-- Estado del carrito -->
+        <div class="cart-status" v-if="!sending">
+          <div v-if="checkCartStatus().status === 'empty'" class="cart-status-empty">
+            <i class="fas fa-shopping-cart"></i>
+            <span>{{ checkCartStatus().message }}</span>
+          </div>
+          <div v-else-if="checkCartStatus().status === 'no-quantity'" class="cart-status-warning">
+            <i class="fas fa-exclamation-triangle"></i>
+            <span>{{ checkCartStatus().message }}</span>
+          </div>
+          <div v-else class="cart-status-ready">
+            <i class="fas fa-check-circle"></i>
+            <span>{{ checkCartStatus().message }}</span>
+          </div>
+        </div>
+        
+        <button 
+          class="order-btn" 
+          v-show="!sending" 
+          @click="proceedToCheckout" 
+          :disabled="!canProceedToCheckout"
+        >
           <i class="fas fa-shopping-cart"></i>
           <span>Confirmar y Ordenar</span>
-    </button>
+        </button>
+        
         <button class="order-btn loading" v-show="sending" disabled>
           <i class="fas fa-spinner fa-spin"></i>
           <span>Procesando orden...</span>
-    </button>
+        </button>
       </div>
     </div>
   </App>
@@ -638,6 +660,20 @@ export default {
     cartIGV() {
       return this.cartTotal - this.cartTotal / 1.18;
     },
+    
+    canProceedToCheckout() {
+      const cartStatus = this.checkCartStatus();
+      return cartStatus.canProceed && this.office && (this.check || this.pay_method);
+    }
+  },
+  watch: {
+    cartItems: {
+      handler(newItems) {
+        // Sincronizar con el store cada vez que cambie el carrito
+        this.$store.commit('setCartItems', [...newItems]);
+      },
+      deep: true
+    }
   },
   async created() {
     try {
@@ -674,6 +710,12 @@ export default {
 
       this.offices = data.offices || [];
       this.tab = this.categories[0];
+      
+      // Restaurar el carrito desde el store si existe
+      const savedCartItems = this.$store.state.cartItems;
+      if (savedCartItems && savedCartItems.length > 0) {
+        this.cartItems = [...savedCartItems];
+      }
       
     } catch (error) {
       console.error('Error loading activation data:', error);
@@ -724,7 +766,8 @@ export default {
       } = this;
 
       // Validación de productos y oficina
-      if (!this.total) {
+      const productosSeleccionados = this.products.filter(p => p.total > 0);
+      if (productosSeleccionados.length === 0) {
         this.error = "No hay productos seleccionados";
         return;
       }
@@ -793,6 +836,11 @@ export default {
 
         this.sending = false;
         this.success = true;
+        
+        // Limpiar el carrito solo después de procesar exitosamente
+        this.cartItems = [];
+        this.$store.commit('setCartItems', []);
+        
         this.reset();
         
         // Mostrar mensaje de éxito por 3 segundos y luego recargar
@@ -888,9 +936,13 @@ export default {
       } else {
         this.cartItems.push({ ...product, total: 1 });
       }
+      // Sincronizar con el store
+      this.$store.commit('setCartItems', [...this.cartItems]);
     },
     removeFromCart(index) {
       this.cartItems.splice(index, 1);
+      // Sincronizar con el store
+      this.$store.commit('setCartItems', [...this.cartItems]);
     },
     getProductQuantity(product) {
       const item = this.cartItems.find(item => item.id === product.id);
@@ -900,6 +952,8 @@ export default {
       const item = this.cartItems.find(item => item.id === product.id);
       if (item) {
         item.total += 1;
+        // Sincronizar con el store
+        this.$store.commit('setCartItems', [...this.cartItems]);
       }
     },
     decreaseQuantity(product) {
@@ -909,6 +963,9 @@ export default {
         // Si llega a 0, remover del carrito
         if (item.total === 0) {
           this.removeFromCart(this.cartItems.indexOf(item));
+        } else {
+          // Sincronizar con el store
+          this.$store.commit('setCartItems', [...this.cartItems]);
         }
       }
     },
@@ -919,7 +976,14 @@ export default {
     proceedToCheckout() {
       // Validar que hay productos en el carrito
       if (this.cartItems.length === 0) {
-        this.error = "No hay productos en el carrito";
+        this.error = "No hay productos en el carrito. Agrega productos antes de continuar.";
+        return;
+      }
+      
+      // Validar que hay productos con cantidad > 0
+      const productosConCantidad = this.cartItems.filter(item => item.total > 0);
+      if (productosConCantidad.length === 0) {
+        this.error = "No hay productos con cantidad seleccionada. Verifica las cantidades de los productos.";
         return;
       }
 
@@ -969,8 +1033,7 @@ export default {
         }
       });
       
-      // Limpiar carrito y procesar orden
-      this.cartItems = [];
+      // NO limpiar el carrito aquí, solo procesar la orden
       this.error = null;
       this.sending = true;
       this.POST();
@@ -1020,6 +1083,32 @@ export default {
       
       // Descripción genérica si no hay una específica
       return 'Producto de alta calidad con ingredientes naturales seleccionados cuidadosamente. Diseñado para mejorar tu bienestar y calidad de vida. ¡Experimenta la diferencia con nuestros productos premium!';
+    },
+    
+    // Método para verificar el estado del carrito
+    checkCartStatus() {
+      if (this.cartItems.length === 0) {
+        return {
+          status: 'empty',
+          message: 'Tu carrito está vacío. Agrega productos para continuar.',
+          canProceed: false
+        };
+      }
+      
+      const productosConCantidad = this.cartItems.filter(item => item.total > 0);
+      if (productosConCantidad.length === 0) {
+        return {
+          status: 'no-quantity',
+          message: 'No hay productos con cantidad seleccionada. Verifica las cantidades.',
+          canProceed: false
+        };
+      }
+      
+      return {
+        status: 'ready',
+        message: `Carrito listo con ${productosConCantidad.length} productos.`,
+        canProceed: true
+      };
     }
   },
   
@@ -2143,6 +2232,40 @@ export default {
 
 .order-btn i {
   font-size: 1.2rem;
+}
+
+/* Indicadores de estado del carrito */
+.cart-status {
+  margin-bottom: 16px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cart-status-empty {
+  background: #fff3cd;
+  color: #856404;
+  border: 1px solid #ffeaa7;
+}
+
+.cart-status-warning {
+  background: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
+
+.cart-status-ready {
+  background: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+.cart-status i {
+  font-size: 1.1rem;
 }
 
 /* Indicador de recarga */
