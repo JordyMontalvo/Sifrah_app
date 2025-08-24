@@ -263,8 +263,30 @@ export default {
         this.$store.commit("SET_SESSION", data.session);
         // Verificar si el usuario está afiliado
         if (data.affiliated) {
+          // Establecer información del usuario en el store
+          if (data.name) this.$store.commit("SET_NAME", data.name);
+          if (data.lastName) this.$store.commit("SET_LAST_NAME", data.lastName);
+          if (data.email) this.$store.commit("SET_EMAIL", data.email);
+          if (data.photo) this.$store.commit("SET_PHOTO", data.photo);
+          if (data.plan) this.$store.commit("SET_PLAN", data.plan);
+          if (data.total_points !== undefined) this.$store.commit("SET_TOTAL_POINTS", data.total_points);
+          
+          // Establecer estado de afiliación
+          this.$store.commit("SET_AFFILIATED", data.affiliated);
+          
           this.$router.push("/dashboard");
         } else {
+          // Establecer información del usuario en el store
+          if (data.name) this.$store.commit("SET_NAME", data.name);
+          if (data.lastName) this.$store.commit("SET_LAST_NAME", data.lastName);
+          if (data.email) this.$store.commit("SET_EMAIL", data.email);
+          if (data.photo) this.$store.commit("SET_PHOTO", data.photo);
+          if (data.plan) this.$store.commit("SET_PLAN", data.plan);
+          if (data.total_points !== undefined) this.$store.commit("SET_TOTAL_POINTS", data.total_points);
+          
+          // Establecer estado de afiliación
+          this.$store.commit("SET_AFFILIATED", data.affiliated);
+          
           this.$router.push("/affiliation");
         }
       } catch (e) {
@@ -300,6 +322,17 @@ export default {
       // login
       this.$store.commit("SET_SESSION", data.session);
       if (office_id) this.$store.commit("SET_OFFICE_ID", { office_id, path });
+
+      // Establecer información del usuario en el store
+      if (data.name) this.$store.commit("SET_NAME", data.name);
+      if (data.lastName) this.$store.commit("SET_LAST_NAME", data.lastName);
+      if (data.email) this.$store.commit("SET_EMAIL", data.email);
+      if (data.photo) this.$store.commit("SET_PHOTO", data.photo);
+      if (data.plan) this.$store.commit("SET_PLAN", data.plan);
+      if (data.total_points !== undefined) this.$store.commit("SET_TOTAL_POINTS", data.total_points);
+      
+      // Establecer estado de afiliación
+      this.$store.commit("SET_AFFILIATED", data.affiliated);
 
       // routing
       if (office_id) {
