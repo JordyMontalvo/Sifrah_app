@@ -391,15 +391,15 @@ export default {
   async created() {
     // GET data
     const { data } = await api.dashboard(this.session);
-    console.log({ data });
-
     this.loading = false;
 
     // error
-    if (data.error && data.msg == "invalid session")
+    if (data.error && data.msg == "invalid session") {
       this.$router.push("/login");
+      return;
+    }
 
-    // success
+    // success - actualizar store
     this.$store.commit("SET_NAME", data.name);
     this.$store.commit("SET_LAST_NAME", data.lastName);
     this.$store.commit("SET_AFFILIATED", data.affiliated);
@@ -413,12 +413,13 @@ export default {
     this.$store.commit("SET_TOKEN", data.token);
     this.$store.commit("SET_TOTAL_POINTS", data.total_points);
 
-    // Si el usuario no está afiliado, redirigir a la página de afiliación
+    // Verificar afiliación
     if (!data.affiliated) {
-      this.$router.push({ path: '/affiliation', query: { redirected: 'true' } });
+      this.$router.push("/affiliation");
       return;
     }
 
+    // Cargar datos del dashboard
     this.banner = data.banner;
     this.ins = data.ins;
     this.insVirtual = data.insVirtual;
@@ -433,53 +434,6 @@ export default {
     this.directs = data.directs || [];
     this.frontals = data.frontals || [];
     this.total_points = data.total_points;
-
-    this.plans = data.plans.map((a) => ({ ...a, total: 0 }));
-    this.plan = data.plan;
-
-    const time = 4000;
-    let i = 0;
-    const n = 3;
-
-    setInterval(() => {
-      i += 1;
-      console.log(i);
-
-      if (i == 0) {
-        // reset all
-        this.op = 0;
-        this.op2 = 0;
-        this.op3 = 0;
-        // show 0
-        this.op = 1;
-      }
-
-      if (i == 1) {
-        // reset all
-        this.op = 0;
-        this.op2 = 0;
-        this.op3 = 0;
-        // show 0
-        this.op2 = 1;
-      }
-
-      if (i == 2) {
-        // reset all
-        this.op = 0;
-        this.op2 = 0;
-        this.op3 = 0;
-        // show 0
-        this.op3 = 1;
-      }
-
-      if (i == n - 1) i = -1;
-    }, time);
-
-    // Slider automático
-    if (this.bannerInterval) clearInterval(this.bannerInterval);
-    this.bannerInterval = setInterval(() => {
-      if (this.bannerImages.length > 1) this.nextBanner();
-    }, 4000);
   },
   beforeUnmount() {
     if (this.bannerInterval) clearInterval(this.bannerInterval);

@@ -19,65 +19,37 @@ Vue.use(GAuth, gauthOption);
 Vue.mixin({
   methods: {
     logout() {
-      // Limpiar localStorage completamente
-      localStorage.removeItem("session");
-      localStorage.removeItem("affiliated");
-      localStorage.removeItem("name");
-      localStorage.removeItem("lastName");
-      localStorage.removeItem("email");
-      localStorage.removeItem("photo");
-      localStorage.removeItem("plan");
-      localStorage.removeItem("total_points");
-      localStorage.removeItem("token");
-      localStorage.removeItem("tree");
-      localStorage.removeItem("activated");
-      localStorage.removeItem("_activated");
-      localStorage.removeItem("country");
-      localStorage.removeItem("address");
-      localStorage.removeItem("city");
-      localStorage.removeItem("birthdate");
+      // Limpiar store
+      this.$store.dispatch('clearState');
       
+      // Limpiar localStorage
+      localStorage.clear();
+      
+      // Logout en API
       api.logout(this.session);
 
+      // Redirigir según el tipo de usuario
       const office = localStorage.getItem("office");
-
       if (office == "true") {
         const office_id = localStorage.getItem("office_id");
         const path = localStorage.getItem("path");
-
         const url = `/login/${office_id}?path=${path}`;
-        console.log({ url });
-
-        localStorage.removeItem("office_id");
-        localStorage.removeItem("office");
-        localStorage.removeItem("path");
-
         this.$router.push(url);
       } else {
         this.$router.push("/login");
       }
     },
     logout2() {
-      // Limpiar localStorage completamente
-      localStorage.removeItem("session");
-      localStorage.removeItem("affiliated");
-      localStorage.removeItem("name");
-      localStorage.removeItem("lastName");
-      localStorage.removeItem("email");
-      localStorage.removeItem("photo");
-      localStorage.removeItem("plan");
-      localStorage.removeItem("total_points");
-      localStorage.removeItem("token");
-      localStorage.removeItem("tree");
-      localStorage.removeItem("activated");
-      localStorage.removeItem("_activated");
-      localStorage.removeItem("country");
-      localStorage.removeItem("address");
-      localStorage.removeItem("city");
-      localStorage.removeItem("birthdate");
+      // Limpiar store
+      this.$store.dispatch('clearState');
       
+      // Limpiar localStorage
+      localStorage.clear();
+      
+      // Logout en API
       api.logout(this.session);
 
+      // Redirigir a login
       this.$router.push("/login");
     },
   },

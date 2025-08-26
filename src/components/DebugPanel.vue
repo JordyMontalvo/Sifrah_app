@@ -84,8 +84,6 @@
 </template>
 
 <script>
-import { debug, checkAffiliationStatus, restoreUserState } from '@/utils/debug.js'
-
 export default {
   name: 'DebugPanel',
   data() {
@@ -135,8 +133,12 @@ export default {
       }
     },
     checkAffiliation() {
-      const restored = checkAffiliationStatus(this.$store)
-      if (restored) {
+      // Verificar estado de afiliación
+      const storedAffiliated = localStorage.getItem('affiliated')
+      const currentAffiliated = this.$store.state.affiliated
+      
+      if (storedAffiliated !== null && currentAffiliated !== (storedAffiliated === 'true')) {
+        this.$store.commit('SET_AFFILIATED', storedAffiliated === 'true')
         this.refreshState()
         alert('✅ Estado de afiliación restaurado correctamente')
       } else {
@@ -144,11 +146,12 @@ export default {
       }
     },
     showLocalStorage() {
-      debug.logLocalStorage()
+      console.log('📦 Contenido de localStorage:', this.localStorageData)
       alert('📦 Revisa la consola para ver el contenido de localStorage')
     },
     forceRestore() {
-      restoreUserState(this.$store)
+      // Restaurar estado desde localStorage
+      this.$store.dispatch('restoreState')
       this.refreshState()
       alert('⚡ Estado restaurado completamente. Revisa la consola para más detalles.')
     }
@@ -290,3 +293,4 @@ export default {
   }
 }
 </style>
+

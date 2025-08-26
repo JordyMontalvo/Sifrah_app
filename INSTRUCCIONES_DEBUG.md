@@ -168,3 +168,4 @@ Proporcionar:
 - **Verificar la consola** para logs de debugging
 - **Usar los comandos** de debugging disponibles
 - **Revisar localStorage** en DevTools → Application → Storage
+

@@ -319,7 +319,6 @@
 import api from "@/api";
 import lib from "@/lib";
 import ThemeToggle from "@/components/ThemeToggle.vue";
-import { debug, checkAffiliationStatus } from '@/utils/debug.js';
 
 const ROOT = process.env.VUE_APP_ROOT;
 console.log({ ROOT });
@@ -482,13 +481,7 @@ export default {
     handleInicioClick() {
       // Verificar afiliación antes de permitir acceso a INICIO
       if (!this.affiliated) {
-        // Si estamos en la página de afiliación, mostrar el mensaje directamente
-        if (this.$route.path === '/affiliation') {
-          this.showAffiliationMessageInAffiliationPage();
-        } else {
-          // Si estamos en otra página, redirigir a afiliación
-          this.$router.push({ path: '/affiliation', query: { redirected: 'true' } });
-        }
+        this.$router.push('/affiliation');
         return;
       }
       
@@ -498,13 +491,7 @@ export default {
     actived(i) {
       // Verificar afiliación antes de permitir acceso a opciones restringidas
       if (!this.affiliated && (i === 1 || i === 2 || i === 3)) {
-        // Si estamos en la página de afiliación, mostrar el mensaje directamente
-        if (this.$route.path === '/affiliation') {
-          this.showAffiliationMessageInAffiliationPage();
-        } else {
-          // Si estamos en otra página, redirigir a afiliación
-          this.$router.push({ path: '/affiliation', query: { redirected: 'true' } });
-        }
+        this.$router.push('/affiliation');
         return;
       }
       
@@ -647,36 +634,7 @@ export default {
         }
       }, 4000);
     },
-    // checkAffiliationStatus() { // Eliminado
-    //   // Logs de depuración para verificar el estado
-    //   console.log('App Component - Affiliation Status Check:', {
-    //     storeAffiliated: this.$store.state.affiliated,
-    //     localStorageAffiliated: localStorage.getItem('affiliated'),
-    //     session: this.$store.state.session,
-    //     currentRoute: this.$route.path,
-    //     computedAffiliated: this.affiliated
-    //   });
-      
-    //   // Si no hay sesión, no hacer nada
-    //   if (!this.$store.state.session) {
-    //     console.log('No session found, skipping affiliation check');
-    //     return;
-    //   }
-      
-    //   // Si está afiliado y está en la página de afiliación, redirigir al dashboard
-    //   if (this.affiliated && this.$route.path === '/affiliation') {
-    //     console.log('User is affiliated, redirecting to dashboard');
-    //     this.$router.push('/dashboard');
-    //     return;
-    //   }
-      
-    //   // Si no está afiliado y no está en la página de afiliación, redirigir a afiliación
-    //   if (!this.affiliated && this.$route.path !== '/affiliation' && this.$route.path !== '/profile' && this.$route.path !== '/password' && this.$route.path !== '/security') {
-    //     console.log('User is not affiliated, redirecting to affiliation');
-    //     this.$router.push('/affiliation');
-    //     return;
-    //   }
-    // },
+
   },
 };
 </script>

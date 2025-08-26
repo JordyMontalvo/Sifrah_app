@@ -435,7 +435,8 @@ export default {
         }
 
         this.$store.commit("SET_SESSION", data.session);
-        // Verificar si el usuario está afiliado
+        
+        // Redirigir según el estado de afiliación
         if (data.affiliated) {
           this.$router.push("/dashboard");
         } else {

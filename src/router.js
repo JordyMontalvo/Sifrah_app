@@ -9,7 +9,7 @@ import Remember from './views/auth/Remember.vue'
 import ResetPassword from './views/auth/ResetPassword.vue'
 // Aux
 import Logout from './views/auxi/Logout.vue'
-// import Verify from './views/iaux/Verify.vue'
+// import Verify from './views/auxi/Verify.vue'
 import Check  from './views/auxi/Check.vue'
 // App
 import Dashboard    from './views/app/Dashboard.vue'
@@ -103,7 +103,7 @@ const routes = [
   {
     path: '/dashboard',
     component: Dashboard,
-    meta: { requiresAuth: true }
+    meta: { requiresAuth: true, requiresAffiliation: true }
   },
   {
     path: '/status',
@@ -234,7 +234,6 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-
   const requiresNoAuth = to.matched.some(record => record.meta.requiresNoAuth)
   const requiresAuth   = to.matched.some(record => record.meta.requiresAuth)
   const requiresAffiliation = to.matched.some(record => record.meta.requiresAffiliation)
@@ -243,30 +242,44 @@ router.beforeEach((to, from, next) => {
   const office_id = localStorage.getItem('office_id')
   const path      = localStorage.getItem('path')
   const affiliated = localStorage.getItem('affiliated') === 'true'
-  // console.log({ session, office })
 
-  if (requiresNoAuth &&  session && !office_id) { next({ path: '/dashboard' }) }
-  if (requiresNoAuth &&  session &&  office_id) { next({ path: `/${path}`   }) }
-
-  if (requiresAuth   && !session) { next({ path: '/login' }) }
-  
-  // Si el usuario está autenticado pero no afiliado, redirigir a afiliación
-  // excepto si ya está en la página de afiliación o en rutas que no requieren afiliación
-  if (session && !affiliated && to.path !== '/affiliation' && to.path !== '/profile' && to.path !== '/password' && to.path !== '/security') {
-    next({ path: '/affiliation', query: { redirected: 'true' } });
-    return;
+  // Si es usuario de oficina, manejar redirección especial
+  if (office_id && path) {
+    if (requiresNoAuth && session) {
+      next({ path: `/${path}` })
+      return
+    }
   }
-  
-  // Verificar afiliación para rutas que la requieren
+
+  // Si requiere no autenticación y ya está autenticado
+  if (requiresNoAuth && session && !office_id) {
+    if (affiliated) {
+      next({ path: '/dashboard' })
+    } else {
+      next({ path: '/affiliation' })
+    }
+    return
+  }
+
+  // Si requiere autenticación y no está autenticado
+  if (requiresAuth && !session) {
+    next({ path: '/login' })
+    return
+  }
+
+  // Si requiere afiliación y no está afiliado
   if (requiresAffiliation && !affiliated) {
-    // Redirigir inmediatamente a afiliación
-    next({ path: '/affiliation', query: { redirected: 'true' } });
-    return;
+    next({ path: '/affiliation' })
+    return
+  }
+
+  // Si está autenticado pero no afiliado y no está en afiliación
+  if (session && !affiliated && to.path !== '/affiliation' && to.path !== '/profile' && to.path !== '/password' && to.path !== '/security') {
+    next({ path: '/affiliation' })
+    return
   }
 
   next()
 })
-
-
 
 export default router
