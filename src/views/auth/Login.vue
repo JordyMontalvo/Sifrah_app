@@ -330,17 +330,33 @@ export default {
         if (data._activated !== undefined) this.$store.commit("SET__ACTIVATED", data._activated);
         if (data.country) this.$store.commit("SET_COUNTRY", data.country);
         if (data.balance !== undefined) this.$store.commit("SET_BALANCE", data.balance);
-        if (data._balance !== undefined) this.$store.commit("SET__BALANCE", data._balance);
+        if (data._balance !== undefined) this.$store.commit("SET__BALANCE", data.balance);
+
+        // Esperar a que el store se actualice antes de redirigir
+        await this.$nextTick();
+        
+        // Verificar que el estado se haya establecido correctamente
+        console.log('Login: Estado después de commit:', {
+          session: this.$store.state.session,
+          affiliated: this.$store.state.affiliated,
+          localStorage: {
+            session: localStorage.getItem('session'),
+            affiliated: localStorage.getItem('affiliated')
+          }
+        });
 
         // Redirigir según el tipo de usuario
         if (office_id) {
           // Usuario de oficina
+          console.log('Login: Redirigiendo usuario de oficina a', `/${this.path}`);
           this.$router.push(`/${this.path}`);
         } else {
           // Usuario normal - redirigir según afiliación
           if (data.affiliated) {
+            console.log('Login: Usuario afiliado, redirigiendo a /dashboard');
             this.$router.push("/dashboard");
           } else {
+            console.log('Login: Usuario no afiliado, redirigiendo a /affiliation');
             this.$router.push("/affiliation");
           }
         }

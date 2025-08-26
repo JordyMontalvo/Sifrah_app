@@ -251,6 +251,11 @@ router.beforeEach(async (to, from, next) => {
   } else {
     const localAffiliated = localStorage.getItem('affiliated')
     affiliated = localAffiliated === 'true'
+    // Si hay discrepancia, sincronizar el store
+    if (localAffiliated !== null && store.state.affiliated !== affiliated) {
+      store.commit('SET_AFFILIATED', affiliated)
+      console.log('Router Guard: Estado de afiliación sincronizado desde localStorage:', affiliated)
+    }
   }
 
   console.log('Router Guard:', { 
@@ -264,13 +269,11 @@ router.beforeEach(async (to, from, next) => {
     requiresNoAuth,
     storeState: {
       session: store.state.session,
-      affiliated: store.state.affiliated,
-      office_id: store.state.office_id
+      affiliated: store.state.affiliated
     },
     localStorage: {
       session: localStorage.getItem('session'),
-      affiliated: localStorage.getItem('affiliated'),
-      office_id: localStorage.getItem('office_id')
+      affiliated: localStorage.getItem('affiliated')
     }
   })
 
@@ -319,6 +322,13 @@ router.beforeEach(async (to, from, next) => {
   // Si está autenticado y afiliado pero está en afiliación, redirigir al dashboard
   if (session && affiliated && to.path === '/affiliation') {
     console.log('Router Guard: Usuario afiliado en página de afiliación, redirigiendo a /dashboard')
+    next({ path: '/dashboard' })
+    return
+  }
+
+  // Si está autenticado y afiliado y va a la raíz, redirigir al dashboard
+  if (session && affiliated && to.path === '/') {
+    console.log('Router Guard: Usuario afiliado en raíz, redirigiendo a /dashboard')
     next({ path: '/dashboard' })
     return
   }
