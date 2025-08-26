@@ -319,12 +319,13 @@ router.beforeEach(async (to, from, next) => {
     return
   }
 
-  // Si está autenticado y afiliado pero está en afiliación, redirigir al dashboard
-  if (session && affiliated && to.path === '/affiliation') {
-    console.log('Router Guard: Usuario afiliado en página de afiliación, redirigiendo a /dashboard')
-    next({ path: '/dashboard' })
-    return
-  }
+  // IMPORTANTE: NO redirigir usuarios afiliados desde afiliación
+  // Ellos pueden querer acceder para hacer upgrade o ver historial
+  // if (session && affiliated && to.path === '/affiliation') {
+  //   console.log('Router Guard: Usuario afiliado en página de afiliación, redirigiendo a /dashboard')
+  //   next({ path: '/dashboard' })
+  //   return
+  // }
 
   // Si está autenticado y afiliado y va a la raíz, redirigir al dashboard
   if (session && affiliated && to.path === '/') {
