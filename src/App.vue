@@ -31,6 +31,7 @@ export default {
     // color c-main-red
     // color c-main-light-green
     color c-main-green
+    
 
   @import 'assets/style/elements/inputs.styl'
   @import 'assets/style/elements/icons.styl'
