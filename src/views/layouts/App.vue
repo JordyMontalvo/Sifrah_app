@@ -435,6 +435,7 @@ export default {
   },
   methods: {
     startNotificationLoop() {
+    
       setTimeout(() => {
         this.checkAndShowNotification();
 
