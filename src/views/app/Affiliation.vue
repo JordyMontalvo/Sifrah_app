@@ -937,7 +937,7 @@ export default {
   
   methods: {
     // Método para sincronizar estado desde el store
-    syncStateFromStore() {
+    async syncStateFromStore() {
       console.log('Affiliation.vue: Sincronizando estado desde el store...');
       
       // Verificar si el usuario ya está afiliado
@@ -947,12 +947,104 @@ export default {
         return;
       }
       
-      // Si no está afiliado, cargar datos básicos sin hacer llamada al API
-      console.log('Affiliation.vue: Usuario no afiliado, cargando datos básicos...');
+      // Si no está afiliado, SIEMPRE cargar los datos necesarios para la interfaz
+      console.log('Affiliation.vue: Usuario no afiliado, cargando datos necesarios...');
       
-      // Aquí podrías cargar datos básicos necesarios para la afiliación
-      // Por ahora, solo establecer loading en false
-      this.loading = false;
+      try {
+        // Hacer llamada al API para obtener datos necesarios para la afiliación
+        const { data } = await api.Afiliation.GET(this.session);
+        console.log('Affiliation.vue: Datos cargados para afiliación:', data);
+        
+        if (data.error && data.msg == "invalid session") {
+          this.$router.push("/login");
+          return;
+        }
+        
+        // Establecer datos en el store (sin cambiar affiliated)
+        if (data.name) this.$store.commit("SET_NAME", data.name);
+        if (data.lastName) this.$store.commit("SET_LAST_NAME", data.lastName);
+        if (data.photo) this.$store.commit("SET_PHOTO", data.photo);
+        if (data.plan) this.$store.commit("SET_PLAN", data.plan);
+        if (data.country) this.$store.commit("SET_COUNTRY", data.country);
+        if (data.tree !== undefined) this.$store.commit("SET_TREE", data.tree);
+        if (data.activated !== undefined) this.$store.commit("SET_ACTIVATED", data.activated);
+        if (data._activated !== undefined) this.$store.commit("SET__ACTIVATED", data._activated);
+        if (data.balance !== undefined) this.$store.commit("SET_BALANCE", data.balance);
+        if (data._balance !== undefined) this.$store.commit("SET__BALANCE", data._balance);
+        
+        // Cargar datos específicos para la afiliación
+        this.plans = data.plans || [];
+        if (this.plans.length > 0) {
+          this.selec_plan = this.plans[0];
+        }
+        
+        // Initialize products with proper structure
+        if (data.products && Array.isArray(data.products)) {
+          this.products = data.products.map((product) => ({
+            ...product,
+            total: 0,
+            plans: product.plans || {
+              basic: false,
+              standard: false,
+              master: false,
+            },
+          }));
+          
+          if (this.products.length > 0) {
+            this.product = this.products[0];
+            // Set initial tab if categories exist
+            if (this.categories && this.categories.length > 0) {
+              this.tab = this.categories[0];
+            }
+          }
+        } else {
+          console.error("No products data received or invalid format");
+          this.products = [];
+        }
+        
+        this.balance = data.balance || 0;
+        this._balance = data._balance || 0;
+        this.offices = data.offices || [];
+        this.affiliation = data.affiliation || null;
+        this.affiliations = data.affiliations || [];
+        
+        // Llamar checkUpgradeMode después de que todo esté cargado
+        if (this.selec_plan) {
+          this.checkUpgradeMode();
+        }
+        
+        // Set congrats state
+        if (
+          this.plan == "master" ||
+          (this.affiliation &&
+            this.affiliation.plan.id == "master" &&
+            this.affiliation.status == "approved")
+        ) {
+          this.congrats = true;
+        }
+        
+        // Set pending state
+        if (this.affiliation && this.affiliation.status == "pending") {
+          this.pending = true;
+        }
+        
+        // Verificar si viene de una redirección desde opciones bloqueadas
+        if (this.$route.query.redirected === 'true') {
+          this.showRedirectMessage = true;
+          // El mensaje desaparece automáticamente después de 4 segundos
+          setTimeout(() => {
+            this.showRedirectMessage = false;
+          }, 4000);
+        }
+        
+        console.log('Affiliation.vue: Datos cargados exitosamente para usuario no afiliado');
+        
+      } catch (error) {
+        console.error('Affiliation.vue: Error al cargar datos para afiliación:', error);
+        this.error = "Error al cargar los datos de afiliación. Por favor, intenta de nuevo.";
+      } finally {
+        this.loading = false;
+      }
     },
     reset_totals() {
       if (!this.products) return;
