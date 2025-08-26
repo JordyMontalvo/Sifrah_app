@@ -314,15 +314,7 @@ export default {
         console.log('Login: ¿data.affiliated es undefined?', data.affiliated === undefined);
         console.log('Login: ¿data.affiliated es null?', data.affiliated === null);
 
-        // Validar que affiliated tenga un valor válido
-        if (data.affiliated === undefined || data.affiliated === null) {
-          console.error('Login: ERROR - data.affiliated es undefined o null');
-          console.error('Login: Respuesta del API:', data);
-          this.alert = "Error: No se pudo determinar el estado de afiliación";
-          return;
-        }
-
-        // Establecer sesión
+        // Establecer sesión primero
         this.$store.commit("SET_SESSION", data.session);
         
         // Si es usuario de oficina, establecer office_id
@@ -330,24 +322,71 @@ export default {
           this.$store.commit("SET_OFFICE_ID", { office_id, path });
         }
 
-        // Establecer información del usuario
-        if (data.name) this.$store.commit("SET_NAME", data.name);
-        if (data.lastName) this.$store.commit("SET_LAST_NAME", data.lastName);
-        if (data.email) this.$store.commit("SET_EMAIL", data.email);
-        if (data.photo) this.$store.commit("SET_PHOTO", data.photo);
-        if (data.plan) this.$store.commit("SET_PLAN", data.plan);
-        if (data.total_points !== undefined) this.$store.commit("SET_TOTAL_POINTS", data.total_points);
-        
-        // Establecer estado de afiliación y otros campos
-        console.log('Login: Estableciendo affiliated en store:', data.affiliated);
-        this.$store.commit("SET_AFFILIATED", data.affiliated);
-        
-        if (data.tree !== undefined) this.$store.commit("SET_TREE", data.tree);
-        if (data.activated !== undefined) this.$store.commit("SET_ACTIVATED", data.activated);
-        if (data._activated !== undefined) this.$store.commit("SET__ACTIVATED", data._activated);
-        if (data.country) this.$store.commit("SET_COUNTRY", data.country);
-        if (data.balance !== undefined) this.$store.commit("SET_BALANCE", data.balance);
-        if (data._balance !== undefined) this.$store.commit("SET__BALANCE", data._balance);
+        // SOLUCIÓN: Si no tenemos información completa del usuario, hacer llamada adicional
+        if (data.affiliated === undefined || data.affiliated === null) {
+          console.log('Login: No tenemos información completa del usuario, haciendo llamada adicional...');
+          
+          try {
+            // Hacer llamada al API de afiliación para obtener información completa
+            const userData = await api.Afiliation.GET(data.session);
+            console.log('Login: Información completa del usuario obtenida:', userData.data);
+            
+            if (userData.data.error) {
+              console.error('Login: Error al obtener información del usuario:', userData.data);
+              this.alert = "Error al obtener información del usuario";
+              return;
+            }
+            
+            // Usar la información completa del usuario
+            const userInfo = userData.data;
+            
+            // Establecer información del usuario
+            if (userInfo.name) this.$store.commit("SET_NAME", userInfo.name);
+            if (userInfo.lastName) this.$store.commit("SET_LAST_NAME", userInfo.lastName);
+            if (userInfo.email) this.$store.commit("SET_EMAIL", userInfo.email);
+            if (userInfo.photo) this.$store.commit("SET_PHOTO", userInfo.photo);
+            if (userInfo.plan) this.$store.commit("SET_PLAN", userInfo.plan);
+            if (userInfo.total_points !== undefined) this.$store.commit("SET_TOTAL_POINTS", userInfo.total_points);
+            
+            // Establecer estado de afiliación y otros campos
+            console.log('Login: Estableciendo affiliated en store:', userInfo.affiliated);
+            this.$store.commit("SET_AFFILIATED", userInfo.affiliated);
+            
+            if (userInfo.tree !== undefined) this.$store.commit("SET_TREE", userInfo.tree);
+            if (userInfo.activated !== undefined) this.$store.commit("SET_ACTIVATED", userInfo.activated);
+            if (userInfo._activated !== undefined) this.$store.commit("SET__ACTIVATED", userInfo._activated);
+            if (userInfo.country) this.$store.commit("SET_COUNTRY", userInfo.country);
+            if (userInfo.balance !== undefined) this.$store.commit("SET_BALANCE", userInfo.balance);
+            if (userInfo._balance !== undefined) this.$store.commit("SET__BALANCE", userInfo._balance);
+            
+          } catch (userError) {
+            console.error('Login: Error al obtener información del usuario:', userError);
+            this.alert = "Error al obtener información del usuario";
+            return;
+          }
+        } else {
+          // Si ya tenemos la información completa, usarla directamente
+          console.log('Login: Usando información completa del API de login...');
+          
+          // Establecer información del usuario
+          if (data.name) this.$store.commit("SET_NAME", data.name);
+          if (data.lastName) this.$store.commit("SET_LAST_NAME", data.lastName);
+          if (data.email) this.$store.commit("SET_EMAIL", data.email);
+          if (data.photo) this.$store.commit("SET_PHOTO", data.photo);
+          if (data.plan) this.$store.commit("SET_PLAN", data.plan);
+          if (data.total_points !== undefined) this.$store.commit("SET_TOTAL_POINTS", data.total_points);
+          
+          // Establecer estado de afiliación y otros campos
+          console.log('Login: Estableciendo affiliated en store:', data.affiliated);
+          this.$store.commit("SET_AFFILIATED", data.affiliated);
+          
+          if (data.tree !== undefined) this.$store.commit("SET_TREE", data.tree);
+          if (data.activated !== undefined) this.$store.commit("SET_ACTIVATED", data.activated);
+          if (data._activated !== undefined) this.$store.commit("SET__ACTIVATED", data._activated);
+          if (data.country) this.$store.commit("SET_COUNTRY", data.country);
+          if (data.balance !== undefined) this.$store.commit("SET_BALANCE", data.balance);
+          if (data._balance !== undefined) this.$store.commit("SET__BALANCE", data._balance);
+        }
 
         // IMPORTANTE: Esperar a que TODOS los valores del store se establezcan
         console.log('Login: Estableciendo estado del store...');
@@ -371,7 +410,11 @@ export default {
         if (this.$store.state.affiliated === null || this.$store.state.affiliated === undefined) {
           console.error('Login: ERROR - affiliated no se estableció correctamente');
           console.log('Login: Reintentando establecer affiliated...');
-          this.$store.commit("SET_AFFILIATED", data.affiliated);
+          // Intentar obtener el valor desde localStorage como fallback
+          const localAffiliated = localStorage.getItem('affiliated');
+          if (localAffiliated !== null) {
+            this.$store.commit("SET_AFFILIATED", localAffiliated === 'true');
+          }
           await this.$nextTick();
         }
 
@@ -394,7 +437,7 @@ export default {
           this.$router.push(`/${this.path}`);
         } else {
           // Usuario normal - redirigir según afiliación
-          if (data.affiliated) {
+          if (this.$store.state.affiliated) {
             console.log('Login: Usuario afiliado, redirigiendo a /dashboard');
             this.$router.push("/dashboard");
           } else {
