@@ -77,11 +77,27 @@ export default new Vuex.Store({
       }
     },
     SET_AFFILIATED: (state, affiliated) => {
-      state.affiliated = affiliated
-      if (affiliated !== null && affiliated !== undefined) {
-        localStorage.setItem('affiliated', affiliated.toString())
+      // Asegurar que affiliated sea un booleano válido
+      let affiliatedValue = affiliated;
+      
+      if (typeof affiliated === 'string') {
+        affiliatedValue = affiliated === 'true';
+      } else if (affiliated === null || affiliated === undefined) {
+        affiliatedValue = null;
       } else {
-        localStorage.removeItem('affiliated')
+        affiliatedValue = Boolean(affiliated);
+      }
+      
+      state.affiliated = affiliatedValue;
+      
+      console.log('Store: SET_AFFILIATED llamado con:', affiliated, '-> convertido a:', affiliatedValue);
+      
+      if (affiliatedValue !== null && affiliatedValue !== undefined) {
+        localStorage.setItem('affiliated', affiliatedValue.toString());
+        console.log('Store: affiliated guardado en localStorage:', affiliatedValue.toString());
+      } else {
+        localStorage.removeItem('affiliated');
+        console.log('Store: affiliated removido de localStorage');
       }
     },
     SET_ACTIVATED: (state, activated) => {

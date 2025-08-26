@@ -234,7 +234,7 @@ const router = new Router({
   routes,
 })
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   const requiresNoAuth = to.matched.some(record => record.meta.requiresNoAuth)
   const requiresAuth   = to.matched.some(record => record.meta.requiresAuth)
   const requiresAffiliation = to.matched.some(record => record.meta.requiresAffiliation)
@@ -243,21 +243,41 @@ router.beforeEach((to, from, next) => {
   const session   = store.state.session || localStorage.getItem('session')
   const office_id = store.state.office_id || localStorage.getItem('office_id')
   const path      = localStorage.getItem('path')
-  const affiliated = store.state.affiliated !== null ? store.state.affiliated : (localStorage.getItem('affiliated') === 'true')
+  
+  // Mejorar la obtención del estado de afiliación
+  let affiliated = null
+  if (store.state.affiliated !== null && store.state.affiliated !== undefined) {
+    affiliated = store.state.affiliated
+  } else {
+    const localAffiliated = localStorage.getItem('affiliated')
+    affiliated = localAffiliated === 'true'
+  }
 
   console.log('Router Guard:', { 
     to: to.path, 
+    from: from.path,
     session: !!session, 
     affiliated, 
     office_id: !!office_id,
     requiresAuth,
     requiresAffiliation,
-    requiresNoAuth
+    requiresNoAuth,
+    storeState: {
+      session: store.state.session,
+      affiliated: store.state.affiliated,
+      office_id: store.state.office_id
+    },
+    localStorage: {
+      session: localStorage.getItem('session'),
+      affiliated: localStorage.getItem('affiliated'),
+      office_id: localStorage.getItem('office_id')
+    }
   })
 
   // Si es usuario de oficina, manejar redirección especial
   if (office_id && path) {
     if (requiresNoAuth && session) {
+      console.log('Router Guard: Usuario de oficina, redirigiendo a', `/${path}`)
       next({ path: `/${path}` })
       return
     }
@@ -266,8 +286,10 @@ router.beforeEach((to, from, next) => {
   // Si requiere no autenticación y ya está autenticado
   if (requiresNoAuth && session && !office_id) {
     if (affiliated) {
+      console.log('Router Guard: Usuario autenticado y afiliado, redirigiendo a /dashboard')
       next({ path: '/dashboard' })
     } else {
+      console.log('Router Guard: Usuario autenticado pero no afiliado, redirigiendo a /affiliation')
       next({ path: '/affiliation' })
     }
     return
@@ -275,22 +297,33 @@ router.beforeEach((to, from, next) => {
 
   // Si requiere autenticación y no está autenticado
   if (requiresAuth && !session) {
+    console.log('Router Guard: Requiere autenticación pero no hay sesión, redirigiendo a /login')
     next({ path: '/login' })
     return
   }
 
   // Si requiere afiliación y no está afiliado
   if (requiresAffiliation && !affiliated) {
+    console.log('Router Guard: Requiere afiliación pero no está afiliado, redirigiendo a /affiliation')
     next({ path: '/affiliation' })
     return
   }
 
   // Si está autenticado pero no afiliado y no está en afiliación
   if (session && !affiliated && to.path !== '/affiliation' && to.path !== '/profile' && to.path !== '/password' && to.path !== '/security') {
+    console.log('Router Guard: Usuario autenticado pero no afiliado, redirigiendo a /affiliation')
     next({ path: '/affiliation' })
     return
   }
 
+  // Si está autenticado y afiliado pero está en afiliación, redirigir al dashboard
+  if (session && affiliated && to.path === '/affiliation') {
+    console.log('Router Guard: Usuario afiliado en página de afiliación, redirigiendo a /dashboard')
+    next({ path: '/dashboard' })
+    return
+  }
+
+  console.log('Router Guard: Navegación permitida a', to.path)
   next()
 })
 

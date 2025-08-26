@@ -31,13 +31,30 @@ export default {
       if (session) {
         console.log('AppInitializer: Sesión encontrada, verificando estado de afiliación...');
         
-        // Verificar estado de afiliación
-        const affiliated = this.$store.state.affiliated !== null 
-          ? this.$store.state.affiliated 
-          : (localStorage.getItem('affiliated') === 'true');
+        // Verificar estado de afiliación con mejor sincronización
+        let affiliated = null;
+        if (this.$store.state.affiliated !== null && this.$store.state.affiliated !== undefined) {
+          affiliated = this.$store.state.affiliated;
+        } else {
+          const localAffiliated = localStorage.getItem('affiliated');
+          affiliated = localAffiliated === 'true';
+          // Sincronizar el store si no está definido
+          if (affiliated !== null) {
+            this.$store.commit('SET_AFFILIATED', affiliated);
+            console.log('AppInitializer: Estado de afiliación sincronizado desde localStorage:', affiliated);
+          }
+        }
         
         console.log('AppInitializer: Estado de afiliación:', affiliated);
         console.log('AppInitializer: Ruta actual:', this.$route.path);
+        console.log('AppInitializer: Store state:', {
+          session: this.$store.state.session,
+          affiliated: this.$store.state.affiliated
+        });
+        console.log('AppInitializer: localStorage:', {
+          session: localStorage.getItem('session'),
+          affiliated: localStorage.getItem('affiliated')
+        });
         
         // Solo redirigir si es necesario y no estamos ya en la ruta correcta
         if (!affiliated && this.$route.path !== '/affiliation' && this.$route.path !== '/profile' && this.$route.path !== '/password' && this.$route.path !== '/security') {
