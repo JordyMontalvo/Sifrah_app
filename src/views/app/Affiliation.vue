@@ -931,7 +931,14 @@ export default {
       console.error("Error loading data:", error);
       this.error = "Error al cargar los datos. Por favor, intenta de nuevo.";
     } finally {
+      // IMPORTANTE: Establecer loading en false ANTES de que termine la carga
+      // para evitar la pantalla negra
       this.loading = false;
+      
+      // Pequeño delay para asegurar que la interfaz se renderice suavemente
+      setTimeout(() => {
+        console.log('Affiliation.vue: Carga completada, interfaz lista');
+      }, 100);
     }
   },
   
