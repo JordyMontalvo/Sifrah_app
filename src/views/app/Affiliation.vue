@@ -940,15 +940,9 @@ export default {
     async syncStateFromStore() {
       console.log('Affiliation.vue: Sincronizando estado desde el store...');
       
-      // Verificar si el usuario ya está afiliado
-      if (this.$store.state.affiliated === true) {
-        console.log('Affiliation.vue: Usuario ya está afiliado, redirigiendo a dashboard...');
-        this.$router.push('/dashboard');
-        return;
-      }
-      
-      // Si no está afiliado, SIEMPRE cargar los datos necesarios para la interfaz
-      console.log('Affiliation.vue: Usuario no afiliado, cargando datos necesarios...');
+      // IMPORTANTE: Permitir que usuarios afiliados accedan libremente
+      // Ellos pueden querer acceder para hacer upgrade o ver historial
+      console.log('Affiliation.vue: Estado de afiliación:', this.$store.state.affiliated);
       
       try {
         // Hacer llamada al API para obtener datos necesarios para la afiliación
@@ -1037,7 +1031,7 @@ export default {
           }, 4000);
         }
         
-        console.log('Affiliation.vue: Datos cargados exitosamente para usuario no afiliado');
+        console.log('Affiliation.vue: Datos cargados exitosamente');
         
       } catch (error) {
         console.error('Affiliation.vue: Error al cargar datos para afiliación:', error);
@@ -1370,6 +1364,36 @@ export default {
   text-align left
   font-family Arial, sans-serif
   
+  &.affiliated-user
+    background linear-gradient(135deg, #2196F3, #1976D2)
+    max-width 400px
+    
+    .affiliation-notification-actions
+      margin-top 15px
+      display flex
+      justify-content center
+      
+      .btn-dashboard
+        background rgba(255, 255, 255, 0.2)
+        color white
+        border 1px solid rgba(255, 255, 255, 0.3)
+        border-radius 8px
+        padding 8px 16px
+        font-size 0.9rem
+        cursor pointer
+        transition all 0.2s
+        display flex
+        align-items center
+        gap 6px
+        
+        &:hover
+          background rgba(255, 255, 255, 0.3)
+          transform translateY(-2px)
+          box-shadow 0 4px 12px rgba(0, 0, 0, 0.2)
+        
+        i
+          font-size 0.8rem
+
 .affiliation-notification-content
   position relative
   
