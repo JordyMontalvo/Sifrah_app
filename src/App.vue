@@ -5,14 +5,58 @@
 </template>
 
 <script>
+import { debug, restoreUserState, checkAffiliationStatus } from './utils/debug.js'
+
 export default {
   created() {
-    console.log('App! ...')
-    this.$store.commit('SET_SESSION', localStorage.getItem('session'))
-    this.$store.commit('SET_OFFICE_ID', {
-      office_id: localStorage.getItem('office_id'),
-      path:      localStorage.getItem('path')
-    })
+    debug.log('App! Inicializando estado desde localStorage...')
+    
+    // Restaurar sesión
+    const session = localStorage.getItem('session')
+    this.$store.commit('SET_SESSION', session)
+    
+    // Restaurar office_id y path
+    const office_id = localStorage.getItem('office_id')
+    const path = localStorage.getItem('path')
+    this.$store.commit('SET_OFFICE_ID', { office_id, path })
+    
+    // Restaurar estado completo del usuario
+    restoreUserState(this.$store)
+    
+    // Verificar consistencia
+    debug.checkConsistency(this.$store)
+    
+    // Log del estado final
+    debug.logUserState(this.$store)
+    
+    // Agregar comando global para debugging
+    window.enableDebug = () => {
+      debug.enable();
+      console.log('Para habilitar debug en producción, ejecuta: window.enableDebug()');
+      console.log('Para ver el estado actual: window.showUserState()');
+      console.log('Para ver localStorage: window.showLocalStorage()');
+    };
+    
+    window.showUserState = () => {
+      debug.logUserState(this.$store);
+    };
+    
+    window.showLocalStorage = () => {
+      debug.logLocalStorage();
+    };
+    
+    window.checkAffiliation = () => {
+      checkAffiliationStatus(this.$store);
+    };
+    
+    // Mostrar comandos de debugging en consola
+    if (debug.enabled) {
+      console.log('🔧 Comandos de debugging disponibles:');
+      console.log('window.enableDebug() - Habilitar debug');
+      console.log('window.showUserState() - Ver estado del usuario');
+      console.log('window.showLocalStorage() - Ver localStorage');
+      console.log('window.checkAffiliation() - Verificar afiliación');
+    }
   },
 };
 </script>

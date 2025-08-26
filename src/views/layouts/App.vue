@@ -316,6 +316,7 @@
 import api from "@/api";
 import lib from "@/lib";
 import ThemeToggle from "@/components/ThemeToggle.vue";
+import { debug, checkAffiliationStatus } from '@/utils/debug.js';
 
 const ROOT = process.env.VUE_APP_ROOT;
 console.log({ ROOT });

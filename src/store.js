@@ -81,6 +81,30 @@ export default new Vuex.Store({
       state.tree = tree
     },
 
+    SET_EMAIL: (state, email) => {
+      state.email = email
+    },
+    SET_TOKEN: (state, token) => {
+      state.token = token
+    },
+    SET_ADDRESS: (state, address) => {
+      state.address = address
+    },
+    SET_CITY: (state, city) => {
+      state.city = city
+    },
+    SET_BIRTHDATE: (state, birthdate) => {
+      state.birthdate = birthdate
+    },
+    SET_TOTAL_POINTS: (state, total_points) => {
+      if(total_points !== null && total_points !== undefined) localStorage.setItem('total_points', total_points)
+      state.total_points = total_points
+    },
+    setCartItems: (state, cartItems) => {
+      state.cartItems = cartItems
+    },
+    
+    // Mutaciones de menú
     SET_OPEN: (state) => {
       state.open = !state.open
     },
@@ -101,34 +125,12 @@ export default new Vuex.Store({
       state.buys = false
       state.network = !state.network
       state.commissions = false
-
     },
     SET_COMMISSIONS: (state) => {
       state.resume = false
       state.buys = false
       state.network = false
       state.commissions = !state.commissions
-    },
-    SET_EMAIL: (state, email) => {
-      state.email = email
-    },
-    SET_TOKEN: (state, token) => {
-      state.token = token
-    },
-    SET_ADDRESS: (state, address) => {
-      state.address = address
-    },
-    SET_CITY: (state, city) => {
-      state.city = city
-    },
-    SET_BIRTHDATE: (state, birthdate) => {
-      state.birthdate = birthdate
-    },
-    SET_TOTAL_POINTS: (state, total_points) => {
-      state.total_points = total_points
-    },
-    setCartItems: (state, cartItems) => {
-      state.cartItems = cartItems
     },
   },
 })

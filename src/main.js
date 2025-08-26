@@ -19,7 +19,24 @@ Vue.use(GAuth, gauthOption);
 Vue.mixin({
   methods: {
     logout() {
+      // Limpiar localStorage completamente
       localStorage.removeItem("session");
+      localStorage.removeItem("affiliated");
+      localStorage.removeItem("name");
+      localStorage.removeItem("lastName");
+      localStorage.removeItem("email");
+      localStorage.removeItem("photo");
+      localStorage.removeItem("plan");
+      localStorage.removeItem("total_points");
+      localStorage.removeItem("token");
+      localStorage.removeItem("tree");
+      localStorage.removeItem("activated");
+      localStorage.removeItem("_activated");
+      localStorage.removeItem("country");
+      localStorage.removeItem("address");
+      localStorage.removeItem("city");
+      localStorage.removeItem("birthdate");
+      
       api.logout(this.session);
 
       const office = localStorage.getItem("office");
@@ -32,6 +49,8 @@ Vue.mixin({
         console.log({ url });
 
         localStorage.removeItem("office_id");
+        localStorage.removeItem("office");
+        localStorage.removeItem("path");
 
         this.$router.push(url);
       } else {
@@ -39,7 +58,24 @@ Vue.mixin({
       }
     },
     logout2() {
+      // Limpiar localStorage completamente
       localStorage.removeItem("session");
+      localStorage.removeItem("affiliated");
+      localStorage.removeItem("name");
+      localStorage.removeItem("lastName");
+      localStorage.removeItem("email");
+      localStorage.removeItem("photo");
+      localStorage.removeItem("plan");
+      localStorage.removeItem("total_points");
+      localStorage.removeItem("token");
+      localStorage.removeItem("tree");
+      localStorage.removeItem("activated");
+      localStorage.removeItem("_activated");
+      localStorage.removeItem("country");
+      localStorage.removeItem("address");
+      localStorage.removeItem("city");
+      localStorage.removeItem("birthdate");
+      
       api.logout(this.session);
 
       this.$router.push("/login");
