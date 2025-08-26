@@ -330,9 +330,14 @@ export default {
         if (data._activated !== undefined) this.$store.commit("SET__ACTIVATED", data._activated);
         if (data.country) this.$store.commit("SET_COUNTRY", data.country);
         if (data.balance !== undefined) this.$store.commit("SET_BALANCE", data.balance);
-        if (data._balance !== undefined) this.$store.commit("SET__BALANCE", data.balance);
+        if (data._balance !== undefined) this.$store.commit("SET__BALANCE", data._balance);
 
-        // Esperar a que el store se actualice antes de redirigir
+        // IMPORTANTE: Esperar a que TODOS los valores del store se establezcan
+        console.log('Login: Estableciendo estado del store...');
+        
+        // Esperar múltiples ticks para asegurar que el store esté completamente actualizado
+        await this.$nextTick();
+        await this.$nextTick();
         await this.$nextTick();
         
         // Verificar que el estado se haya establecido correctamente
@@ -344,6 +349,26 @@ export default {
             affiliated: localStorage.getItem('affiliated')
           }
         });
+
+        // Verificar que affiliated esté correctamente establecido
+        if (this.$store.state.affiliated === null || this.$store.state.affiliated === undefined) {
+          console.error('Login: ERROR - affiliated no se estableció correctamente');
+          console.log('Login: Reintentando establecer affiliated...');
+          this.$store.commit("SET_AFFILIATED", data.affiliated);
+          await this.$nextTick();
+        }
+
+        // Verificación final del estado
+        const estadoFinal = {
+          session: this.$store.state.session,
+          affiliated: this.$store.state.affiliated,
+          localStorage: {
+            session: localStorage.getItem('session'),
+            affiliated: localStorage.getItem('affiliated')
+          }
+        };
+        
+        console.log('Login: Estado final antes de redirección:', estadoFinal);
 
         // Redirigir según el tipo de usuario
         if (office_id) {
