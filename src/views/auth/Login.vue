@@ -307,6 +307,21 @@ export default {
           return;
         }
 
+        // IMPORTANTE: Verificar la respuesta del API ANTES de procesarla
+        console.log('Login: Respuesta completa del API:', data);
+        console.log('Login: Tipo de data.affiliated:', typeof data.affiliated);
+        console.log('Login: Valor de data.affiliated:', data.affiliated);
+        console.log('Login: ¿data.affiliated es undefined?', data.affiliated === undefined);
+        console.log('Login: ¿data.affiliated es null?', data.affiliated === null);
+
+        // Validar que affiliated tenga un valor válido
+        if (data.affiliated === undefined || data.affiliated === null) {
+          console.error('Login: ERROR - data.affiliated es undefined o null');
+          console.error('Login: Respuesta del API:', data);
+          this.alert = "Error: No se pudo determinar el estado de afiliación";
+          return;
+        }
+
         // Establecer sesión
         this.$store.commit("SET_SESSION", data.session);
         
@@ -324,7 +339,9 @@ export default {
         if (data.total_points !== undefined) this.$store.commit("SET_TOTAL_POINTS", data.total_points);
         
         // Establecer estado de afiliación y otros campos
+        console.log('Login: Estableciendo affiliated en store:', data.affiliated);
         this.$store.commit("SET_AFFILIATED", data.affiliated);
+        
         if (data.tree !== undefined) this.$store.commit("SET_TREE", data.tree);
         if (data.activated !== undefined) this.$store.commit("SET_ACTIVATED", data.activated);
         if (data._activated !== undefined) this.$store.commit("SET__ACTIVATED", data._activated);

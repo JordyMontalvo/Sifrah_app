@@ -824,7 +824,23 @@ export default {
   },
   async created() {
     try {
-      // GET data
+      // Verificar si ya tenemos el estado de afiliación en el store
+      console.log('Affiliation.vue: Estado actual del store:', {
+        session: this.$store.state.session,
+        affiliated: this.$store.state.affiliated
+      });
+      
+      // Si ya tenemos el estado de afiliación, no hacer llamada al API
+      if (this.$store.state.affiliated !== null && this.$store.state.affiliated !== undefined) {
+        console.log('Affiliation.vue: Ya tenemos estado de afiliación, sincronizando...');
+        
+        // Sincronizar el estado desde el store en lugar de hacer llamada al API
+        this.syncStateFromStore();
+        return;
+      }
+      
+      // Solo hacer llamada al API si no tenemos el estado
+      console.log('Affiliation.vue: No tenemos estado de afiliación, haciendo llamada al API...');
       const { data } = await api.Afiliation.GET(this.session);
       console.log("API Response:", data);
 
@@ -918,8 +934,26 @@ export default {
       this.loading = false;
     }
   },
-
+  
   methods: {
+    // Método para sincronizar estado desde el store
+    syncStateFromStore() {
+      console.log('Affiliation.vue: Sincronizando estado desde el store...');
+      
+      // Verificar si el usuario ya está afiliado
+      if (this.$store.state.affiliated === true) {
+        console.log('Affiliation.vue: Usuario ya está afiliado, redirigiendo a dashboard...');
+        this.$router.push('/dashboard');
+        return;
+      }
+      
+      // Si no está afiliado, cargar datos básicos sin hacer llamada al API
+      console.log('Affiliation.vue: Usuario no afiliado, cargando datos básicos...');
+      
+      // Aquí podrías cargar datos básicos necesarios para la afiliación
+      // Por ahora, solo establecer loading en false
+      this.loading = false;
+    },
     reset_totals() {
       if (!this.products) return;
       this.products.forEach((p) => {
