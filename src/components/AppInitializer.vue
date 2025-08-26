@@ -116,11 +116,8 @@ export default {
           console.log('AppInitializer: Redirección por cambio de ruta - usuario no afiliado');
           this.$router.push('/affiliation');
         }
-        // Si está afiliado y está en afiliación
-        else if (affiliated && this.$route.path === '/affiliation') {
-          console.log('AppInitializer: Redirección por cambio de ruta - usuario afiliado');
-          this.$router.push('/dashboard');
-        }
+        // IMPORTANTE: NO redirigir usuarios afiliados desde afiliación
+        // Ellos pueden querer acceder para hacer upgrade o ver historial
       }
     }
   }
