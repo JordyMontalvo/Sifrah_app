@@ -79,8 +79,28 @@ setTheme(savedTheme);
 // Método global para cambiar tema
 document.setTheme = setTheme;
 
-new Vue({
-  router,
-  store,
-  render: (h) => h(App),
-}).$mount("#app");
+// Función para inicializar la aplicación después de restaurar el estado
+async function initializeApp() {
+  try {
+    // Restaurar el estado del store antes de crear la instancia de Vue
+    await store.dispatch('restoreState');
+    
+    // Crear la instancia de Vue después de restaurar el estado
+    new Vue({
+      router,
+      store,
+      render: (h) => h(App),
+    }).$mount("#app");
+  } catch (error) {
+    console.error('Error al inicializar la aplicación:', error);
+    // Crear la instancia de Vue incluso si hay error
+    new Vue({
+      router,
+      store,
+      render: (h) => h(App),
+    }).$mount("#app");
+  }
+}
+
+// Inicializar la aplicación
+initializeApp();

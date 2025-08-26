@@ -1,5 +1,6 @@
 import Vue    from 'vue'
 import Router from 'vue-router'
+import store from './store'
 
 // Auth
 import Welcome  from './views/auth/Welcome.vue'
@@ -238,10 +239,21 @@ router.beforeEach((to, from, next) => {
   const requiresAuth   = to.matched.some(record => record.meta.requiresAuth)
   const requiresAffiliation = to.matched.some(record => record.meta.requiresAffiliation)
 
-  const session   = localStorage.getItem('session')
-  const office_id = localStorage.getItem('office_id')
+  // Obtener datos del store (estado actual) y localStorage (estado persistido)
+  const session   = store.state.session || localStorage.getItem('session')
+  const office_id = store.state.office_id || localStorage.getItem('office_id')
   const path      = localStorage.getItem('path')
-  const affiliated = localStorage.getItem('affiliated') === 'true'
+  const affiliated = store.state.affiliated !== null ? store.state.affiliated : (localStorage.getItem('affiliated') === 'true')
+
+  console.log('Router Guard:', { 
+    to: to.path, 
+    session: !!session, 
+    affiliated, 
+    office_id: !!office_id,
+    requiresAuth,
+    requiresAffiliation,
+    requiresNoAuth
+  })
 
   // Si es usuario de oficina, manejar redirección especial
   if (office_id && path) {

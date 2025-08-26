@@ -231,64 +231,84 @@ export default new Vuex.Store({
   },
   actions: {
     // Acción para restaurar el estado desde localStorage
-    restoreState({ commit }) {
-      const session = localStorage.getItem('session')
-      if (session) commit('SET_SESSION', session)
-      
-      const office_id = localStorage.getItem('office_id')
-      const path = localStorage.getItem('path')
-      if (office_id) commit('SET_OFFICE_ID', { office_id, path })
-      
-      const name = localStorage.getItem('name')
-      if (name) commit('SET_NAME', name)
-      
-      const lastName = localStorage.getItem('lastName')
-      if (lastName) commit('SET_LAST_NAME', lastName)
-      
-      const affiliated = localStorage.getItem('affiliated')
-      if (affiliated !== null) commit('SET_AFFILIATED', affiliated === 'true')
-      
-      const activated = localStorage.getItem('activated')
-      if (activated !== null) commit('SET_ACTIVATED', activated === 'true')
-      
-      const _activated = localStorage.getItem('_activated')
-      if (_activated !== null) commit('SET__ACTIVATED', _activated === 'true')
-      
-      const plan = localStorage.getItem('plan')
-      if (plan) commit('SET_PLAN', plan)
-      
-      const country = localStorage.getItem('country')
-      if (country) commit('SET_COUNTRY', country)
-      
-      const photo = localStorage.getItem('photo')
-      if (photo) commit('SET_PHOTO', photo)
-      
-      const tree = localStorage.getItem('tree')
-      if (tree !== null) commit('SET_TREE', tree === 'true')
-      
-      const email = localStorage.getItem('email')
-      if (email) commit('SET_EMAIL', email)
-      
-      const token = localStorage.getItem('token')
-      if (token) commit('SET_TOKEN', token)
-      
-      const address = localStorage.getItem('address')
-      if (address) commit('SET_ADDRESS', address)
-      
-      const city = localStorage.getItem('city')
-      if (city) commit('SET_CITY', city)
-      
-      const birthdate = localStorage.getItem('birthdate')
-      if (birthdate) commit('SET_BIRTHDATE', birthdate)
-      
-      const total_points = localStorage.getItem('total_points')
-      if (total_points !== null) commit('SET_TOTAL_POINTS', parseInt(total_points))
-      
-      const balance = localStorage.getItem('balance')
-      if (balance !== null) commit('SET_BALANCE', parseFloat(balance))
-      
-      const _balance = localStorage.getItem('_balance')
-      if (_balance !== null) commit('SET__BALANCE', parseFloat(_balance))
+    async restoreState({ commit }) {
+      try {
+        console.log('Restaurando estado desde localStorage...');
+        
+        const session = localStorage.getItem('session')
+        if (session) {
+          commit('SET_SESSION', session)
+          console.log('Sesión restaurada:', !!session);
+        }
+        
+        const office_id = localStorage.getItem('office_id')
+        const path = localStorage.getItem('path')
+        if (office_id) {
+          commit('SET_OFFICE_ID', { office_id, path })
+          console.log('Office ID restaurado:', !!office_id);
+        }
+        
+        const name = localStorage.getItem('name')
+        if (name) commit('SET_NAME', name)
+        
+        const lastName = localStorage.getItem('lastName')
+        if (lastName) commit('SET_LAST_NAME', lastName)
+        
+        const affiliated = localStorage.getItem('affiliated')
+        if (affiliated !== null) {
+          const isAffiliated = affiliated === 'true'
+          commit('SET_AFFILIATED', isAffiliated)
+          console.log('Estado de afiliación restaurado:', isAffiliated);
+        }
+        
+        const activated = localStorage.getItem('activated')
+        if (activated !== null) commit('SET_ACTIVATED', activated === 'true')
+        
+        const _activated = localStorage.getItem('_activated')
+        if (_activated !== null) commit('SET__ACTIVATED', _activated === 'true')
+        
+        const plan = localStorage.getItem('plan')
+        if (plan) commit('SET_PLAN', plan)
+        
+        const country = localStorage.getItem('country')
+        if (country) commit('SET_COUNTRY', country)
+        
+        const photo = localStorage.getItem('photo')
+        if (photo) commit('SET_PHOTO', photo)
+        
+        const tree = localStorage.getItem('tree')
+        if (tree !== null) commit('SET_TREE', tree === 'true')
+        
+        const email = localStorage.getItem('email')
+        if (email) commit('SET_EMAIL', email)
+        
+        const token = localStorage.getItem('token')
+        if (token) commit('SET_TOKEN', token)
+        
+        const address = localStorage.getItem('address')
+        if (address) commit('SET_ADDRESS', address)
+        
+        const city = localStorage.getItem('city')
+        if (city) commit('SET_CITY', city)
+        
+        const birthdate = localStorage.getItem('birthdate')
+        if (birthdate) commit('SET_BIRTHDATE', birthdate)
+        
+        const total_points = localStorage.getItem('total_points')
+        if (total_points !== null) commit('SET_TOTAL_POINTS', parseInt(total_points))
+        
+        const balance = localStorage.getItem('balance')
+        if (balance !== null) commit('SET_BALANCE', parseFloat(balance))
+        
+        const _balance = localStorage.getItem('_balance')
+        if (_balance !== null) commit('SET__BALANCE', parseFloat(_balance))
+        
+        console.log('Estado restaurado exitosamente');
+        return true;
+      } catch (error) {
+        console.error('Error al restaurar el estado:', error);
+        return false;
+      }
     },
     
     // Acción para limpiar todo el estado

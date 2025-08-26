@@ -1,15 +1,19 @@
 <template>
   <div id="app">
-    <router-view/>
+    <AppInitializer>
+      <router-view/>
+    </AppInitializer>
   </div>
 </template>
 
 <script>
+import AppInitializer from '@/components/AppInitializer.vue'
+
 export default {
-  created() {
-    // Restaurar el estado desde localStorage al iniciar la aplicación
-    this.$store.dispatch('restoreState')
-  },
+  name: 'App',
+  components: {
+    AppInitializer
+  }
 };
 </script>
 
