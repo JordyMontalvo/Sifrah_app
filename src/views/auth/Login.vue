@@ -331,8 +331,25 @@ export default {
       if (data.plan) this.$store.commit("SET_PLAN", data.plan);
       if (data.total_points !== undefined) this.$store.commit("SET_TOTAL_POINTS", data.total_points);
       
-      // Establecer estado de afiliación
+      // Establecer estado de afiliación y otros campos importantes
       this.$store.commit("SET_AFFILIATED", data.affiliated);
+      if (data.tree !== undefined) this.$store.commit("SET_TREE", data.tree);
+      if (data.activated !== undefined) this.$store.commit("SET_ACTIVATED", data.activated);
+      if (data._activated !== undefined) this.$store.commit("SET__ACTIVATED", data._activated);
+      if (data.country) this.$store.commit("SET_COUNTRY", data.country);
+      if (data.balance !== undefined) this.$store.commit("SET_BALANCE", data.balance);
+      if (data._balance !== undefined) this.$store.commit("SET__BALANCE", data._balance);
+      
+      // Log para debugging
+      console.log('Login exitoso - Estado guardado:', {
+        session: data.session,
+        affiliated: data.affiliated,
+        tree: data.tree,
+        activated: data.activated,
+        _activated: data._activated,
+        name: data.name,
+        plan: data.plan
+      });
 
       // routing
       if (office_id) {
@@ -340,8 +357,10 @@ export default {
       } else {
         // Verificar si el usuario está afiliado
         if (data.affiliated) {
+          console.log('Usuario afiliado, redirigiendo al dashboard');
           this.$router.push("/dashboard");
         } else {
+          console.log('Usuario no afiliado, redirigiendo a afiliación');
           this.$router.push("/affiliation");
         }
       }

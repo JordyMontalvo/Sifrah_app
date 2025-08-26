@@ -309,6 +309,9 @@
     </footer>
 
     <a :href="wsp" target="_blank" class="wsp fab fa-whatsapp"></a>
+    
+    <!-- Panel de Debug (solo visible en desarrollo o cuando se habilite) -->
+    <DebugPanel />
   </div>
 </template>
 

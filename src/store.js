@@ -100,6 +100,14 @@ export default new Vuex.Store({
       if(total_points !== null && total_points !== undefined) localStorage.setItem('total_points', total_points)
       state.total_points = total_points
     },
+    SET_BALANCE: (state, balance) => {
+      if(balance !== null && balance !== undefined) localStorage.setItem('balance', balance)
+      state.balance = balance
+    },
+    SET__BALANCE: (state, _balance) => {
+      if(_balance !== null && _balance !== undefined) localStorage.setItem('_balance', _balance)
+      state._balance = _balance
+    },
     setCartItems: (state, cartItems) => {
       state.cartItems = cartItems
     },

@@ -28,7 +28,10 @@ export const debug = {
         total_points: store.state.total_points,
         tree: store.state.tree,
         activated: store.state.activated,
-        _activated: store.state._activated
+        _activated: store.state._activated,
+        balance: store.state.balance,
+        _balance: store.state._balance,
+        country: store.state.country
       });
     }
   },
@@ -36,7 +39,7 @@ export const debug = {
   // Log de localStorage
   logLocalStorage: () => {
     if (debug.enabled) {
-      const keys = ['session', 'affiliated', 'name', 'lastName', 'email', 'plan', 'total_points', 'token', 'tree', 'activated', '_activated', 'country', 'address', 'city', 'birthdate'];
+      const keys = ['session', 'affiliated', 'name', 'lastName', 'email', 'plan', 'total_points', 'token', 'tree', 'activated', '_activated', 'country', 'address', 'city', 'birthdate', 'balance', '_balance'];
       const storage = {};
       keys.forEach(key => {
         storage[key] = localStorage.getItem(key);
