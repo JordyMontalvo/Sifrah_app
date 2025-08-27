@@ -74,7 +74,7 @@ const routes = [
   {
     path: '/register/:code?',
     component: Register,
-    // meta: { requiresNoAuth: true }
+    meta: { requiresNoAuth: true }
   },
   {
     path: '/remember',
