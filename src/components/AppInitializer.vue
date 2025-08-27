@@ -79,8 +79,13 @@ export default {
       } else {
         console.log('AppInitializer: No hay sesión activa');
         
+        // Permitir acceso directo a registro con código de referido sin redireccionar
+        if (this.$route.path.startsWith('/register/')) {
+          console.log('AppInitializer: Permitiendo acceso directo a registro con código de referido sin sesión activa');
+          // No redirigir
+        }
         // Si no hay sesión y no está en login, redirigir a login
-        if (this.$route.path !== '/login' && this.$route.path !== '/welcome' && this.$route.path !== '/register' && this.$route.path !== '/remember' && this.$route.path !== '/reset-password') {
+        else if (this.$route.path !== '/login' && this.$route.path !== '/welcome' && this.$route.path !== '/register' && this.$route.path !== '/remember' && this.$route.path !== '/reset-password') {
           console.log('AppInitializer: No hay sesión, redirigiendo a login...');
           this.$router.push('/login');
         }

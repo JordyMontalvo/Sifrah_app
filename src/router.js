@@ -305,6 +305,13 @@ router.beforeEach(async (to, from, next) => {
     return
   }
 
+  // Permitir acceso directo a registro con código de referido sin redireccionar
+  if (to.path.startsWith('/register/')) {
+    console.log('Router Guard: Permitiendo acceso directo a registro con código de referido')
+    next()
+    return
+  }
+  
   // Si requiere autenticación y no está autenticado
   if (requiresAuth && !session) {
     console.log('Router Guard: Requiere autenticación pero no hay sesión, redirigiendo a /login')
