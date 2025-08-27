@@ -56,8 +56,13 @@ export default {
           affiliated: localStorage.getItem('affiliated')
         });
         
+        // Permitir acceso a registro con código de referido incluso con sesión activa
+        if (this.$route.path.startsWith('/register/')) {
+          console.log('AppInitializer: Permitiendo acceso a registro con código de referido a pesar de sesión activa');
+          // No redirigir
+        }
         // Solo redirigir si es necesario y no estamos ya en la ruta correcta
-        if (!affiliated && this.$route.path !== '/affiliation' && this.$route.path !== '/profile' && this.$route.path !== '/password' && this.$route.path !== '/security') {
+        else if (!affiliated && this.$route.path !== '/affiliation' && this.$route.path !== '/profile' && this.$route.path !== '/password' && this.$route.path !== '/security') {
           console.log('AppInitializer: Usuario no afiliado, redirigiendo a affiliation...');
           this.$router.push('/affiliation');
         }
@@ -110,6 +115,13 @@ export default {
         const affiliated = this.$store.state.affiliated !== null 
           ? this.$store.state.affiliated 
           : (localStorage.getItem('affiliated') === 'true');
+        
+        // Permitir acceso a registro con código de referido incluso con sesión activa
+        if (this.$route.path.startsWith('/register/')) {
+          console.log('AppInitializer: Permitiendo acceso a registro con código de referido a pesar de sesión activa');
+          // No redirigir
+          return;
+        }
         
         // Si no está afiliado y no está en una ruta permitida
         if (!affiliated && this.$route.path !== '/affiliation' && this.$route.path !== '/profile' && this.$route.path !== '/password' && this.$route.path !== '/security') {

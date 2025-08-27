@@ -288,6 +288,13 @@ router.beforeEach(async (to, from, next) => {
 
   // Si requiere no autenticación y ya está autenticado
   if (requiresNoAuth && session && !office_id) {
+    // Excepción para la ruta de registro con código de referido
+    if (to.path.startsWith('/register/')) {
+      console.log('Router Guard: Permitiendo acceso a registro con código de referido a pesar de sesión activa')
+      next()
+      return
+    }
+    
     if (affiliated) {
       console.log('Router Guard: Usuario autenticado y afiliado, redirigiendo a /dashboard')
       next({ path: '/dashboard' })
