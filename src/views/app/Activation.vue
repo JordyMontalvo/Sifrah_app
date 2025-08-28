@@ -879,6 +879,9 @@ export default {
       this.current_points = data.points || 0;
       this.current_profit = data.profit || 0;
       this.products = data.products ? data.products.map((a) => ({ ...a, total: 0 })) : [];
+      console.log("[Activation.vue] Productos recibidos del API:", data.products ? data.products.map(p => ({ id: p.id, name: p.name, subdescription: p.subdescription })) : "No hay productos");
+      console.log("[Activation.vue] Estructura completa del primer producto:", this.products.length > 0 ? this.products[0] : "No hay productos");
+      console.log("[Activation.vue] Campos disponibles en productos:", this.products.length > 0 ? Object.keys(this.products[0]) : "No hay productos");
       this.product = this.products.length > 0 ? this.products[0] : null;
 
       this.balance = data.balance || 0;
