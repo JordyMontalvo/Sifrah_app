@@ -286,11 +286,11 @@
           </div>
           
           <div class="cart-actions">
-            <button class="view-detail-btn" @click="openCartDetailModal">
-              Ver detalle
-            </button>
             <button class="pay-btn" @click="goToCheckout" :disabled="cartItems.length === 0">
               Ir a Pagar
+            </button>
+            <button class="view-detail-btn" @click="openCartDetailModal">
+              Ver detalle
             </button>
           </div>
         </div>
@@ -417,12 +417,12 @@
             
             <!-- Botones de acción -->
             <div class="cart-detail-actions">
+              <button class="go-to-pay-btn" @click="goToCheckout" :disabled="cartItems.length === 0">
+                Ir a Pagar
+              </button>
               <button class="add-more-products-btn" @click="closeCartDetailModal">
                 <i class="fas fa-plus"></i>
                 Añadir más productos
-              </button>
-              <button class="go-to-pay-btn" @click="goToCheckout" :disabled="cartItems.length === 0">
-                Ir a Pagar
               </button>
             </div>
           </div>
@@ -3096,7 +3096,7 @@ export default {
 
 
 
-.product-catalog-price {
+.product-catalog-prrce {
   font-size: 0.9rem;
   color: #388e3c;
   font-weight: 500;
