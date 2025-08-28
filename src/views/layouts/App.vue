@@ -97,6 +97,9 @@
           <router-link to="/affiliation" @click.native="close">
             <i class="fas fa-receipt"></i> AFILIACIÓN
           </router-link>
+          <router-link to="/activations" @click.native="close" v-if="affiliated">
+            <i class="fas fa-history"></i> HISTORIAL
+          </router-link>
         </div>
 
         <a

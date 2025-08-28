@@ -8,10 +8,6 @@
         <router-link class="tab" to="/activation">
           <span class="tab-icon">🛒</span> Comprar
         </router-link>
-        &nbsp;&nbsp;
-        <router-link class="tab" to="/activations" v-if="!office_id">
-          <span class="tab-icon">📜</span> Historial
-        </router-link>
       </h4>
 
       <div class="points-bar">
