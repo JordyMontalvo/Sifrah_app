@@ -271,8 +271,7 @@
             <h3>Resumen</h3>
             <div class="summary-details">
               <div class="summary-row">
-                <span>Concepto:</span>
-                <span>Sin Pack</span>
+                <span class="summary-value">{{ cartItemsTotal }} items</span>
               </div>
               <div class="summary-row">
                 <span>Puntos:</span>
@@ -401,8 +400,7 @@
               <h3>Resumen</h3>
               <div class="cart-detail-summary-details">
                 <div class="summary-row">
-                  <span>Concepto:</span>
-                  <span>Sin Pack</span>
+                  <span class="summary-value">{{ cartItemsTotal }} items</span>
                 </div>
                 <div class="summary-row">
                   <span>Puntos:</span>
