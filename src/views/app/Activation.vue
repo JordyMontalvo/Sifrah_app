@@ -3089,24 +3089,16 @@ export default {
 }
 
 .product-catalog-info-text {
-  font-size: 0.85rem;
-  color: #666;
-  font-weight: 400;
+  font-size: 0.9rem;
+  color: #555;
+  font-weight: 500;
   margin-bottom: 8px;
-  margin-top: -2px;
-  line-height: 1.0;
+  margin-top: 4px;
+  line-height: 1.3;
   text-align: center;
-  min-height: 1.0em;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  padding: 0;
-  background: transparent;
-  border: none;
-  width: 100%;
-  box-shadow: none;
 }
+
+
 
 .product-catalog-price {
   font-size: 0.9rem;
