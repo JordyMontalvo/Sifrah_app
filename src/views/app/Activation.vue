@@ -1,6 +1,9 @@
 <template>
   <App :session="session" :office_id="office_id" :title="title">
     <div v-cloak>
+      <!-- Título principal de la tienda -->
+      <h1 class="store-title">Tienda Sifrah</h1>
+      
       <h4 class="tabs">
         <router-link class="tab" to="/activation">
           <span class="tab-icon">🛒</span> Comprar
@@ -14,7 +17,39 @@
       <div class="points-bar">
         <span class="points-icon">💎</span> Puntos: <b>{{ current_points }}</b>
       </div>
-      <h4 class="products-title">Catálogo de Productos</h4>
+      
+      <!-- Sección de banners destacados -->
+      <div class="featured-banners">
+        <div class="banner-grid">
+          <!-- Banner principal grande horizontal (2/3 del ancho) -->
+          <div class="banner-main">
+            <div class="banner-placeholder">
+              <span class="banner-text">Banner Principal</span>
+            </div>
+          </div>
+          
+          <!-- Banners laterales derechos (1/3 del ancho) -->
+          <div class="banner-sidebar">
+            <div class="banner-small">
+              <div class="banner-placeholder">
+                <span class="banner-text">Banner 1</span>
+              </div>
+            </div>
+            <div class="banner-medium">
+              <div class="banner-placeholder">
+                <span class="banner-text">Banner 2</span>
+              </div>
+            </div>
+            <div class="banner-large">
+              <div class="banner-placeholder">
+                <span class="banner-text">Banner 3</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+
 
       <!-- Nuevo catálogo de productos con carrito -->
       <div v-if="loading" class="loading-container">
@@ -50,6 +85,13 @@
       <div v-else class="catalog-container">
         <!-- Área principal de productos -->
         <div class="products-main-area">
+          <!-- Contenedor con altura definida para el sticky -->
+          <div class="catalog-content-wrapper">
+            <!-- Contenedor del catálogo completo -->
+            <div class="catalog-inner-wrapper">
+          <!-- Título del catálogo -->
+          <h4 class="products-title">Catálogo de Productos</h4>
+          
           <!-- Filtros y búsqueda -->
           <div class="catalog-filters">
             <div class="search-filter">
@@ -57,23 +99,13 @@
               <input 
                 v-model="searchTerm" 
                 type="text" 
-                placeholder="Busqueda..." 
+                placeholder="Búsqueda..." 
                 class="search-input"
               />
             </div>
             
             <div class="category-filters">
-              <span>Puedes utilizar estos filtros.</span>
               <div class="category-buttons">
-                <button 
-                  v-for="category in categories" 
-                  :key="category"
-                  @click="toggleCategory(category)"
-                  :class="{ active: selectedCategories.includes(category) }"
-                  class="category-btn"
-                >
-                  {{ category }}
-                </button>
                 <button 
                   @click="clearAllFilters"
                   class="clear-filters-btn"
@@ -81,6 +113,15 @@
                 >
                   <i class="fas fa-times"></i> Limpiar
                 </button>
+                                  <button 
+                    v-for="category in categories" 
+                    :key="category"
+                    @click="toggleCategory(category)"
+                    :class="{ active: selectedCategories.includes(category) }"
+                    class="category-btn"
+                  >
+                    {{ formatCategoryName(category) }}
+                  </button>
               </div>
             </div>
           </div>
@@ -106,6 +147,9 @@
               class="product-catalog-card"
               @click="openProductModal(product)"
             >
+              <!-- Esquina decorativa de la tarjeta -->
+              <div class="card-corner"></div>
+              
               <!-- Badge de puntos -->
               <div class="points-badge">
                 <i class="fas fa-star"></i>
@@ -130,24 +174,34 @@
               </div>
               
               <!-- Controles de cantidad -->
-              <div class="product-quantity-controls">
+              <div v-if="getProductQuantity(product) > 0" class="product-quantity-controls">
                 <button 
-                  v-if="getProductQuantity(product) > 0"
                   @click.stop="decreaseQuantity(product)"
                   class="qty-control-btn"
                 >
                   -
                 </button>
-                <span v-if="getProductQuantity(product) > 0" class="quantity-display">
+                <span class="quantity-display">
                   {{ getProductQuantity(product) }}
                 </span>
                 <button 
                   @click.stop="addToCart(product)"
-                  :class="getProductQuantity(product) > 0 ? 'qty-control-btn' : 'add-to-cart-btn'"
+                  class="qty-control-btn"
                   :disabled="getProductQuantity(product) >= 10"
                 >
-                  <i v-if="getProductQuantity(product) === 0" class="fas fa-shopping-cart"></i>
-                  {{ getProductQuantity(product) > 0 ? '+' : 'Agregar' }}
+                  +
+                </button>
+              </div>
+              
+              <!-- Botón de agregar -->
+              <div v-else class="add-to-cart-container">
+                <button 
+                  @click.stop="addToCart(product)"
+                  class="add-to-cart-btn"
+                  :disabled="getProductQuantity(product) >= 10"
+                >
+                  <i class="fas fa-shopping-cart"></i>
+                  Agregar
                 </button>
               </div>
             </div>
@@ -163,15 +217,14 @@
             </div>
           </div>
         </div>
+          </div>
+          </div>
 
-        <!-- Sidebar del carrito -->
-        <div class="cart-sidebar" :class="{ 'cart-sidebar-open': showCart }">
+        <!-- Carrito fijo en el lado derecho -->
+        <div class="sticky-cart-sidebar">
           <div class="cart-header">
-            <h3>Carrito de compras</h3>
+            <h3>Carrito de Compras</h3>
             <p>Puedes hacer scroll para ver todos tus productos.</p>
-            <button @click="toggleCart" class="close-cart-btn">
-              <i class="fas fa-times"></i>
-            </button>
           </div>
           
           <div class="cart-items-container">
@@ -232,11 +285,11 @@
           </div>
           
           <div class="cart-actions">
-            <button class="pay-btn" @click="goToCheckout" :disabled="cartItems.length === 0">
-              IR A PAGAR
+            <button class="view-detail-btn" @click="openCartDetailModal">
+              Ver detalle
             </button>
-            <button class="add-more-btn" @click="scrollToProducts">
-              AÑADIR MÁS PRODUCTOS
+            <button class="pay-btn" @click="goToCheckout" :disabled="cartItems.length === 0">
+              Ir a Pagar
             </button>
           </div>
         </div>
@@ -289,10 +342,90 @@
         </div>
       </div>
 
-      <!-- Botón flotante del carrito -->
-      <div v-if="!showCart" class="cart-toggle-btn" @click="toggleCart">
-        <i class="fas fa-shopping-cart"></i>
-        <span v-if="cartItems.length > 0" class="cart-badge">{{ cartItems.length }}</span>
+      <!-- Interfaz del carrito detallado (pegada a la derecha) -->
+      <div v-if="showCartDetailModal" class="cart-detail-interface">
+        <div class="cart-detail-interface-content">
+          <div class="cart-detail-header">
+            <h2>Carrito de Compras</h2>
+            <p>Puedes hacer scroll para ver todos tus productos.</p>
+            <button @click="closeCartDetailModal" class="close-cart-detail-btn">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+          
+          <div class="cart-detail-body">
+            <!-- Lista de productos del carrito -->
+            <div class="cart-detail-items">
+              <h3>Productos en tu carrito</h3>
+              <div 
+                v-for="(item, index) in cartItems" 
+                :key="index"
+                class="cart-detail-item"
+              >
+                <div class="cart-detail-item-image">
+                  <img :src="item.img" :alt="item.name" />
+                </div>
+                <div class="cart-detail-item-info">
+                  <h4>{{ item.name }}</h4>
+                  <div class="cart-detail-item-details">
+                    <span class="cart-detail-item-price">S/ {{ getProductPrice(item) }}</span>
+                    <span class="cart-detail-item-points">{{ item.points }}pts</span>
+                  </div>
+                </div>
+                <div class="cart-detail-item-controls">
+                  <div class="cart-detail-quantity-controls">
+                    <button @click="decreaseQuantity(item)" class="qty-control-btn">
+                      -
+                    </button>
+                    <span class="quantity-display">{{ item.total }}</span>
+                    <button @click="increaseQuantity(item)" class="qty-control-btn">
+                      +
+                    </button>
+                  </div>
+                  <button @click="removeFromCart(index)" class="remove-cart-item-btn">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>
+              </div>
+              
+              <div v-if="cartItems.length === 0" class="empty-cart-detail">
+                <i class="fas fa-shopping-cart"></i>
+                                  <p>Tu carrito está vacío</p>
+                  <span>Agregar productos para comenzar</span>
+              </div>
+            </div>
+            
+            <!-- Resumen del carrito -->
+            <div class="cart-detail-summary">
+              <h3>Resumen</h3>
+              <div class="cart-detail-summary-details">
+                <div class="summary-row">
+                  <span>Concepto:</span>
+                  <span>Sin Pack</span>
+                </div>
+                <div class="summary-row">
+                  <span>Puntos:</span>
+                  <span>{{ cartPoints.toFixed(2) }}</span>
+                </div>
+                <div class="summary-row total-row">
+                  <span>Total:</span>
+                  <span>S/ {{ cartTotal.toFixed(2) }}</span>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Botones de acción -->
+            <div class="cart-detail-actions">
+              <button class="add-more-products-btn" @click="closeCartDetailModal">
+                <i class="fas fa-plus"></i>
+                Añadir más productos
+              </button>
+              <button class="go-to-pay-btn" @click="goToCheckout" :disabled="cartItems.length === 0">
+                Ir a Pagar
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -554,10 +687,10 @@ export default {
       success: false,
       sending: false,
       pending: false,
-      selectedProduct: null,
-      imageLoaded: false,
-      showCart: false,
-      cartItems: [],
+              selectedProduct: null,
+        imageLoaded: false,
+        showCartDetailModal: false,
+        cartItems: [],
       searchTerm: "",
       selectedCategories: [],
       current_points: 0,
@@ -570,6 +703,7 @@ export default {
       points: 0,
       IGV: 0,
       remaining: 0,
+
     };
   },
   computed: {
@@ -766,7 +900,12 @@ export default {
       this.loading = false;
     }
   },
+
   methods: {
+    formatCategoryName(category) {
+      // Convertir la primera letra a mayúscula y el resto a minúscula
+      return category.charAt(0).toUpperCase() + category.slice(1).toLowerCase();
+    },
     touch(i) {
       this.product = this.products[i];
     },
@@ -950,6 +1089,8 @@ export default {
       return product.price;
     },
 
+
+
     // Métodos para el catálogo de productos
     toggleCategory(category) {
       if (category === "Todos") {
@@ -1094,11 +1235,15 @@ export default {
       this.POST();
     },
 
-    toggleCart() {
-      this.showCart = !this.showCart;
-    },
-    
-    scrollToProducts() {
+          openCartDetailModal() {
+        this.showCartDetailModal = true;
+      },
+      
+      closeCartDetailModal() {
+        this.showCartDetailModal = false;
+      },
+      
+      scrollToProducts() {
       // Hacer scroll hacia la sección de productos
       const productsSection = document.querySelector('.products-main-area');
       if (productsSection) {
@@ -1237,11 +1382,11 @@ export default {
     font-size 1.3em
 
 .products-title
-  text-align center
+  text-align left
   font-size 1.5rem
   font-weight 700
-  color #ff9800
-  margin 18px 0 10px 0
+  color #333
+  margin 0 0 15px 0
   letter-spacing 1px
 
 .products-flex
@@ -1504,6 +1649,40 @@ export default {
   .filter-group
     justify-content space-between
   
+  /* Responsive para banners */
+  .banner-grid
+    flex-direction column
+    gap 15px
+  
+  .banner-main
+    height 150px
+  
+  .banner-sidebar
+    flex-direction row
+    gap 10px
+  
+  .banner-small, .banner-medium, .banner-large
+    flex 1
+    height 80px
+  
+  /* Responsive para placeholders de productos */
+  .product-placeholders
+    flex-direction column
+    gap 15px
+  
+  .placeholder-main
+    height 120px
+    margin-right 0
+  
+  .placeholder-sidebar
+    flex-direction row
+    gap 10px
+    max-width 100%
+  
+  .placeholder-small
+    flex 1
+    height 60px
+  
   /* Responsive para el catálogo */
   .catalog-container
     flex-direction column
@@ -1515,13 +1694,15 @@ export default {
   
   .catalog-filters
     flex-direction column
-    gap 12px
+    gap 15px
+    padding 15px
   
   .search-filter
     min-width 100%
   
   .category-buttons
     justify-content center
+    gap 8px
   
   .cart-sidebar
     order -1
@@ -1588,6 +1769,48 @@ export default {
     font-size 1.4rem
 
 @media (max-width: 600px)
+  /* Responsive para banners en móviles */
+  .featured-banners
+    margin 15px 0
+  
+  .banner-grid
+    gap 10px
+  
+  .banner-main
+    height 120px
+  
+  .banner-sidebar
+    gap 8px
+  
+  .banner-small, .banner-medium, .banner-large
+    height 60px
+  
+  .banner-text
+    font-size 0.8rem
+    padding 6px 12px
+  
+  /* Responsive para placeholders en móviles */
+  .store-title
+    font-size 2rem
+    margin 0 0 15px 0
+  
+  .product-placeholders
+    margin 15px 0
+    gap 10px
+  
+  .placeholder-main
+    height 100px
+  
+  .placeholder-sidebar
+    gap 8px
+  
+  .placeholder-small
+    height 50px
+  
+  .placeholder-text
+    font-size 0.8rem
+    padding 6px 12px
+  
   .products-title
     font-size 1.1rem
   .products-grid
@@ -1607,6 +1830,19 @@ export default {
   .search-input
     padding 12px 16px 12px 44px
     font-size 0.9rem
+  
+  .catalog-filters
+    padding 12px
+    gap 12px
+  
+  .category-btn
+    padding 6px 12px
+    font-size 0.85rem
+  
+  .clear-filters-btn
+    padding 5px 10px
+    font-size 0.85rem
+  
   .filter-select
     padding 6px 10px
     font-size 0.85rem
@@ -2369,64 +2605,276 @@ export default {
   color: #333;
 }
 
+/* Layout principal con productos y carrito fijo */
+.main-layout {
+  display: flex;
+  gap: 20px;
+  width: 100%;
+  align-items: flex-start;
+}
+
+/* Carrito sticky en el lado derecho */
+.sticky-cart-sidebar {
+  width: 380px;
+  background: #fff;
+  border-radius: 15px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  max-height: 85vh;
+  overflow: hidden;
+  position: sticky;
+  top: 20px;
+  align-self: flex-start;
+  height: fit-content;
+  z-index: 100;
+  flex-shrink: 0;
+  margin-top: 0;
+  transform: translateZ(0);
+  transition: all 0.3s ease;
+  bottom: 20px;
+}
+
+/* Estilos para el título principal de la tienda */
+.store-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #333;
+  margin: 0 0 20px 0;
+  text-align: left;
+  letter-spacing: -0.5px;
+}
+
+/* Estilos para el título del catálogo */
+.products-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #333;
+  margin: 0 0 20px 0;
+  text-align: left;
+  letter-spacing: -0.5px;
+}
+
+/* Estilos para los banners destacados */
+.featured-banners {
+  margin: 20px 0;
+}
+
+.banner-grid {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+.banner-main {
+  flex: 2;
+  height: 200px;
+  margin-right: 20px;
+}
+
+.banner-sidebar {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  max-width: 33.33%;
+}
+
+.banner-small {
+  height: 90px;
+}
+
+.banner-medium {
+  height: 120px;
+}
+
+.banner-large {
+  height: 180px;
+}
+
+.banner-placeholder {
+  width: 100%;
+  height: 100%;
+  background: repeating-conic-gradient(
+    #f0f0f0 0deg 90deg,
+    #e0e0e0 90deg 180deg
+  );
+  background-size: 20px 20px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #d0d0d0;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.banner-text {
+  color: #666;
+  font-size: 0.9rem;
+  font-weight: 500;
+  background: rgba(255,255,255,0.8);
+  padding: 8px 16px;
+  border-radius: 20px;
+  backdrop-filter: blur(4px);
+}
+
+/* Estilos para los placeholders de productos */
+.product-placeholders {
+  display: flex;
+  gap: 20px;
+  margin: 20px 0;
+  align-items: flex-start;
+}
+
+.placeholder-main {
+  flex: 2;
+  height: 150px;
+  margin-right: 20px;
+}
+
+.placeholder-sidebar {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  max-width: 33.33%;
+}
+
+.placeholder-small {
+  height: 65px;
+}
+
+.placeholder-content {
+  width: 100%;
+  height: 100%;
+  background: repeating-conic-gradient(
+    #f0f0f0 0deg 90deg,
+    #e0e0e0 90deg 180deg
+  );
+  background-size: 20px 20px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #d0d0d0;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.placeholder-text {
+  color: #666;
+  font-size: 0.9rem;
+  font-weight: 500;
+  background: rgba(255,255,255,0.8);
+  padding: 8px 16px;
+  border-radius: 20px;
+  backdrop-filter: blur(4px);
+}
+
 /* Estilos para el nuevo catálogo de productos */
 .catalog-container {
   display: flex;
   gap: 20px;
-  margin-top: 20px;
+  margin-top: 10px;
+  align-items: flex-start;
+  min-height: 100vh;
+  position: relative;
+  overflow: visible;
+  padding-top: 20px;
+}
+
+/* Asegurar que el contenedor tenga el comportamiento correcto para sticky */
+.catalog-container {
+  height: auto;
+  overflow: visible;
+}
+
+/* Contenedor wrapper para controlar el comportamiento sticky del carrito */
+.catalog-content-wrapper {
+  min-height: 150vh;
+  position: relative;
+  overflow: visible;
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  height: auto;
+}
+
+/* Contenedor interno del catálogo */
+.catalog-inner-wrapper {
+  flex: 1;
+  min-height: 150vh;
+  position: relative;
+  height: auto;
+  overflow: visible;
 }
 
 .products-main-area {
-  flex: 2;
+  flex: 1;
   background: #f9f9f9;
   border-radius: 12px;
   padding: 18px;
   box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+  min-height: 1200px;
+  position: relative;
+  width: 100%;
+  margin-top: 0;
+  overflow: visible;
+  background: transparent;
+  box-shadow: none;
+  padding: 0;
+  height: auto;
 }
 
 .catalog-filters {
   display: flex;
-  flex-wrap: wrap;
-  gap: 15px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
   margin-bottom: 20px;
-  padding-bottom: 15px;
-  border-bottom: 1px solid #eee;
+  padding: 20px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  border: 1px solid #f0f0f0;
+  margin-top: 0;
 }
 
 .search-filter {
   position: relative;
   flex: 1;
-  min-width: 200px;
+  min-width: 300px;
 }
 
 .search-input {
   width: 100%;
-  padding: 10px 15px 10px 40px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  font-size: 0.95rem;
+  padding: 14px 18px 14px 50px;
+  border: 1px solid #e0e0e0;
+  border-radius: 25px;
+  font-size: 1rem;
   background-color: #fff;
-  transition: border-color 0.2s;
+  transition: all 0.2s;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
 }
 
 .search-input:focus {
   border-color: #ff9800;
   outline: none;
+  box-shadow: 0 2px 8px rgba(255,152,0,0.15);
 }
 
 .search-icon {
   position: absolute;
-  left: 15px;
+  left: 20px;
   top: 50%;
   transform: translateY(-50%);
   color: #999;
   font-size: 1.1rem;
 }
 
-.country-filter, .category-filters {
+.category-filters {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
 }
 
 .country-select, .category-btn {
@@ -2451,44 +2899,52 @@ export default {
 }
 
 .category-btn {
-  background: #ffe0b2;
-  color: #ff9800;
-  border: 1px solid #ff9800;
-  padding: 6px 12px;
+  background: #f8f9fa;
+  color: #333;
+  border: 1px solid #e0e0e0;
+  padding: 8px 16px;
   border-radius: 20px;
-  font-weight: 600;
+  font-weight: 500;
   font-size: 0.9rem;
-  transition: background 0.2s, border-color 0.2s;
+  transition: all 0.2s;
+  cursor: pointer;
 }
 
 .category-btn.active {
-  background: #ff9800;
-  color: #fff;
+  background: transparent;
+  color: #ff9800;
   border-color: #ff9800;
+  font-weight: 600;
+}
+
+.category-btn:hover {
+  background: #f0f0f0;
+  border-color: #ccc;
 }
 
 .clear-filters-btn {
-  background: #f5f5f5;
-  color: #666;
-  border: 1px solid #ddd;
+  background: transparent;
+  color: #333;
+  border: none;
   padding: 6px 12px;
   border-radius: 20px;
-  font-weight: 600;
+  font-weight: 500;
   font-size: 0.9rem;
   transition: all 0.2s;
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
+  cursor: pointer;
 }
 
 .clear-filters-btn:hover {
-  background: #e0e0e0;
-  color: #333;
-  border-color: #ccc;
+  background: rgba(0,0,0,0.05);
+  color: #ff9800;
 }
 
 .clear-filters-btn i {
-  font-size: 0.8rem;
+  font-size: 0.9rem;
+  font-weight: bold;
 }
 
 .products-catalog-grid {
@@ -2498,50 +2954,97 @@ export default {
 }
 
 .product-catalog-card {
-  background: #fff;
-  border-radius: 12px; /* Más pequeño */
-  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
-  padding: 12px; /* Menos padding */
+  background: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%);
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15), 0 2px 8px rgba(0,0,0,0.1);
+  padding: 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
   position: relative;
-  transition: box-shadow 0.18s, transform 0.18s;
+  transition: all 0.3s ease;
   cursor: pointer;
-  border: 2px solid transparent;
-  min-height: 280px; /* Altura fija más pequeña */
+  border: 2px solid #e8e8e8;
+  min-height: 320px;
+  overflow: hidden;
+}
+
+.product-catalog-card::before {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  right: 2px;
+  bottom: 2px;
+  border: 1px solid #f0f0f0;
+  border-radius: 10px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.product-catalog-card::after {
+  content: '';
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  right: 6px;
+  bottom: 6px;
+  border: 1px solid #e8e8e8;
+  border-radius: 8px;
+  pointer-events: none;
+  z-index: 1;
 }
 
 .product-catalog-card:hover {
-  box-shadow: 0 4px 16px rgba(255,152,0,0.13);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.18), 0 4px 12px rgba(0,0,0,0.12);
   border: 2px solid #ff9800;
-  transform: scale(1.02); /* Menos escala */
+  transform: translateY(-2px);
+  background: linear-gradient(145deg, #ffffff 0%, #fafafa 100%);
+}
+
+.product-catalog-card .card-corner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 25px 25px 0 0;
+  border-color: #ff9800 transparent transparent transparent;
+  z-index: 2;
+  opacity: 0.9;
 }
 
 .points-badge {
   position: absolute;
-  top: 8px;
-  right: 8px;
+  top: 12px;
+  right: 12px;
   background: #ff9800;
   color: #fff;
-  border-radius: 10px;
-  padding: 3px 8px;
-  font-size: 0.75rem; /* Más pequeño */
+  border-radius: 4px;
+  padding: 6px 12px;
+  font-size: 0.8rem;
   font-weight: 600;
   display: flex;
   align-items: center;
-  gap: 3px;
-  box-shadow: 0 2px 6px rgba(255,152,0,0.15);
+  gap: 4px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+  z-index: 3;
+  border: 2px solid #fff;
 }
 
 .product-image-container {
-  width: 80px; /* Más pequeño */
-  height: 80px;
+  width: 110px;
+  height: 110px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 10px;
+  margin-bottom: 18px;
   overflow: hidden;
+  border-radius: 6px;
+  padding: 8px;
+  border: 2px solid #f0f0f0;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
 .product-catalog-img {
@@ -2557,58 +3060,100 @@ export default {
 }
 
 .product-catalog-name {
-  font-size: 0.95rem; /* Más pequeño */
+  font-size: 1.1rem;
   font-weight: 700;
   color: #ff9800;
-  margin-bottom: 3px;
-  line-height: 1.2;
+  margin-bottom: 8px;
+  line-height: 1.3;
+  text-align: center;
+  min-height: 2.6em;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  padding: 0;
+  background: transparent;
+  border: none;
+  width: 100%;
+  box-shadow: none;
 }
 
 .product-catalog-price {
-  font-size: 0.85rem; /* Más pequeño */
+  font-size: 0.9rem;
   color: #388e3c;
-  font-weight: 600;
+  font-weight: 500;
+  margin-bottom: 8px;
+  padding: 0;
+  background: transparent;
+  border: none;
+  width: 100%;
+  text-align: center;
+  box-shadow: none;
+}
+
+.price-amount {
+  display: block;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #388e3c;
+  margin-top: 4px;
 }
 
 .product-quantity-controls {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
   margin-top: auto; /* Empujar al final */
   width: 100%;
+  background: #ffb74d;
+  border-radius: 25px;
+  padding: 4px;
+  box-shadow: 0 2px 8px rgba(255,152,0,0.2);
 }
 
 .qty-control-btn {
-  background: #ff9800;
+  background: transparent;
   color: #fff;
   border: none;
-  border-radius: 6px;
-  width: 28px;
-  height: 28px;
-  font-size: 1rem;
+  width: 36px;
+  height: 36px;
+  font-size: 1.2rem;
   font-weight: 700;
   cursor: pointer;
-  transition: background 0.2s, transform 0.18s;
+  transition: all 0.2s ease;
   display: flex;
   align-items: center;
   justify-content: center;
+  box-shadow: none;
+}
+
+.qty-control-btn:first-child {
+  border-radius: 21px 0 0 21px;
+}
+
+.qty-control-btn:last-child {
+  border-radius: 0 21px 21px 0;
 }
 
 .qty-control-btn:hover {
-  background: #fb8c00;
+  background: rgba(255, 255, 255, 0.1);
   transform: scale(1.05);
 }
 
 .quantity-display {
-  font-size: 1rem;
-  font-weight: 600;
-  color: #333;
-  min-width: 20px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #fff;
+  min-width: 24px;
   text-align: center;
-  background: #f5f5f5;
-  padding: 4px 8px;
-  border-radius: 4px;
+  background: transparent;
+  padding: 8px 12px;
+  border: none;
+  box-shadow: none;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* Estilos específicos para los controles de cantidad en el modal del carrito */
@@ -2653,26 +3198,33 @@ export default {
   box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
 }
 
+.add-to-cart-container {
+  margin-top: auto;
+  width: 100%;
+}
+
 .add-to-cart-btn {
-  background: linear-gradient(90deg, #ff9800 60%, #ffb74d 100%);
+  background: #ff9800;
   color: #fff;
   border: none;
   border-radius: 8px;
+  padding: 12px 24px;
   font-weight: 700;
-  font-size: 0.9rem;
-  padding: 8px 16px;
+  font-size: 1rem;
   cursor: pointer;
-  transition: background 0.2s, box-shadow 0.2s, transform 0.18s;
+  transition: all 0.3s ease;
   display: flex;
   align-items: center;
-  gap: 6px;
-  box-shadow: 0 2px 6px rgba(255,152,0,0.13);
+  gap: 8px;
+  box-shadow: 0 4px 12px rgba(255,152,0,0.3);
+  width: 100%;
+  justify-content: center;
 }
 
 .add-to-cart-btn:hover {
-  background: linear-gradient(90deg, #fb8c00 60%, #ffe0b2 100%);
-  box-shadow: 0 4px 12px rgba(255,152,0,0.18);
-  transform: scale(1.04);
+  background: #fb8c00;
+  box-shadow: 0 6px 20px rgba(255,152,0,0.4);
+  transform: translateY(-2px);
 }
 
 .add-to-cart-btn:disabled {
@@ -3021,7 +3573,7 @@ export default {
   flex-shrink: 0;
 }
 
-.pay-btn, .add-more-btn {
+.pay-btn, .add-more-btn, .view-detail-btn {
   padding: 12px 20px;
   border: none;
   border-radius: 8px;
@@ -3063,6 +3615,18 @@ export default {
 .add-more-btn:hover {
   background: #ffd5b2;
   box-shadow: none;
+}
+
+.view-detail-btn {
+  background: linear-gradient(90deg, #ffb74d 60%, #ffcc02 100%);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(255, 183, 77, 0.2);
+}
+
+.view-detail-btn:hover {
+  background: linear-gradient(90deg, #ffa726 60%, #ffb74d 100%);
+  box-shadow: 0 4px 12px rgba(255, 183, 77, 0.3);
+  transform: scale(1.02);
 }
 
 .product-modal-header {
@@ -3263,6 +3827,339 @@ export default {
   box-shadow: none;
 }
 
+/* Interfaz del carrito detallado (pegada a la derecha) */
+.cart-detail-interface {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  z-index: 2000;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.cart-detail-interface-content {
+  background: #fff;
+  width: 450px;
+  height: 100vh;
+  overflow-y: auto;
+  box-shadow: -10px 0 30px rgba(0, 0, 0, 0.3);
+  position: relative;
+  animation: slideInRight 0.3s ease-out;
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.cart-detail-header {
+  background: #fff;
+  color: #333;
+  padding: 20px 25px;
+  border-bottom: 2px solid #f0f0f0;
+  text-align: center;
+  position: relative;
+}
+
+.cart-detail-header h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #ff9800;
+  margin: 0 0 8px 0;
+}
+
+.cart-detail-header p {
+  font-size: 0.9rem;
+  color: #666;
+  margin: 0;
+}
+
+.close-cart-detail-btn {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: none;
+  border: none;
+  color: #999;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 50%;
+  transition: all 0.2s;
+}
+
+.close-cart-detail-btn:hover {
+  color: #ff9800;
+  background: rgba(255, 152, 0, 0.1);
+}
+
+.cart-detail-body {
+  padding: 20px;
+}
+
+.cart-detail-items h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 15px;
+  text-align: center;
+  color: #ff9800;
+}
+
+.cart-detail-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 15px;
+  background: #fff;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+.cart-detail-item-image {
+  width: 70px;
+  height: 70px;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  flex-shrink: 0;
+}
+
+.cart-detail-item-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.cart-detail-item-info {
+  flex: 1;
+}
+
+.cart-detail-item-info h4 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 6px;
+  line-height: 1.2;
+}
+
+.cart-detail-item-details {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.cart-detail-item-price {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #388e3c;
+}
+
+.cart-detail-item-points {
+  font-size: 0.85rem;
+  color: #ff9800;
+  font-weight: 600;
+}
+
+.cart-detail-item-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+  margin-left: auto;
+}
+
+.cart-detail-quantity-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.cart-detail-quantity-controls .qty-control-btn {
+  background: #ff9800;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  width: 26px;
+  height: 26px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 1px 3px rgba(255,152,0,0.2);
+}
+
+.cart-detail-quantity-controls .qty-control-btn:hover {
+  background: #fb8c00;
+  transform: scale(1.05);
+}
+
+.cart-detail-quantity-controls .quantity-display {
+  background: #fff;
+  padding: 4px 8px;
+  border-radius: 4px;
+  border: 1px solid #e0e0e0;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #333;
+  min-width: 18px;
+  text-align: center;
+}
+
+.remove-cart-item-btn {
+  background: #e53935;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  width: 24px;
+  height: 24px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 1px 3px rgba(229, 57, 53, 0.2);
+}
+
+.remove-cart-item-btn:hover {
+  background: #d32f2f;
+  transform: scale(1.05);
+}
+
+.empty-cart-detail {
+  text-align: center;
+  padding: 40px 20px;
+  color: #666;
+}
+
+.empty-cart-detail i {
+  font-size: 3rem;
+  color: #ccc;
+  margin-bottom: 15px;
+}
+
+.empty-cart-detail p {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.empty-cart-detail span {
+  font-size: 1rem;
+  color: #666;
+  margin-bottom: 20px;
+  display: block;
+}
+
+.cart-detail-summary {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 20px;
+  margin: 20px 0;
+  border: 1px solid #e0e0e0;
+}
+
+.cart-detail-summary h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 15px;
+  text-align: center;
+  color: #ff9800;
+}
+
+.cart-detail-summary-details .summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid #e0e0e0;
+  font-size: 1rem;
+}
+
+.cart-detail-summary-details .summary-row:last-child {
+  border-bottom: none;
+}
+
+.cart-detail-summary-details .total-row {
+  font-weight: 700;
+  color: #388e3c;
+  font-size: 1.1rem;
+  border-top: 1px solid #e0e0e0;
+  padding-top: 12px;
+  margin-top: 8px;
+}
+
+.cart-detail-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.add-more-products-btn {
+  background: linear-gradient(90deg, #ffb74d 60%, #ffcc02 100%);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 1rem;
+  padding: 12px 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 2px 8px rgba(255, 183, 77, 0.2);
+}
+
+.add-more-products-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 183, 77, 0.4);
+}
+
+.go-to-pay-btn {
+  background: linear-gradient(90deg, #ff9800 60%, #ffb74d 100%);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 1.1rem;
+  padding: 14px 24px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(255, 152, 0, 0.2);
+}
+
+.go-to-pay-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 152, 0, 0.4);
+}
+
+.go-to-pay-btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
 .close-product-btn-inside {
   position: absolute;
   top: 10px;
@@ -3322,6 +4219,50 @@ export default {
 }
 
 @media (max-width: 900px) {
+  .main-layout {
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .products-main-area {
+    order: 1;
+  }
+  
+  .fixed-cart-sidebar {
+    order: 2;
+    width: 100%;
+    position: static;
+    max-height: 60vh;
+  }
+  
+  .cart-detail-modal-content {
+    width: 95%;
+    max-width: 600px;
+  }
+  
+  .cart-detail-header {
+    padding: 20px 25px;
+  }
+  
+  .cart-detail-header h2 {
+    font-size: 1.6rem;
+  }
+  
+  .cart-detail-body {
+    padding: 20px;
+  }
+  
+  .cart-detail-item {
+    flex-direction: column;
+    text-align: center;
+    gap: 15px;
+  }
+  
+  .cart-detail-item-controls {
+    flex-direction: row;
+    gap: 15px;
+  }
+  
   .products-catalog-grid {
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
     gap: 12px;
@@ -3347,6 +4288,59 @@ export default {
 }
 
 @media (max-width: 600px) {
+  .main-layout {
+    gap: 10px;
+  }
+  
+  .fixed-cart-sidebar {
+    max-height: 50vh;
+  }
+  
+  .cart-detail-modal-content {
+    width: 98%;
+    max-width: 500px;
+  }
+  
+  .cart-detail-header {
+    padding: 15px 20px;
+  }
+  
+  .cart-detail-header h2 {
+    font-size: 1.4rem;
+  }
+  
+  .cart-detail-body {
+    padding: 15px;
+  }
+  
+  .cart-detail-item {
+    padding: 15px;
+  }
+  
+  .cart-detail-item-image {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .cart-detail-item-info h4 {
+    font-size: 1rem;
+  }
+  
+  .cart-detail-item-details {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .cart-detail-actions {
+    gap: 12px;
+  }
+  
+  .add-more-products-btn,
+  .go-to-pay-btn {
+    padding: 12px 20px;
+    font-size: 1rem;
+  }
+  
   .products-catalog-grid {
     grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
     gap: 10px;
@@ -3514,6 +4508,132 @@ export default {
   color: #6c757d;
   margin: 0 0 20px 0;
   font-size: 0.95rem;
+}
+
+/* Estilos adicionales para mejorar el comportamiento sticky del carrito */
+@media (max-width: 1200px) {
+  .sticky-cart-sidebar {
+    width: 350px;
+  }
+}
+
+@media (max-width: 768px) {
+  .catalog-container {
+    flex-direction: column;
+    padding-top: 0;
+  }
+  
+  .catalog-content-wrapper {
+    flex-direction: column;
+  }
+  
+  .sticky-cart-sidebar {
+    width: 100%;
+    position: relative;
+    top: 0;
+    right: 0;
+    margin-top: 20px;
+    max-height: none;
+  }
+  
+  .products-main-area {
+    min-height: auto;
+  }
+}
+
+
+
+/* Asegurar que el contenedor de productos tenga suficiente altura */
+.products-main-area {
+  min-height: 600px;
+}
+
+/* Asegurar que el grid de productos tenga suficiente contenido para el sticky */
+.products-catalog-grid {
+  min-height: 800px;
+  padding-bottom: 300px;
+  position: relative;
+  height: auto;
+}
+
+/* Asegurar que el wrapper tenga suficiente altura para el sticky */
+.catalog-content-wrapper {
+  padding-bottom: 200px;
+  position: relative;
+  z-index: 1;
+}
+
+/* Asegurar que el sticky funcione correctamente */
+.catalog-content-wrapper {
+  height: auto;
+  overflow: visible;
+}
+
+/* Asegurar que el carrito se mantenga visible hasta el último producto */
+.sticky-cart-sidebar {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 20px;
+  bottom: 20px;
+  max-height: calc(100vh - 40px);
+}
+
+
+
+/* Asegurar que el scroll funcione correctamente */
+.catalog-container {
+  overflow: visible;
+  height: auto;
+  min-height: 150vh;
+}
+
+/* Asegurar que el contenedor padre tenga el comportamiento correcto para sticky */
+.catalog-container::after {
+  content: '';
+  display: block;
+  height: 100vh;
+  width: 1px;
+  position: absolute;
+  right: 0;
+  top: 0;
+  pointer-events: none;
+}
+
+/* Asegurar que el body tenga el comportamiento correcto para sticky */
+body {
+  overflow-x: hidden;
+}
+
+/* Mejorar el comportamiento del carrito sticky */
+.sticky-cart-sidebar {
+  max-height: calc(100vh - 140px);
+  overflow-y: auto;
+  transition: all 0.3s ease;
+}
+
+.sticky-cart-sidebar:hover {
+  box-shadow: 0 6px 25px rgba(0,0,0,0.15);
+}
+
+/* Asegurar que el carrito sticky funcione correctamente */
+.sticky-cart-sidebar {
+  will-change: transform;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+}
+
+/* Asegurar que el carrito se alinee con el contenido */
+.sticky-cart-sidebar .cart-header {
+  padding-top: 0;
+  margin-top: 0;
+}
+
+.products-main-area {
+  overflow: visible;
+  position: relative;
+  min-height: 1200px;
 }
 
 </style>
