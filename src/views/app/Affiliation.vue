@@ -223,6 +223,9 @@
                       <!-- Información del producto -->
                       <div class="product-catalog-info">
                         <h4 class="product-catalog-name">{{ product.name }}</h4>
+                        <div v-if="product.subdescription" class="product-catalog-info-text">
+                          {{ product.subdescription }}
+                        </div>
                         <div class="product-catalog-price">
                           Precio Socio: <span class="price-amount">S/ {{ getProductPrice(product) }}</span>
                         </div>
@@ -2358,8 +2361,23 @@ export default {
   font-size: 0.95rem; /* Más pequeño */
   font-weight: 700;
   color: #ff9800;
+  margin-bottom: 0px;
+  line-height: 1.1;
+}
+
+.product-catalog-info-text {
+  font-size: 0.8rem;
+  color: #666;
+  font-weight: 400;
   margin-bottom: 3px;
-  line-height: 1.2;
+  margin-top: -1px;
+  line-height: 1.0;
+  text-align: center;
+  min-height: 1.0em;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .product-catalog-price {
