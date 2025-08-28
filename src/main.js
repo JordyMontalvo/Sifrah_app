@@ -19,6 +19,14 @@ Vue.use(GAuth, gauthOption);
 Vue.mixin({
   methods: {
     logout() {
+      // Limpiar todos los mensajes de notificación del DOM
+      const notifications = document.querySelectorAll('.affiliation-required-notification, .affiliation-notification');
+      notifications.forEach(notification => {
+        if (notification.parentElement) {
+          notification.remove();
+        }
+      });
+      
       // Limpiar store
       this.$store.dispatch('clearState');
       
@@ -40,6 +48,14 @@ Vue.mixin({
       }
     },
     logout2() {
+      // Limpiar todos los mensajes de notificación del DOM
+      const notifications = document.querySelectorAll('.affiliation-required-notification, .affiliation-notification');
+      notifications.forEach(notification => {
+        if (notification.parentElement) {
+          notification.remove();
+        }
+      });
+      
       // Limpiar store
       this.$store.dispatch('clearState');
       

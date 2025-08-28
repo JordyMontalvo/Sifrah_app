@@ -349,6 +349,14 @@ export default {
     affiliated(newValue, oldValue) {
       if (newValue !== oldValue) {
         this.$store.commit("CLEAR_MENU_STATES");
+        
+        // Limpiar mensajes de notificación cuando cambie el estado de afiliación
+        const notifications = document.querySelectorAll('.affiliation-required-notification, .affiliation-notification');
+        notifications.forEach(notification => {
+          if (notification.parentElement) {
+            notification.remove();
+          }
+        });
       }
     }
   },
