@@ -244,6 +244,12 @@ export default new Vuex.Store({
       state.network = false
       state.commissions = !state.commissions
     },
+    CLEAR_MENU_STATES: (state) => {
+      state.resume = false
+      state.buys = false
+      state.network = false
+      state.commissions = false
+    },
   },
   actions: {
     // Acción para restaurar el estado desde localStorage
@@ -319,6 +325,9 @@ export default new Vuex.Store({
         const _balance = localStorage.getItem('_balance')
         if (_balance !== null) commit('SET__BALANCE', parseFloat(_balance))
         
+        // Limpiar estados de los menús al restaurar (no deben persistir entre sesiones)
+        commit('CLEAR_MENU_STATES')
+        
         console.log('Estado restaurado exitosamente');
         return true;
       } catch (error) {
@@ -348,6 +357,9 @@ export default new Vuex.Store({
       commit('SET_TOTAL_POINTS', null)
       commit('SET_BALANCE', null)
       commit('SET__BALANCE', null)
+      
+      // Limpiar estados de los menús
+      commit('CLEAR_MENU_STATES')
     }
   }
 })

@@ -21,29 +21,31 @@
       <!-- Sección de banners destacados -->
       <div class="featured-banners">
         <div class="banner-grid">
-          <!-- Banner principal grande horizontal (2/3 del ancho) -->
-          <div class="banner-main">
+          <!-- Banner grande izquierda -->
+          <div class="banner-left">
             <div class="banner-placeholder">
-              <span class="banner-text">Banner Principal</span>
+              <span class="banner-text">Banner Izquierda</span>
             </div>
           </div>
           
-          <!-- Banners laterales derechos (1/3 del ancho) -->
-          <div class="banner-sidebar">
-            <div class="banner-small">
+          <!-- Banners medianos en el centro -->
+          <div class="banner-center">
+            <div class="banner-medium-top">
               <div class="banner-placeholder">
-                <span class="banner-text">Banner 1</span>
+                <span class="banner-text">Banner Centro Arriba</span>
               </div>
             </div>
-            <div class="banner-medium">
+            <div class="banner-medium-bottom">
               <div class="banner-placeholder">
-                <span class="banner-text">Banner 2</span>
+                <span class="banner-text">Banner Centro Abajo</span>
               </div>
             </div>
-            <div class="banner-large">
-              <div class="banner-placeholder">
-                <span class="banner-text">Banner 3</span>
-              </div>
+          </div>
+          
+          <!-- Banner grande derecha -->
+          <div class="banner-right">
+            <div class="banner-placeholder">
+              <span class="banner-text">Banner Derecha</span>
             </div>
           </div>
         </div>
@@ -1654,14 +1656,14 @@ export default {
     flex-direction column
     gap 15px
   
-  .banner-main
+  .banner-left, .banner-right
     height 150px
   
-  .banner-sidebar
+  .banner-center
     flex-direction row
     gap 10px
   
-  .banner-small, .banner-medium, .banner-large
+  .banner-medium-top, .banner-medium-bottom
     flex 1
     height 80px
   
@@ -2664,33 +2666,35 @@ export default {
   display: flex;
   gap: 20px;
   align-items: flex-start;
+  width: 100%;
 }
 
-.banner-main {
-  flex: 2;
+.banner-left {
+  flex: 1;
   height: 200px;
-  margin-right: 20px;
 }
 
-.banner-sidebar {
+.banner-center {
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 15px;
-  max-width: 33.33%;
+  gap: 20px;
 }
 
-.banner-small {
+.banner-medium-top {
   height: 90px;
 }
 
-.banner-medium {
-  height: 120px;
+.banner-medium-bottom {
+  height: 90px;
 }
 
-.banner-large {
-  height: 180px;
+.banner-right {
+  flex: 1;
+  height: 200px;
 }
+
+
 
 .banner-placeholder {
   width: 100%;

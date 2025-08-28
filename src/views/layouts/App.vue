@@ -344,6 +344,14 @@ export default {
       notificationTimer: null,
     };
   },
+  watch: {
+    // Limpiar estados de menús cuando cambie el estado de afiliación
+    affiliated(newValue, oldValue) {
+      if (newValue !== oldValue) {
+        this.$store.commit("CLEAR_MENU_STATES");
+      }
+    }
+  },
   created() {
     this.startNotificationLoop();
   },
@@ -481,7 +489,8 @@ export default {
     handleInicioClick() {
       // Verificar afiliación antes de permitir acceso a INICIO
       if (!this.affiliated) {
-        this.$router.push('/affiliation');
+        // Mostrar mensaje de afiliación requerida
+        this.showAffiliationRequiredMessage();
         return;
       }
       
@@ -491,7 +500,10 @@ export default {
     actived(i) {
       // Verificar afiliación antes de permitir acceso a opciones restringidas
       if (!this.affiliated && (i === 1 || i === 2 || i === 3)) {
-        this.$router.push('/affiliation');
+        // Mostrar mensaje de afiliación requerida
+        this.showAffiliationRequiredMessage();
+        // Limpiar estados de menús si no está afiliado
+        this.$store.commit("CLEAR_MENU_STATES");
         return;
       }
       
@@ -627,16 +639,109 @@ export default {
       // Agregar el mensaje al DOM
       document.body.appendChild(notification);
       
-      // El mensaje desaparece automáticamente después de 4 segundos
-      setTimeout(() => {
-        if (notification.parentElement) {
-          notification.remove();
-        }
-      }, 4000);
-    },
+             // El mensaje desaparece automáticamente después de 4 segundos
+       setTimeout(() => {
+         if (notification.parentElement) {
+           notification.remove();
+         }
+       }, 4000);
+     },
 
-  },
-};
+     showAffiliationRequiredMessage() {
+       // Primero, eliminar cualquier mensaje existente
+       const existingNotifications = document.querySelectorAll('.affiliation-required-notification');
+       existingNotifications.forEach(notification => {
+         if (notification.parentElement) {
+           notification.remove();
+         }
+       });
+       
+       // Crear y mostrar el mensaje de notificación en la esquina derecha superior
+       const notification = document.createElement('div');
+       notification.className = 'affiliation-required-notification';
+       notification.innerHTML = `
+         <div class="affiliation-required-notification-content">
+           <div class="affiliation-required-notification-header">
+             <i class="fas fa-lock" style="color: #ffd700; margin-right: 10px;"></i>
+             <span style="font-weight: bold; font-size: 16px;">¡Función Bloqueada!</span>
+           </div>
+           <div class="affiliation-required-notification-body">
+             Para acceder a esta función, necesitas afiliarte primero. ¡Únete a Sifrah y desbloquea todas las funcionalidades!
+           </div>
+           <div class="affiliation-required-notification-footer">
+             <button onclick="window.location.href='/affiliation'" style="
+               background: #4CAF50;
+               color: white;
+               border: none;
+               padding: 8px 16px;
+               border-radius: 6px;
+               cursor: pointer;
+               font-size: 14px;
+               font-weight: bold;
+               margin-top: 10px;
+             ">Afiliarme Ahora</button>
+           </div>
+         </div>
+       `;
+       
+       // Agregar estilos inline para el mensaje en la esquina derecha superior
+       notification.style.cssText = `
+         position: fixed;
+         top: 20px;
+         right: 20px;
+         background: linear-gradient(135deg, #4CAF50, #45a049);
+         color: white;
+         padding: 20px;
+         border-radius: 12px;
+         box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+         z-index: 9999;
+         max-width: 350px;
+         text-align: left;
+         font-family: Arial, sans-serif;
+         animation: slideInFromRight 0.5s ease-out;
+       `;
+       
+       // Agregar estilos para el contenido interno
+       const content = notification.querySelector('.affiliation-required-notification-content');
+       content.style.cssText = `
+         position: relative;
+       `;
+       
+       const header = notification.querySelector('.affiliation-required-notification-header');
+       header.style.cssText = `
+         margin-bottom: 10px;
+         font-size: 16px;
+         display: flex;
+         align-items: center;
+         justify-content: flex-start;
+       `;
+       
+       const body = notification.querySelector('.affiliation-required-notification-body');
+       body.style.cssText = `
+         font-size: 14px;
+         line-height: 1.4;
+         margin-bottom: 15px;
+         opacity: 0.9;
+       `;
+       
+       const footer = notification.querySelector('.affiliation-required-notification-footer');
+       footer.style.cssText = `
+         text-align: center;
+       `;
+       
+       // Agregar el mensaje al DOM
+       document.body.appendChild(notification);
+       
+       // El mensaje desaparece automáticamente después de 6 segundos
+       setTimeout(() => {
+         if (notification.parentElement) {
+           notification.remove();
+         }
+       }, 6000);
+     },
+
+   },
+ };
 </script>
 <style scoped>
 .menu {
