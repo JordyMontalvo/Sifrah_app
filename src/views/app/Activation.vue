@@ -2619,14 +2619,14 @@ export default {
 
 /* Carrito sticky en el lado derecho */
 .sticky-cart-sidebar {
-  width: 380px;
+  width: 480px;
   background: #fff;
   border-radius: 15px;
   box-shadow: 0 4px 20px rgba(0,0,0,0.1);
   display: flex;
   flex-direction: column;
-  max-height: 85vh;
-  overflow: hidden;
+  max-height: calc(100vh - 40px);
+  overflow-y: auto;
   position: sticky;
   top: 20px;
   align-self: flex-start;
@@ -2636,7 +2636,6 @@ export default {
   margin-top: 0;
   transform: translateZ(0);
   transition: all 0.3s ease;
-  bottom: 20px;
 }
 
 /* Estilos para el título principal de la tienda */
@@ -2672,28 +2671,28 @@ export default {
 }
 
 .banner-left {
-  flex: 1;
-  height: 200px;
+  flex: 2;
+  height: 350px;
 }
 
 .banner-center {
-  flex: 1;
+  flex: 1.1;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 10px;
 }
 
 .banner-medium-top {
-  height: 90px;
+  height: 170px;
 }
 
 .banner-medium-bottom {
-  height: 90px;
+  height: 170px;
 }
 
 .banner-right {
-  flex: 1;
-  height: 200px;
+  flex: 0.95;
+  height: 350px;
 }
 
 
@@ -2782,7 +2781,7 @@ export default {
   gap: 20px;
   margin-top: 10px;
   align-items: flex-start;
-  min-height: 100vh;
+  min-height: auto;
   position: relative;
   overflow: visible;
   padding-top: 20px;
@@ -2796,7 +2795,7 @@ export default {
 
 /* Contenedor wrapper para controlar el comportamiento sticky del carrito */
 .catalog-content-wrapper {
-  min-height: 150vh;
+  min-height: auto;
   position: relative;
   overflow: visible;
   display: flex;
@@ -2808,7 +2807,7 @@ export default {
 /* Contenedor interno del catálogo */
 .catalog-inner-wrapper {
   flex: 1;
-  min-height: 150vh;
+  min-height: auto;
   position: relative;
   height: auto;
   overflow: visible;
@@ -2820,7 +2819,7 @@ export default {
   border-radius: 12px;
   padding: 18px;
   box-shadow: 0 2px 12px rgba(0,0,0,0.07);
-  min-height: 1200px;
+  min-height: auto;
   position: relative;
   width: 100%;
   margin-top: 0;
@@ -3275,22 +3274,22 @@ export default {
 
 .cart-header {
   background: #f9f9f9;
-  padding: 16px 16px 12px 16px;
+  padding: 20px 20px 16px 20px;
   border-bottom: 1px solid #eee;
   border-radius: 15px 15px 0 0;
   position: relative;
 }
 
 .cart-header h3 {
-  font-size: 1.2rem;
+  font-size: 1.5rem;
   font-weight: 700;
   color: #ff9800;
-  margin: 0 0 6px 0;
+  margin: 0 0 8px 0;
   text-align: center;
 }
 
 .cart-header p {
-  font-size: 0.85rem;
+  font-size: 0.95rem;
   color: #666;
   margin: 0;
   text-align: center;
@@ -3298,12 +3297,12 @@ export default {
 
 .cart-items-container {
   flex: 1;
-  padding: 12px 16px;
+  padding: 16px 20px;
   overflow-y: auto;
-  max-height: 400px;
+  max-height: 450px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 12px;
 }
 
 .empty-cart {
@@ -3435,10 +3434,10 @@ export default {
 .cart-item {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 16px;
   background: #fff;
-  border-radius: 10px;
-  padding: 12px;
+  border-radius: 12px;
+  padding: 16px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.06);
   margin-bottom: 8px;
   border: 1px solid #f0f0f0;
@@ -3451,13 +3450,13 @@ export default {
 }
 
 .cart-item-img {
-  width: 60px;
-  height: 60px;
+  width: 80px;
+  height: 80px;
   object-fit: contain;
-  border-radius: 8px;
+  border-radius: 10px;
   flex-shrink: 0;
   background: #f8f8f8;
-  padding: 6px;
+  padding: 8px;
   border: 1px solid #eee;
 }
 
@@ -3470,7 +3469,7 @@ export default {
 }
 
 .cart-item-info h4 {
-  font-size: 0.8rem;
+  font-size: 1.1rem;
   font-weight: 700;
   color: #333;
   margin: 0;
@@ -3484,18 +3483,18 @@ export default {
 }
 
 .cart-item-price {
-  font-size: 0.95rem;
+  font-size: 1.1rem;
   font-weight: 600;
   color: #388e3c;
 }
 
 .cart-item-points {
-  font-size: 0.85rem;
+  font-size: 1rem;
   font-weight: 600;
   color: #ff9800;
   background: rgba(255, 152, 0, 0.1);
-  padding: 2px 6px;
-  border-radius: 4px;
+  padding: 4px 8px;
+  border-radius: 6px;
 }
 
 .cart-item-controls {
@@ -3546,7 +3545,7 @@ export default {
 }
 
 .cart-summary-section {
-  padding: 14px 16px;
+  padding: 18px 20px;
   border-top: 1px solid #eee;
   background: #f9f9f9;
   flex-shrink: 0;
@@ -3555,8 +3554,8 @@ export default {
 .summary-details {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  font-size: 1rem;
+  gap: 12px;
+  font-size: 1.1rem;
   color: #b26a00;
 }
 
@@ -3583,8 +3582,8 @@ export default {
 .cart-actions {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  padding: 14px 16px;
+  gap: 14px;
+  padding: 18px 20px;
   border-top: 1px solid #eee;
   background: #f9f9f9;
   border-radius: 0 0 15px 15px;
@@ -3592,17 +3591,17 @@ export default {
 }
 
 .pay-btn, .add-more-btn, .view-detail-btn {
-  padding: 12px 20px;
+  padding: 16px 24px;
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
   font-weight: 700;
-  font-size: 0.95rem;
+  font-size: 1.1rem;
   cursor: pointer;
   transition: background 0.2s, box-shadow 0.2s, transform 0.18s;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  gap: 8px;
 }
 
 .pay-btn {
@@ -4559,82 +4558,22 @@ export default {
   }
 }
 
-
-
-/* Asegurar que el contenedor de productos tenga suficiente altura */
-.products-main-area {
-  min-height: 600px;
-}
-
 /* Asegurar que el grid de productos tenga suficiente contenido para el sticky */
 .products-catalog-grid {
-  min-height: 800px;
-  padding-bottom: 300px;
+  min-height: auto;
+  padding-bottom: 50px;
   position: relative;
   height: auto;
-}
-
-/* Asegurar que el wrapper tenga suficiente altura para el sticky */
-.catalog-content-wrapper {
-  padding-bottom: 200px;
-  position: relative;
-  z-index: 1;
-}
-
-/* Asegurar que el sticky funcione correctamente */
-.catalog-content-wrapper {
-  height: auto;
-  overflow: visible;
-}
-
-/* Asegurar que el carrito se mantenga visible hasta el último producto */
-.sticky-cart-sidebar {
-  position: -webkit-sticky;
-  position: sticky;
-  top: 20px;
-  bottom: 20px;
-  max-height: calc(100vh - 40px);
-}
-
-
-
-/* Asegurar que el scroll funcione correctamente */
-.catalog-container {
-  overflow: visible;
-  height: auto;
-  min-height: 150vh;
-}
-
-/* Asegurar que el contenedor padre tenga el comportamiento correcto para sticky */
-.catalog-container::after {
-  content: '';
-  display: block;
-  height: 100vh;
-  width: 1px;
-  position: absolute;
-  right: 0;
-  top: 0;
-  pointer-events: none;
-}
-
-/* Asegurar que el body tenga el comportamiento correcto para sticky */
-body {
-  overflow-x: hidden;
 }
 
 /* Mejorar el comportamiento del carrito sticky */
 .sticky-cart-sidebar {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 20px;
   max-height: calc(100vh - 140px);
   overflow-y: auto;
   transition: all 0.3s ease;
-}
-
-.sticky-cart-sidebar:hover {
-  box-shadow: 0 6px 25px rgba(0,0,0,0.15);
-}
-
-/* Asegurar que el carrito sticky funcione correctamente */
-.sticky-cart-sidebar {
   will-change: transform;
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
@@ -4642,16 +4581,14 @@ body {
   transform: translateZ(0);
 }
 
+.sticky-cart-sidebar:hover {
+  box-shadow: 0 6px 25px rgba(0,0,0,0.15);
+}
+
 /* Asegurar que el carrito se alinee con el contenido */
 .sticky-cart-sidebar .cart-header {
   padding-top: 0;
   margin-top: 0;
-}
-
-.products-main-area {
-  overflow: visible;
-  position: relative;
-  min-height: 1200px;
 }
 
 </style>
