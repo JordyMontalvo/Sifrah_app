@@ -1,30 +1,27 @@
 <template>
   <App :session="session" :office_id="office_id" :title="title">
     <div v-cloak>
-      <!-- Título principal de la tienda -->
-      <h1 class="store-title">Tienda Sifrah</h1>
-      
-      <h4 class="tabs">
-        <router-link class="tab" to="/activation">
-          <span class="tab-icon">🛒</span> Comprar
-        </router-link>
-      </h4>
+      <!-- CONTENEDOR PRINCIPAL DE LA TIENDA SIFRAH -->
+      <div class="tienda-sifrah-container">
+        
+        <!-- Título principal de la tienda -->
+        <h1 class="store-title">Tienda Sifrah</h1>
 
-      <div class="points-bar">
-        <span class="points-icon">💎</span> Puntos: <b>{{ current_points }}</b>
-      </div>
-      
-      <!-- Sección de banners destacados -->
-      <div class="featured-banners">
-        <div class="banner-grid">
-          <!-- Banner grande izquierda -->
+        <!-- Barra de puntos del usuario -->
+        <div class="points-bar">
+          <span class="points-icon">💎</span> Puntos: <b>{{ current_points }}</b>
+        </div>
+        
+        <!-- Sistema de banners unificado -->
+        <div class="banners-unified-wrapper">
+          <!-- Banner izquierda - El más ancho -->
           <div class="banner-left">
             <div class="banner-placeholder">
               <span class="banner-text">Banner Izquierda</span>
             </div>
           </div>
           
-          <!-- Banners medianos en el centro -->
+          <!-- Banners del centro - Medianos -->
           <div class="banner-center">
             <div class="banner-medium-top">
               <div class="banner-placeholder">
@@ -38,260 +35,266 @@
             </div>
           </div>
           
-          <!-- Banner grande derecha -->
+          <!-- Banner derecha - El más cuadrado -->
           <div class="banner-right">
             <div class="banner-placeholder">
               <span class="banner-text">Banner Derecha</span>
             </div>
           </div>
         </div>
-      </div>
-      
 
-
-      <!-- Nuevo catálogo de productos con carrito -->
-      <div v-if="loading" class="loading-container">
-        <div class="loading-spinner-large"></div>
-        <p>Cargando productos...</p>
-      </div>
-      
-      <div v-else-if="!products || products.length === 0" class="loading-container">
-        <div class="loading-spinner-large"></div>
-        <p v-if="!products">Inicializando catálogo...</p>
-        <p v-else>No hay productos disponibles</p>
-        <div v-if="error" class="error-message">
-          {{ error }}
-        </div>
-      </div>
-      
-      <div v-else-if="loading" class="skeleton-container">
-        <div class="skeleton-header">
-          <div class="skeleton-title"></div>
-          <div class="skeleton-subtitle"></div>
-        </div>
-        <div class="skeleton-grid">
-          <div v-for="i in 6" :key="i" class="skeleton-card">
-            <div class="skeleton-image"></div>
-            <div class="skeleton-content">
-              <div class="skeleton-line"></div>
-              <div class="skeleton-line short"></div>
+        <!-- Sección de catálogo de productos y carrito -->
+        <div class="productos-compras-section">
+          
+          <!-- Estados de carga y error -->
+          <div v-if="loading" class="loading-container">
+            <div class="loading-spinner-large"></div>
+            <p>Cargando productos...</p>
+          </div>
+          
+          <div v-else-if="!products || products.length === 0" class="loading-container">
+            <div class="loading-spinner-large"></div>
+            <p v-if="!products">Inicializando catálogo...</p>
+            <p v-else>No hay productos disponibles</p>
+            <div v-if="error" class="error-message">
+              {{ error }}
             </div>
           </div>
-        </div>
-      </div>
-      
-      <div v-else class="catalog-container">
-        <!-- Área principal de productos -->
-        <div class="products-main-area">
-          <!-- Contenedor con altura definida para el sticky -->
-          <div class="catalog-content-wrapper">
-            <!-- Contenedor del catálogo completo -->
-            <div class="catalog-inner-wrapper">
-          <!-- Título del catálogo -->
-          <h4 class="products-title">Catálogo de Productos</h4>
           
-          <!-- Filtros y búsqueda -->
-          <div class="catalog-filters">
-            <div class="search-filter">
-              <i class="fas fa-search search-icon"></i>
-              <input 
-                v-model="searchTerm" 
-                type="text" 
-                placeholder="Búsqueda..." 
-                class="search-input"
-              />
+          <div v-else-if="loading" class="skeleton-container">
+            <div class="skeleton-header">
+              <div class="skeleton-title"></div>
+              <div class="skeleton-subtitle"></div>
             </div>
-            
-            <div class="category-filters">
-              <div class="category-buttons">
-                <button 
-                  @click="clearAllFilters"
-                  class="clear-filters-btn"
-                  v-if="searchTerm || (selectedCategories.length > 0 && !selectedCategories.includes('Todos'))"
-                >
-                  <i class="fas fa-times"></i> Limpiar
-                </button>
-                                  <button 
-                    v-for="category in categories" 
-                    :key="category"
-                    @click="toggleCategory(category)"
-                    :class="{ active: selectedCategories.includes(category) }"
-                    class="category-btn"
+            <div class="skeleton-grid">
+              <div v-for="i in 6" :key="i" class="skeleton-card">
+                <div class="skeleton-image"></div>
+                <div class="skeleton-content">
+                  <div class="skeleton-line"></div>
+                  <div class="skeleton-line short"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Contenido principal del catálogo y carrito -->
+          <div v-else class="catalog-container">
+            <!-- Área principal de productos -->
+            <div class="products-main-area">
+              <!-- Contenedor con altura definida para el sticky -->
+              <div class="catalog-content-wrapper">
+                <!-- Contenedor del catálogo completo -->
+                <div class="catalog-inner-wrapper">
+                  <!-- Título del catálogo -->
+                  <h4 class="products-title">Catálogo de Productos</h4>
+                  
+                  <!-- Filtros y búsqueda -->
+                  <div class="catalog-filters">
+                    <div class="search-filter">
+                      <i class="fas fa-search search-icon"></i>
+                      <input 
+                        v-model="searchTerm" 
+                        type="text" 
+                        placeholder="Búsqueda..." 
+                        class="search-input"
+                      />
+                    </div>
+                    
+                    <div class="category-filters">
+                      <div class="category-buttons">
+                        <button 
+                          @click="clearAllFilters"
+                          class="clear-filters-btn"
+                          v-if="searchTerm || (selectedCategories.length > 0 && !selectedCategories.includes('Todos'))"
+                        >
+                          <i class="fas fa-times"></i> Limpiar
+                        </button>
+                        <button 
+                          v-for="category in categories" 
+                          :key="category"
+                          @click="toggleCategory(category)"
+                          :class="{ active: selectedCategories.includes(category) }"
+                          class="category-btn"
+                        >
+                          {{ formatCategoryName(category) }}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Grid de productos -->
+                  <div v-if="loading" class="products-loading">
+                    <div class="loading-spinner-medium"></div>
+                    <p>Cargando catálogo...</p>
+                  </div>
+                  
+                  <div v-else class="products-catalog-grid">
+                    <!-- Indicador de productos mostrados -->
+                    <div class="products-count-indicator">
+                      <span>Mostrando {{ filteredCatalogProducts.length }} de {{ products.length }} productos</span>
+                      <span v-if="searchTerm || (selectedCategories.length > 0 && !selectedCategories.includes('Todos'))" class="filter-active">
+                        (filtros activos)
+                      </span>
+                    </div>
+                    
+                    <div 
+                      v-for="(product, i) in filteredCatalogProducts" 
+                      :key="product.id || i"
+                      class="product-catalog-card"
+                      @click="openProductModal(product)"
+                    >
+                      <!-- Esquina decorativa de la tarjeta -->
+                      <div class="card-corner"></div>
+                      
+                      <!-- Badge de puntos -->
+                      <div class="points-badge">
+                        <i class="fas fa-star"></i>
+                        {{ product.points }} pts
+                      </div>
+                      
+                      <!-- Imagen del producto -->
+                      <div class="product-image-container">
+                        <img
+                          :src="product.img"
+                          :alt="product.name"
+                          class="product-catalog-img"
+                        />
+                      </div>
+                      
+                      <!-- Información del producto -->
+                      <div class="product-catalog-info">
+                        <h4 class="product-catalog-name">{{ product.name }}</h4>
+                        <div v-if="product.subdescription" class="product-catalog-info-text">
+                          {{ product.subdescription }}
+                        </div>
+                        <div class="product-catalog-price">
+                          Precio Socio: <span class="price-amount">S/ {{ getProductPrice(product) }}</span>
+                        </div>
+                      </div>
+                      
+                      <!-- Controles de cantidad -->
+                      <div v-if="getProductQuantity(product) > 0" class="product-quantity-controls">
+                        <button 
+                          @click.stop="decreaseQuantity(product)"
+                          class="qty-control-btn"
+                        >
+                          -
+                        </button>
+                        <span class="quantity-display">
+                          {{ getProductQuantity(product) }}
+                        </span>
+                        <button 
+                          @click.stop="addToCart(product)"
+                          class="qty-control-btn"
+                          :disabled="getProductQuantity(product) >= 10"
+                        >
+                          +
+                        </button>
+                      </div>
+                      
+                      <!-- Botón de agregar -->
+                      <div v-else class="add-to-cart-container">
+                        <button 
+                          @click.stop="addToCart(product)"
+                          class="add-to-cart-btn"
+                          :disabled="getProductQuantity(product) >= 10"
+                        >
+                          <i class="fas fa-shopping-cart"></i>
+                          Agregar
+                        </button>
+                      </div>
+                    </div>
+                    
+                    <!-- Mensaje cuando no hay productos que coincidan con los filtros -->
+                    <div v-if="filteredCatalogProducts.length === 0 && !loading" class="no-products-message">
+                      <i class="fas fa-search"></i>
+                      <h4>No se encontraron productos</h4>
+                      <p>No hay productos que coincidan con los filtros seleccionados.</p>
+                      <button @click="clearAllFilters" class="clear-filters-btn">
+                        <i class="fas fa-times"></i> Limpiar filtros
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- DIV PADRE DEL CARRITO DE COMPRAS -->
+            <div class="carrito-compras-container">
+              <!-- Carrito fijo en el lado derecho -->
+              <div class="sticky-cart-sidebar">
+                <div class="cart-header">
+                  <h3>Carrito de Compras</h3>
+                  <p>Puedes hacer scroll para ver todos tus productos.</p>
+                </div>
+                
+                <div class="cart-items-container">
+                  <div 
+                    v-for="(item, index) in cartItems" 
+                    :key="index"
+                    class="cart-item"
                   >
-                    {{ formatCategoryName(category) }}
+                    <img :src="item.img" :alt="item.name" class="cart-item-img" />
+                    <div class="cart-item-info">
+                      <h4>{{ item.name }}</h4>
+                      <div class="cart-item-details">
+                        <span class="cart-item-price">S/ {{ getProductPrice(item) }}</span>
+                        <span class="cart-item-points">{{ item.points }}pts</span>
+                      </div>
+                    </div>
+                    <div class="cart-item-controls">
+                      <div class="cart-item-quantity-controls">
+                        <button @click="decreaseQuantity(item)" class="qty-control-btn">
+                          -
+                        </button>
+                        <span class="quantity-display">{{ item.total }}</span>
+                        <button @click="increaseQuantity(item)" class="qty-control-btn">
+                          +
+                        </button>
+                      </div>
+                      <div class="cart-item-remove-control">
+                        <button @click="removeFromCart(index)" class="remove-btn">
+                          <i class="fas fa-trash"></i>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div v-if="cartItems.length === 0" class="empty-cart">
+                    <i class="fas fa-shopping-cart"></i>
+                    <p>Tu carrito está vacío</p>
+                    <span>Agrega productos para comenzar</span>
+                  </div>
+                </div>
+                
+                <div class="cart-summary-section">
+                  <h3>Resumen</h3>
+                  <div class="summary-details">
+                    <div class="summary-row">
+                      <span>Total productos:</span>
+                      <span class="summary-value">{{ cartItemsTotal }} items</span>
+                    </div>
+                    <div class="summary-row">
+                      <span>Puntos:</span>
+                      <span>{{ cartPoints.toFixed(2) }}</span>
+                    </div>
+                    <div class="summary-row total-row">
+                      <span>Total:</span>
+                      <span>S/ {{ cartTotal.toFixed(2) }}</span>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="cart-actions">
+                  <button class="pay-btn" @click="goToCheckout" :disabled="cartItems.length === 0">
+                    Ir a Pagar
                   </button>
-              </div>
-            </div>
-          </div>
-
-          <!-- Grid de productos -->
-          <div v-if="loading" class="products-loading">
-            <div class="loading-spinner-medium"></div>
-            <p>Cargando catálogo...</p>
-          </div>
-          
-          <div v-else class="products-catalog-grid">
-            <!-- Indicador de productos mostrados -->
-            <div class="products-count-indicator">
-              <span>Mostrando {{ filteredCatalogProducts.length }} de {{ products.length }} productos</span>
-              <span v-if="searchTerm || (selectedCategories.length > 0 && !selectedCategories.includes('Todos'))" class="filter-active">
-                (filtros activos)
-              </span>
-            </div>
-            
-            <div 
-              v-for="(product, i) in filteredCatalogProducts" 
-              :key="product.id || i"
-              class="product-catalog-card"
-              @click="openProductModal(product)"
-            >
-              <!-- Esquina decorativa de la tarjeta -->
-              <div class="card-corner"></div>
-              
-              <!-- Badge de puntos -->
-              <div class="points-badge">
-                <i class="fas fa-star"></i>
-                {{ product.points }} pts
-              </div>
-              
-              <!-- Imagen del producto -->
-              <div class="product-image-container">
-                <img
-                  :src="product.img"
-                  :alt="product.name"
-                  class="product-catalog-img"
-                />
-              </div>
-              
-              <!-- Información del producto -->
-              <div class="product-catalog-info">
-                <h4 class="product-catalog-name">{{ product.name }}</h4>
-                <div v-if="product.subdescription" class="product-catalog-info-text">
-                  {{ product.subdescription }}
-                </div>
-                <div class="product-catalog-price">
-                  Precio Socio: <span class="price-amount">S/ {{ getProductPrice(product) }}</span>
-                </div>
-              </div>
-              
-              <!-- Controles de cantidad -->
-              <div v-if="getProductQuantity(product) > 0" class="product-quantity-controls">
-                <button 
-                  @click.stop="decreaseQuantity(product)"
-                  class="qty-control-btn"
-                >
-                  -
-                </button>
-                <span class="quantity-display">
-                  {{ getProductQuantity(product) }}
-                </span>
-                <button 
-                  @click.stop="addToCart(product)"
-                  class="qty-control-btn"
-                  :disabled="getProductQuantity(product) >= 10"
-                >
-                  +
-                </button>
-              </div>
-              
-              <!-- Botón de agregar -->
-              <div v-else class="add-to-cart-container">
-                <button 
-                  @click.stop="addToCart(product)"
-                  class="add-to-cart-btn"
-                  :disabled="getProductQuantity(product) >= 10"
-                >
-                  <i class="fas fa-shopping-cart"></i>
-                  Agregar
-                </button>
-              </div>
-            </div>
-            
-            <!-- Mensaje cuando no hay productos que coincidan con los filtros -->
-            <div v-if="filteredCatalogProducts.length === 0 && !loading" class="no-products-message">
-              <i class="fas fa-search"></i>
-              <h4>No se encontraron productos</h4>
-              <p>No hay productos que coincidan con los filtros seleccionados.</p>
-              <button @click="clearAllFilters" class="clear-filters-btn">
-                <i class="fas fa-times"></i> Limpiar filtros
-              </button>
-            </div>
-          </div>
-        </div>
-          </div>
-          </div>
-
-        <!-- Carrito fijo en el lado derecho -->
-        <div class="sticky-cart-sidebar">
-          <div class="cart-header">
-            <h3>Carrito de Compras</h3>
-            <p>Puedes hacer scroll para ver todos tus productos.</p>
-          </div>
-          
-          <div class="cart-items-container">
-            <div 
-              v-for="(item, index) in cartItems" 
-              :key="index"
-              class="cart-item"
-            >
-              <img :src="item.img" :alt="item.name" class="cart-item-img" />
-              <div class="cart-item-info">
-                <h4>{{ item.name }}</h4>
-                <div class="cart-item-details">
-                  <span class="cart-item-price">S/ {{ getProductPrice(item) }}</span>
-                  <span class="cart-item-points">{{ item.points }}pts</span>
-                </div>
-              </div>
-              <div class="cart-item-controls">
-                <div class="cart-item-quantity-controls">
-                  <button @click="decreaseQuantity(item)" class="qty-control-btn">
-                    -
-                  </button>
-                  <span class="quantity-display">{{ item.total }}</span>
-                  <button @click="increaseQuantity(item)" class="qty-control-btn">
-                    +
+                  <button class="view-detail-btn" @click="openCartDetailModal">
+                    Ver detalle
                   </button>
                 </div>
-                <div class="cart-item-remove-control">
-                <button @click="removeFromCart(index)" class="remove-btn">
-                  <i class="fas fa-trash"></i>
-                </button>
-              </div>
               </div>
             </div>
-            
-            <div v-if="cartItems.length === 0" class="empty-cart">
-              <i class="fas fa-shopping-cart"></i>
-              <p>Tu carrito está vacío</p>
-              <span>Agrega productos para comenzar</span>
-            </div>
-          </div>
-          
-          <div class="cart-summary-section">
-            <h3>Resumen</h3>
-            <div class="summary-details">
-              <div class="summary-row">
-                <span>Total productos:</span>
-                <span class="summary-value">{{ cartItemsTotal }} items</span>
-              </div>
-              <div class="summary-row">
-                <span>Puntos:</span>
-                <span>{{ cartPoints.toFixed(2) }}</span>
-              </div>
-              <div class="summary-row total-row">
-                <span>Total:</span>
-                <span>S/ {{ cartTotal.toFixed(2) }}</span>
-              </div>
-            </div>
-          </div>
-          
-          <div class="cart-actions">
-            <button class="pay-btn" @click="goToCheckout" :disabled="cartItems.length === 0">
-              Ir a Pagar
-            </button>
-            <button class="view-detail-btn" @click="openCartDetailModal">
-              Ver detalle
-            </button>
           </div>
         </div>
       </div>
@@ -1653,21 +1656,29 @@ export default {
   .filter-group
     justify-content space-between
   
-  /* Responsive para banners */
-  .banner-grid
+  /* Responsive para banners - Sistema unificado */
+  .banners-inner-wrapper
+    padding 0 15px 0 0
+  
+  .banners-unified-grid
     flex-direction column
     gap 15px
   
-  .banner-left, .banner-right
-    height 150px
-  
-  .banner-center
-    flex-direction row
-    gap 10px
-  
-  .banner-medium-top, .banner-medium-bottom
+  .banner-left-container
     flex 1
-    height 80px
+  
+  .banner-center-container
+    flex-direction row
+    gap 15px
+  
+  .banner-center-top-element, .banner-center-bottom-element
+    flex 1
+  
+  .banner-left-element, .banner-right-element
+    height 200px
+  
+  .banner-center-top-placeholder, .banner-center-bottom-placeholder
+    height 95px
   
   /* Responsive para placeholders de productos */
   .product-placeholders
@@ -2609,23 +2620,81 @@ export default {
   color: #333;
 }
 
+/* CONTENEDOR PRINCIPAL DE LA TIENDA SIFRAH */
+.tienda-sifrah-container {
+  width: 100%;
+  max-width: 1800px;
+  margin: 0 0 0 20px;
+  padding: 20px;
+  background: #fafafa;
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+}
+
+/* SECCIÓN DE PRODUCTOS Y COMPRAS */
+.productos-compras-section {
+  margin-top: 30px;
+  padding: 20px 0;
+}
+
+/* Barra de puntos del usuario */
+.points-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 12px 20px;
+  border-radius: 20px;
+  margin: 20px 0;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+  font-size: 0.95rem;
+  font-weight: 600;
+  width: fit-content;
+  max-width: 250px;
+  margin-left: auto;
+}
+
+.points-icon {
+  font-size: 1rem;
+  animation: sparkle 2s ease-in-out infinite;
+}
+
+@keyframes sparkle {
+  0%, 100% { transform: scale(1) rotate(0deg); }
+  50% { transform: scale(1.1) rotate(180deg); }
+}
+
 /* Layout principal con productos y carrito fijo */
 .main-layout {
   display: flex;
   gap: 20px;
   width: 100%;
   align-items: flex-start;
+  position: relative;
+}
+
+/* DIV PADRE DEL CARRITO DE COMPRAS */
+.carrito-compras-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: flex-start;
+  height: 100%;
+  position: relative;
 }
 
 /* Carrito sticky en el lado derecho */
 .sticky-cart-sidebar {
-  width: 480px;
+  width: 420px;
   background: #fff;
   border-radius: 15px;
   box-shadow: 0 4px 20px rgba(0,0,0,0.1);
   display: flex;
   flex-direction: column;
-  max-height: calc(100vh - 40px);
+  max-height: calc(100vh - 20px);
+  min-height: 700px;
   overflow-y: auto;
   position: sticky;
   top: 20px;
@@ -2636,13 +2705,14 @@ export default {
   margin-top: 0;
   transform: translateZ(0);
   transition: all 0.3s ease;
+  flex: 0 0 420px;
 }
 
 /* Estilos para el título principal de la tienda */
 .store-title {
   font-size: 2.5rem;
   font-weight: 700;
-  color: #333;
+  color: #000;
   margin: 0 0 20px 0;
   text-align: left;
   letter-spacing: -0.5px;
@@ -2656,46 +2726,39 @@ export default {
   margin: 0 0 20px 0;
   text-align: left;
   letter-spacing: -0.5px;
+  border-left: 4px solid #ff6b35;
+  padding-left: 15px;
 }
 
-/* Estilos para los banners destacados */
-.featured-banners {
-  margin: 20px 0;
-}
-
-.banner-grid {
+/* Sistema de banners unificado - TODO EN UN SOLO DIV PARA ZOOM UNIFORME */
+.banners-unified-wrapper {
   display: flex;
-  gap: 20px;
-  align-items: flex-start;
+  gap: 15px;
   width: 100%;
+  margin: 0;
+  padding: 20px 0;
+  position: relative;
+  background: transparent;
+  transform-origin: top left;
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  overflow: hidden;
+  contain: layout style paint;
+  align-items: stretch;
 }
 
+/* Banner izquierda - El más ancho */
 .banner-left {
-  flex: 2;
-  height: 350px;
+  flex: 3.8;
+  min-width: 0;
+  position: relative;
+  align-self: stretch;
 }
 
-.banner-center {
-  flex: 1.1;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+.banner-left .banner-placeholder {
+  height: 400px;
 }
-
-.banner-medium-top {
-  height: 170px;
-}
-
-.banner-medium-bottom {
-  height: 170px;
-}
-
-.banner-right {
-  flex: 0.95;
-  height: 350px;
-}
-
-
 
 .banner-placeholder {
   width: 100%;
@@ -2709,18 +2772,114 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
   border: 1px solid #d0d0d0;
   box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
 
-.banner-text {
+/* Banners del centro - Medianos */
+.banner-center {
+  flex: 1.8;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-width: 0;
+  position: relative;
+  justify-content: space-between;
+  align-self: stretch;
+}
+
+.banner-medium-top,
+.banner-medium-bottom {
+  width: 100%;
+  height: 190px;
+  position: relative;
+  overflow: hidden;
+  flex: 1;
+}
+
+/* Banner derecha - El más cuadrado */
+.banner-right {
+  flex: 2;
+  min-width: 0;
+  position: relative;
+  align-self: stretch;
+}
+
+.banner-right .banner-placeholder {
+  height: 400px;
+}
+
+/* Estilos para los placeholders de banners del centro y derecha */
+.banner-medium-top .banner-placeholder,
+.banner-medium-bottom .banner-placeholder,
+.banner-right .banner-placeholder {
+  width: 100%;
+  height: 100%;
+  background: repeating-conic-gradient(
+    #f0f0f0 0deg 90deg,
+    #e0e0e0 90deg 180deg
+  );
+  background-size: 20px 20px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  border: 1px solid #d0d0d0;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+/* Estilos para los textos de banners del centro y derecha */
+.banner-medium-top .banner-text,
+.banner-medium-bottom .banner-text,
+.banner-right .banner-text {
+  font-size: 16px;
+  font-weight: 600;
   color: #666;
-  font-size: 0.9rem;
-  font-weight: 500;
-  background: rgba(255,255,255,0.8);
-  padding: 8px 16px;
+  text-align: center;
+  padding: 16px;
+  background: rgba(255,255,255,0.9);
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+
+
+.banner-placeholder {
+  width: 100%;
+  height: 100%;
+  background: repeating-conic-gradient(
+    #f0f0f0 0deg 90deg,
+    #e0e0e0 90deg 180deg
+  );
+  background-size: 20px 20px;
+  border-radius: inherit;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  box-shadow: none;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+/* Estilos unificados para todos los textos de banners */
+.banner-text {
+  color: #333;
+  font-size: 14px;
+  font-weight: 600;
+  background: rgba(255,255,255,0.95);
+  padding: 10px 16px;
   border-radius: 20px;
-  backdrop-filter: blur(4px);
+  backdrop-filter: blur(8px);
+  white-space: nowrap;
+  text-align: center;
+  line-height: 1.2;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  position: relative;
+  z-index: 2;
 }
 
 /* Estilos para los placeholders de productos */
@@ -2785,6 +2944,7 @@ export default {
   position: relative;
   overflow: visible;
   padding-top: 20px;
+  width: 100%;
 }
 
 /* Asegurar que el contenedor tenga el comportamiento correcto para sticky */
@@ -2811,10 +2971,11 @@ export default {
   position: relative;
   height: auto;
   overflow: visible;
+  width: 100%;
 }
 
 .products-main-area {
-  flex: 1;
+  flex: 3;
   background: #f9f9f9;
   border-radius: 12px;
   padding: 18px;
@@ -2952,16 +3113,18 @@ export default {
   font-weight: bold;
 }
 
-.products-catalog-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); /* Más pequeño para 4 columnas */
-  gap: 15px; /* Menos espacio entre cards */
-}
+  .products-catalog-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 4 columnas fijas como la imagen */
+    gap: 20px; /* Espacio reducido entre cards para acercar productos */
+    width: 100%;
+    padding: 20px 0;
+  }
 
 .product-catalog-card {
   background: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%);
   border-radius: 12px;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.15), 0 2px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1), 0 2px 6px rgba(0,0,0,0.08);
   padding: 20px;
   display: flex;
   flex-direction: column;
@@ -2969,8 +3132,8 @@ export default {
   position: relative;
   transition: all 0.3s ease;
   cursor: pointer;
-  border: 2px solid #e8e8e8;
-  min-height: 320px;
+  border: 1px solid #f0f0f0;
+  min-height: 300px;
   overflow: hidden;
 }
 
@@ -3039,23 +3202,40 @@ export default {
 }
 
 .product-image-container {
-  width: 110px;
-  height: 110px;
+  width: 200px;
+  height: 200px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 18px;
+  margin-bottom: 15px;
   overflow: hidden;
-  border-radius: 6px;
-  padding: 8px;
-  border: 2px solid #f0f0f0;
+  border-radius: 12px;
+  padding: 16px;
+  border: 1px solid #e8e8e8;
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  background: #fafafa;
+  transition: all 0.3s ease;
+}
+
+.product-image-container:hover {
+  border-color: #ff6b35;
+  box-shadow: 0 4px 16px rgba(255,107,53,0.2);
 }
 
 .product-catalog-img {
   max-width: 100%;
   max-height: 100%;
   object-fit: contain;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+  background: #fff;
+  padding: 8px;
+}
+
+.product-catalog-img:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.15);
 }
 
 .product-catalog-info {
@@ -3065,13 +3245,13 @@ export default {
 }
 
 .product-catalog-name {
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   font-weight: 700;
-  color: #ff9800;
-  margin-bottom: 0px;
+  color: #ff6b35;
+  margin-bottom: 8px;
   line-height: 1.2;
   text-align: center;
-  min-height: 2.6em;
+  min-height: 2.4em;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
@@ -3110,10 +3290,11 @@ export default {
 
 .price-amount {
   display: block;
-  font-size: 1.2rem;
+  font-size: 1.3rem;
   font-weight: 700;
   color: #388e3c;
-  margin-top: 4px;
+  margin-top: 6px;
+  margin-bottom: 8px;
 }
 
 .product-quantity-controls {
@@ -3221,26 +3402,26 @@ export default {
 }
 
 .add-to-cart-btn {
-  background: #ff9800;
+  background: linear-gradient(90deg, #ff9800 60%, #ffb74d 100%);
   color: #fff;
   border: none;
-  border-radius: 8px;
-  padding: 12px 24px;
+  border-radius: 10px;
+  padding: 14px 26px;
   font-weight: 700;
-  font-size: 1rem;
+  font-size: 1.1rem;
   cursor: pointer;
   transition: all 0.3s ease;
   display: flex;
   align-items: center;
   gap: 8px;
-  box-shadow: 0 4px 12px rgba(255,152,0,0.3);
+  box-shadow: 0 3px 12px rgba(255,152,0,0.25);
   width: 100%;
   justify-content: center;
 }
 
 .add-to-cart-btn:hover {
-  background: #fb8c00;
-  box-shadow: 0 6px 20px rgba(255,152,0,0.4);
+  background: linear-gradient(90deg, #fb8c00 60%, #ffa726 100%);
+  box-shadow: 0 5px 18px rgba(255,152,0,0.35);
   transform: translateY(-2px);
 }
 
@@ -3297,12 +3478,12 @@ export default {
 
 .cart-items-container {
   flex: 1;
-  padding: 16px 20px;
+  padding: 24px 28px;
   overflow-y: auto;
-  max-height: 450px;
+  max-height: 550px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 18px;
 }
 
 .empty-cart {
@@ -3434,12 +3615,12 @@ export default {
 .cart-item {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 18px;
   background: #fff;
   border-radius: 12px;
-  padding: 16px;
+  padding: 20px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-  margin-bottom: 8px;
+  margin-bottom: 12px;
   border: 1px solid #f0f0f0;
   transition: all 0.2s ease;
 }
@@ -4555,6 +4736,7 @@ export default {
   
   .products-main-area {
     min-height: auto;
+    margin-right: 0;
   }
 }
 
@@ -4589,6 +4771,273 @@ export default {
 .sticky-cart-sidebar .cart-header {
   padding-top: 0;
   margin-top: 0;
+}
+
+/* Media queries específicas para diferentes niveles de zoom */
+@media screen and (min-resolution: 1.1dppx) {
+  .banners-unified-grid {
+    gap: 22px;
+  }
+  
+  .banner-left-text,
+  .banner-center-top-text,
+  .banner-center-bottom-text,
+  .banner-right-text {
+    font-size: 15px;
+  }
+}
+
+@media screen and (min-resolution: 1.5dppx) {
+  .banners-unified-grid {
+    gap: 25px;
+  }
+  
+  .banner-left-text,
+  .banner-center-top-text,
+  .banner-center-bottom-text,
+  .banner-right-text {
+    font-size: 16px;
+  }
+}
+
+/* Media queries para diferentes escalas de zoom del navegador */
+@media screen and (min-width: 1200px) and (max-width: 1400px) {
+  .banner-left-element,
+  .banner-right-element {
+    height: 300px;
+  }
+  
+  .banner-center-top-placeholder,
+  .banner-center-bottom-placeholder {
+    height: 140px;
+  }
+}
+
+@media screen and (min-width: 1400px) and (max-width: 1800px) {
+  .banner-left-element,
+  .banner-right-element {
+    height: 320px;
+  }
+  
+  .banner-center-top-placeholder,
+  .banner-center-bottom-placeholder {
+    height: 150px;
+  }
+}
+
+@media screen and (min-width: 1800px) {
+  .banner-left-element,
+  .banner-right-element {
+    height: 350px;
+  }
+  
+  .banner-center-top-placeholder,
+  .banner-center-bottom-placeholder {
+    height: 165px;
+  }
+}
+
+/* Media queries para dispositivos con alta densidad de píxeles */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .banner-placeholder {
+    background-size: clamp(12px, 1.2vw, 20px);
+  }
+}
+
+/* Media queries para dispositivos con muy alta densidad de píxeles */
+@media (-webkit-min-device-pixel-ratio: 3), (min-resolution: 288dpi) {
+  .banner-placeholder {
+    background-size: clamp(10px, 1vw, 18px);
+  }
+}
+
+/* Media queries para diferentes escalas de zoom del navegador */
+@media (min-zoom: 1.1) {
+  .banners-unified-wrapper {
+    gap: 22px;
+  }
+}
+
+@media (min-zoom: 1.5) {
+  .banners-unified-wrapper {
+    gap: 25px;
+  }
+}
+
+@media (min-zoom: 2) {
+  .banners-unified-wrapper {
+    gap: 28px;
+  }
+}
+
+/* Estilos adicionales para mejorar la experiencia del zoom */
+.banner-left, .banner-center, .banner-right {
+  transform-origin: center;
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* Prevenir distorsión en diferentes escalas de zoom */
+@media (min-resolution: 1.1dppx) {
+  .banner-placeholder {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+  }
+}
+
+/* Mejorar la calidad de renderizado en dispositivos de alta resolución */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .banner-placeholder {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+  }
+}
+
+/* Asegurar que los banners mantengan su proporción en todos los niveles de zoom */
+.banner-left, .banner-center, .banner-right {
+  min-width: 0;
+  max-width: 100%;
+}
+
+/* Media queries para tablets */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .banners-unified-wrapper {
+    gap: 25px;
+  }
+  
+  .products-catalog-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+  }
+  
+  .product-catalog-card {
+    min-height: 260px;
+    padding: 16px;
+  }
+}
+
+/* Media queries para dispositivos móviles grandes */
+@media (min-width: 480px) and (max-width: 767px) {
+  .banners-unified-wrapper {
+    gap: 20px;
+  }
+  
+  .products-catalog-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+  
+  .product-catalog-card {
+    min-height: 240px;
+    padding: 14px;
+  }
+}
+
+/* Media queries para los nuevos contenedores */
+@media (max-width: 1800px) {
+  .tienda-sifrah-container {
+    max-width: 95%;
+    padding: 15px;
+    margin: 0 0 0 15px;
+  }
+}
+
+@media (max-width: 1400px) {
+  .tienda-sifrah-container {
+    max-width: 98%;
+    padding: 15px;
+    margin: 0 0 0 15px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .tienda-sifrah-container {
+    max-width: 98%;
+    padding: 15px;
+    margin: 0 0 0 15px;
+  }
+}
+
+@media (max-width: 768px) {
+  .tienda-sifrah-container {
+    max-width: 100%;
+    padding: 10px;
+    border-radius: 15px;
+    margin: 0 0 0 10px;
+  }
+  
+  .store-title {
+    font-size: 2rem;
+    text-align: left;
+  }
+  
+  .points-bar {
+    padding: 12px 20px;
+    font-size: 1rem;
+    margin: 15px 0;
+  }
+  
+  .productos-compras-section {
+    margin-top: 20px;
+    padding: 15px 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .tienda-sifrah-container {
+    padding: 8px;
+    border-radius: 10px;
+    margin: 0 0 0 8px;
+  }
+  
+  .store-title {
+    font-size: 1.8rem;
+    margin: 0 0 15px 0;
+    text-align: left;
+  }
+  
+  .points-bar {
+    padding: 10px 15px;
+    font-size: 0.9rem;
+    margin: 10px 0;
+  }
+  
+  .productos-compras-section {
+    margin-top: 15px;
+    padding: 10px 0;
+  }
+  
+  .product-image-container {
+    width: 90px;
+    height: 90px;
+  }
+}
+
+/* Media queries para dispositivos móviles pequeños */
+@media (max-width: 479px) {
+  .products-catalog-grid {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+  
+  .product-catalog-card {
+    min-height: 220px;
+    padding: 12px;
+  }
+  
+  .product-image-container {
+    width: 80px;
+    height: 80px;
+  }
+  
+  .product-catalog-name {
+    font-size: 1.1rem;
+  }
+  
+  .price-amount {
+    font-size: 1.2rem;
+  }
 }
 
 </style>

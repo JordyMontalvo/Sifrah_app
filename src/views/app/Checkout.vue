@@ -1,392 +1,590 @@
 <template>
   <App>
-    <div class="checkout-page">
-
-
-    <!-- Barra de progreso superior -->
-    <div class="top-progress-bar" :style="{ '--current-step': currentStep }">
-      <div class="progress-step" :class="{ active: currentStep >= 1 }">
-        <div class="step-number">1</div>
-        <div class="step-label">Despacho</div>
-      </div>
-      <div class="progress-step" :class="{ active: currentStep >= 2 }">
-        <div class="step-number">2</div>
-        <div class="step-label">Facturación</div>
-      </div>
-      <div class="progress-step" :class="{ active: currentStep >= 3 }">
-        <div class="step-number">3</div>
-        <div class="step-label">Pago</div>
-      </div>
-    </div>
-
-    <div class="checkout-container">
+    <!-- Contenedor padre unificado para prevenir distorsión con zoom -->
+    <div class="checkout-unified-wrapper">
       
-      <div class="checkout-content">
-        <!-- Columna izquierda - Resumen del carrito -->
-        <div class="cart-summary">
-          <!-- Título del carrito -->
-          <div class="cart-title">
-            <h2>Carrito de compras</h2>
-            <p>Estos son los productos que has elegido</p>
-          </div>
-          
-          <!-- Productos del carrito -->
-          <div class="cart-items">
-            <div v-for="item in cartItems" :key="item.id" class="cart-item">
-              <div class="cart-item-image">
-                <img :src="item.img" :alt="item.name" />
+
+
+      <div class="checkout-container">
+        
+        <div class="checkout-content">
+          <!-- Columna izquierda - Resumen del carrito -->
+          <div class="cart-summary">
+            <!-- Título del carrito -->
+            <div class="cart-title">
+              <h2>Carrito de compras</h2>
+              <p>Estos son los productos que has elegido</p>
+            </div>
+            
+            <!-- Productos del carrito -->
+            <div class="cart-items">
+              <div v-for="item in cartItems" :key="item.id" class="cart-item">
+                <div class="cart-item-image">
+                  <img :src="item.img" :alt="item.name" />
+                </div>
+                <div class="cart-item-details">
+                  <div class="cart-item-quantity">{{ item.total }} Unid.</div>
+                  <div class="cart-item-name">{{ item.name }}</div>
+                  <div class="cart-item-price">S/ {{ getProductPrice(item) }} - {{ item.points }} pts</div>
+                </div>
               </div>
-              <div class="cart-item-details">
-                <div class="cart-item-quantity">{{ item.total }} Unid.</div>
-                <div class="cart-item-name">{{ item.name }}</div>
-                <div class="cart-item-price">S/ {{ getProductPrice(item) }} - {{ item.points }} pts</div>
+            </div>
+
+            <!-- Resumen de la orden -->
+            <div class="order-summary">
+              <div class="summary-row">
+                <span>Total productos:</span>
+                <span>{{ cartItems.length }} items</span>
+              </div>
+              <div class="summary-row">
+                <span>Puntos:</span>
+                <span>{{ cartPoints.toFixed(2) }}</span>
+              </div>
+              <div class="summary-row total">
+                <span>Total:</span>
+                <span>S/ {{ cartTotal.toFixed(2) }}</span>
               </div>
             </div>
-          </div>
 
-          <!-- Resumen de la orden -->
-          <div class="order-summary">
-            <div class="summary-row">
-              <span>Concepto:</span>
-              <span>Sin Pack</span>
-            </div>
-            <div class="summary-row">
-              <span>Puntos:</span>
-              <span>{{ cartPoints.toFixed(2) }}</span>
-            </div>
-            <div class="summary-row total">
-              <span>Total:</span>
-              <span>S/ {{ cartTotal.toFixed(2) }}</span>
+            <!-- Botón para volver a la tienda -->
+            <div class="return-to-store">
+              <p>¿Olvidaste algún producto?</p>
+              <button @click="returnToStore" class="return-btn">
+                Volver a la tienda
+              </button>
             </div>
           </div>
 
-          <!-- Botón para volver a la tienda -->
-          <div class="return-to-store">
-            <p>¿Olvidaste algún producto?</p>
-            <button @click="returnToStore" class="return-btn">
-              Volver a la tienda
-            </button>
-          </div>
-        </div>
+          <!-- Columna derecha - Proceso de checkout -->
+          <div class="checkout-process">
 
-                <!-- Columna derecha - Proceso de checkout -->
-        <div class="checkout-process">
-
-        <!-- Paso 1: Opciones de Despacho -->
-        <div v-if="currentStep === 1" class="checkout-step">
-          <!-- Opciones de Despacho -->
-          <div class="delivery-options">
-            <div class="delivery-header">
-              <h3>Opciones de Despacho</h3>
+            <!-- Barra de progreso (siempre visible) -->
+            <div class="top-progress-bar" :style="{ '--current-step': currentStep }">
+              <div class="progress-step" :class="{ active: currentStep >= 1 }">
+                <div class="step-number">1</div>
+                <div class="step-label">Despacho</div>
+              </div>
+              <div class="progress-step" :class="{ active: currentStep >= 2 }">
+                <div class="step-number">2</div>
+                <div class="step-label">Facturación</div>
+              </div>
+              <div class="progress-step" :class="{ active: currentStep >= 3 }">
+                <div class="step-number">3</div>
+                <div class="step-label">Pago</div>
+              </div>
             </div>
+
+            <!-- Paso 1: Opciones de Despacho -->
+            <div v-if="currentStep === 1" class="checkout-step">
+              <!-- Opciones de Despacho -->
+              <div class="delivery-options">
+                <div class="delivery-header">
+                  <h3>Opciones de Despacho</h3>
+                </div>
+            
             <div class="delivery-description">
               <p>Elije tu método de despacho preferido.</p>
             </div>
-            
-            <div class="delivery-methods">
-              <button 
-                @click="selectDeliveryMethod('pickup')" 
-                :class="['delivery-method', { active: deliveryMethod === 'pickup' }]"
-              >
-                Retira tu compra
-              </button>
-              <button 
-                @click="selectDeliveryMethod('delivery')" 
-                :class="['delivery-method', { active: deliveryMethod === 'delivery' }]"
-              >
-                Delivery
-              </button>
-            </div>
-          </div>
-
-          <!-- Centro de Recojo -->
-          <div v-if="deliveryMethod === 'pickup'" class="pickup-center">
-            <div class="section-header">
-              <h3>Centro de Recojo</h3>
-            </div>
-            
-            <div class="pickup-selector">
-              <label>Seleccione el PDE</label>
-              <select v-model="selectedPickupPoint" class="pickup-select">
-                <option value="">Selecciona un punto de entrega</option>
-                <option v-for="point in pickupPoints" :key="point.id" :value="point.id">
-                  {{ point.name }}
-                </option>
-              </select>
-            </div>
-          </div>
-
-          <!-- Ubicación en mapa y información -->
-          <div v-if="selectedPickupPoint && deliveryMethod === 'pickup'" class="map-and-location-container">
-            <div class="section-header">
-              <h3>Ubicación en mapa</h3>
-            </div>
-            
-            <div class="map-location-grid">
-              <!-- Columna izquierda: Mapa -->
-              <div class="map-column">
-                <div class="map-container">
-                  <div class="map-embed">
-                    <iframe 
-                      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3904.1234567890123!2d-77.01234567890123!3d-12.01234567890123!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTLCsDAwJzQ0LjQiUyA3N8KwMDAnNDQuNCJX!5e0!3m2!1ses!2spe!4v1234567890123"
-                      width="100%" 
-                      height="300" 
-                      style="border:0;" 
-                      allowfullscreen="" 
-                      loading="lazy" 
-                      referrerpolicy="no-referrer-when-downgrade">
-                    </iframe>
-                  </div>
-                  <div class="map-info">
-                    <div class="location-name">Agatas, San Juan de Lurigancho 15434</div>
-                    <a href="#" class="map-link">Ampliar el mapa</a>
-                  </div>
-                </div>
-              </div>
-              
-              <!-- Columna derecha: Información de ubicación -->
-              <div class="location-column">
-                <div class="location-header">
-                  <h3>Ubicación</h3>
+                
+                <div class="delivery-methods">
+                  <button 
+                    @click="selectDeliveryMethod('pickup')" 
+                    :class="['delivery-method', { active: deliveryMethod === 'pickup' }]"
+                  >
+                    Retira tu compra
+                  </button>
+                  <button 
+                    @click="selectDeliveryMethod('delivery')" 
+                    :class="['delivery-method', { active: deliveryMethod === 'delivery' }]"
+                  >
+                    Delivery
+                  </button>
                 </div>
                 
-                                 <div class="location-details">
-                   <div class="location-main">
-                     <strong>LIMA - LIMA - ATE - CERES</strong>
-                   </div>
-                   
-                   <div class="location-item">
-                     <span class="location-label">Dirección:</span>
-                     <span class="location-value">Av. Nicolás Ayllón N° 5024 - Ate</span>
-                   </div>
-                   
-                   <div class="location-item">
-                     <span class="location-label">Teléfono:</span>
-                     <span class="location-value">+51 959 141 444 <i class="fab fa-whatsapp whatsapp-icon"></i></span>
-                   </div>
-                   
-                   <div class="location-item">
-                     <span class="location-label">Horario:</span>
-                     <span class="location-value">Atención previa coordinación por WhatsApp</span>
-                   </div>
-                   
-                   <div class="location-item">
-                     <span class="location-label">Días:</span>
-                     <span class="location-value">L - V: 9 am a 6 pm</span>
-                   </div>
-                 </div>
+                <!-- Formulario de Delivery -->
+                <div v-if="deliveryMethod === 'delivery'" class="delivery-form">
+                  <div class="form-section">
+                    <h4>Información del Receptor</h4>
+                    
+                    <div class="form-row">
+                      <div class="form-group">
+                        <label>Nombre Receptor</label>
+                        <div class="input-with-icon">
+                          <input v-model="deliveryData.recipientName" type="text" placeholder="Nombre Completo" required />
+                          <i class="fas fa-user"></i>
+                        </div>
+                      </div>
+                      
+                      <div class="form-group">
+                        <label>Documento</label>
+                        <div class="input-with-icon">
+                          <input v-model="deliveryData.document" type="text" placeholder="Nro. de Documento" required />
+                          <i class="fas fa-list"></i>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div class="form-group">
+                      <label>Celular Receptor</label>
+                      <div class="input-with-icon">
+                        <input v-model="deliveryData.recipientPhone" type="tel" placeholder="Celular Receptor" required />
+                        <i class="fas fa-phone"></i>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="form-section">
+                    <h4>Ubicación de Entrega</h4>
+                    
+                    <div class="form-row">
+                                              <div class="form-group">
+                          <label>Departamento</label>
+                          <select v-model="deliveryData.department" class="form-select" @change="onDepartmentChange">
+                            <option value="">Selecciona</option>
+                            <option value="lima">Lima</option>
+                            <option value="arequipa">Arequipa</option>
+                            <option value="cusco">Cusco</option>
+                            <option value="piura">Piura</option>
+                            <option value="la-libertad">La Libertad</option>
+                            <option value="lambayeque">Lambayeque</option>
+                            <option value="junin">Junín</option>
+                          </select>
+                        </div>
+                        
+                        <div class="form-group">
+                          <label>Provincia</label>
+                          <select v-model="deliveryData.province" class="form-select" @change="onProvinceChange">
+                            <option value="">Selecciona</option>
+                            <option v-for="province in availableProvinces" :key="province.value" :value="province.value">
+                              {{ province.name }}
+                            </option>
+                          </select>
+                        </div>
+                      
+                        <div class="form-group">
+                          <label>Distrito</label>
+                          <select v-model="deliveryData.district" class="form-select">
+                            <option value="">Selecciona</option>
+                            <option v-for="district in availableDistricts" :key="district" :value="district">
+                              {{ district }}
+                            </option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <!-- Campo de Agencia (solo para envíos fuera de Lima) -->
+                    <div v-if="showAgencyField" class="form-section agency-section">
+                      <h4>Agencia de Transporte</h4>
+                      <div class="form-group">
+                        <label>Agencia</label>
+                        <select v-model="deliveryData.agency" class="form-select">
+                          <option value="">Seleccione el PDE</option>
+                          <option value="olva">Olva Courier</option>
+                          <option value="serpost">Serpost</option>
+                          <option value="dhl">DHL Express</option>
+                          <option value="fedex">FedEx</option>
+                          <option value="cruz-del-sur">Cruz del Sur</option>
+                        </select>
+                      </div>
+                    </div>
+                    
+                    <div v-if="showAgencyField" class="delivery-note">
+                      <p>*En caso de no haber cargo por delivery, el pago del delivery será al momento de la entrega.</p>
+                    </div>
+                </div>
+              </div>
+
+              <!-- Centro de Recojo -->
+              <div v-if="deliveryMethod === 'pickup'" class="pickup-center">
+                <div class="section-header">
+                  <h3>Centro de Recojo</h3>
+                </div>
+                
+                <div class="pickup-selector">
+                  <label>Seleccione el PDE</label>
+                  <select v-model="selectedPickupPoint" class="pickup-select">
+                    <option value="">Selecciona un punto de entrega</option>
+                    <option v-for="point in pickupPoints" :key="point.id" :value="point.id">
+                      {{ point.name }}
+                    </option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Ubicación en mapa y información -->
+              <div v-if="selectedPickupPoint && deliveryMethod === 'pickup'" class="map-and-location-container">
+                <div class="section-header">
+                  <h3>Ubicación en mapa</h3>
+                </div>
+                
+                <div class="map-location-grid">
+                  <!-- Columna izquierda: Mapa -->
+                  <div class="map-column">
+                    <div class="map-container">
+                      <div class="map-embed">
+                        <iframe 
+                          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3904.1234567890123!2d-77.01234567890123!3d-12.01234567890123!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTLCsDAwJzQ0LjQiUyA3N8KwMDAnNDQuNCJX!5e0!3m2!1ses!2spe!4v1234567890123"
+                          width="100%" 
+                          height="300" 
+                          style="border:0;" 
+                          allowfullscreen="" 
+                          loading="lazy" 
+                          referrerpolicy="no-referrer-when-downgrade">
+                        </iframe>
+                      </div>
+                      <div class="map-info">
+                        <div class="location-name">Agatas, San Juan de Lurigancho 15434</div>
+                        <a href="#" class="map-link">Ampliar el mapa</a>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <!-- Columna derecha: Información de ubicación -->
+                  <div class="location-column">
+                    <div class="location-header">
+                      <h3>Ubicación</h3>
+                    </div>
+                    
+                    <div class="location-details">
+                      <div class="location-main">
+                        <strong>LIMA - LIMA - ATE - CERES</strong>
+                      </div>
+                      
+                      <div class="location-item">
+                        <span class="location-label">Dirección:</span>
+                        <span class="location-value">Av. Nicolás Ayllón N° 5024 - Ate</span>
+                      </div>
+                      
+                      <div class="location-item">
+                        <span class="location-label">Teléfono:</span>
+                        <span class="location-value">+51 959 141 444 <i class="fab fa-whatsapp whatsapp-icon"></i></span>
+                      </div>
+                      
+                      <div class="location-item">
+                        <span class="location-label">Horario:</span>
+                        <span class="location-value">Atención previa coordinación por WhatsApp</span>
+                      </div>
+                      
+                      <div class="location-item">
+                        <span class="location-label">Días:</span>
+                        <span class="location-value">L - V: 9 am a 6 pm</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Botón continuar -->
+              <div class="step-actions">
+                <button 
+                  @click="nextStep" 
+                  :disabled="!canProceedToNextStep"
+                  class="continue-btn"
+                >
+                  Continuar >>
+                </button>
               </div>
             </div>
-          </div>
 
-          <!-- Botón continuar -->
-          <div class="step-actions">
-            <button 
-              @click="nextStep" 
-              :disabled="!canProceedToNextStep"
-              class="continue-btn"
-            >
-              Continuar >>
-            </button>
+            <!-- Paso 2: Facturación -->
+            <div v-if="currentStep === 2" class="checkout-step">
+              <div class="proof-section">
+                <div class="proof-header">
+                  <h3>Facturación</h3>
+                </div>
+                <div class="proof-description">
+                  <p>Elije entre boleta y factura.</p>
+                </div>
+                
+                <div class="proof-form">
+                  <!-- Selección de tipo de comprobante -->
+                  <div class="proof-type-selection">
+                    <div class="proof-option">
+                      <input 
+                        type="radio" 
+                        id="boleta" 
+                        name="proofType" 
+                        value="boleta"
+                        v-model="proofData.type"
+                      />
+                      <label for="boleta" class="proof-label">
+                        <span>Boleta</span>
+                      </label>
+                    </div>
+                    
+                    <div class="proof-option">
+                      <input 
+                        type="radio" 
+                        id="factura" 
+                        name="proofType" 
+                        value="factura"
+                        v-model="proofData.type"
+                      />
+                      <label for="factura" class="proof-label">
+                        <span>Factura</span>
+                      </label>
+                    </div>
+                  </div>
+                  
+                  <!-- Campo de documento (solo para boleta) -->
+                  <div v-if="proofData.type === 'boleta'" class="boleta-fields">
+                    <div class="form-group">
+                      <label>Documento</label>
+                      <div class="input-with-icon">
+                        <input v-model="proofData.document" type="text" placeholder="Nro. de Documento" required />
+                        <i class="fas fa-user"></i>
+                        <i class="fas fa-list"></i>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <!-- Campos para factura -->
+                  <div v-if="proofData.type === 'factura'" class="factura-fields">
+                    <div class="form-row">
+                      <div class="form-group">
+                        <label>Nro. RUC</label>
+                        <div class="input-with-icon">
+                          <input v-model="proofData.ruc" type="text" placeholder="Número de RUC" required />
+                          <i class="fas fa-user"></i>
+                        </div>
+                      </div>
+                      
+                      <div class="form-group">
+                        <label>Razón Social</label>
+                        <div class="input-with-icon">
+                          <input v-model="proofData.razonSocial" type="text" placeholder="Razón Social" required />
+                          <i class="fas fa-users"></i>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div class="form-group">
+                      <label>Dirección Fiscal</label>
+                      <div class="input-with-icon">
+                        <input v-model="proofData.direccionFiscal" type="text" placeholder="Dirección Fiscal" required />
+                        <i class="fas fa-map-marker-alt"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Botones de navegación -->
+              <div class="step-actions">
+                <button @click="previousStep" class="back-btn">
+                  << Regresar
+                </button>
+                <button 
+                  @click="processOrder" 
+                  :disabled="!canProceedToProofStep"
+                  class="continue-btn"
+                >
+                  Terminar Pedido
+                </button>
+              </div>
+            </div>
+
+            <!-- Paso 3: Facturación -->
+            <div v-if="currentStep === 3" class="checkout-step">
+              <div class="billing-section">
+                <div class="section-header">
+                  <h3>Información de Facturación</h3>
+                  <p>Completa tus datos para la facturación.</p>
+                </div>
+                
+                <div class="billing-form">
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label>Nombre</label>
+                      <input v-model="billingData.firstName" type="text" placeholder="Tu nombre" required />
+                    </div>
+                    <div class="form-group">
+                      <label>Apellido</label>
+                      <input v-model="billingData.lastName" type="text" placeholder="Tu apellido" required />
+                    </div>
+                  </div>
+                  
+                  <div class="form-group">
+                    <label>Email</label>
+                    <input v-model="billingData.email" type="email" placeholder="tu@email.com" required />
+                  </div>
+                  
+                  <div class="form-group">
+                    <label>Teléfono</label>
+                    <input v-model="billingData.phone" type="tel" placeholder="+51 999 999 999" required />
+                  </div>
+                  
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label>Ciudad</label>
+                      <input v-model="billingData.city" type="text" placeholder="Lima" required />
+                    </div>
+                    <div class="form-group">
+                      <label>Código Postal</label>
+                      <input v-model="billingData.zipCode" type="text" placeholder="15001" />
+                    </div>
+                  </div>
+                  
+                  <div class="form-group">
+                    <label>Dirección</label>
+                    <textarea v-model="billingData.address" placeholder="Tu dirección completa" required></textarea>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Botones de navegación -->
+              <div class="step-actions">
+                <button @click="previousStep" class="back-btn">
+                  << Volver
+                </button>
+                <button 
+                  @click="nextStep" 
+                  :disabled="!canProceedToNextStep"
+                  class="continue-btn"
+                >
+                  Continuar >>
+                </button>
+              </div>
+            </div>
+
+            <!-- Paso 3: Pago -->
+            <div v-if="currentStep === 4" class="checkout-step">
+              <div class="payment-section">
+                <div class="section-header">
+                  <h3>Método de Pago</h3>
+                  <p>Selecciona tu método de pago preferido.</p>
+                </div>
+                
+                <div class="payment-methods">
+                  <div class="payment-method">
+                    <input 
+                      type="radio" 
+                      id="credit-card" 
+                      name="payment" 
+                      value="credit-card"
+                      v-model="paymentMethod"
+                    />
+                    <label for="credit-card">
+                      <i class="fas fa-credit-card"></i>
+                      <span>Tarjeta de Crédito/Débito</span>
+                    </label>
+                  </div>
+                  
+                  <div class="payment-method">
+                    <input 
+                      type="radio" 
+                      id="transfer" 
+                      name="payment" 
+                      value="transfer"
+                      v-model="paymentMethod"
+                    />
+                    <label for="transfer">
+                      <i class="fas fa-university"></i>
+                      <span>Transferencia Bancaria</span>
+                    </label>
+                  </div>
+                  
+                  <div class="payment-method">
+                    <input 
+                      type="radio" 
+                      id="cash" 
+                      name="payment" 
+                      value="cash"
+                      v-model="paymentMethod"
+                    />
+                    <label for="cash">
+                      <i class="fas fa-money-bill-wave"></i>
+                      <span>Efectivo</span>
+                    </label>
+                  </div>
+                </div>
+                
+                <!-- Información de transferencia -->
+                <div v-if="paymentMethod === 'transfer'" class="transfer-info">
+                  <div class="section-header">
+                    <h3>Datos Bancarios</h3>
+                  </div>
+                  
+                  <div class="bank-details">
+                    <div class="bank-item">
+                      <strong>Banco:</strong> Banco de Crédito del Perú
+                    </div>
+                    <div class="bank-item">
+                      <strong>Cuenta:</strong> 193-12345678-0-12
+                    </div>
+                    <div class="bank-item">
+                      <strong>Titular:</strong> SIFRAH SAC
+                    </div>
+                    <div class="bank-item">
+                      <strong>Tipo:</strong> Cuenta Corriente
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- Resumen final -->
+                <div class="final-summary">
+                  <div class="summary-header">
+                    <h3>Resumen de tu Orden</h3>
+                  </div>
+                  
+                  <div class="summary-details">
+                    <div class="summary-item">
+                      <span>Subtotal:</span>
+                      <span>S/ {{ cartTotal.toFixed(2) }}</span>
+                    </div>
+                    <div class="summary-item">
+                      <span>Envío:</span>
+                      <span>S/ 0.00</span>
+                    </div>
+                    <div class="summary-item total">
+                      <span>Total:</span>
+                      <span>S/ {{ cartTotal.toFixed(2) }}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Botones finales -->
+              <div class="step-actions">
+                <button @click="previousStep" class="back-btn">
+                  << Volver
+                </button>
+                <button 
+                  @click="processOrder" 
+                  :disabled="!canProcessOrder"
+                  class="process-btn"
+                >
+                  Confirmar y Pagar
+                </button>
+              </div>
+            </div>
           </div>
         </div>
-
-        <!-- Paso 2: Facturación -->
-        <div v-if="currentStep === 2" class="checkout-step">
-          <div class="billing-section">
-            <div class="section-header">
-              <h3>Información de Facturación</h3>
-              <p>Completa tus datos para la facturación.</p>
-            </div>
-            
-            <div class="billing-form">
-              <div class="form-row">
-                <div class="form-group">
-                  <label>Nombres</label>
-                  <input v-model="billingData.firstName" type="text" placeholder="Ingresa tus nombres" />
-                </div>
-                <div class="form-group">
-                  <label>Apellidos</label>
-                  <input v-model="billingData.lastName" type="text" placeholder="Ingresa tus apellidos" />
-                </div>
-              </div>
-              
-              <div class="form-group">
-                <label>Email</label>
-                <input v-model="billingData.email" type="email" placeholder="Ingresa tu email" />
-              </div>
-              
-              <div class="form-group">
-                <label>Teléfono</label>
-                <input v-model="billingData.phone" type="tel" placeholder="Ingresa tu teléfono" />
-              </div>
-              
-              <div class="form-group">
-                <label>Dirección</label>
-                <input v-model="billingData.address" type="text" placeholder="Ingresa tu dirección" />
-              </div>
-              
-              <div class="form-row">
-                <div class="form-group">
-                  <label>Ciudad</label>
-                  <input v-model="billingData.city" type="text" placeholder="Ciudad" />
-                </div>
-                <div class="form-group">
-                  <label>Código Postal</label>
-                  <input v-model="billingData.zipCode" type="text" placeholder="Código postal" />
-                </div>
-              </div>
-            </div>
+      </div>
+      
+      <!-- Modal de confirmación -->
+      <div v-if="showConfirmation" class="confirmation-modal">
+        <div class="modal-content">
+          <div class="modal-header">
+            <i class="fas fa-check-circle"></i>
+            <h3>¡Orden Confirmada!</h3>
           </div>
-
-          <!-- Botones de navegación -->
-          <div class="step-actions">
-            <button @click="previousStep" class="back-btn">
-              << Volver
-            </button>
-            <button 
-              @click="nextStep" 
-              :disabled="!canProceedToNextStep"
-              class="continue-btn"
-            >
-              Continuar >>
-            </button>
+          <div class="modal-body">
+            <p>Tu orden ha sido procesada exitosamente.</p>
+            <p>Número de orden: <strong>{{ orderNumber }}</strong></p>
+            <p>Te enviaremos un email con los detalles de tu compra.</p>
           </div>
-        </div>
-
-        <!-- Paso 3: Pago -->
-        <div v-if="currentStep === 3" class="checkout-step">
-          <div class="payment-section">
-            <div class="section-header">
-              <h3>Método de Pago</h3>
-              <p>Selecciona tu método de pago preferido.</p>
-            </div>
-            
-            <div class="payment-methods">
-              <div class="payment-method">
-                <input 
-                  type="radio" 
-                  id="cash" 
-                  v-model="paymentMethod" 
-                  value="cash"
-                />
-                <label for="cash">
-                  <i class="fas fa-money-bill-wave"></i>
-                  Efectivo
-                </label>
-              </div>
-              
-              <div class="payment-method">
-                <input 
-                  type="radio" 
-                  id="transfer" 
-                  v-model="paymentMethod" 
-                  value="transfer"
-                />
-                <label for="transfer">
-                  <i class="fas fa-university"></i>
-                  Transferencia Bancaria
-                </label>
-              </div>
-              
-              <div class="payment-method">
-                <input 
-                  type="radio" 
-                  id="balance" 
-                  v-model="paymentMethod" 
-                  value="balance"
-                />
-                <label for="balance">
-                  <i class="fas fa-wallet"></i>
-                  Saldo Disponible (S/ {{ userBalance.toFixed(2) }})
-                </label>
-              </div>
-            </div>
-
-            <!-- Información de transferencia -->
-            <div v-if="paymentMethod === 'transfer'" class="transfer-info">
-              <div class="section-header">
-                <h4>Información Bancaria</h4>
-              </div>
-              
-              <div class="bank-details">
-                <div class="bank-item">
-                  <span>Banco:</span> BCP
-                </div>
-                <div class="bank-item">
-                  <span>Cuenta:</span> 123-456789-0-12
-                </div>
-                <div class="bank-item">
-                  <span>Titular:</span> SIFRAH SAC
-                </div>
-                <div class="bank-item">
-                  <span>Tipo:</span> Cuenta Corriente
-                </div>
-              </div>
-            </div>
-
-            <!-- Resumen final -->
-            <div class="final-summary">
-              <div class="summary-header">
-                <h4>Resumen de tu orden</h4>
-              </div>
-              
-              <div class="summary-details">
-                <div class="summary-item">
-                  <span>Subtotal:</span>
-                  <span>S/ {{ (cartTotal / 1.18).toFixed(2) }}</span>
-                </div>
-                <div class="summary-item">
-                  <span>IGV (18%):</span>
-                  <span>S/ {{ (cartTotal - cartTotal / 1.18).toFixed(2) }}</span>
-                </div>
-                <div class="summary-item total">
-                  <span>Total a pagar:</span>
-                  <span>S/ {{ cartTotal.toFixed(2) }}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Botones finales -->
-          <div class="step-actions">
-            <button @click="previousStep" class="back-btn">
-              << Volver
-            </button>
-            <button 
-              @click="processOrder" 
-              :disabled="!canProcessOrder"
-              class="process-btn"
-            >
-              Confirmar y Pagar
+          <div class="modal-actions">
+            <button @click="goToDashboard" class="dashboard-btn">
+              Ir al Dashboard
             </button>
           </div>
         </div>
       </div>
-    </div>
-      </div>
-
-    <!-- Modal de confirmación -->
-    <div v-if="showConfirmation" class="confirmation-modal">
-      <div class="modal-content">
-        <div class="modal-header">
-          <i class="fas fa-check-circle"></i>
-          <h3>¡Orden Confirmada!</h3>
-        </div>
-        <div class="modal-body">
-          <p>Tu orden ha sido procesada exitosamente.</p>
-          <p>Número de orden: <strong>{{ orderNumber }}</strong></p>
-          <p>Te enviaremos un email con los detalles de tu compra.</p>
-        </div>
-        <div class="modal-actions">
-          <button @click="goToDashboard" class="dashboard-btn">
-            Ir al Dashboard
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-    </App>
+      
+    </div> <!-- Cierre del checkout-unified-wrapper -->
+  </App>
 </template>
 
   <script>
@@ -418,6 +616,26 @@ export default {
         zipCode: ''
       },
       
+      // Datos de delivery
+      deliveryData: {
+        recipientName: '',
+        document: '',
+        recipientPhone: '',
+        department: '',
+        province: '',
+        district: '',
+        agency: ''
+      },
+      
+      // Datos del comprobante
+      proofData: {
+        type: 'boleta',
+        document: '',
+        ruc: '',
+        razonSocial: '',
+        direccionFiscal: ''
+      },
+      
       // Puntos de recogida
       pickupPoints: [
         {
@@ -437,7 +655,102 @@ export default {
       ],
       
       // Datos del usuario (simulados)
-      userBalance: 150.00
+      userBalance: 150.00,
+      
+      // Datos geográficos del Perú
+      peruData: {
+        lima: {
+          name: 'Lima',
+          provincias: {
+            lima: {
+              name: 'Lima',
+              distritos: ['Lima', 'Miraflores', 'San Isidro', 'Barranco', 'Chorrillos', 'Surco', 'San Borja', 'La Molina', 'Santiago de Surco', 'Villa El Salvador']
+            },
+            callao: {
+              name: 'Callao',
+              distritos: ['Callao', 'Bellavista', 'Carmen de la Legua', 'La Perla', 'La Punta', 'Ventanilla']
+            }
+          }
+        },
+        arequipa: {
+          name: 'Arequipa',
+          provincias: {
+            arequipa: {
+              name: 'Arequipa',
+              distritos: ['Arequipa', 'Alto Selva Alegre', 'Cayma', 'Cerro Colorado', 'Characato', 'Chiguata', 'Jacobo Hunter', 'La Joya', 'Mariano Melgar', 'Miraflores', 'Mollebaya', 'Paucarpata', 'Pocsi', 'Polobaya', 'Quequeña', 'Sabandía', 'Sachaca', 'San Juan de Siguas', 'San Juan de Tarucani', 'Santa Isabel de Siguas', 'Santa Rita de Siguas', 'Socabaya', 'Tiabaya', 'Uchumayo', 'Vitor', 'Yanahuara', 'Yarabamba', 'Yura']
+            },
+            camana: {
+              name: 'Camaná',
+              distritos: ['Camaná', 'José María Quimper', 'Mariano Nicolás Valcárcel', 'Mariscal Cáceres', 'Nicolás de Piérola', 'Ocoña', 'Quilca']
+            }
+          }
+        },
+        cusco: {
+          name: 'Cusco',
+          provincias: {
+            cusco: {
+              name: 'Cusco',
+              distritos: ['Cusco', 'Ccorca', 'Poroy', 'San Jerónimo', 'San Sebastián', 'Santiago', 'Saylla', 'Wanchaq']
+            },
+            urubamba: {
+              name: 'Urubamba',
+              distritos: ['Urubamba', 'Chinchero', 'Huayllabamba', 'Machupicchu', 'Maras', 'Ollantaytambo', 'Yucay']
+            }
+          }
+        },
+        piura: {
+          name: 'Piura',
+          provincias: {
+            piura: {
+              name: 'Piura',
+              distritos: ['Piura', 'Castilla', 'Catacaos', 'Cura Mori', 'El Tallán', 'La Arena', 'La Unión', 'Las Lomas', 'Tambo Grande', 'Veintiséis de Octubre']
+            },
+            talara: {
+              name: 'Talara',
+              distritos: ['Talara', 'El Alto', 'La Brea', 'Lobitos', 'Los Organos', 'Mancora', 'Pariñas']
+            }
+          }
+        },
+        'la-libertad': {
+          name: 'La Libertad',
+          provincias: {
+            trujillo: {
+              name: 'Trujillo',
+              distritos: ['Trujillo', 'El Porvenir', 'Florencia de Mora', 'Huanchaco', 'La Esperanza', 'Laredo', 'Moche', 'Poroto', 'Salaverry', 'Simbal', 'Victor Larco Herrera']
+            },
+            chepen: {
+              name: 'Chepén',
+              distritos: ['Chepén', 'Pacanga', 'Pueblo Nuevo']
+            }
+          }
+        },
+        lambayeque: {
+          name: 'Lambayeque',
+          provincias: {
+            chiclayo: {
+              name: 'Chiclayo',
+              distritos: ['Chiclayo', 'Chongoyape', 'Eten', 'Eten Puerto', 'José Leonardo Ortiz', 'La Victoria', 'Lagunas', 'Monsefú', 'Nueva Arica', 'Oyotún', 'Picsi', 'Pimentel', 'Reque', 'Santa Rosa', 'Saña', 'Tuman']
+            },
+            lambayeque: {
+              name: 'Lambayeque',
+              distritos: ['Lambayeque', 'Chochope', 'Illimo', 'Jayanca', 'Mochumi', 'Mórrope', 'Motupe', 'Olmos', 'Pacora', 'Salas', 'San José', 'Tucume']
+            }
+          }
+        },
+        junin: {
+          name: 'Junín',
+          provincias: {
+            huancayo: {
+              name: 'Huancayo',
+              distritos: ['Huancayo', 'Chacapampa', 'Chicche', 'Chilca', 'Chongos Alto', 'Chupaca', 'Colca', 'Cullhuas', 'El Tambo', 'Huacrapuquio', 'Hualhuas', 'Huancan', 'Huasicancha', 'Huayucachi', 'Ingenio', 'Pariahuanca', 'Pilcomayo', 'Pucara', 'Quichuay', 'Quilcas', 'San Agustín', 'San Jerónimo de Tunan', 'Saño', 'Sapallanga', 'Sicaya', 'Santo Domingo de Acobamba', 'Viques']
+            },
+            tarma: {
+              name: 'Tarma',
+              distritos: ['Tarma', 'Acobamba', 'Huaricolca', 'Huasahuasi', 'La Unión', 'Palca', 'Palcamayo', 'San Pedro de Cajas', 'Tapo']
+            }
+          }
+        }
+      }
     }
   },
   
@@ -459,16 +772,85 @@ export default {
     
     canProceedToNextStep() {
       if (this.currentStep === 1) {
-        return this.deliveryMethod && 
-               (this.deliveryMethod === 'delivery' || this.selectedPickupPoint);
+        if (this.deliveryMethod === 'delivery') {
+          // Para delivery, validar que se complete la información básica
+          const basicInfo = this.deliveryData.recipientName && 
+                           this.deliveryData.document && 
+                           this.deliveryData.recipientPhone &&
+                           this.deliveryData.department &&
+                           this.deliveryData.province &&
+                           this.deliveryData.district;
+          
+          // Si es fuera de Lima, también validar que se seleccione agencia
+          if (this.showAgencyField) {
+            return basicInfo && this.deliveryData.agency;
+          }
+          
+          return basicInfo;
+        }
+        return this.deliveryMethod && this.selectedPickupPoint;
       }
       if (this.currentStep === 2) {
+        return this.proofData.type && this.proofData.document;
+      }
+      if (this.currentStep === 3) {
         return this.billingData.firstName && 
                this.billingData.lastName && 
                this.billingData.email && 
                this.billingData.phone;
       }
       return true;
+    },
+    
+    showAgencyField() {
+      console.log('Debug showAgencyField:', {
+        department: this.deliveryData.department,
+        province: this.deliveryData.province,
+        deptNotLima: this.deliveryData.department !== 'lima',
+        provNotLima: this.deliveryData.province !== 'lima'
+      });
+      
+      // Mostrar agencia si el departamento NO es lima O la provincia NO es lima
+      return (this.deliveryData.department && this.deliveryData.department !== 'lima') ||
+             (this.deliveryData.province && this.deliveryData.province !== 'lima');
+    },
+    
+    // Obtener provincias del departamento seleccionado
+    availableProvinces() {
+      if (!this.deliveryData.department) return [];
+      const dept = this.peruData[this.deliveryData.department];
+      if (!dept) return [];
+      
+      return Object.keys(dept.provincias).map(key => ({
+        value: key,
+        name: dept.provincias[key].name
+      }));
+    },
+    
+    // Obtener distritos de la provincia seleccionada
+    availableDistricts() {
+      if (!this.deliveryData.department || !this.deliveryData.province) return [];
+      const dept = this.peruData[this.deliveryData.department];
+      if (!dept) return [];
+      
+      const province = dept.provincias[this.deliveryData.province];
+      if (!province) return [];
+      
+      return province.distritos;
+    },
+    
+    canProceedToProofStep() {
+      // Para boleta solo requiere documento
+      if (this.proofData.type === 'boleta') {
+        return this.proofData.document;
+      }
+      // Para factura requiere RUC, Razón Social y Dirección Fiscal
+      if (this.proofData.type === 'factura') {
+        return this.proofData.ruc && 
+               this.proofData.razonSocial && 
+               this.proofData.direccionFiscal;
+      }
+      return false;
     },
     
     canProcessOrder() {
@@ -499,6 +881,24 @@ export default {
       if (method === 'delivery') {
         this.selectedPickupPoint = '';
       }
+    },
+    
+    onDepartmentChange() {
+      // Resetear provincia, distrito y agencia cuando cambia el departamento
+      this.deliveryData.province = '';
+      this.deliveryData.district = '';
+      this.deliveryData.agency = '';
+      console.log('Departamento cambiado:', this.deliveryData.department);
+      console.log('Provincias disponibles:', this.availableProvinces);
+      console.log('showAgencyField:', this.showAgencyField);
+    },
+    
+    onProvinceChange() {
+      // Resetear distrito y agencia cuando cambia la provincia
+      this.deliveryData.district = '';
+      this.deliveryData.agency = '';
+      console.log('Provincia cambiada:', this.deliveryData.province);
+      console.log('showAgencyField:', this.showAgencyField);
     },
     
     nextStep() {
@@ -557,7 +957,7 @@ export default {
   margin-bottom 20px
   max-width 600px
   margin-left auto
-  margin-right 510px
+  margin-right 90px
   background #fdf6f0
   padding 35px 45px
   border-radius 20px
@@ -696,12 +1096,12 @@ export default {
   min-height 600px
   border-radius 18px
   box-shadow 0 8px 32px rgba(0,0,0,0.12)
-  min-width 400px
-  width 100%
+  min-width 350px
+  width 90%
   border 1px solid #e8e8e8
   position relative
   z-index 10
-  margin-top -150px
+  margin-top 20px
 
 .cart-title
   text-align center
@@ -713,7 +1113,7 @@ export default {
   
   h2
     margin 0 0 12px 0
-    font-size 2rem
+    font-size 1.6rem
     font-weight 700
     color #ff8c00
     text-shadow 0 1px 2px rgba(255, 140, 0, 0.1)
@@ -854,20 +1254,39 @@ export default {
   box-shadow 0 4px 16px rgba(0,0,0,0.08)
   border 1px solid #f0f0f0
 
-  h3
-    margin-bottom 15px
-    font-size 1.1rem
-    color #333
-    font-weight 600
-    text-align center
-
-.summary-details
   .summary-row
     display flex
     justify-content space-between
     margin-bottom 10px
     font-size 0.95rem
     align-items center
+    
+    span:first-child
+      font-weight 600
+      color #333
+    
+    span:last-child
+      font-weight 500
+      color #666
+    
+    // Colores específicos para cada tipo de información
+    &:nth-child(1) // Total productos
+      font-size 1.1rem
+      span:first-child
+        color #333
+        font-weight 700
+      span:last-child
+        color #333
+        font-weight 700
+    
+    &:nth-child(2) // Puntos
+      font-size 1.1rem
+      span:first-child
+        color #333
+        font-weight 700
+      span:last-child
+        color #ff8c00
+        font-weight 700
     
     &.total
       font-weight 700
@@ -876,6 +1295,14 @@ export default {
       border-top 1px solid #e0e0e0
       padding-top 10px
       margin-top 10px
+      
+      span:first-child
+        font-weight 600
+        color #333
+      
+      span:last-child
+        font-weight 700
+        color #388e3c
 
 .summary-details .concept-value
   font-weight 600
@@ -1276,14 +1703,15 @@ export default {
     background #f57c00
 
 .continue-btn, .process-btn
-  background #ff9800
+  background #ff8c00
   color white
-  border 1px solid #ff9800
-  padding 12px 30px
+  border none
+  padding 14px 32px
   border-radius 8px
-  font-weight 600
+  font-weight 700
   cursor pointer
   transition all 0.3s ease
+  font-size 1.05rem
   
   &:hover:not(:disabled)
     background #f57c00
@@ -1305,7 +1733,179 @@ export default {
     gap 20px
     margin-bottom 20px
 
-.form-group
+// Formulario de delivery
+.delivery-form
+  margin-top 30px
+  padding 35px
+  background linear-gradient(145deg, #ffffff 0%, #fafafa 50%, #f8f9fa 100%)
+  border-radius 20px
+  border 2px solid #ffe4d6
+  box-shadow 0 8px 32px rgba(255, 140, 0, 0.12), 0 4px 16px rgba(0,0,0,0.08)
+  position relative
+  overflow hidden
+  
+  &::before
+    content ''
+    position absolute
+    top 0
+    left 0
+    right 0
+    height 4px
+    background linear-gradient(90deg, #ff8c00 0%, #ffa726 50%, #ff8c00 100%)
+  
+  &::after
+    content ''
+    position absolute
+    top 0
+    right 0
+    width 60px
+    height 60px
+    background linear-gradient(135deg, rgba(255, 140, 0, 0.1) 0%, transparent 100%)
+    border-radius 0 20px 0 60px
+
+  .form-section
+    margin-bottom 30px
+    
+    h4
+      color #ff8c00
+      font-size 1.3rem
+      font-weight 700
+      margin-bottom 25px
+      padding 15px 20px
+      background linear-gradient(135deg, rgba(255, 140, 0, 0.08) 0%, rgba(255, 140, 0, 0.03) 100%)
+      border-radius 12px
+      border-left 4px solid #ff8c00
+      position relative
+      
+
+
+  .form-row
+    display grid
+    grid-template-columns 1fr 1fr
+    gap 20px
+    margin-bottom 20px
+
+  .form-group
+    margin-bottom 20px
+    
+    label
+      display block
+      margin-bottom 8px
+      font-weight 600
+      color #333
+      font-size 0.95rem
+    
+    .input-with-icon
+      position relative
+      
+      input, .form-select
+        width 100%
+        padding 14px 18px
+        border 2px solid #e8e8e8
+        border-radius 12px
+        font-size 1rem
+        transition all 0.3s cubic-bezier(0.4, 0, 0.2, 1)
+        color #333
+        background linear-gradient(135deg, #ffffff 0%, #fafafa 100%)
+        box-shadow 0 2px 8px rgba(0,0,0,0.08)
+        
+        &:hover
+          border-color #ffb74d
+          box-shadow 0 4px 16px rgba(255, 140, 0, 0.15)
+          transform translateY(-1px)
+        
+        &:focus
+          outline none
+          border-color #ff8c00
+          box-shadow 0 6px 24px rgba(255,140,0,0.2)
+          transform translateY(-2px)
+          background-color #fff
+      
+      i
+        position absolute
+        right 15px
+        top 50%
+        transform translateY(-50%)
+        color #333
+        font-size 1rem
+
+  .form-select
+    background linear-gradient(135deg, #ffffff 0%, #fafafa 100%)
+    cursor pointer
+    color #333
+    font-weight 500
+    box-shadow 0 2px 8px rgba(0,0,0,0.08)
+    border 2px solid #e8e8e8
+    border-radius 12px
+    padding 14px 18px
+    font-size 1rem
+    transition all 0.3s cubic-bezier(0.4, 0, 0.2, 1)
+    position relative
+    appearance none
+    background-image url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23ff8c00' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6,9 12,15 18,9'%3E%3C/polyline%3E%3C/svg%3E")
+    background-repeat no-repeat
+    background-position right 15px center
+    background-size 16px
+    
+    &:hover
+      border-color #ffb74d
+      box-shadow 0 4px 16px rgba(255, 140, 0, 0.15)
+      transform translateY(-1px)
+    
+    &:focus
+      outline none
+      border-color #ff8c00
+      box-shadow 0 6px 24px rgba(255,140,0,0.2)
+      transform translateY(-2px)
+      background-color #fff
+
+  .form-select
+    background white
+    cursor pointer
+
+  .delivery-note
+    margin-top 30px
+    padding 20px 25px
+    background linear-gradient(135deg, rgba(255, 140, 0, 0.12) 0%, rgba(255, 140, 0, 0.06) 100%)
+    border-radius 16px
+    border-left 5px solid #ff8c00
+    position relative
+    box-shadow 0 4px 20px rgba(255, 140, 0, 0.15)
+    
+    &::before
+      content '💡'
+      position absolute
+      left 20px
+      top 50%
+      transform translateY(-50%)
+      font-size 1.2rem
+    
+    p
+      margin 0 0 0 35px
+      font-size 0.95rem
+      color #555
+      font-weight 500
+            line-height 1.5
+
+  // Estilos para la sección de agencia
+  .agency-section
+    margin-top 25px
+    padding 25px
+    background linear-gradient(135deg, rgba(255, 140, 0, 0.08) 0%, rgba(255, 140, 0, 0.03) 100%)
+    border-radius 16px
+    border 2px solid #ffe4d6
+    
+    h4
+      color #ff8c00
+      font-size 1.2rem
+      font-weight 700
+      margin-bottom 20px
+      padding 12px 18px
+      background rgba(255, 140, 0, 0.1)
+      border-radius 10px
+      border-left 4px solid #ff8c00
+
+  .form-group
   margin-bottom 20px
   
   label
@@ -1325,6 +1925,142 @@ export default {
     &:focus
       outline none
       border-color #667eea
+
+// Estilos para el paso 2 - Comprobante de Compra
+.proof-section
+  background #fdf6f0
+  padding 0
+  border-radius 20px
+  border 2px solid #ffe4d6
+  box-shadow 0 8px 32px rgba(255, 140, 0, 0.15)
+  overflow hidden
+  margin-top 20px
+
+.proof-type-selection
+  display flex
+  gap 20px
+  margin 0 30px 30px 30px
+
+  .proof-option
+    flex 1
+    
+    input[type="radio"]
+      display none
+    
+    .proof-label
+      display block
+      padding 15px 20px
+      text-align center
+      background #f0f0f0
+      border 2px solid #e0e0e0
+      border-radius 8px
+      cursor pointer
+      transition all 0.3s ease
+      font-weight 600
+      color #333
+      
+      &:hover
+        border-color #ff8c00
+        background #f8f9fa
+      
+      span
+        font-size 1rem
+        font-weight 600
+    
+    input[type="radio"]:checked + .proof-label
+      background #ff8c00
+      color white
+      border-color #ff8c00
+
+// Header naranja del comprobante
+.proof-header
+  background #ff8c00
+  padding 20px 30px
+  margin 0
+  
+  h3
+    color white
+    font-size 1.3rem
+    font-weight 700
+    margin 0
+    text-align left
+
+.proof-description
+  margin 25px 30px 25px 30px
+  
+  p
+    color #333
+    font-size 1rem
+    font-weight 500
+    margin 0
+    text-align left
+
+// Estilos específicos para el campo de documento en el comprobante
+.proof-form .form-group
+  label
+    display block
+    margin-bottom 12px
+    font-weight 600
+    color #333
+    font-size 1.1rem
+    letter-spacing 0.5px
+
+// Estilos para los campos de boleta
+.boleta-fields
+  margin 0 30px 30px 30px
+  padding 25px
+  background linear-gradient(135deg, rgba(255, 140, 0, 0.05) 0%, rgba(255, 140, 0, 0.02) 100%)
+  border-radius 12px
+  border 1px solid rgba(255, 140, 0, 0.2)
+
+// Estilos para los campos de factura
+.factura-fields
+  margin 0 30px 30px 30px
+  padding 25px
+  background linear-gradient(135deg, rgba(255, 140, 0, 0.05) 0%, rgba(255, 140, 0, 0.02) 100%)
+  border-radius 12px
+  border 1px solid rgba(255, 140, 0, 0.2)
+  
+  .form-row
+    display grid
+    grid-template-columns 1fr 1fr
+    gap 20px
+    margin-bottom 20px
+  
+  .form-group
+    margin-bottom 20px
+    
+    label
+      display block
+      margin-bottom 8px
+      font-weight 600
+      color #333
+      font-size 1rem
+    
+    .input-with-icon
+      position relative
+      
+      input
+        width 100%
+        padding 12px 15px
+        border 2px solid #e0e0e0
+        border-radius 8px
+        font-size 1rem
+        transition all 0.3s ease
+        background white
+        
+        &:focus
+          outline none
+          border-color #ff8c00
+          box-shadow 0 4px 16px rgba(255,140,0,0.15)
+      
+      i
+        position absolute
+        right 15px
+        top 50%
+        transform translateY(-50%)
+        color #333
+        font-size 1rem
 
 // Métodos de pago
 .payment-methods
