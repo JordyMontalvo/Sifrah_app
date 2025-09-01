@@ -2705,7 +2705,7 @@ export default {
   margin-top: 0;
   transform: translateZ(0);
   transition: all 0.3s ease;
-  flex: 0 0 420px;
+  flex: 0 0 380px;
 }
 
 /* Estilos para el título principal de la tienda */
@@ -3210,10 +3210,9 @@ export default {
   margin-bottom: 15px;
   overflow: hidden;
   border-radius: 12px;
-  padding: 16px;
   border: 1px solid #e8e8e8;
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  background: #fafafa;
+  background: #fff;
   transition: all 0.3s ease;
 }
 
@@ -3223,19 +3222,14 @@ export default {
 }
 
 .product-catalog-img {
-  max-width: 100%;
-  max-height: 100%;
+  width: 100%;
+  height: 100%;
   object-fit: contain;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
   transition: all 0.3s ease;
-  background: #fff;
-  padding: 8px;
 }
 
 .product-catalog-img:hover {
   transform: scale(1.05);
-  box-shadow: 0 4px 16px rgba(0,0,0,0.15);
 }
 
 .product-catalog-info {
@@ -4711,7 +4705,7 @@ export default {
 /* Estilos adicionales para mejorar el comportamiento sticky del carrito */
 @media (max-width: 1200px) {
   .sticky-cart-sidebar {
-    width: 350px;
+    width: 320px;
   }
 }
 
