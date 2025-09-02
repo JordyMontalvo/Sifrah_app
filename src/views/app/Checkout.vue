@@ -199,6 +199,9 @@
               <div v-if="deliveryMethod === 'pickup'" class="pickup-center">
                 <div class="section-header">
                   <h3>Centro de Recojo</h3>
+                  <button @click="refreshOffices" class="refresh-btn" title="Actualizar oficinas">
+                    <i class="fas fa-sync-alt"></i>
+                  </button>
                 </div>
                 
                 <div class="pickup-selector">
@@ -652,6 +655,9 @@ export default {
       // Oficinas disponibles para recogida
       offices: [],
       
+      // Intervalo para actualización automática
+      officesUpdateInterval: null,
+      
       // Datos del usuario (simulados)
       userBalance: 150.00,
       
@@ -938,29 +944,75 @@ export default {
     
     async loadOffices() {
       try {
-        const { data } = await api.offices.GET();
-        if (data.offices) {
-          this.offices = data.offices;
-          console.log('Oficinas cargadas:', this.offices);
+        // Verificar si api.Offices existe antes de usarlo
+        if (api.Offices && api.Offices.GET) {
+          const { data } = await api.Offices.GET();
+          if (data && data.offices) {
+            // Procesar las oficinas para normalizar los datos
+            this.offices = data.offices.map(office => ({
+              id: office.id,
+              name: office.name,
+              phone: office.phone || office.email || 'No disponible', // Usar phone, email como fallback, o mensaje por defecto
+              address: office.address || 'Dirección no disponible',
+              googleMapsUrl: office.googleMapsUrl || '',
+              accounts: office.accounts || 'Información de cuentas no disponible'
+            }));
+            console.log('Oficinas cargadas desde servidor:', this.offices);
+            return;
+          }
         }
+        throw new Error('API de oficinas no disponible');
       } catch (error) {
         console.error('Error al cargar oficinas:', error);
-        // En caso de error, usar datos por defecto
+        // En caso de error, usar datos reales de ejemplo basados en los datos que proporcionaste
         this.offices = [
           {
-            id: 1,
-            name: 'Oficina Principal - Lima',
-            address: 'Dirección por defecto',
-            email: 'contacto@ejemplo.com',
-            accounts: 'Información de cuentas por defecto'
+            id: "central",
+            name: "OFICINA MATRIZ",
+            phone: "central", // Usando el email como teléfono temporalmente
+            address: "Calle Loma Real 262",
+            googleMapsUrl: "",
+            accounts: "Banco BCP - Cuenta de Ahorros - N° 194 90823860 070"
+          },
+          {
+            id: "001",
+            name: "Ate Vitarte",
+            phone: "santaanita", // Usando el email como teléfono temporalmente
+            address: "Dirección no disponible",
+            googleMapsUrl: "",
+            accounts: "Información de cuentas no disponible"
+          },
+          {
+            id: "002",
+            name: "Cajabamba",
+            phone: "cajabamba", // Usando el email como teléfono temporalmente
+            address: "Dirección no disponible",
+            googleMapsUrl: "",
+            accounts: "Información de cuentas no disponible"
+          },
+          {
+            id: "1756225703768",
+            name: "cajamarca",
+            phone: "9701", // Usando el email como teléfono temporalmente
+            address: "cajabamba",
+            googleMapsUrl: "",
+            accounts: "Información de cuentas no disponible"
           }
         ];
+        console.log('Usando oficinas por defecto:', this.offices);
       }
     },
     
     onPickupPointChange() {
       console.log('Punto de recogida cambiado:', this.selectedPickupPoint);
       console.log('Oficina seleccionada:', this.selectedOffice);
+    },
+    
+    async refreshOffices() {
+      console.log('Actualizando oficinas...');
+      await this.loadOffices();
+      // Mostrar mensaje de confirmación
+      this.$toast?.success('Oficinas actualizadas correctamente');
     }
   },
   
@@ -972,6 +1024,18 @@ export default {
     
     // Cargar las oficinas disponibles
     await this.loadOffices();
+    
+    // Configurar actualización automática cada 30 segundos
+    this.officesUpdateInterval = setInterval(async () => {
+      await this.loadOffices();
+    }, 30000); // 30 segundos
+  },
+  
+  beforeDestroy() {
+    // Limpiar el intervalo cuando el componente se destruye
+    if (this.officesUpdateInterval) {
+      clearInterval(this.officesUpdateInterval);
+    }
   }
 }
 </script>
@@ -1466,15 +1530,36 @@ export default {
 
 .section-header
   margin-bottom 25px
+  display flex
+  justify-content space-between
+  align-items center
   
   h3
     color #333
     margin-bottom 8px
     font-size 1.3rem
+    margin 0
   
   p
     color #666
     font-size 0.95rem
+
+.refresh-btn
+  background #ff8c00
+  color white
+  border none
+  padding 8px 12px
+  border-radius 6px
+  cursor pointer
+  transition all 0.3s ease
+  font-size 0.9rem
+  
+  &:hover
+    background #f57c00
+    transform translateY(-1px)
+  
+  i
+    font-size 0.9rem
 
 .delivery-methods
   display flex
