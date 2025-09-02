@@ -203,10 +203,13 @@
                 
                 <div class="pickup-selector">
                   <label>Seleccione el PDE</label>
-                  <select v-model="selectedPickupPoint" class="pickup-select">
+                  <select v-model="selectedPickupPoint" class="pickup-select" @change="onPickupPointChange">
                     <option value="">Selecciona un punto de entrega</option>
-                    <option v-for="point in pickupPoints" :key="point.id" :value="point.id">
-                      {{ point.name }}
+                    <option v-for="office in offices" :key="office.id" :value="office.id">
+                      {{ office.name }}
+                      <span v-if="office.googleMapsUrl" class="maps-indicator" title="Tiene Google Maps">
+                        <i class="fas fa-map-marker-alt"></i>
+                      </span>
                     </option>
                   </select>
                 </div>
@@ -222,21 +225,26 @@
                   <!-- Columna izquierda: Mapa -->
                   <div class="map-column">
                     <div class="map-container">
-                      <div class="map-embed">
-                        <iframe 
-                          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3904.1234567890123!2d-77.01234567890123!3d-12.01234567890123!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTLCsDAwJzQ0LjQiUyA3N8KwMDAnNDQuNCJX!5e0!3m2!1ses!2spe!4v1234567890123"
-                          width="100%" 
-                          height="300" 
-                          style="border:0;" 
-                          allowfullscreen="" 
-                          loading="lazy" 
-                          referrerpolicy="no-referrer-when-downgrade">
-                        </iframe>
-                      </div>
-                      <div class="map-info">
-                        <div class="location-name">Agatas, San Juan de Lurigancho 15434</div>
-                        <a href="#" class="map-link">Ampliar el mapa</a>
-                      </div>
+                                              <div class="map-embed">
+                          <iframe 
+                            v-if="selectedOffice && selectedOffice.googleMapsUrl"
+                            :src="selectedOffice.googleMapsUrl.replace('/maps/', '/maps/embed/')"
+                            width="100%" 
+                            height="300" 
+                            style="border:0;" 
+                            allowfullscreen="" 
+                            loading="lazy" 
+                            referrerpolicy="no-referrer-when-downgrade">
+                          </iframe>
+                          <div v-else class="map-placeholder">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <p>Mapa no disponible</p>
+                          </div>
+                        </div>
+                        <div class="map-info">
+                          <div class="location-name">{{ selectedOffice ? selectedOffice.name : 'Oficina seleccionada' }}</div>
+                          <a v-if="selectedOffice && selectedOffice.googleMapsUrl" :href="selectedOffice.googleMapsUrl" target="_blank" class="map-link">Ampliar el mapa</a>
+                        </div>
                     </div>
                   </div>
                   
@@ -246,20 +254,25 @@
                       <h3>Ubicación</h3>
                     </div>
                     
-                    <div class="location-details">
-                      <div class="location-main">
-                        <strong>LIMA - LIMA - ATE - CERES</strong>
-                      </div>
-                      
-                      <div class="location-item">
-                        <span class="location-label">Dirección:</span>
-                        <span class="location-value">Av. Nicolás Ayllón N° 5024 - Ate</span>
-                      </div>
-                      
-                      <div class="location-item">
-                        <span class="location-label">Teléfono:</span>
-                        <span class="location-value">+51 959 141 444 <i class="fab fa-whatsapp whatsapp-icon"></i></span>
-                      </div>
+                                          <div class="location-details">
+                        <div class="location-main">
+                          <strong>{{ selectedOffice ? selectedOffice.name : 'Oficina' }}</strong>
+                        </div>
+                        
+                        <div class="location-item">
+                          <span class="location-label">Dirección:</span>
+                          <span class="location-value">{{ selectedOffice ? selectedOffice.address : 'No disponible' }}</span>
+                        </div>
+                        
+                        <div class="location-item">
+                          <span class="location-label">Teléfono:</span>
+                          <span class="location-value">{{ selectedOffice ? selectedOffice.phone : 'No disponible' }}</span>
+                        </div>
+                        
+                        <div class="location-item" v-if="selectedOffice && selectedOffice.accounts">
+                          <span class="location-label">Cuentas:</span>
+                          <span class="location-value">{{ selectedOffice.accounts }}</span>
+                        </div>
                       
                       <div class="location-item">
                         <span class="location-label">Horario:</span>
@@ -636,23 +649,8 @@ export default {
         direccionFiscal: ''
       },
       
-      // Puntos de recogida
-      pickupPoints: [
-        {
-          id: 1,
-          name: 'Agatas - San Juan de Lurigancho',
-          address: 'Jr las Agatas 449 - Urb. San Carlos',
-          phone: '+51 908 804 551',
-          hours: 'L - V: 9 am - 6:00pm'
-        },
-        {
-          id: 2,
-          name: 'Centro - Lima',
-          address: 'Av. Arequipa 123 - Lima',
-          phone: '+51 908 804 552',
-          hours: 'L - S: 9 am - 8:00pm'
-        }
-      ],
+      // Oficinas disponibles para recogida
+      offices: [],
       
       // Datos del usuario (simulados)
       userBalance: 150.00,
@@ -855,6 +853,11 @@ export default {
     
     canProcessOrder() {
       return this.paymentMethod && this.cartItems.length > 0;
+    },
+    
+    selectedOffice() {
+      if (!this.selectedPickupPoint) return null;
+      return this.offices.find(office => office.id == this.selectedPickupPoint);
     }
   },
   
@@ -931,14 +934,44 @@ export default {
     
     goToDashboard() {
       this.$router.push('/dashboard');
+    },
+    
+    async loadOffices() {
+      try {
+        const { data } = await api.offices.GET();
+        if (data.offices) {
+          this.offices = data.offices;
+          console.log('Oficinas cargadas:', this.offices);
+        }
+      } catch (error) {
+        console.error('Error al cargar oficinas:', error);
+        // En caso de error, usar datos por defecto
+        this.offices = [
+          {
+            id: 1,
+            name: 'Oficina Principal - Lima',
+            address: 'Dirección por defecto',
+            email: 'contacto@ejemplo.com',
+            accounts: 'Información de cuentas por defecto'
+          }
+        ];
+      }
+    },
+    
+    onPickupPointChange() {
+      console.log('Punto de recogida cambiado:', this.selectedPickupPoint);
+      console.log('Oficina seleccionada:', this.selectedOffice);
     }
   },
   
-  mounted() {
+  async mounted() {
     // Verificar si hay productos en el carrito
     if (this.cartItems.length === 0) {
       this.$router.push('/activation');
     }
+    
+    // Cargar las oficinas disponibles
+    await this.loadOffices();
   }
 }
 </script>
@@ -1487,6 +1520,22 @@ export default {
     outline none
     border-color #667eea
 
+.maps-indicator
+  margin-left 8px
+  color #f59e0b
+  font-size 0.8rem
+  
+  i
+    animation pulse 2s infinite
+
+@keyframes pulse
+  0%
+    opacity 1
+  50%
+    opacity 0.5
+  100%
+    opacity 1
+
 .map-container
   margin-bottom 30px
 
@@ -1647,6 +1696,27 @@ export default {
   
   &:hover
     text-decoration underline
+
+.map-placeholder
+  display flex
+  flex-direction column
+  align-items center
+  justify-content center
+  height 300px
+  background #f8f9fa
+  border 2px dashed #dee2e6
+  border-radius 8px
+  color #6c757d
+  
+  i
+    font-size 3rem
+    margin-bottom 15px
+    color #adb5bd
+  
+  p
+    margin 0
+    font-size 1.1rem
+    font-weight 500
 
 .location-info
   margin-top 20px

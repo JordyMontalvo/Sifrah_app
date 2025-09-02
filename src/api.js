@@ -30,6 +30,7 @@ class API {
     Collects,
     Closeds,
     Transfers,
+    Offices,
   }) {
     this.Profile = new Profile();
     this.Password = new Password();
@@ -43,6 +44,7 @@ class API {
     this.Collects = new Collects();
     this.Closeds = new Closeds();
     this.Transfers = new Transfers();
+    this.Offices = new Offices();
   }
 
   register(data) {
@@ -228,6 +230,12 @@ class Transfers {
   }
 }
 
+class Offices {
+  GET() {
+    return axios.get(`/admin/offices`);
+  }
+}
+
 export default new API({
   Profile,
   Password,
@@ -241,4 +249,5 @@ export default new API({
   Transfer,
   Collects,
   Transfers,
+  Offices,
 });
