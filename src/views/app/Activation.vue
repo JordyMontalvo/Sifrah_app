@@ -16,7 +16,10 @@
         <div class="banners-unified-wrapper">
           <!-- Banner izquierda - El más ancho -->
           <div class="banner-left">
-            <div class="banner-placeholder">
+            <div v-if="activationBanners.left" class="banner-image-container">
+              <img :src="activationBanners.left" alt="Banner Izquierda" class="banner-image" />
+            </div>
+            <div v-else class="banner-placeholder">
               <span class="banner-text">Banner Izquierda</span>
             </div>
           </div>
@@ -24,12 +27,18 @@
           <!-- Banners del centro - Medianos -->
           <div class="banner-center">
             <div class="banner-medium-top">
-              <div class="banner-placeholder">
+              <div v-if="activationBanners.centerTop" class="banner-image-container">
+                <img :src="activationBanners.centerTop" alt="Banner Centro Arriba" class="banner-image" />
+              </div>
+              <div v-else class="banner-placeholder">
                 <span class="banner-text">Banner Centro Arriba</span>
               </div>
             </div>
             <div class="banner-medium-bottom">
-              <div class="banner-placeholder">
+              <div v-if="activationBanners.centerBottom" class="banner-image-container">
+                <img :src="activationBanners.centerBottom" alt="Banner Centro Abajo" class="banner-image" />
+              </div>
+              <div v-else class="banner-placeholder">
                 <span class="banner-text">Banner Centro Abajo</span>
               </div>
             </div>
@@ -37,7 +46,10 @@
           
           <!-- Banner derecha - El más cuadrado -->
           <div class="banner-right">
-            <div class="banner-placeholder">
+            <div v-if="activationBanners.right" class="banner-image-container">
+              <img :src="activationBanners.right" alt="Banner Derecha" class="banner-image" />
+            </div>
+            <div v-else class="banner-placeholder">
               <span class="banner-text">Banner Derecha</span>
             </div>
           </div>
@@ -703,6 +715,14 @@ export default {
       _balance: 0,
       tab: "Todos",
       total: 0,
+      
+      // Banners de activación
+      activationBanners: {
+        left: "",
+        centerTop: "",
+        centerBottom: "",
+        right: ""
+      },
       price: 0,
       points: 0,
       IGV: 0,
