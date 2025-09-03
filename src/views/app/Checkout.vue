@@ -195,7 +195,9 @@
                 </div>
               </div>
 
-
+              <!-- Centro de Recojo -->
+              <div v-if="deliveryMethod === 'pickup'" class="pickup-center">
+              
                 
                 <div class="pickup-selector">
                   <label>Seleccione el PDE</label>
