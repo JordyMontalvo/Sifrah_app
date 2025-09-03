@@ -909,7 +909,18 @@ export default {
       if (this.office_id) this.office = this.office_id;
 
       this.offices = data.offices || [];
-      // Remover la dependencia de categories aquí
+      
+      // Cargar banners de activación
+      try {
+        const { data: bannersData } = await api.ActivationBanners.GET(this.session);
+        if (bannersData.activationBanners) {
+          this.activationBanners = bannersData.activationBanners;
+          console.log("[Activation.vue] Banners de activación cargados:", this.activationBanners);
+        }
+      } catch (bannerError) {
+        console.error("Error loading activation banners:", bannerError);
+        // No mostrar error al usuario, solo usar banners vacíos
+      }
       
       // Restaurar el carrito desde el store si existe
       const savedCartItems = this.$store.state.cartItems;
@@ -5052,6 +5063,44 @@ export default {
   .price-amount {
     font-size: 1.2rem;
   }
+}
+
+/* Estilos para las imágenes de banners */
+.banner-image-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  border: 1px solid #d0d0d0;
+}
+
+.banner-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+.banner-image:hover {
+  transform: scale(1.02);
+}
+
+/* Asegurar que las imágenes tengan las mismas dimensiones que los placeholders */
+.banner-left .banner-image-container {
+  height: 400px;
+}
+
+.banner-medium-top .banner-image-container,
+.banner-medium-bottom .banner-image-container {
+  height: 190px;
+}
+
+.banner-right .banner-image-container {
+  height: 400px;
 }
 
 </style>

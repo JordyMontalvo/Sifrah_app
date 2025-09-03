@@ -31,6 +31,7 @@ class API {
     Closeds,
     Transfers,
     Offices,
+    ActivationBanners,
   }) {
     this.Profile = new Profile();
     this.Password = new Password();
@@ -45,6 +46,7 @@ class API {
     this.Closeds = new Closeds();
     this.Transfers = new Transfers();
     this.Offices = new Offices();
+    this.ActivationBanners = new ActivationBanners();
   }
 
   register(data) {
@@ -236,6 +238,12 @@ class Offices {
   }
 }
 
+class ActivationBanners {
+  GET(session) {
+    return axios.get(`/app/activation-banners?session=${session}`);
+  }
+}
+
 export default new API({
   Profile,
   Password,
@@ -250,4 +258,5 @@ export default new API({
   Collects,
   Transfers,
   Offices,
+  ActivationBanners,
 });
