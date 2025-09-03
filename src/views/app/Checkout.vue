@@ -195,14 +195,7 @@
                 </div>
               </div>
 
-              <!-- Centro de Recojo -->
-              <div v-if="deliveryMethod === 'pickup'" class="pickup-center">
-                <div class="section-header">
-                  <h3>Centro de Recojo</h3>
-                  <button @click="refreshOffices" class="refresh-btn" title="Actualizar oficinas">
-                    <i class="fas fa-sync-alt"></i>
-                  </button>
-                </div>
+
                 
                 <div class="pickup-selector">
                   <label>Seleccione el PDE</label>
@@ -230,8 +223,8 @@
                     <div class="map-container">
                                               <div class="map-embed">
                           <iframe 
-                            v-if="selectedOffice && selectedOffice.googleMapsUrl"
-                            :src="selectedOffice.googleMapsUrl.replace('/maps/', '/maps/embed/')"
+                            v-if="selectedOffice && getMapUrl(selectedOffice)"
+                            :src="getMapUrl(selectedOffice)"
                             width="100%" 
                             height="300" 
                             style="border:0;" 
@@ -242,11 +235,27 @@
                           <div v-else class="map-placeholder">
                             <i class="fas fa-map-marker-alt"></i>
                             <p>Mapa no disponible</p>
+                            <small>Esta oficina no tiene ubicación configurada</small>
                           </div>
                         </div>
                         <div class="map-info">
                           <div class="location-name">{{ selectedOffice ? selectedOffice.name : 'Oficina seleccionada' }}</div>
-                          <a v-if="selectedOffice && selectedOffice.googleMapsUrl" :href="selectedOffice.googleMapsUrl" target="_blank" class="map-link">Ampliar el mapa</a>
+                          <a 
+                            v-if="selectedOffice && selectedOffice.googleMapsUrl" 
+                            :href="selectedOffice.googleMapsUrl" 
+                            target="_blank" 
+                            class="map-link"
+                          >
+                            Ver en Google Maps
+                          </a>
+                          <a 
+                            v-else-if="selectedOffice && selectedOffice.address && selectedOffice.address !== 'Dirección no disponible' && selectedOffice.address !== 'hola'"
+                            :href="`https://www.openstreetmap.org/search?query=${encodeURIComponent(selectedOffice.address)}`"
+                            target="_blank" 
+                            class="map-link"
+                          >
+                            Ver en OpenStreetMap
+                          </a>
                         </div>
                     </div>
                   </div>
@@ -1015,6 +1024,22 @@ export default {
       if (this.$toast) {
         this.$toast.success('Oficinas actualizadas correctamente');
       }
+    },
+    
+    getMapUrl(office) {
+      if (!office) return '';
+      
+      // Usar OpenStreetMap para el iframe (siempre funciona)
+      if (office.address && office.address !== 'Dirección no disponible' && office.address !== 'hola') {
+        try {
+          const encodedAddress = encodeURIComponent(office.address);
+          return `https://www.openstreetmap.org/export/embed.html?bbox=-77.1,-12.1,-77.0,-12.0&layer=mapnik&marker=-12.0464,-77.0428&search=${encodedAddress}`;
+        } catch (error) {
+          console.error('Error al generar URL de OpenStreetMap:', error);
+        }
+      }
+      
+      return '';
     }
   },
   
@@ -1747,8 +1772,13 @@ export default {
     width 100%
     
     iframe
-      border-radius 0
-      border none
+      border-radius 12px
+      box-shadow 0 4px 20px rgba(0,0,0,0.15)
+      transition all 0.3s ease
+      
+      &:hover
+        box-shadow 0 6px 25px rgba(0,0,0,0.2)
+        transform translateY(-2px)
 
 .map-info
   padding 12px 15px
@@ -1790,20 +1820,30 @@ export default {
   align-items center
   justify-content center
   height 300px
-  background #f8f9fa
+  background linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%)
   border 2px dashed #dee2e6
-  border-radius 8px
+  border-radius 12px
   color #6c757d
+  padding 20px
+  text-align center
   
   i
-    font-size 3rem
-    margin-bottom 15px
-    color #adb5bd
+    font-size 3.5rem
+    margin-bottom 20px
+    color #ff8c00
+    opacity 0.7
   
   p
-    margin 0
+    margin 0 0 10px 0
     font-size 1.1rem
-    font-weight 500
+    font-weight 600
+    color #495057
+  
+  small
+    font-size 0.9rem
+    color #6c757d
+    line-height 1.4
+    max-width 250px
 
 .location-info
   margin-top 20px
