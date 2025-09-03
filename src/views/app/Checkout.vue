@@ -1012,7 +1012,9 @@ export default {
       console.log('Actualizando oficinas...');
       await this.loadOffices();
       // Mostrar mensaje de confirmación
-      this.$toast?.success('Oficinas actualizadas correctamente');
+      if (this.$toast) {
+        this.$toast.success('Oficinas actualizadas correctamente');
+      }
     }
   },
   
