@@ -228,7 +228,26 @@
                   <!-- Columna izquierda: Mapa -->
                   <div class="map-column">
                     <div class="map-container">
-                      <div id="map" style="height: 300px;"></div>
+                      <div id="map" style="height: 300px; border-radius: 12px;"></div>
+                      <div class="map-info">
+                        <div class="location-name">{{ selectedOffice ? selectedOffice.name : 'Oficina seleccionada' }}</div>
+                        <a 
+                          v-if="selectedOffice && selectedOffice.googleMapsUrl" 
+                          :href="selectedOffice.googleMapsUrl" 
+                          target="_blank" 
+                          class="map-link"
+                        >
+                          Ver en Google Maps
+                        </a>
+                        <a 
+                          v-else-if="selectedOffice && selectedOffice.address && selectedOffice.address !== 'Dirección no disponible' && selectedOffice.address !== 'hola'"
+                          :href="`https://www.openstreetmap.org/search?query=${encodeURIComponent(selectedOffice.address)}`"
+                          target="_blank" 
+                          class="map-link"
+                        >
+                          Ver en OpenStreetMap
+                        </a>
+                      </div>
                     </div>
                   </div>
                   
@@ -635,6 +654,9 @@ export default {
       // Oficinas disponibles para recogida
       offices: [],
       
+      // Instancia del mapa de Leaflet
+      map: null,
+      
       // Intervalo para actualización automática
       officesUpdateInterval: null,
       
@@ -1036,31 +1058,31 @@ export default {
             name: "OFICINA MATRIZ",
             phone: "central", // Usando el email como teléfono temporalmente
             address: "Calle Loma Real 262",
-            googleMapsUrl: "",
+            googleMapsUrl: "https://maps.google.com/?q=-12.0464,-77.0428",
             accounts: "Banco BCP - Cuenta de Ahorros - N° 194 90823860 070"
           },
           {
             id: "001",
             name: "Ate Vitarte",
             phone: "santaanita", // Usando el email como teléfono temporalmente
-            address: "Dirección no disponible",
-            googleMapsUrl: "",
+            address: "Ate Vitarte, Lima",
+            googleMapsUrl: "https://maps.google.com/?q=-12.0432,-76.8987",
             accounts: "Información de cuentas no disponible"
           },
           {
             id: "002",
             name: "Cajabamba",
             phone: "cajabamba", // Usando el email como teléfono temporalmente
-            address: "Dirección no disponible",
-            googleMapsUrl: "",
+            address: "Cajabamba, Cajamarca",
+            googleMapsUrl: "https://maps.google.com/?q=-7.6208,-78.0486",
             accounts: "Información de cuentas no disponible"
           },
           {
             id: "1756225703768",
             name: "cajamarca",
             phone: "9701", // Usando el email como teléfono temporalmente
-            address: "cajabamba",
-            googleMapsUrl: "",
+            address: "Cajamarca, Cajamarca",
+            googleMapsUrl: "https://maps.google.com/?q=-7.1631,-78.5126",
             accounts: "Información de cuentas no disponible"
           }
         ];
@@ -1082,20 +1104,167 @@ export default {
       }
     },
     
-    getMapUrl(office) {
-      if (!office) return '';
+    getMapCoordinates(office) {
+      if (!office) return null;
       
-      // Usar OpenStreetMap para el iframe (siempre funciona)
-      if (office.address && office.address !== 'Dirección no disponible' && office.address !== 'hola') {
+      // Prioridad 1: Extraer coordenadas de Google Maps URL
+      if (office.googleMapsUrl && office.googleMapsUrl.trim() !== '') {
         try {
-          const encodedAddress = encodeURIComponent(office.address);
-          return `https://www.openstreetmap.org/export/embed.html?bbox=-77.1,-12.1,-77.0,-12.0&layer=mapnik&marker=-12.0464,-77.0428&search=${encodedAddress}`;
+          const googleUrl = office.googleMapsUrl;
+          console.log('URL de Google Maps:', googleUrl);
+          
+          // Diferentes patrones para extraer coordenadas
+          let coordsMatch = googleUrl.match(/@(-?\d+\.?\d*),(-?\d+\.?\d*)/); // @lat,lng
+          if (!coordsMatch) {
+            coordsMatch = googleUrl.match(/q=(-?\d+\.?\d*),(-?\d+\.?\d*)/); // q=lat,lng
+          }
+          if (!coordsMatch) {
+            coordsMatch = googleUrl.match(/ll=(-?\d+\.?\d*),(-?\d+\.?\d*)/); // ll=lat,lng
+          }
+          
+          if (coordsMatch) {
+            console.log('Coordenadas extraídas de Google Maps:', coordsMatch);
+            return {
+              lat: parseFloat(coordsMatch[1]),
+              lng: parseFloat(coordsMatch[2])
+            };
+          }
         } catch (error) {
-          console.error('Error al generar URL de OpenStreetMap:', error);
+          console.error('Error al extraer coordenadas de Google Maps:', error);
         }
       }
       
-      return '';
+      // Prioridad 2: Usar coordenadas por defecto para ciudades conocidas
+      if (office.address && office.address !== 'Dirección no disponible' && office.address !== 'hola') {
+        const address = office.address.toLowerCase();
+        
+        // Coordenadas por defecto para ciudades principales del Perú
+        if (address.includes('lima') || address.includes('loma real')) {
+          return { lat: -12.0464, lng: -77.0428 }; // Lima Centro
+        } else if (address.includes('ate') || address.includes('vitarte')) {
+          return { lat: -12.0432, lng: -76.8987 }; // Ate Vitarte
+        } else if (address.includes('cajamarca') || address.includes('cajabamba')) {
+          return { lat: -7.1631, lng: -78.5126 }; // Cajamarca
+        } else if (address.includes('arequipa')) {
+          return { lat: -16.4040, lng: -71.5197 }; // Arequipa
+        } else if (address.includes('cusco')) {
+          return { lat: -13.5319, lng: -71.9675 }; // Cusco
+        } else if (address.includes('trujillo')) {
+          return { lat: -8.1116, lng: -79.0287 }; // Trujillo
+        } else if (address.includes('piura')) {
+          return { lat: -5.1945, lng: -80.6328 }; // Piura
+        } else if (address.includes('chiclayo')) {
+          return { lat: -6.7714, lng: -79.8374 }; // Chiclayo
+        } else if (address.includes('huancayo')) {
+          return { lat: -12.0653, lng: -75.2049 }; // Huancayo
+        }
+      }
+      
+      console.warn('No se pudieron obtener coordenadas para la oficina:', office.name);
+      return null;
+    },
+    
+    initMap(office) {
+      console.log('Iniciando mapa para oficina:', office);
+      
+      // Verificar que Leaflet está disponible
+      if (typeof L === 'undefined') {
+        console.error('Leaflet no está disponible. Verifica que se haya cargado la librería.');
+        return;
+      }
+      
+      const coords = this.getMapCoordinates(office);
+      console.log('Coordenadas extraídas:', coords);
+      
+      if (!coords) {
+        console.warn('No se pudieron obtener coordenadas para la oficina:', office.name);
+        return;
+      }
+      
+      // Verificar que el elemento del mapa existe
+      const mapElement = document.getElementById('map');
+      if (!mapElement) {
+        console.warn('Elemento del mapa no encontrado');
+        return;
+      }
+      
+      // Limpiar el mapa si ya existe
+      if (this.map) {
+        console.log('Limpiando mapa anterior');
+        this.map.remove();
+        this.map = null;
+      }
+      
+      try {
+        console.log('Creando nuevo mapa con coordenadas:', coords);
+        
+        // Crear mapa de Leaflet
+        this.map = L.map('map', {
+          zoomControl: true,
+          scrollWheelZoom: true,
+          doubleClickZoom: true,
+          boxZoom: true,
+          keyboard: true,
+          dragging: true,
+          touchZoom: true
+        }).setView([coords.lat, coords.lng], 15);
+        
+        // Agregar capa de tiles
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+          maxZoom: 19
+        }).addTo(this.map);
+        
+        // Agregar marcador personalizado
+        const customIcon = L.divIcon({
+          className: 'custom-marker',
+          html: '<div style="background-color: #ff8c00; width: 30px; height: 30px; border-radius: 50%; border: 3px solid white; box-shadow: 0 2px 10px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center;"><i class="fas fa-map-marker-alt" style="color: white; font-size: 14px;"></i></div>',
+          iconSize: [30, 30],
+          iconAnchor: [15, 15]
+        });
+        
+        L.marker([coords.lat, coords.lng], { icon: customIcon })
+          .addTo(this.map)
+          .bindPopup(`
+            <div style="text-align: center; padding: 10px;">
+              <h4 style="margin: 0 0 8px 0; color: #ff8c00; font-weight: 700;">${office.name}</h4>
+              <p style="margin: 0; color: #666; font-size: 14px;">${office.address}</p>
+              ${office.phone && office.phone !== 'No disponible' ? `<p style="margin: 5px 0 0 0; color: #333; font-size: 13px;"><i class="fas fa-phone"></i> ${office.phone}</p>` : ''}
+            </div>
+          `)
+          .openPopup();
+        
+        // Ajustar el tamaño del mapa después de cargar
+        setTimeout(() => {
+          if (this.map) {
+            this.map.invalidateSize();
+            console.log('Mapa inicializado correctamente');
+          }
+        }, 200);
+        
+      } catch (error) {
+        console.error('Error al inicializar el mapa:', error);
+      }
+    }
+  },
+  
+  watch: {
+    selectedPickupPoint: {
+      handler(newPickupPoint) {
+        console.log('Punto de recogida cambió a:', newPickupPoint);
+        if (newPickupPoint) {
+          const office = this.offices.find(o => o.id == newPickupPoint);
+          console.log('Oficina encontrada:', office);
+          if (office) {
+            // Esperar a que el DOM se actualice
+            this.$nextTick(() => {
+              setTimeout(() => {
+                this.initMap(office);
+              }, 100);
+            });
+          }
+        }
+      }
     }
   },
   
@@ -1119,6 +1288,12 @@ export default {
     if (this.officesUpdateInterval) {
       clearInterval(this.officesUpdateInterval);
     }
+    
+    // Limpiar el mapa cuando el componente se destruye
+    if (this.map) {
+      this.map.remove();
+      this.map = null;
+    }
   }
 }
 </script>
@@ -1137,12 +1312,8 @@ export default {
   max-width 600px
   margin-left auto
   margin-right 90px
-  background transparent !important
   padding 35px 45px
-  border-radius 20px
-  box-shadow none !important
   position relative
-  border none !important
   
   &::before
     content ''
@@ -2612,4 +2783,55 @@ export default {
   box-shadow 0 2px 8px rgba(0,0,0,0.08) !important
   transform translateY(0) !important
   background linear-gradient(135deg, #ffffff 0%, #fafafa 100%) !important
+
+// Estilos para el mapa de Leaflet
+#map
+  border-radius 12px
+  box-shadow 0 4px 20px rgba(0,0,0,0.15)
+  transition all 0.3s ease
+  
+  &:hover
+    box-shadow 0 6px 25px rgba(0,0,0,0.2)
+    transform translateY(-2px)
+
+.map-info
+  padding 12px 15px
+  background white
+  border-radius 0 0 12px 12px
+  border-top 1px solid #e0e0e0
+  
+  .location-name
+    font-weight 600
+    color #333
+    margin-bottom 8px
+    font-size 1rem
+  
+  .map-link
+    color #ff8c00
+    text-decoration none
+    font-weight 500
+    font-size 0.9rem
+    
+    &:hover
+      text-decoration underline
+
+.map-container
+  background white
+  border-radius 12px
+  box-shadow 0 4px 20px rgba(0,0,0,0.15)
+  overflow hidden
+
+// Estilos para el marcador personalizado
+.custom-marker
+  background transparent !important
+  border none !important
+
+// Estilos para el popup
+.leaflet-popup-content-wrapper
+  border-radius 12px
+  box-shadow 0 4px 20px rgba(0,0,0,0.15)
+
+.leaflet-popup-content
+  margin 0
+  padding 0
 </style> 
