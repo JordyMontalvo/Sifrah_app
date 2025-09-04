@@ -1,21 +1,27 @@
 <template>
   <App :session="session" :office_id="office_id" :title="title">
     <div v-cloak>
-      <!-- CONTENEDOR PRINCIPAL DE LA TIENDA SIFRAH -->
-      <div class="tienda-sifrah-container">
-        <div v-if="loading" class="loading-container">
-            <div class="loading-spinner-large"></div>
-            <p>Cargando productos...</p>
+      <!-- Loading que cubre toda la vista -->
+      <div v-if="loading || !products || products.length === 0" class="full-page-loading">
+        <div class="loading-container">
+          <div class="sifrah-logo-loading">
+            <i class="fas fa-store"></i>
           </div>
-          
-          <div v-else-if="!products || products.length === 0" class="loading-container">
-            <div class="loading-spinner-large"></div>
-            <p v-if="!products">Inicializando catálogo...</p>
-            <p v-else>No hay productos disponibles</p>
-            <div v-if="error" class="error-message">
-              {{ error }}
-            </div>
+          <div class="loading-spinner-large"></div>
+          <h2 v-if="loading">Cargando Tienda Sifrah...</h2>
+          <h2 v-else-if="!products">Inicializando catálogo...</h2>
+          <h2 v-else-if="products && products.length === 0">No hay productos disponibles</h2>
+          <p v-if="loading">Preparando el mejor catálogo para ti</p>
+          <p v-else-if="!products">Configurando productos y ofertas</p>
+          <p v-else-if="products && products.length === 0">Contacta al administrador para agregar productos</p>
+          <div v-if="error" class="error-message">
+            {{ error }}
           </div>
+        </div>
+      </div>
+      
+      <!-- Contenido principal (solo se muestra cuando no está cargando y hay productos) -->
+      <div v-else-if="products && products.length > 0" class="tienda-sifrah-container">
         <!-- Título principal de la tienda -->
         <h1 class="store-title">Tienda Sifrah</h1>
 
@@ -70,36 +76,7 @@
         <!-- Sección de catálogo de productos y carrito -->
         <div class="productos-compras-section">
           
-         <!-- Estados de carga y error -->
-          <!-- <div v-if="loading" class="loading-container">
-            <div class="loading-spinner-large"></div>
-            <p>Cargando productos...</p>
-          </div>
-          
-          <div v-else-if="!products || products.length === 0" class="loading-container">
-            <div class="loading-spinner-large"></div>
-            <p v-if="!products">Inicializando catálogo...</p>
-            <p v-else>No hay productos disponibles</p>
-            <div v-if="error" class="error-message">
-              {{ error }}
-            </div>
-          </div>
-          
-          <div v-else-if="loading" class="skeleton-container">
-            <div class="skeleton-header">
-              <div class="skeleton-title"></div>
-              <div class="skeleton-subtitle"></div>
-            </div>
-            <div class="skeleton-grid">
-              <div v-for="i in 6" :key="i" class="skeleton-card">
-                <div class="skeleton-image"></div>
-                <div class="skeleton-content">
-                  <div class="skeleton-line"></div>
-                  <div class="skeleton-line short"></div>
-                </div>
-              </div>
-            </div>
-          </div>  -->
+
           
           <!-- Contenido principal del catálogo y carrito -->
           <div class="catalog-container">
@@ -147,12 +124,7 @@
                   </div>
 
                   <!-- Grid de productos -->
-                  <div v-if="loading" class="products-loading">
-                    <div class="loading-spinner-medium"></div>
-                    <p>Cargando catálogo...</p>
-                  </div>
-                  
-                  <div v-else class="products-catalog-grid">
+                  <div class="products-catalog-grid">
                     <!-- Indicador de productos mostrados -->
                     <div class="products-count-indicator">
                       <span>Mostrando {{ filteredCatalogProducts.length }} de {{ products.length }} productos</span>
@@ -4612,6 +4584,44 @@ export default {
   }
 }
 
+// Loading de página completa
+.full-page-loading
+  position fixed
+  top 0
+  left 0
+  width 100%
+  height 100%
+  background linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(248, 249, 250, 0.95) 100%)
+  backdrop-filter blur(15px)
+  z-index 9999
+  display flex
+  align-items center
+  justify-content center
+
+// Logo de Sifrah para el loading
+.sifrah-logo-loading
+  width 120px
+  height 120px
+  background linear-gradient(135deg, #ff8c00 0%, #ffa726 100%)
+  border-radius 50%
+  display flex
+  align-items center
+  justify-content center
+  margin-bottom 25px
+  box-shadow 0 8px 30px rgba(255, 140, 0, 0.3)
+  animation logoFloat 2s ease-in-out infinite
+  
+  i
+    font-size 3.5rem
+    color white
+    text-shadow 0 2px 10px rgba(0, 0, 0, 0.2)
+
+@keyframes logoFloat
+  0%, 100%
+    transform translateY(0px) scale(1)
+  50%
+    transform translateY(-10px) scale(1.05)
+
 // Estilos para el loading container
 .loading-container
   display flex
@@ -4620,31 +4630,47 @@ export default {
   justify-content center
   min-height 400px
   padding 40px
-  animation fadeIn 0.3s ease-in
+  animation fadeIn 0.6s ease-in
+  text-align center
   
   .loading-spinner-large
-    width 60px
-    height 60px
-    border 4px solid #f3f3f3
-    border-top 4px solid #ff9800
+    width 80px
+    height 80px
+    border 6px solid #f3f3f3
+    border-top 6px solid #ff8c00
     border-radius 50%
-    animation spin 1s linear infinite
-    margin-bottom 20px
+    animation spin 1.5s linear infinite
+    margin-bottom 30px
+    box-shadow 0 4px 20px rgba(255, 140, 0, 0.3)
+  
+  h2
+    color #333
+    font-size 1.8rem
+    margin 0 0 15px 0
+    font-weight 700
+    text-align center
+    letter-spacing -0.5px
   
   p
     color #666
     font-size 1.1rem
-    margin 0 0 15px 0
+    margin 0 0 20px 0
+    font-weight 500
+    text-align center
+    max-width 400px
+    line-height 1.4
   
   .error-message
     background #ffebee
     color #c62828
-    padding 12px 20px
-    border-radius 8px
+    padding 20px 30px
+    border-radius 15px
     border 1px solid #ffcdd2
-    font-size 0.9rem
+    font-size 1.1rem
     text-align center
-    max-width 400px
+    max-width 600px
+    box-shadow 0 6px 25px rgba(198, 40, 40, 0.2)
+    margin-top 20px
 
 @keyframes fadeIn
   from
