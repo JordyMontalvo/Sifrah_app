@@ -142,7 +142,7 @@
                     <h4>Ubicación de Entrega</h4>
                     
                     <div class="form-row">
-                                              <div class="form-group">
+                                              <div class="form-group department-field">
                           <label>Departamento</label>
                           <select v-model="deliveryData.department" class="form-select" @change="onDepartmentChange">
                             <option value="">Selecciona</option>
@@ -156,7 +156,7 @@
                           </select>
                         </div>
                         
-                        <div class="form-group">
+                        <div class="form-group province-field">
                           <label>Provincia</label>
                           <select v-model="deliveryData.province" class="form-select" @change="onProvinceChange">
                             <option value="">Selecciona</option>
@@ -2178,6 +2178,12 @@ export default {
   .agency-select
     min-width 200px !important
     width 100%
+
+  // Estilos específicos para campos de ubicación
+  .department-field, .province-field
+    .form-select
+      min-width 200px !important
+      width 100%
 
   .delivery-note
     margin-top 30px
