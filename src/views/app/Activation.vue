@@ -2664,7 +2664,7 @@ export default {
 
 /* SECCIÓN DE PRODUCTOS Y COMPRAS */
 .productos-compras-section {
-  margin-top: 30px;
+  margin-top: -20px;
   padding: 20px 0;
 }
 
@@ -2678,13 +2678,14 @@ export default {
   color: white;
   padding: 12px 20px;
   border-radius: 20px;
-  margin: 20px 0;
+  margin: 0 0 20px 0;
   box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
   font-size: 0.95rem;
   font-weight: 600;
   width: fit-content;
   max-width: 250px;
   margin-left: auto;
+  margin-top: -60px;
 }
 
 .points-icon {
@@ -2767,7 +2768,7 @@ export default {
   gap: 15px;
   width: 100%;
   margin: 0;
-  padding: 20px 0;
+  padding: 0;
   position: relative;
   background: transparent;
   transform-origin: top left;
@@ -3292,8 +3293,8 @@ export default {
   font-size: 0.9rem;
   color: #555;
   font-weight: 500;
-  margin-bottom: 8px;
-  margin-top: 4px;
+  margin-bottom: 9px;
+  margin-top: -25px;
   line-height: 1.3;
   text-align: center;
 }
@@ -5000,7 +5001,7 @@ export default {
   .points-bar {
     padding: 12px 20px;
     font-size: 1rem;
-    margin: 15px 0;
+    margin: 0 0 15px 0;
   }
   
   .productos-compras-section {
@@ -5025,7 +5026,7 @@ export default {
   .points-bar {
     padding: 10px 15px;
     font-size: 0.9rem;
-    margin: 10px 0;
+    margin: 0 0 10px 0;
   }
   
   .productos-compras-section {

@@ -1,5 +1,10 @@
 <template>
   <App>
+    <!-- Título principal del checkout -->
+    <div class="checkout-main-title">
+      <h1>Checkout</h1>
+    </div>
+    
     <!-- Contenedor padre unificado para prevenir distorsión con zoom -->
     <div class="checkout-unified-wrapper">
       
@@ -34,7 +39,7 @@
             <div class="order-summary">
               <div class="summary-row">
                 <span>Total productos:</span>
-                <span>{{ cartItems.length }} items</span>
+                <span>{{ cartItemsTotal }} items</span>
               </div>
               <div class="summary-row">
                 <span>Puntos:</span>
@@ -110,7 +115,7 @@
                       <div class="form-group">
                         <label>Nombre Receptor</label>
                         <div class="input-with-icon">
-                          <input v-model="deliveryData.recipientName" type="text" placeholder="Nombre Completo" required />
+                          <input v-model="deliveryData.recipientName" type="text" placeholder="Nombre Completo" @input="onlyLetters($event, 'deliveryData.recipientName')" required />
                           <i class="fas fa-user"></i>
                         </div>
                       </div>
@@ -118,7 +123,7 @@
                       <div class="form-group">
                         <label>Documento</label>
                         <div class="input-with-icon">
-                          <input v-model="deliveryData.document" type="text" placeholder="Nro. de Documento" required />
+                          <input v-model="deliveryData.document" type="text" placeholder="Nro. de Documento" @input="onlyNumbersDocument($event, 'deliveryData.document')" maxlength="8" required />
                           <i class="fas fa-list"></i>
                         </div>
                       </div>
@@ -127,7 +132,7 @@
                     <div class="form-group">
                       <label>Celular Receptor</label>
                       <div class="input-with-icon">
-                        <input v-model="deliveryData.recipientPhone" type="tel" placeholder="Celular Receptor" required />
+                        <input v-model="deliveryData.recipientPhone" type="tel" placeholder="Celular Receptor" @input="onlyNumbersPhone($event, 'deliveryData.recipientPhone')" maxlength="9" required />
                         <i class="fas fa-phone"></i>
                       </div>
                     </div>
@@ -160,16 +165,16 @@
                             </option>
                           </select>
                         </div>
+                      </div>
                       
-                        <div class="form-group">
-                          <label>Distrito</label>
-                          <select v-model="deliveryData.district" class="form-select">
-                            <option value="">Selecciona</option>
-                            <option v-for="district in availableDistricts" :key="district" :value="district">
-                              {{ district }}
-                            </option>
-                          </select>
-                        </div>
+                      <div class="form-group">
+                        <label>Distrito</label>
+                        <select v-model="deliveryData.district" class="form-select district-select">
+                          <option value="">Selecciona</option>
+                          <option v-for="district in availableDistricts" :key="district" :value="district">
+                            {{ district }}
+                          </option>
+                        </select>
                       </div>
                     </div>
                     
@@ -178,7 +183,7 @@
                       <h4>Agencia de Transporte</h4>
                       <div class="form-group">
                         <label>Agencia</label>
-                        <select v-model="deliveryData.agency" class="form-select">
+                        <select v-model="deliveryData.agency" class="form-select agency-select">
                           <option value="">Seleccione el PDE</option>
                           <option value="olva">Olva Courier</option>
                           <option value="serpost">Serpost</option>
@@ -190,7 +195,7 @@
                     </div>
                     
                     <div v-if="showAgencyField" class="delivery-note">
-                      <p>*En caso de no haber cargo por delivery, el pago del delivery será al momento de la entrega.</p>
+                      <p>💡 En caso de no haber cargo por delivery, el pago del delivery será al momento de la entrega.</p>
                     </div>
                 </div>
               </div>
@@ -359,8 +364,7 @@
                     <div class="form-group">
                       <label>Documento</label>
                       <div class="input-with-icon">
-                        <input v-model="proofData.document" type="text" placeholder="Nro. de Documento" required />
-                        <i class="fas fa-user"></i>
+                        <input v-model="proofData.document" type="text" placeholder="Nro. de Documento" @input="onlyNumbersDocument($event, 'proofData.document')" maxlength="8" required />
                         <i class="fas fa-list"></i>
                       </div>
                     </div>
@@ -372,7 +376,7 @@
                       <div class="form-group">
                         <label>Nro. RUC</label>
                         <div class="input-with-icon">
-                          <input v-model="proofData.ruc" type="text" placeholder="Número de RUC" required />
+                          <input v-model="proofData.ruc" type="text" placeholder="Número de RUC" @input="onlyNumbersRUC($event, 'proofData.ruc')" maxlength="11" required />
                           <i class="fas fa-user"></i>
                         </div>
                       </div>
@@ -785,12 +789,17 @@ export default {
         sum + item.points * item.total, 0);
     },
     
+    cartItemsTotal() {
+      return this.cartItems.reduce((sum, item) => sum + item.total, 0);
+    },
+    
     canProceedToNextStep() {
       if (this.currentStep === 1) {
         if (this.deliveryMethod === 'delivery') {
           // Para delivery, validar que se complete la información básica
           const basicInfo = this.deliveryData.recipientName && 
                            this.deliveryData.document && 
+                           this.deliveryData.document.length === 8 &&
                            this.deliveryData.recipientPhone &&
                            this.deliveryData.department &&
                            this.deliveryData.province &&
@@ -806,7 +815,7 @@ export default {
         return this.deliveryMethod && this.selectedPickupPoint;
       }
       if (this.currentStep === 2) {
-        return this.proofData.type && this.proofData.document;
+        return this.proofData.type && this.proofData.document && this.proofData.document.length === 8;
       }
       if (this.currentStep === 3) {
         return this.billingData.firstName && 
@@ -855,13 +864,14 @@ export default {
     },
     
     canProceedToProofStep() {
-      // Para boleta solo requiere documento
+      // Para boleta solo requiere documento con exactamente 8 números
       if (this.proofData.type === 'boleta') {
-        return this.proofData.document;
+        return this.proofData.document && this.proofData.document.length === 8;
       }
-      // Para factura requiere RUC, Razón Social y Dirección Fiscal
+      // Para factura requiere RUC con exactamente 11 números, Razón Social y Dirección Fiscal
       if (this.proofData.type === 'factura') {
         return this.proofData.ruc && 
+               this.proofData.ruc.length === 11 &&
                this.proofData.razonSocial && 
                this.proofData.direccionFiscal;
       }
@@ -894,6 +904,85 @@ export default {
         return product.prices[planId];
       }
       return product.price || 0;
+    },
+    
+    onlyNumbers(event, fieldPath) {
+      // Remover todos los caracteres que no sean números
+      const value = event.target.value.replace(/[^0-9]/g, '');
+      event.target.value = value;
+      
+      // Actualizar el modelo de datos
+      const pathParts = fieldPath.split('.');
+      if (pathParts.length === 2) {
+        this[pathParts[0]][pathParts[1]] = value;
+      }
+    },
+    
+    onlyNumbersDocument(event, fieldPath) {
+      // Remover todos los caracteres que no sean números y limitar a 8 dígitos
+      let value = event.target.value.replace(/[^0-9]/g, '');
+      
+      // Limitar a máximo 8 dígitos
+      if (value.length > 8) {
+        value = value.substring(0, 8);
+      }
+      
+      event.target.value = value;
+      
+      // Actualizar el modelo de datos
+      const pathParts = fieldPath.split('.');
+      if (pathParts.length === 2) {
+        this[pathParts[0]][pathParts[1]] = value;
+      }
+    },
+    
+    onlyNumbersPhone(event, fieldPath) {
+      // Remover todos los caracteres que no sean números y limitar a 9 dígitos
+      let value = event.target.value.replace(/[^0-9]/g, '');
+      
+      // Limitar a máximo 9 dígitos
+      if (value.length > 9) {
+        value = value.substring(0, 9);
+      }
+      
+      event.target.value = value;
+      
+      // Actualizar el modelo de datos
+      const pathParts = fieldPath.split('.');
+      if (pathParts.length === 2) {
+        this[pathParts[0]][pathParts[1]] = value;
+      }
+    },
+    
+    onlyLetters(event, fieldPath) {
+      // Remover todos los caracteres que no sean letras, espacios o acentos
+      let value = event.target.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]/g, '');
+      
+      event.target.value = value;
+      
+      // Actualizar el modelo de datos
+      const pathParts = fieldPath.split('.');
+      if (pathParts.length === 2) {
+        this[pathParts[0]][pathParts[1]] = value;
+      }
+    },
+    
+    onlyNumbersRUC(event, fieldPath) {
+      // Remover todos los caracteres que no sean números y limitar a 11 dígitos
+      let value = event.target.value.replace(/[^0-9]/g, '');
+      
+      // Limitar a máximo 11 dígitos
+      if (value.length > 11) {
+        value = value.substring(0, 11);
+      }
+      
+      event.target.value = value;
+      
+      // Actualizar el modelo de datos
+      const pathParts = fieldPath.split('.');
+      if (pathParts.length === 2) {
+        this[pathParts[0]][pathParts[1]] = value;
+      }
     },
     
     selectDeliveryMethod(method) {
@@ -1084,12 +1173,12 @@ export default {
   max-width 600px
   margin-left auto
   margin-right 90px
-  background #fdf6f0
+  background transparent
   padding 35px 45px
   border-radius 20px
-  box-shadow 0 4px 20px rgba(0,0,0,0.08)
+  box-shadow none
   position relative
-  border 1px solid #ffe4d6
+  border none
   
   &::before
     content ''
@@ -1165,6 +1254,24 @@ export default {
 
 
 
+.checkout-main-title
+  text-align left
+  margin-bottom 20px
+  padding 0
+  margin-top 0
+  position absolute
+  top 40px
+  left 40px
+  z-index 10
+  
+  h1
+    color #ff6b35
+    font-size 20px
+    margin 0 0 20px 0
+    font-weight 700
+    text-align left
+    letter-spacing -0.5px
+
 .checkout-header
   text-align center
   color #333
@@ -1184,7 +1291,7 @@ export default {
   display flex
   flex-direction column
   max-width 1400px
-  margin 0 auto
+  margin 0 auto 0 0
   background white
   border-radius 15px
   box-shadow 0 4px 20px rgba(0,0,0,0.08)
@@ -1209,8 +1316,8 @@ export default {
 
 .checkout-content
   display grid
-  grid-template-columns 1.2fr 1.8fr
-  gap 30px
+  grid-template-columns 1.2fr 2.2fr
+  gap 0px
   margin-top -25px
   position relative
   overflow visible
@@ -1231,7 +1338,7 @@ export default {
 
 .cart-title
   text-align center
-  margin-bottom 30px
+  margin-bottom 13px
   padding 25px
   background #fdf6f0
   border-radius 12px
@@ -1239,14 +1346,14 @@ export default {
   
   h2
     margin 0 0 12px 0
-    font-size 1.6rem
+    font-size 1.3rem
     font-weight 700
     color #ff8c00
     text-shadow 0 1px 2px rgba(255, 140, 0, 0.1)
   
   p
     margin 0
-    font-size 1.1rem
+    font-size 0.95rem
     color #555
     font-weight 500
     line-height 1.4
@@ -1999,7 +2106,8 @@ export default {
       
       input, .form-select
         width 100%
-        padding 14px 18px
+        min-width 200px
+        padding 20px 18px
         border 2px solid #e8e8e8
         border-radius 12px
         font-size 1rem
@@ -2036,8 +2144,9 @@ export default {
     box-shadow 0 2px 8px rgba(0,0,0,0.08)
     border 2px solid #e8e8e8
     border-radius 12px
-    padding 14px 18px
+    padding 20px 18px
     font-size 1rem
+    min-width 333px
     transition all 0.3s cubic-bezier(0.4, 0, 0.2, 1)
     position relative
     appearance none
@@ -2061,48 +2170,49 @@ export default {
   .form-select
     background white
     cursor pointer
+    
+  .district-select
+    min-width 200px !important
+    width 100%
+    
+  .agency-select
+    min-width 200px !important
+    width 100%
 
   .delivery-note
     margin-top 30px
-    padding 20px 25px
-    background linear-gradient(135deg, rgba(255, 140, 0, 0.12) 0%, rgba(255, 140, 0, 0.06) 100%)
-    border-radius 16px
-    border-left 5px solid #ff8c00
+    padding 0
+    background transparent
+    border-radius 0
+    border-left none
     position relative
-    box-shadow 0 4px 20px rgba(255, 140, 0, 0.15)
-    
-    &::before
-      content '💡'
-      position absolute
-      left 20px
-      top 50%
-      transform translateY(-50%)
-      font-size 1.2rem
+    box-shadow none
     
     p
-      margin 0 0 0 35px
+      margin 0
       font-size 0.95rem
       color #555
       font-weight 500
-            line-height 1.5
+      line-height 1.5
 
   // Estilos para la sección de agencia
   .agency-section
     margin-top 25px
-    padding 25px
-    background linear-gradient(135deg, rgba(255, 140, 0, 0.08) 0%, rgba(255, 140, 0, 0.03) 100%)
-    border-radius 16px
-    border 2px solid #ffe4d6
+    padding 0
+    background transparent
+    border-radius 0
+    border none
     
     h4
       color #ff8c00
-      font-size 1.2rem
+      font-size 1.3rem
       font-weight 700
-      margin-bottom 20px
-      padding 12px 18px
-      background rgba(255, 140, 0, 0.1)
-      border-radius 10px
+      margin-bottom 25px
+      padding 15px 20px
+      background linear-gradient(135deg, rgba(255, 140, 0, 0.08) 0%, rgba(255, 140, 0, 0.03) 100%)
+      border-radius 12px
       border-left 4px solid #ff8c00
+      position relative
 
   .form-group
   margin-bottom 20px
@@ -2206,19 +2316,57 @@ export default {
 
 // Estilos para los campos de boleta
 .boleta-fields
-  margin 0 30px 30px 30px
-  padding 25px
-  background linear-gradient(135deg, rgba(255, 140, 0, 0.05) 0%, rgba(255, 140, 0, 0.02) 100%)
-  border-radius 12px
-  border 1px solid rgba(255, 140, 0, 0.2)
+  margin -10px 0 15px 0
+  padding 0 30px
+  background transparent
+  border-radius 0
+  border none
+  
+  .form-group
+    margin-bottom 20px
+    
+    label
+      display block
+      margin-bottom 8px
+      font-weight 600
+      color #333
+      font-size 1rem
+    
+    .input-with-icon
+      position relative
+      
+      input
+        width 100%
+        padding 20px 18px
+        border 2px solid #ff8c00
+        border-radius 12px
+        font-size 1rem
+        transition all 0.3s ease
+        background white
+        box-shadow 0 2px 8px rgba(0,0,0,0.08)
+        
+        &:focus
+          outline none
+          border-color #ff8c00
+          box-shadow 0 6px 24px rgba(255,140,0,0.2)
+          transform translateY(-2px)
+          background-color #fff
+      
+      i
+        position absolute
+        right 15px
+        top 50%
+        transform translateY(-50%)
+        color #333
+        font-size 1rem
 
 // Estilos para los campos de factura
 .factura-fields
-  margin 0 30px 30px 30px
-  padding 25px
-  background linear-gradient(135deg, rgba(255, 140, 0, 0.05) 0%, rgba(255, 140, 0, 0.02) 100%)
-  border-radius 12px
-  border 1px solid rgba(255, 140, 0, 0.2)
+  margin -10px 0 15px 0
+  padding 0 30px
+  background transparent
+  border-radius 0
+  border none
   
   .form-row
     display grid
@@ -2488,4 +2636,11 @@ export default {
       
       .step-label
         font-size 0.85rem
+
+// Fix para resetear el estado de enfoque del campo de documento
+.boleta-fields .input-with-icon input:not(:focus)
+  border-color #e8e8e8 !important
+  box-shadow 0 2px 8px rgba(0,0,0,0.08) !important
+  transform translateY(0) !important
+  background linear-gradient(135deg, #ffffff 0%, #fafafa 100%) !important
 </style> 
