@@ -1,7 +1,9 @@
 <template>
   <App :session="session" :office_id="office_id" :title="title">
     <div v-cloak>
-      <div v-if="loading" class="loading-container">
+      <!-- CONTENEDOR PRINCIPAL DE LA TIENDA SIFRAH -->
+      <div class="tienda-sifrah-container">
+        <div v-if="loading" class="loading-container">
             <div class="loading-spinner-large"></div>
             <p>Cargando productos...</p>
           </div>
@@ -14,9 +16,6 @@
               {{ error }}
             </div>
           </div>
-      <!-- CONTENEDOR PRINCIPAL DE LA TIENDA SIFRAH -->
-      <div class="tienda-sifrah-container">
-        
         <!-- Título principal de la tienda -->
         <h1 class="store-title">Tienda Sifrah</h1>
 
