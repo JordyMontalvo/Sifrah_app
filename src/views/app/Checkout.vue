@@ -228,42 +228,7 @@
                   <!-- Columna izquierda: Mapa -->
                   <div class="map-column">
                     <div class="map-container">
-                                              <div class="map-embed">
-                          <iframe 
-                            v-if="selectedOffice && getMapUrl(selectedOffice)"
-                            :src="getMapUrl(selectedOffice)"
-                            width="100%" 
-                            height="300" 
-                            style="border:0;" 
-                            allowfullscreen="" 
-                            loading="lazy" 
-                            referrerpolicy="no-referrer-when-downgrade">
-                          </iframe>
-                          <div v-else class="map-placeholder">
-                            <i class="fas fa-map-marker-alt"></i>
-                            <p>Mapa no disponible</p>
-                            <small>Esta oficina no tiene ubicación configurada</small>
-                          </div>
-                        </div>
-                        <div class="map-info">
-                          <div class="location-name">{{ selectedOffice ? selectedOffice.name : 'Oficina seleccionada' }}</div>
-                          <a 
-                            v-if="selectedOffice && selectedOffice.googleMapsUrl" 
-                            :href="selectedOffice.googleMapsUrl" 
-                            target="_blank" 
-                            class="map-link"
-                          >
-                            Ver en Google Maps
-                          </a>
-                          <a 
-                            v-else-if="selectedOffice && selectedOffice.address && selectedOffice.address !== 'Dirección no disponible' && selectedOffice.address !== 'hola'"
-                            :href="`https://www.openstreetmap.org/search?query=${encodeURIComponent(selectedOffice.address)}`"
-                            target="_blank" 
-                            class="map-link"
-                          >
-                            Ver en OpenStreetMap
-                          </a>
-                        </div>
+                      <div id="map" style="height: 300px;"></div>
                     </div>
                   </div>
                   
@@ -1172,12 +1137,12 @@ export default {
   max-width 600px
   margin-left auto
   margin-right 90px
-  background transparent
+  background transparent !important
   padding 35px 45px
   border-radius 20px
-  box-shadow none
+  box-shadow none !important
   position relative
-  border none
+  border none !important
   
   &::before
     content ''
@@ -1582,7 +1547,6 @@ export default {
 
 // Columna derecha - Proceso de checkout
 .checkout-process
-  background white
   padding 30px
 
 .progress-bar
