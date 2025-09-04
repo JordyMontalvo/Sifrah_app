@@ -234,7 +234,7 @@ class Transfers {
 
 class Offices {
   GET() {
-    return axios.get(`/admin/offices`);
+    return axios.get(`/app/offices`); // Cambiar a endpoint de usuarios
   }
 }
 
