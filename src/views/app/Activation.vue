@@ -3294,7 +3294,7 @@ export default {
   color: #555;
   font-weight: 500;
   margin-bottom: 9px;
-  margin-top: -25px;
+  margin-top: -10px;
   line-height: 1.3;
   text-align: center;
 }
