@@ -1,6 +1,19 @@
 <template>
   <App :session="session" :office_id="office_id" :title="title">
     <div v-cloak>
+      <div v-if="loading" class="loading-container">
+            <div class="loading-spinner-large"></div>
+            <p>Cargando productos...</p>
+          </div>
+          
+          <div v-else-if="!products || products.length === 0" class="loading-container">
+            <div class="loading-spinner-large"></div>
+            <p v-if="!products">Inicializando catálogo...</p>
+            <p v-else>No hay productos disponibles</p>
+            <div v-if="error" class="error-message">
+              {{ error }}
+            </div>
+          </div>
       <!-- CONTENEDOR PRINCIPAL DE LA TIENDA SIFRAH -->
       <div class="tienda-sifrah-container">
         
@@ -58,8 +71,8 @@
         <!-- Sección de catálogo de productos y carrito -->
         <div class="productos-compras-section">
           
-          <!-- Estados de carga y error -->
-          <div v-if="loading" class="loading-container">
+         <!-- Estados de carga y error -->
+          <!-- <div v-if="loading" class="loading-container">
             <div class="loading-spinner-large"></div>
             <p>Cargando productos...</p>
           </div>
@@ -87,10 +100,10 @@
                 </div>
               </div>
             </div>
-          </div>
+          </div>  -->
           
           <!-- Contenido principal del catálogo y carrito -->
-          <div v-else class="catalog-container">
+          <div class="catalog-container">
             <!-- Área principal de productos -->
             <div class="products-main-area">
               <!-- Contenedor con altura definida para el sticky -->

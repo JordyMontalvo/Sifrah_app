@@ -86,24 +86,26 @@
                 <div class="delivery-header">
                   <h3>Opciones de Despacho</h3>
                 </div>
-            
-            <div class="delivery-description">
-              <p>Elije tu método de despacho preferido.</p>
-            </div>
                 
-                <div class="delivery-methods">
-                  <button 
-                    @click="selectDeliveryMethod('pickup')" 
-                    :class="['delivery-method', { active: deliveryMethod === 'pickup' }]"
-                  >
-                    Retira tu compra
-                  </button>
-                  <button 
-                    @click="selectDeliveryMethod('delivery')" 
-                    :class="['delivery-method', { active: deliveryMethod === 'delivery' }]"
-                  >
-                    Delivery
-                  </button>
+                <div class="delivery-content">
+                  <div class="delivery-description">
+                    <p>Elije tu método de despacho preferido.</p>
+                  </div>
+                  
+                  <div class="delivery-methods">
+                    <button 
+                      @click="selectDeliveryMethod('pickup')" 
+                      :class="['delivery-method', { active: deliveryMethod === 'pickup' }]"
+                    >
+                      Retira tu Compra
+                    </button>
+                    <button 
+                      @click="selectDeliveryMethod('delivery')" 
+                      :class="['delivery-method', { active: deliveryMethod === 'delivery' }]"
+                    >
+                      Delivery
+                    </button>
+                  </div>
                 </div>
                 
                 <!-- Formulario de Delivery -->
@@ -254,7 +256,6 @@
                   <!-- Columna derecha: Información de ubicación -->
                   <div class="location-column">
                     <div class="location-header">
-                      <h3>Ubicación</h3>
                     </div>
                     
                                           <div class="location-details">
@@ -271,12 +272,7 @@
                           <span class="location-label">Teléfono:</span>
                           <span class="location-value">{{ selectedOffice ? selectedOffice.phone : 'No disponible' }}</span>
                         </div>
-                        
-                        <div class="location-item" v-if="selectedOffice && selectedOffice.accounts">
-                          <span class="location-label">Cuentas:</span>
-                          <span class="location-value">{{ selectedOffice.accounts }}</span>
-                        </div>
-                      
+
                       <div class="location-item">
                         <span class="location-label">Horario:</span>
                         <span class="location-value">Atención previa coordinación por WhatsApp</span>
@@ -1308,7 +1304,7 @@ export default {
   display flex
   justify-content space-between
   align-items center
-  margin-bottom 20px
+  margin-bottom -20px
   max-width 600px
   margin-left auto
   margin-right 90px
@@ -1773,30 +1769,43 @@ export default {
 .checkout-step
   min-height 400px
 
+.delivery-options
+  background white
+  border-radius 12px
+  box-shadow 0 4px 20px rgba(0,0,0,0.08)
+  overflow hidden
+  margin-bottom 30px
+
 .delivery-header
-  background #ff9800
+  background #ff8c00
   color white
-  padding 25px 20px
-  border-radius 8px 8px 0 0
+  padding 20px 30px
+  border-radius 12px 12px 0 0
   margin-bottom 0
   
   h3
     margin 0
-    font-size 1.2rem
-    font-weight 600
+    font-size 1.3rem
+    font-weight 700
+    text-align left
+
+.delivery-content
+  background #f8f9fa
+  border-left 1px solid #e0e0e0
+  border-right 1px solid #e0e0e0
+  border-bottom 1px solid #e0e0e0
+  border-radius 0 0 12px 12px
+  padding 25px 0
 
 .delivery-description
-  background #f8f9fa
-  padding 15px 20px
-  border 1px solid #e0e0e0
-  border-top none
-  border-radius 0 0 8px 8px
-  margin-bottom 20px
+  padding 0 30px 20px 30px
+  margin-bottom 0
   
   p
     margin 0
-    color #666
-    font-size 0.95rem
+    color #333
+    font-size 1rem
+    font-weight 500
 
 .section-header
   margin-bottom 25px
@@ -1834,25 +1843,29 @@ export default {
 .delivery-methods
   display flex
   gap 15px
-  margin-bottom 30px
+  margin 0 30px 30px 30px
 
 .delivery-method
   flex 1
-  padding 15px 20px
+  padding 18px 25px
   border 2px solid #e0e0e0
-  border-radius 10px
+  border-radius 12px
   background white
   cursor pointer
   transition all 0.3s ease
-  font-weight 500
+  font-weight 600
+  font-size 1rem
+  color #333
   
   &:hover
-    border-color #ff9800
+    border-color #ff8c00
+    background #f8f9fa
   
   &.active
-    border-color #ff9800
-    background #ff9800
+    border-color #ff8c00
+    background #ff8c00
     color white
+    box-shadow 0 4px 16px rgba(255, 140, 0, 0.25)
 
 .pickup-selector
   margin-bottom 30px
@@ -1909,7 +1922,7 @@ export default {
 
 .location-column
   .location-header
-    margin-bottom 15px
+    margin-bottom -18px
     
     h3
       color #333
@@ -2177,10 +2190,6 @@ export default {
 .delivery-form
   margin-top 30px
   padding 35px
-  background linear-gradient(145deg, #ffffff 0%, #fafafa 50%, #f8f9fa 100%)
-  border-radius 20px
-  border 2px solid #ffe4d6
-  box-shadow 0 8px 32px rgba(255, 140, 0, 0.12), 0 4px 16px rgba(0,0,0,0.08)
   position relative
   overflow hidden
   
