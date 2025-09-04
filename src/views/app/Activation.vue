@@ -2657,9 +2657,9 @@ export default {
   max-width: 1800px;
   margin: 0 0 0 20px;
   padding: 20px;
-  background: #fafafa;
+/*   background: #fafafa;
   border-radius: 20px;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.1); */
 }
 
 /* SECCIÓN DE PRODUCTOS Y COMPRAS */

@@ -2466,7 +2466,7 @@ export default {
   gap: 15px;
 }
 
-.cart-summary {
+.cart-summary-afi {
   background: #f9f9f9;
   border-radius: 10px;
   padding: 15px;
@@ -2664,12 +2664,12 @@ export default {
   color: #c62828;
 }
 
-.cart-summary-section {
+/* .cart-summary-section {
   padding: 15px 20px;
   border-top: 1px solid #eee;
   background: #f9f9f9;
   border-radius: 0 0 15px 15px;
-}
+} */
 
 .summary-details {
   display: flex;

@@ -1161,7 +1161,6 @@ export default {
 <style lang="stylus" scoped>
 .checkout-page
   min-height 100vh
-  background linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%)
   padding 20px
   margin-top 20px
 
@@ -1292,13 +1291,13 @@ export default {
   flex-direction column
   max-width 1400px
   margin 0 auto 0 0
-  background white
-  border-radius 15px
-  box-shadow 0 4px 20px rgba(0,0,0,0.08)
+
+
+
   overflow visible
 
 .checkout-main-header
-  background white
+
   padding 30px
   border-bottom 1px solid #e0e0e0
   text-align center
