@@ -1,8 +1,8 @@
 <template>
   <App :session="session" :office_id="office_id" :title="title">
     <div v-cloak>
-      <!-- Loading que cubre toda la vista -->
-      <div v-if="loading || !products || products.length === 0" class="full-page-loading">
+      <!-- Loading overlay que muestra la vista opaca -->
+      <div v-if="loading || !products || products.length === 0" class="loading-overlay">
         <div class="loading-container">
           <div class="sifrah-logo-loading">
             <i class="fas fa-store"></i>
@@ -20,8 +20,8 @@
         </div>
       </div>
       
-      <!-- Contenido principal (solo se muestra cuando no está cargando y hay productos) -->
-      <div v-else-if="products && products.length > 0" class="tienda-sifrah-container">
+      <!-- Contenido principal (siempre visible, pero opaco durante carga) -->
+      <div class="tienda-sifrah-container" :class="{ 'content-loading': loading || !products || products.length === 0 }">
         <!-- Título principal de la tienda -->
         <h1 class="store-title">Tienda Sifrah</h1>
 
@@ -4584,19 +4584,25 @@ export default {
   }
 }
 
-// Loading de página completa
-.full-page-loading
+// Loading overlay que permite ver la vista opaca
+.loading-overlay
   position fixed
   top 0
   left 0
   width 100%
   height 100%
-  background linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(248, 249, 250, 0.95) 100%)
-  backdrop-filter blur(15px)
+  background rgba(255, 255, 255, 0.9)
+  backdrop-filter blur(5px)
   z-index 9999
   display flex
   align-items center
   justify-content center
+
+// Clase para el contenido durante la carga
+.content-loading
+  opacity 0.3
+  pointer-events none
+  user-select none
 
 // Logo de Sifrah para el loading
 .sifrah-logo-loading
