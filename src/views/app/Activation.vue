@@ -2699,6 +2699,8 @@ export default {
   justify-content: flex-start;
   height: 100%;
   position: relative;
+  /* Asegurar que se mantenga la altura relativa al banner */
+  min-height: 400px;
 }
 
 /* Carrito sticky en el lado derecho */
@@ -2713,6 +2715,7 @@ export default {
   min-height: 700px;
   overflow-y: auto;
   position: sticky;
+  /* Asegurar que se mantenga la altura relativa al banner */
   top: 20px;
   align-self: flex-start;
   height: fit-content;
@@ -2762,6 +2765,263 @@ export default {
   overflow: hidden;
   contain: layout style paint;
   align-items: stretch;
+}
+
+/* Layout responsivo para pantallas menores a 1600px */
+@media screen and (max-width: 1599px) {
+  .banners-unified-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  /* Banner principal arriba (banner izquierdo original) */
+  .banner-left {
+    width: 100%;
+    height: 300px;
+    flex: none;
+    order: 1;
+  }
+  
+  /* Contenedor para banners del medio y derecho en fila horizontal */
+  .banner-center {
+    flex: none;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 58%; /* Reducido de 60% a 50% para dar más espacio al banner derecho */
+    order: 2;
+  }
+  
+  /* Banners del medio apilados verticalmente */
+  .banner-medium-top,
+  .banner-medium-bottom {
+    width: 100%;
+    height: 140px;
+    flex: none;
+  }
+  
+  /* Banner derecho al costado */
+  .banner-right {
+    flex: none;
+    width: 40%; /* Aumentado de 35% a 45% para cubrir más espacio */
+    height: 295px; /* 140px + 140px + 15px gap = 295px */
+    order: 2;
+    align-self: flex-start;
+    margin-left: auto;
+    margin-top: -420px;/* Subir el banner derecho 10px para mejor alineación */
+  }
+  
+  /* Ajustar alturas para pantallas pequeñas */
+  .banner-left .banner-placeholder,
+  .banner-left .banner-image-container {
+    height: 300px;
+  }
+  
+  .banner-right .banner-placeholder,
+  .banner-right .banner-image-container {
+    height: 295px;
+  }
+}
+
+/* Estilos para pantallas grandes (1600px y más) */
+@media screen and (min-width: 1600px) {
+  /* Contenedor principal con alineación estable */
+  .banners-unified-wrapper {
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+    width: 100%;
+    position: relative;
+    /* Estabilizar contra zoom del navegador */
+    transform-origin: top left;
+    will-change: auto;
+    contain: layout style paint;
+    /* Prevenir cambios de alineación */
+    align-items: stretch;
+    justify-content: flex-start;
+  }
+  
+  /* Banner izquierdo - Alineación estable */
+  .banner-left {
+    flex: 3.8;
+    min-width: 0;
+    position: relative;
+    align-self: stretch;
+    /* Mantener proporciones fijas */
+    width: calc(3.8 / 7.6 * 100% - 10px);
+    max-width: calc(3.8 / 7.6 * 100% - 10px);
+    /* Estabilizar contra zoom */
+    transform-origin: top left;
+    will-change: auto;
+  }
+  
+  /* Banners del centro - Alineación estable */
+  .banner-center {
+    flex: 1.8;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    min-width: 0;
+    position: relative;
+    justify-content: space-between;
+    align-self: stretch;
+    /* Mantener proporciones fijas */
+    width: calc(1.8 / 7.6 * 100% - 5px);
+    max-width: calc(1.8 / 7.6 * 100% - 5px);
+    /* Estabilizar contra zoom */
+    transform-origin: top left;
+    will-change: auto;
+  }
+  
+  /* Banner derecho - Alineación estable */
+  .banner-right {
+    flex: 2;
+    min-width: 0;
+    position: relative;
+    align-self: stretch;
+    /* Mantener proporciones fijas */
+    width: calc(2 / 7.6 * 100% - 5px);
+    max-width: calc(2 / 7.6 * 100% - 5px);
+    /* Estabilizar contra zoom */
+    transform-origin: top left;
+    will-change: auto;
+  }
+  
+  /* Estabilizar placeholders e imágenes */
+  .banner-left .banner-placeholder,
+  .banner-left .banner-image-container,
+  .banner-right .banner-placeholder,
+  .banner-right .banner-image-container {
+    /* Mantener alturas fijas */
+    height: 400px;
+    min-height: 400px;
+    max-height: 400px;
+    /* Estabilizar contenido */
+    object-fit: cover;
+    object-position: center;
+  }
+  
+  .banner-medium-top .banner-placeholder,
+  .banner-medium-top .banner-image-container,
+  .banner-medium-bottom .banner-placeholder,
+  .banner-medium-bottom .banner-image-container {
+    /* Mantener alturas fijas */
+    height: 190px;
+    min-height: 190px;
+    max-height: 190px;
+    /* Estabilizar contenido */
+    object-fit: cover;
+    object-position: center;
+  }
+}
+
+/* Media queries para estabilizar alineación en diferentes zooms - Solo para pantallas grandes */
+@media screen and (min-width: 1600px) and (min-resolution: 1.1dppx) {
+  .banners-unified-wrapper {
+    gap: 15px;
+    /* Mantener alineación estable */
+    align-items: stretch;
+    justify-content: flex-start;
+  }
+  
+  .banner-left {
+    width: calc(3.8 / 7.6 * 100% - 10px);
+    max-width: calc(3.8 / 7.6 * 100% - 10px);
+  }
+  
+  .banner-center {
+    width: calc(1.8 / 7.6 * 100% - 5px);
+    max-width: calc(1.8 / 7.6 * 100% - 5px);
+  }
+  
+  .banner-right {
+    width: calc(2 / 7.6 * 100% - 5px);
+    max-width: calc(2 / 7.6 * 100% - 5px);
+  }
+}
+
+@media screen and (min-width: 1600px) and (min-resolution: 1.5dppx) {
+  .banners-unified-wrapper {
+    gap: 15px;
+    /* Mantener alineación estable */
+    align-items: stretch;
+    justify-content: flex-start;
+  }
+  
+  .banner-left {
+    width: calc(3.8 / 7.6 * 100% - 10px);
+    max-width: calc(3.8 / 7.6 * 100% - 10px);
+  }
+  
+  .banner-center {
+    width: calc(1.8 / 7.6 * 100% - 5px);
+    max-width: calc(1.8 / 7.6 * 100% - 5px);
+  }
+  
+  .banner-right {
+    width: calc(2 / 7.6 * 100% - 5px);
+    max-width: calc(2 / 7.6 * 100% - 5px);
+  }
+}
+
+/* Media queries para zoom del navegador - Solo para pantallas grandes */
+@media screen and (min-width: 1600px) and (min-zoom: 1.1) {
+  .banners-unified-wrapper {
+    gap: 15px;
+    /* Mantener alineación estable */
+    align-items: stretch;
+    justify-content: flex-start;
+  }
+}
+
+@media screen and (min-width: 1600px) and (min-zoom: 1.5) {
+  .banners-unified-wrapper {
+    gap: 15px;
+    /* Mantener alineación estable */
+    align-items: stretch;
+    justify-content: flex-start;
+  }
+}
+
+@media screen and (min-width: 1600px) and (min-zoom: 2) {
+  .banners-unified-wrapper {
+    gap: 15px;
+    /* Mantener alineación estable */
+    align-items: stretch;
+    justify-content: flex-start;
+  }
+}
+
+/* Estilos adicionales para mantener alineación estable */
+@media screen and (min-width: 1600px) {
+  /* Prevenir que el zoom afecte la alineación */
+  .banners-unified-wrapper {
+    /* Forzar alineación estable */
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: stretch !important;
+    justify-content: flex-start !important;
+  }
+  
+  /* Mantener proporciones exactas */
+  .banner-left {
+    flex: 3.8 !important;
+    width: calc(3.8 / 7.6 * 100% - 10px) !important;
+    max-width: calc(3.8 / 7.6 * 100% - 10px) !important;
+  }
+  
+  .banner-center {
+    flex: 1.8 !important;
+    width: calc(1.8 / 7.6 * 100% - 5px) !important;
+    max-width: calc(1.8 / 7.6 * 100% - 5px) !important;
+  }
+  
+  .banner-right {
+    flex: 2 !important;
+    width: calc(2 / 7.6 * 100% - 5px) !important;
+    max-width: calc(2 / 7.6 * 100% - 5px) !important;
+  }
 }
 
 /* Banner izquierda - El más ancho */
@@ -4785,6 +5045,52 @@ export default {
   }
 }
 
+/* Media queries para hacer el carrito responsivo y que se aplaste */
+@media (max-width: 1400px) {
+  .sticky-cart-sidebar {
+    width: 380px;
+    /* Mantener altura y posición relativa al banner */
+    top: 20px;
+    max-height: calc(100vh - 40px);
+  }
+}
+
+@media (max-width: 1200px) {
+  .sticky-cart-sidebar {
+    width: 320px;
+    /* Ajustar altura para mantener proximidad al banner */
+    top: 20px;
+    max-height: calc(100vh - 40px);
+  }
+}
+
+@media (max-width: 1000px) {
+  .sticky-cart-sidebar {
+    width: 280px;
+    /* Reducir altura para acercarse más al banner */
+    top: 15px;
+    max-height: calc(100vh - 30px);
+  }
+}
+
+@media (max-width: 900px) {
+  .sticky-cart-sidebar {
+    width: 250px;
+    /* Ajustar altura para mantener proximidad */
+    top: 15px;
+    max-height: calc(100vh - 30px);
+  }
+}
+
+@media (max-width: 800px) {
+  .sticky-cart-sidebar {
+    width: 220px;
+    /* Reducir altura para acercarse más al banner */
+    top: 10px;
+    max-height: calc(100vh - 20px);
+  }
+}
+
 @media (max-width: 768px) {
   .catalog-container {
     flex-direction: column;
@@ -4807,6 +5113,62 @@ export default {
   .products-main-area {
     min-height: auto;
     margin-right: 0;
+  }
+}
+
+/* Media queries adicionales para hacer el carrito responsivo y que se aplaste */
+@media (max-width: 600px) {
+  .sticky-cart-sidebar {
+    width: 100%;
+    margin: 10px 0;
+    border-radius: 10px;
+    /* Mantener altura relativa al banner */
+    top: 10px;
+    max-height: calc(100vh - 20px);
+  }
+  
+  .carrito-compras-container {
+    width: 100%;
+    align-items: stretch;
+    min-height: 350px;
+  }
+}
+
+@media (max-width: 480px) {
+  .sticky-cart-sidebar {
+    width: 100%;
+    margin: 5px 0;
+    border-radius: 8px;
+    min-height: 400px;
+    /* Ajustar altura para mantener proximidad al banner */
+    top: 5px;
+    max-height: calc(100vh - 10px);
+  }
+  
+  .carrito-compras-container {
+    min-height: 300px;
+  }
+  
+  .cart-header h3 {
+    font-size: 1.1rem;
+  }
+  
+  .cart-header p {
+    font-size: 0.85rem;
+  }
+}
+
+/* Estilos adicionales para mantener la altura relativa al banner */
+@media (max-width: 1600px) {
+  .carrito-compras-container {
+    /* Ajustar altura para pantallas menores a 1600px */
+    min-height: 350px;
+  }
+  
+  .sticky-cart-sidebar {
+    /* Mantener proximidad al banner */
+    top: 15px;
+    max-height: calc(100vh - 30px);
   }
 }
 
