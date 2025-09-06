@@ -24,12 +24,15 @@
       <div class="scale-wrapper">
         <div class="main-content">
           <div class="tienda-sifrah-container" :class="{ 'content-loading': loading || !products || products.length === 0 }">
-        <!-- Título principal de la tienda -->
-        <h1 class="store-title">Tienda Sifrah</h1>
+        <!-- Contenedor para título y puntos en móvil -->
+        <div class="title-points-container">
+          <!-- Título principal de la tienda -->
+          <h1 class="store-title">Tienda Sifrah</h1>
 
-        <!-- Barra de puntos del usuario -->
-        <div class="points-bar">
-          <span class="points-icon">💎</span> Puntos: <b>{{ current_points }}</b>
+          <!-- Barra de puntos del usuario -->
+          <div class="points-bar">
+            <span class="points-icon">💎</span> Puntos: <b>{{ current_points }}</b>
+          </div>
         </div>
         
         <!-- Sistema de banners unificado -->
@@ -2750,6 +2753,14 @@ export default {
   flex: 0 0 380px;
 }
 
+/* Contenedor para título y puntos */
+.title-points-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin-bottom: 20px;
+}
+
 /* Estilos para el título principal de la tienda */
 .store-title {
   font-size: 2.5rem;
@@ -3081,54 +3092,90 @@ export default {
     gap: 15px;
   }
   
-  /* Banners en móvil - Posicionamiento exacto como en la imagen */
+  /* Contenedor título y puntos en móvil - Lado a lado */
+  .title-points-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+  }
+  
+  .store-title {
+    margin: 0;
+    font-size: 1.8rem;
+    flex: 1;
+  }
+  
+  .points-bar {
+    margin: 0;
+    padding: 8px 12px;
+    font-size: 0.9rem;
+    border-radius: 20px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    white-space: nowrap;
+  }
+
+  /* Banners en móvil - Diseño vertical apilado como en la segunda imagen */
   .banners-unified-wrapper {
     display: flex;
-    flex-direction: row; /* Layout horizontal como en la imagen */
-    gap: 10px;
+    flex-direction: column; /* Layout vertical apilado */
+    gap: 15px;
     width: 100%;
-    height: 180px; /* Altura optimizada para móvil */
     align-items: stretch;
   }
   
   .banner-left {
-    flex: 2.5; /* Banner principal más ancho - como en la imagen */
-    height: 180px;
+    width: 100%;
+    height: 200px; /* Banner principal más alto */
+    order: 1; /* Primero en el stack */
   }
   
   .banner-center {
-    flex: 1;
+    width: 100%;
     display: flex;
-    flex-direction: column;
-    gap: 10px;
-    height: 180px;
+    flex-direction: row;
+    gap: 15px;
+    order: 2; /* Segundo en el stack */
   }
   
   .banner-right {
-    display: none; /* Ocultar banner derecho en móvil para mantener el diseño de la imagen */
+    width: 100%;
+    height: 150px; /* Banner inferior */
+    order: 3; /* Tercero en el stack */
   }
   
   .banner-medium-top,
   .banner-medium-bottom {
     flex: 1;
-    height: 85px; /* Altura perfecta para los dos banners pequeños */
+    height: 150px; /* Altura para los banners del centro */
   }
   
-  /* Ajustar contenedores de imágenes para móvil - Posicionamiento exacto */
-  .banner-left .banner-image-container {
-    height: 180px; /* Banner principal más alto */
+  /* Ajustar contenedores de imágenes para móvil - Diseño vertical */
+  .banner-left .banner-image-container,
+  .banner-left .banner-placeholder {
+    height: 200px; /* Banner principal más alto */
   }
   
-  .banner-center .banner-image-container {
-    height: 85px; /* Banners del centro más pequeños */
+  .banner-center .banner-image-container,
+  .banner-center .banner-placeholder {
+    height: 150px; /* Banners del centro */
+  }
+  
+  .banner-right .banner-image-container,
+  .banner-right .banner-placeholder {
+    height: 150px; /* Banner inferior */
   }
   
   .banner-medium-top .banner-image-container,
-  .banner-medium-bottom .banner-image-container {
-    height: 85px; /* Altura perfecta para los banners pequeños */
+  .banner-medium-top .banner-placeholder,
+  .banner-medium-bottom .banner-image-container,
+  .banner-medium-bottom .banner-placeholder {
+    height: 150px; /* Altura para los banners del centro */
   }
   
-  /* Optimizar proporciones de imágenes para el posicionamiento móvil */
+  /* Optimizar proporciones de imágenes para el diseño móvil vertical */
   .banner-left .banner-image {
     object-fit: cover;
     object-position: center 30%; /* Mostrar mejor el jaguar en banner principal */
@@ -3138,6 +3185,11 @@ export default {
   .banner-medium-bottom .banner-image {
     object-fit: cover;
     object-position: center 40%; /* Centrar verticalmente en banners pequeños */
+  }
+  
+  .banner-right .banner-image {
+    object-fit: cover;
+    object-position: center 35%; /* Ajustar para banner inferior */
   }
   
   /* Sección de productos y carrito en móvil - Layout como en la imagen */
