@@ -21,7 +21,9 @@
       </div>
       
       <!-- Contenido principal (siempre visible, pero opaco durante carga) -->
-      <div class="tienda-sifrah-container" :class="{ 'content-loading': loading || !products || products.length === 0 }">
+      <div class="scale-wrapper">
+        <div class="main-content">
+          <div class="tienda-sifrah-container" :class="{ 'content-loading': loading || !products || products.length === 0 }">
         <!-- Título principal de la tienda -->
         <h1 class="store-title">Tienda Sifrah</h1>
 
@@ -654,6 +656,8 @@
           <i class="fas fa-spinner fa-spin"></i>
           <span>Procesando orden...</span>
         </button>
+      </div>
+        </div>
       </div>
     </div>
   </App>
@@ -1699,6 +1703,25 @@ export default {
   .product-placeholders
     flex-direction column
     gap 15px
+  
+  /* Escalado proporcional para la sección de productos y carrito */
+  .productos-compras-section {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    width: 100%;
+    /* El escalado se aplicará desde .main-content */
+  }
+  
+  .productos-section {
+    flex: 1;
+    /* Mantener proporciones originales */
+  }
+  
+  .sticky-cart-sidebar {
+    flex: 0 0 350px; /* Ancho fijo proporcional */
+    /* Mantener proporciones originales */
+  }
   
   .placeholder-main
     height 120px
@@ -2767,61 +2790,562 @@ export default {
   align-items: stretch;
 }
 
-/* Layout responsivo para pantallas menores a 1600px */
-@media screen and (max-width: 1599px) {
-  .banners-unified-wrapper {
-    display: flex;
-    flex-direction: column;
+/* Sistema de escalado proporcional para toda la tienda Sifrah */
+/* RESOLUCIÓN BASE DE REFERENCIA: 2560x1440p (tu monitor) */
+.scale-wrapper {
+  overflow-x: auto;
+  overflow-y: visible;
+  width: 100%;
+  min-height: 100vh;
+  position: relative;
+  /* Asegurar que el scroll funcione correctamente */
+  scroll-behavior: smooth;
+}
+
+/* Estilos para el scroll horizontal cuando sea necesario */
+.scale-wrapper::-webkit-scrollbar {
+  height: 8px;
+}
+
+.scale-wrapper::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.scale-wrapper::-webkit-scrollbar-thumb {
+  background: #ff6b35;
+  border-radius: 4px;
+}
+
+.scale-wrapper::-webkit-scrollbar-thumb:hover {
+  background: #e55a2b;
+}
+
+.main-content {
+  /* Ancho base optimizado para 2560x1440p */
+  width: 2000px; /* Aumentado para aprovechar mejor tu monitor */
+  transform-origin: top left;
+  margin: 0; /* Alineado a la izquierda */
+  position: relative;
+  min-height: 100vh;
+}
+
+/* ===== SISTEMA DE ESCALADO BASADO EN TU MONITOR 2560x1440p ===== */
+
+/* TU MONITOR: 2560x1440p - RESOLUCIÓN BASE (centrado y equilibrado) */
+@media screen and (min-width: 2560px) {
+  .main-content {
+    transform: scale(1); /* Tamaño original en tu monitor */
+    width: 2200px; /* Ajustado para mejor equilibrio visual */
+    margin: 0 auto; /* Centrado para eliminar espacio vacío de la derecha */
+  }
+  
+  /* Ajustar el carrito para que sea más ancho en tu monitor */
+  .sticky-cart-sidebar {
+    flex: 0 0 450px; /* Aumentado de 350px a 450px */
+    max-width: 450px;
+  }
+  
+  /* Ajustar el catálogo para que tenga más espacio */
+  .productos-section {
+    flex: 1;
+    max-width: calc(100% - 450px); /* Ajustado para el carrito más ancho */
+  }
+  
+  /* Ajustar el grid de productos para mostrar más columnas */
+  .products-grid {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Columnas más anchas */
     gap: 20px;
   }
   
-  /* Banner principal arriba (banner izquierdo original) */
-  .banner-left {
-    width: 100%;
-    height: 300px;
-    flex: none;
-    order: 1;
+  /* Ajustar los banners para aprovechar mejor el espacio */
+  .banners-unified-wrapper {
+    gap: 20px; /* Más espacio entre banners */
   }
   
-  /* Contenedor para banners del medio y derecho en fila horizontal */
+  .banner-left {
+    flex: 4.2; /* Aumentado de 3.8 a 4.2 para más espacio */
+  }
+  
   .banner-center {
-    flex: none;
+    flex: 2.0; /* Aumentado de 1.8 a 2.0 */
+  }
+  
+  .banner-right {
+    flex: 2.2; /* Aumentado de 2 a 2.2 */
+  }
+  
+  /* Ajustar las alturas de los banners para mejor proporción */
+  .banner-left,
+  .banner-right {
+    height: 450px; /* Aumentado de 400px a 450px */
+  }
+  
+  .banner-medium-top,
+  .banner-medium-bottom {
+    height: 215px; /* Aumentado de 190px a 215px */
+  }
+  
+  /* Actualizar las alturas de los contenedores de imágenes */
+  .banner-left .banner-placeholder,
+  .banner-left .banner-image-container,
+  .banner-right .banner-placeholder,
+  .banner-right .banner-image-container {
+    height: 450px;
+  }
+  
+  .banner-medium-top .banner-placeholder,
+  .banner-medium-top .banner-image-container,
+  .banner-medium-bottom .banner-placeholder,
+  .banner-medium-bottom .banner-image-container {
+    height: 215px;
+  }
+  
+  /* Optimizar proporciones de imágenes para tu monitor */
+  .banner-left .banner-image {
+    object-fit: cover;
+    object-position: center 30%; /* Ajustar para mostrar mejor el jaguar */
+  }
+  
+  .banner-medium-top .banner-image,
+  .banner-medium-bottom .banner-image {
+    object-fit: cover;
+    object-position: center 40%; /* Centrar verticalmente para banners pequeños */
+  }
+  
+  .banner-right .banner-image {
+    object-fit: cover;
+    object-position: center 35%; /* Ajustar para banner derecho */
+  }
+}
+
+/* MONITOR 1920x1080p - Escalado para mantener las mismas proporciones */
+@media screen and (min-width: 1920px) and (max-width: 2559px) {
+  .main-content {
+    transform: scale(0.75); /* 1920/2560 = 0.75 - Mantiene proporciones exactas */
+    width: 2200px; /* Mantener el mismo ancho base */
+    margin: 0 auto; /* Centrado para mejor apariencia */
+  }
+  
+  .scale-wrapper {
+    overflow-x: auto;
+    overflow-y: visible;
+  }
+}
+
+/* MONITOR 1680x1050p - Escalado proporcional */
+@media screen and (min-width: 1680px) and (max-width: 1919px) {
+  .main-content {
+    transform: scale(0.656); /* 1680/2560 = 0.656 */
+    width: 2200px;
+    margin: 0 auto; /* Centrado */
+  }
+  
+  .scale-wrapper {
+    overflow-x: auto;
+    overflow-y: visible;
+  }
+}
+
+/* MONITOR 1600x900p - Escalado proporcional */
+@media screen and (min-width: 1600px) and (max-width: 1679px) {
+  .main-content {
+    transform: scale(0.625); /* 1600/2560 = 0.625 */
+    width: 2200px;
+    margin: 0 auto; /* Centrado */
+  }
+  
+  .scale-wrapper {
+    overflow-x: auto;
+    overflow-y: visible;
+  }
+}
+
+/* MONITOR 1440x900p (MacBook Air) - Escalado proporcional */
+@media screen and (min-width: 1440px) and (max-width: 1599px) {
+  .main-content {
+    transform: scale(0.5625); /* 1440/2560 = 0.5625 */
+    width: 2200px;
+    margin: 0 auto; /* Centrado */
+  }
+  
+  .scale-wrapper {
+    overflow-x: auto;
+    overflow-y: visible;
+  }
+}
+
+/* MONITOR 1366x768p - Escalado proporcional */
+@media screen and (min-width: 1366px) and (max-width: 1439px) {
+  .main-content {
+    transform: scale(0.534); /* 1366/2560 = 0.534 */
+    width: 2200px;
+    margin: 0 auto; /* Centrado */
+  }
+  
+  .scale-wrapper {
+    overflow-x: auto;
+    overflow-y: visible;
+  }
+}
+
+/* MONITOR 1280x720p - Escalado proporcional */
+@media screen and (min-width: 1280px) and (max-width: 1365px) {
+  .main-content {
+    transform: scale(0.5); /* 1280/2560 = 0.5 */
+    width: 2200px;
+    margin: 0 auto; /* Centrado */
+  }
+  
+  .scale-wrapper {
+    overflow-x: auto;
+    overflow-y: visible;
+  }
+}
+
+/* MONITOR 1024x768p - Escalado proporcional */
+@media screen and (min-width: 1024px) and (max-width: 1279px) {
+  .main-content {
+    transform: scale(0.4); /* 1024/2560 = 0.4 */
+    width: 2200px;
+    margin: 0 auto; /* Centrado */
+  }
+  
+  .scale-wrapper {
+    overflow-x: auto;
+    overflow-y: visible;
+  }
+}
+
+/* TABLETS - Escalado proporcional */
+@media screen and (min-width: 768px) and (max-width: 1023px) {
+  .main-content {
+    transform: scale(0.3); /* 768/2560 = 0.3 */
+    width: 2200px;
+    margin: 0 auto; /* Centrado */
+  }
+  
+  .scale-wrapper {
+    overflow-x: auto;
+    overflow-y: visible;
+  }
+}
+
+/* MÓVILES GRANDES - Escalado proporcional */
+@media screen and (min-width: 480px) and (max-width: 767px) {
+  .main-content {
+    transform: scale(0.1875); /* 480/2560 = 0.1875 */
+    width: 2200px;
+    margin: 0 auto; /* Centrado */
+  }
+  
+  .scale-wrapper {
+    overflow-x: auto;
+    overflow-y: visible;
+  }
+}
+
+/* MÓVILES PEQUEÑOS - Escalado mínimo */
+@media screen and (max-width: 479px) {
+  .main-content {
+    transform: scale(0.125); /* Escalado mínimo del 12.5% */
+    width: 2200px;
+    margin: 0 auto; /* Centrado */
+  }
+  
+  .scale-wrapper {
+    overflow-x: auto;
+    overflow-y: visible;
+  }
+}
+
+/* ===== DISEÑO MÓVIL ESPECÍFICO ===== */
+/* Para móviles, usar diseño nativo sin escalado */
+@media screen and (max-width: 768px) {
+  .scale-wrapper {
+    overflow-x: visible;
+    overflow-y: visible;
+  }
+  
+  .main-content {
+    transform: none !important; /* Sin escalado en móvil */
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 10px;
+  }
+  
+  /* Layout móvil - Una columna */
+  .tienda-sifrah-container {
     display: flex;
     flex-direction: column;
     gap: 15px;
-    width: 58%; /* Reducido de 60% a 50% para dar más espacio al banner derecho */
-    order: 2;
   }
   
-  /* Banners del medio apilados verticalmente */
+  /* Banners en móvil - Posicionamiento exacto como en la imagen */
+  .banners-unified-wrapper {
+    display: flex;
+    flex-direction: row; /* Layout horizontal como en la imagen */
+    gap: 10px;
+    width: 100%;
+    height: 180px; /* Altura optimizada para móvil */
+    align-items: stretch;
+  }
+  
+  .banner-left {
+    flex: 2.5; /* Banner principal más ancho - como en la imagen */
+    height: 180px;
+  }
+  
+  .banner-center {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    height: 180px;
+  }
+  
+  .banner-right {
+    display: none; /* Ocultar banner derecho en móvil para mantener el diseño de la imagen */
+  }
+  
   .banner-medium-top,
   .banner-medium-bottom {
-    width: 100%;
-    height: 140px;
-    flex: none;
+    flex: 1;
+    height: 85px; /* Altura perfecta para los dos banners pequeños */
   }
   
-  /* Banner derecho al costado */
-  .banner-right {
-    flex: none;
-    width: 40%; /* Aumentado de 35% a 45% para cubrir más espacio */
-    height: 295px; /* 140px + 140px + 15px gap = 295px */
-    order: 2;
-    align-self: flex-start;
-    margin-left: auto;
-    margin-top: -420px;/* Subir el banner derecho 10px para mejor alineación */
-  }
-  
-  /* Ajustar alturas para pantallas pequeñas */
-  .banner-left .banner-placeholder,
+  /* Ajustar contenedores de imágenes para móvil - Posicionamiento exacto */
   .banner-left .banner-image-container {
-    height: 300px;
+    height: 180px; /* Banner principal más alto */
   }
   
-  .banner-right .banner-placeholder,
-  .banner-right .banner-image-container {
-    height: 295px;
+  .banner-center .banner-image-container {
+    height: 85px; /* Banners del centro más pequeños */
   }
+  
+  .banner-medium-top .banner-image-container,
+  .banner-medium-bottom .banner-image-container {
+    height: 85px; /* Altura perfecta para los banners pequeños */
+  }
+  
+  /* Optimizar proporciones de imágenes para el posicionamiento móvil */
+  .banner-left .banner-image {
+    object-fit: cover;
+    object-position: center 30%; /* Mostrar mejor el jaguar en banner principal */
+  }
+  
+  .banner-medium-top .banner-image,
+  .banner-medium-bottom .banner-image {
+    object-fit: cover;
+    object-position: center 40%; /* Centrar verticalmente en banners pequeños */
+  }
+  
+  /* Sección de productos y carrito en móvil - Layout como en la imagen */
+  .productos-compras-section {
+    display: flex;
+    flex-direction: row; /* Layout horizontal como en la imagen */
+    gap: 15px;
+    width: 100%;
+    margin-top: 15px;
+  }
+  
+  .productos-section {
+    flex: 2; /* Productos ocupan más espacio */
+    order: 1;
+  }
+  
+  .sticky-cart-sidebar {
+    flex: 1; /* Carrito más pequeño */
+    order: 2;
+    position: static;
+    max-width: none;
+    height: fit-content;
+  }
+  
+  /* Grid de productos para móvil - Optimizado para el layout horizontal */
+  .products-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 2 columnas en móvil */
+    gap: 8px;
+  }
+  
+  /* Ajustar tarjetas de productos para móvil - Layout como en la imagen */
+  .product-card {
+    padding: 8px;
+    font-size: 0.8rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  
+  .product-img {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .product-name {
+    font-size: 0.7rem;
+    font-weight: 600;
+  }
+  
+  .price-amount {
+    font-size: 0.8rem;
+    font-weight: 700;
+  }
+  
+  /* Carrito móvil - Layout como en la imagen */
+  .cart-summary {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  
+  .cart-empty {
+    text-align: center;
+    padding: 15px;
+  }
+  
+  .cart-empty-icon {
+    font-size: 2.5rem;
+    color: #ccc;
+    margin-bottom: 8px;
+  }
+  
+  /* Botones móviles */
+  .add-btn {
+    padding: 8px 12px;
+    font-size: 0.8rem;
+  }
+  
+  .order-btn {
+    width: 100%;
+    padding: 12px;
+    font-size: 1rem;
+    margin-top: 10px;
+  }
+}
+
+/* Móviles muy pequeños - Diseño ultra compacto */
+@media screen and (max-width: 480px) {
+  .main-content {
+    padding: 5px;
+  }
+  
+  /* Banners más compactos */
+  .banner-left,
+  .banner-right {
+    height: 150px;
+  }
+  
+  .banner-medium-top,
+  .banner-medium-bottom {
+    height: 70px;
+  }
+  
+  .banner-left .banner-image-container,
+  .banner-right .banner-image-container {
+    height: 150px;
+  }
+  
+  .banner-medium-top .banner-image-container,
+  .banner-medium-bottom .banner-image-container {
+    height: 70px;
+  }
+  
+  /* Grid de productos - Una columna en móviles muy pequeños */
+  .products-grid {
+    grid-template-columns: 1fr; /* 1 columna en móviles muy pequeños */
+    gap: 8px;
+  }
+  
+  /* Tarjetas de productos más compactas */
+  .product-card {
+    padding: 8px;
+    font-size: 0.8rem;
+  }
+  
+  .product-img {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .product-name {
+    font-size: 0.7rem;
+  }
+  
+  .price-amount {
+    font-size: 0.8rem;
+  }
+  
+  /* Botones más pequeños */
+  .add-btn {
+    padding: 6px 10px;
+    font-size: 0.7rem;
+  }
+  
+  .order-btn {
+    padding: 10px;
+    font-size: 0.9rem;
+  }
+  
+  /* Títulos más pequeños */
+  .store-title {
+    font-size: 1.5rem;
+  }
+  
+  .points-bar {
+    font-size: 0.9rem;
+  }
+}
+
+/* Layout responsivo - Mantener diseño actual en todas las resoluciones */
+.banners-unified-wrapper {
+  display: flex;
+  flex-direction: row; /* Mantener diseño horizontal original */
+  gap: 15px;
+  width: 100%;
+  /* El escalado se encarga de reducir el tamaño proporcionalmente */
+}
+
+/* Banner izquierdo - proporciones originales */
+.banner-left {
+  flex: 3.8;
+  height: 400px; /* Altura original */
+}
+
+/* Banners del centro - proporciones originales */
+.banner-center {
+  flex: 1.8;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.banner-medium-top,
+.banner-medium-bottom {
+  height: 190px; /* Altura original */
+}
+
+/* Banner derecho - proporciones originales */
+.banner-right {
+  flex: 2;
+  height: 400px; /* Altura original */
+}
+
+/* Mantener alturas originales para todos los contenedores */
+.banner-left .banner-placeholder,
+.banner-left .banner-image-container,
+.banner-right .banner-placeholder,
+.banner-right .banner-image-container {
+  height: 400px;
+}
+
+.banner-medium-top .banner-placeholder,
+.banner-medium-top .banner-image-container,
+.banner-medium-bottom .banner-placeholder,
+.banner-medium-bottom .banner-image-container {
+  height: 190px;
 }
 
 /* Estilos para pantallas grandes (1600px y más) */
@@ -2898,8 +3422,8 @@ export default {
     min-height: 400px;
     max-height: 400px;
     /* Estabilizar contenido */
-    object-fit: cover;
-    object-position: center;
+    position: relative;
+    overflow: hidden;
   }
   
   .banner-medium-top .banner-placeholder,
@@ -2911,8 +3435,8 @@ export default {
     min-height: 190px;
     max-height: 190px;
     /* Estabilizar contenido */
-    object-fit: cover;
-    object-position: center;
+    position: relative;
+    overflow: hidden;
   }
 }
 
@@ -5486,10 +6010,81 @@ export default {
 .banner-image {
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  object-position: center;
+  object-fit: cover; /* Mantener 'cover' para llenar el espacio */
+  object-position: center center; /* Centrar la imagen */
   border-radius: 12px;
   transition: all 0.3s ease;
+  /* Asegurar que la imagen llene completamente el contenedor */
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+/* Ajustes específicos para el banner izquierdo (más ancho) */
+.banner-left .banner-image {
+  object-fit: cover;
+  object-position: center center; /* Centrar horizontalmente y verticalmente */
+}
+
+/* Ajustes para banners del centro (más cuadrados) */
+.banner-medium-top .banner-image,
+.banner-medium-bottom .banner-image {
+  object-fit: cover;
+  object-position: center center; /* Centrar para mejor visualización */
+}
+
+/* Ajustes para banner derecho (más alto que ancho) */
+.banner-right .banner-image {
+  object-fit: cover;
+  object-position: center center; /* Centrar para mantener proporciones */
+}
+
+/* Ajustes de proporciones para diferentes resoluciones */
+@media screen and (min-width: 1920px) and (max-width: 2559px) {
+  .banner-left .banner-image {
+    object-position: center 30%; /* Mantener proporción del jaguar */
+  }
+  
+  .banner-medium-top .banner-image,
+  .banner-medium-bottom .banner-image {
+    object-position: center 40%;
+  }
+  
+  .banner-right .banner-image {
+    object-position: center 35%;
+  }
+}
+
+@media screen and (min-width: 1600px) and (max-width: 1919px) {
+  .banner-left .banner-image {
+    object-position: center 30%;
+  }
+  
+  .banner-medium-top .banner-image,
+  .banner-medium-bottom .banner-image {
+    object-position: center 40%;
+  }
+  
+  .banner-right .banner-image {
+    object-position: center 35%;
+  }
+}
+
+@media screen and (min-width: 1440px) and (max-width: 1599px) {
+  .banner-left .banner-image {
+    object-position: center 30%;
+  }
+  
+  .banner-medium-top .banner-image,
+  .banner-medium-bottom .banner-image {
+    object-position: center 40%;
+  }
+  
+  .banner-right .banner-image {
+    object-position: center 35%;
+  }
 }
 
 .banner-image:hover {
@@ -5508,6 +6103,49 @@ export default {
 
 .banner-right .banner-image-container {
   height: 400px;
+}
+
+/* Estilos responsivos para mantener proporcionalidad en diferentes resoluciones */
+@media screen and (max-width: 1599px) {
+  .banner-image {
+    object-fit: cover;
+    object-position: center center;
+    width: 100%;
+    height: 100%;
+  }
+  
+  .banner-image-container {
+    position: relative;
+    overflow: hidden;
+  }
+}
+
+/* Para pantallas muy pequeñas (móviles) */
+@media screen and (max-width: 768px) {
+  .banner-image {
+    object-fit: cover;
+    object-position: center center;
+    width: 100%;
+    height: 100%;
+  }
+  
+  .banner-image-container {
+    position: relative;
+    overflow: hidden;
+    min-height: 120px;
+  }
+}
+
+/* Para pantallas de alta resolución */
+@media screen and (min-resolution: 2dppx) {
+  .banner-image {
+    object-fit: cover;
+    object-position: center center;
+    width: 100%;
+    height: 100%;
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+  }
 }
 
 </style>
