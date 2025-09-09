@@ -5386,7 +5386,7 @@ export default {
   }
   
   .products-catalog-grid {
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    grid-template-columns: repeat(2, 1fr);
     gap: 10px;
   }
   
@@ -6025,7 +6025,7 @@ export default {
 /* Media queries para dispositivos móviles pequeños */
 @media (max-width: 479px) {
   .products-catalog-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
     gap: 15px;
   }
   

@@ -224,7 +224,6 @@
                       <div class="product-catalog-info">
                         <h4 class="product-catalog-name">{{ product.name }}</h4>
                         <!-- Debug: mostrar subdescription -->
-                        <div style="font-size: 10px; color: red;">Debug: {{ product.subdescription || 'NO HAY SUBDESCRIPTION' }}</div>
                         <div v-if="product.subdescription" class="product-catalog-info-text">
                           {{ product.subdescription }}
                         </div>
