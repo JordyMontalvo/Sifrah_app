@@ -694,10 +694,10 @@ export default {
       success: false,
       sending: false,
       pending: false,
-              selectedProduct: null,
-        imageLoaded: false,
-        showCartDetailModal: false,
-        cartItems: [],
+      selectedProduct: null,
+      imageLoaded: false,
+      showCartDetailModal: false,
+      cartItems: [],
       searchTerm: "",
       selectedCategories: [],
       current_points: 0,
@@ -705,7 +705,6 @@ export default {
       balance: 0,
       _balance: 0,
       tab: "Todos",
-      total: 0,
       
       // Banners de activación
       activationBanners: {
@@ -713,11 +712,7 @@ export default {
         centerTop: "",
         centerBottom: "",
         right: ""
-      },
-      price: 0,
-      points: 0,
-      IGV: 0,
-      remaining: 0,
+      }
 
     };
   },
@@ -2678,7 +2673,7 @@ export default {
   padding: 20px 0;
 }
 
-/* Barra de puntos del usuario */
+/* Barra de puntos del usuario - Definición principal */
 .points-bar {
   display: flex;
   align-items: center;
@@ -3276,6 +3271,62 @@ export default {
     font-size: 1rem;
     margin-top: 10px;
   }
+  
+  /* Catálogo en móvil */
+  .catalog-container {
+    flex-direction: column;
+    padding-top: 0;
+  }
+  
+  .catalog-content-wrapper {
+    flex-direction: column;
+  }
+  
+  .sticky-cart-sidebar {
+    width: 100%;
+    position: relative;
+    top: 0;
+    right: 0;
+    margin-top: 20px;
+    max-height: none;
+  }
+  
+  .products-main-area {
+    min-height: auto;
+    margin-right: 0;
+  }
+  
+  /* Contenedor tienda móvil */
+  .tienda-sifrah-container {
+    max-width: 100%;
+    padding: 10px;
+    border-radius: 15px;
+    margin: 0 0 0 10px;
+  }
+  
+  .store-title {
+    font-size: 2rem;
+    text-align: left;
+  }
+  
+  .productos-compras-section {
+    margin-top: 20px;
+    padding: 15px 0;
+  }
+  
+  /* Banner images móvil */
+  .banner-image {
+    object-fit: cover;
+    object-position: center center;
+    width: 100%;
+    height: 100%;
+  }
+  
+  .banner-image-container {
+    position: relative;
+    overflow: hidden;
+    min-height: 120px;
+  }
 }
 
 /* Móviles muy pequeños - Diseño ultra compacto */
@@ -3346,9 +3397,7 @@ export default {
     font-size: 1.5rem;
   }
   
-  .points-bar {
-    font-size: 0.9rem;
-  }
+  /* points-bar definido en sección principal */
 }
 
 /* Layout responsivo - Mantener diseño actual en todas las resoluciones */
@@ -4121,7 +4170,7 @@ export default {
 
 
 
-.product-catalog-prrce {
+.product-catalog-price {
   font-size: 0.9rem;
   color: #388e3c;
   font-weight: 500;
@@ -5667,30 +5716,7 @@ export default {
   }
 }
 
-@media (max-width: 768px) {
-  .catalog-container {
-    flex-direction: column;
-    padding-top: 0;
-  }
-  
-  .catalog-content-wrapper {
-    flex-direction: column;
-  }
-  
-  .sticky-cart-sidebar {
-    width: 100%;
-    position: relative;
-    top: 0;
-    right: 0;
-    margin-top: 20px;
-    max-height: none;
-  }
-  
-  .products-main-area {
-    min-height: auto;
-    margin-right: 0;
-  }
-}
+/* Media query 768px consolidado arriba */
 
 /* Media queries adicionales para hacer el carrito responsivo y que se aplaste */
 @media (max-width: 600px) {
@@ -5967,30 +5993,7 @@ export default {
   }
 }
 
-@media (max-width: 768px) {
-  .tienda-sifrah-container {
-    max-width: 100%;
-    padding: 10px;
-    border-radius: 15px;
-    margin: 0 0 0 10px;
-  }
-  
-  .store-title {
-    font-size: 2rem;
-    text-align: left;
-  }
-  
-  .points-bar {
-    padding: 12px 20px;
-    font-size: 1rem;
-    margin: 0 0 15px 0;
-  }
-  
-  .productos-compras-section {
-    margin-top: 20px;
-    padding: 15px 0;
-  }
-}
+/* Media query 768px ya consolidado */
 
 @media (max-width: 480px) {
   .tienda-sifrah-container {
@@ -6005,11 +6008,7 @@ export default {
     text-align: left;
   }
   
-  .points-bar {
-    padding: 10px 15px;
-    font-size: 0.9rem;
-    margin: 0 0 10px 0;
-  }
+  /* points-bar móvil definido arriba */
   
   .productos-compras-section {
     margin-top: 15px;
@@ -6173,20 +6172,7 @@ export default {
 }
 
 /* Para pantallas muy pequeñas (móviles) */
-@media screen and (max-width: 768px) {
-  .banner-image {
-    object-fit: cover;
-    object-position: center center;
-    width: 100%;
-    height: 100%;
-  }
-  
-  .banner-image-container {
-    position: relative;
-    overflow: hidden;
-    min-height: 120px;
-  }
-}
+/* Media query 768px consolidado al inicio */
 
 /* Para pantallas de alta resolución */
 @media screen and (min-resolution: 2dppx) {
