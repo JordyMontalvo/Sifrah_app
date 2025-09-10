@@ -2659,9 +2659,9 @@ export default {
 /* CONTENEDOR PRINCIPAL DE LA TIENDA SIFRAH */
 .tienda-sifrah-container {
   width: 100%;
-  max-width: 1800px;
-  margin: 0 0 0 20px;
-  padding: 20px;
+  max-width: 100%; /* Usar todo el ancho disponible */
+  margin: 0; /* Sin márgenes para ocupar todo el espacio */
+  padding: 10px 20px; /* Padding más pequeño en los lados */
 /*   background: #fafafa;
   border-radius: 20px;
   box-shadow: 0 8px 32px rgba(0,0,0,0.1); */
@@ -2726,7 +2726,7 @@ export default {
 
 /* Carrito sticky en el lado derecho */
 .sticky-cart-sidebar {
-  width: 420px;
+  width: 480px; /* Aumentar de 420px a 480px */
   background: #fff;
   border-radius: 15px;
   box-shadow: 0 4px 20px rgba(0,0,0,0.1);
@@ -2745,7 +2745,7 @@ export default {
   margin-top: 0;
   transform: translateZ(0);
   transition: all 0.3s ease;
-  flex: 0 0 380px;
+  flex: 0 0 450px; /* Aumentar de 380px a 450px */
 }
 
 /* Contenedor para título y puntos */
@@ -2781,7 +2781,7 @@ export default {
 /* Sistema de banners unificado - TODO EN UN SOLO DIV PARA ZOOM UNIFORME */
 .banners-unified-wrapper {
   display: flex;
-  gap: 15px;
+  gap: 20px; /* Aumentar gap para más espacio */
   width: 100%;
   margin: 0;
   padding: 0;
@@ -2829,9 +2829,10 @@ export default {
 
 .main-content {
   /* Ancho base optimizado para 2560x1440p */
-  width: 2000px; /* Aumentado para aprovechar mejor tu monitor */
+  width: 100%; /* Usar todo el ancho disponible */
+  max-width: 95%; /* Usar casi todo el ancho de la pantalla */
   transform-origin: top left;
-  margin: 0; /* Alineado a la izquierda */
+  margin: 0 auto; /* Centrar el contenido */
   position: relative;
   min-height: 100vh;
 }
@@ -2842,7 +2843,8 @@ export default {
 @media screen and (min-width: 2560px) {
   .main-content {
     transform: scale(1); /* Tamaño original en tu monitor */
-    width: 2200px; /* Ajustado para mejor equilibrio visual */
+    width: 100%; /* Usar ancho completo disponible */
+    max-width: 98%; /* Usar casi todo el ancho de la pantalla */
     margin: 0 auto; /* Centrado para eliminar espacio vacío de la derecha */
   }
   
@@ -2928,8 +2930,9 @@ export default {
 /* MONITOR 1920x1080p - Escalado para mantener las mismas proporciones */
 @media screen and (min-width: 1920px) and (max-width: 2559px) {
   .main-content {
-    transform: scale(0.75); /* 1920/2560 = 0.75 - Mantiene proporciones exactas */
-    width: 2200px; /* Mantener el mismo ancho base */
+    transform: scale(1); /* Sin escalado para evitar espacio vacío */
+    width: 100%; /* Usar ancho completo disponible */
+    max-width: 95%; /* Usar casi todo el ancho de la pantalla */
     margin: 0 auto; /* Centrado para mejor apariencia */
   }
   
@@ -2942,8 +2945,9 @@ export default {
 /* MONITOR 1680x1050p - Escalado proporcional */
 @media screen and (min-width: 1680px) and (max-width: 1919px) {
   .main-content {
-    transform: scale(0.656); /* 1680/2560 = 0.656 */
-    width: 2200px;
+    transform: scale(1); /* Sin escalado para evitar espacio vacío */
+    width: 100%;
+    max-width: 95%;
     margin: 0 auto; /* Centrado */
   }
   
@@ -2956,8 +2960,9 @@ export default {
 /* MONITOR 1600x900p - Escalado proporcional */
 @media screen and (min-width: 1600px) and (max-width: 1679px) {
   .main-content {
-    transform: scale(0.625); /* 1600/2560 = 0.625 */
-    width: 2200px;
+    transform: scale(1); /* Sin escalado para evitar espacio vacío */
+    width: 100%;
+    max-width: 95%;
     margin: 0 auto; /* Centrado */
   }
   
@@ -2970,8 +2975,9 @@ export default {
 /* MONITOR 1440x900p (MacBook Air) - Escalado proporcional */
 @media screen and (min-width: 1440px) and (max-width: 1599px) {
   .main-content {
-    transform: scale(0.5625); /* 1440/2560 = 0.5625 */
-    width: 2200px;
+    transform: scale(1); /* Sin escalado para evitar espacio vacío */
+    width: 100%;
+    max-width: 1100px;
     margin: 0 auto; /* Centrado */
   }
   
@@ -3409,9 +3415,9 @@ export default {
   /* El escalado se encarga de reducir el tamaño proporcionalmente */
 }
 
-/* Banner izquierdo - proporciones originales */
+/* Banner izquierdo - proporciones expandidas */
 .banner-left {
-  flex: 3.8;
+  flex: 4.2; /* Aumentar de 3.8 a 4.2 para más ancho */
   height: 400px; /* Altura original */
 }
 
@@ -3651,7 +3657,7 @@ export default {
 
 /* Banner izquierda - El más ancho */
 .banner-left {
-  flex: 3.8;
+  flex: 4.5; /* Aumentar de 3.8 a 4.5 para más ancho */
   min-width: 0;
   position: relative;
   align-self: stretch;
@@ -3680,7 +3686,7 @@ export default {
 
 /* Banners del centro - Medianos */
 .banner-center {
-  flex: 1.8;
+  flex: 2.2; /* Aumentar de 1.8 a 2.2 para más ancho */
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -3701,7 +3707,7 @@ export default {
 
 /* Banner derecha - El más cuadrado */
 .banner-right {
-  flex: 2;
+  flex: 2.5; /* Aumentar de 2 a 2.5 para más ancho */
   min-width: 0;
   position: relative;
   align-self: stretch;
@@ -4927,7 +4933,7 @@ export default {
   right: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.8);
+  background: rgba(0, 0, 0, 0.6); /* Fondo menos opaco */
   z-index: 2000;
   display: flex;
   justify-content: flex-end;
@@ -4935,7 +4941,8 @@ export default {
 
 .cart-detail-interface-content {
   background: #fff;
-  width: 450px;
+  width: 400px; /* Reducir de 450px a 400px */
+  max-width: 30vw; /* Limitar al 30% del ancho de viewport */
   height: 100vh;
   overflow-y: auto;
   box-shadow: -10px 0 30px rgba(0, 0, 0, 0.3);
@@ -4955,17 +4962,17 @@ export default {
 .cart-detail-header {
   background: #fff;
   color: #333;
-  padding: 20px 25px;
+  padding: 15px 20px; /* Reducir padding */
   border-bottom: 2px solid #f0f0f0;
   text-align: center;
   position: relative;
 }
 
 .cart-detail-header h2 {
-  font-size: 1.5rem;
+  font-size: 1.3rem; /* Reducir de 1.5rem a 1.3rem */
   font-weight: 700;
   color: #ff9800;
-  margin: 0 0 8px 0;
+  margin: 0 0 6px 0; /* Reducir margen */
 }
 
 .cart-detail-header p {
@@ -4994,7 +5001,7 @@ export default {
 }
 
 .cart-detail-body {
-  padding: 20px;
+  padding: 15px; /* Reducir de 20px a 15px */
 }
 
 .cart-detail-items h3 {
@@ -5009,11 +5016,11 @@ export default {
 .cart-detail-item {
   display: flex;
   align-items: center;
-  gap: 15px;
-  padding: 15px;
+  gap: 12px; /* Reducir de 15px a 12px */
+  padding: 12px; /* Reducir de 15px a 12px */
   background: #fff;
   border-radius: 8px;
-  margin-bottom: 12px;
+  margin-bottom: 10px; /* Reducir de 12px a 10px */
   border: 1px solid #e0e0e0;
   box-shadow: 0 2px 6px rgba(0,0,0,0.05);
 }
@@ -5949,6 +5956,12 @@ export default {
     min-height: 260px;
     padding: 16px;
   }
+  
+  /* Ajustar carrito modal en tablets */
+  .cart-detail-interface-content {
+    width: 350px;
+    max-width: 40vw;
+  }
 }
 
 /* Media queries para dispositivos móviles grandes */
@@ -5965,6 +5978,20 @@ export default {
   .product-catalog-card {
     min-height: 240px;
     padding: 14px;
+  }
+  
+  /* Ajustar carrito modal en móviles grandes */
+  .cart-detail-interface-content {
+    width: 320px;
+    max-width: 85vw;
+  }
+}
+
+/* Media query para pantallas muy grandes */
+@media (min-width: 1920px) {
+  .cart-detail-interface-content {
+    width: 380px;
+    max-width: 25vw; /* Máximo 25% en pantallas muy grandes */
   }
 }
 
@@ -6174,6 +6201,22 @@ export default {
 /* Para pantallas muy pequeñas (móviles) */
 /* Media query 768px consolidado al inicio */
 
+/* Media query para pantallas muy grandes - Carrito modal */
+@media (min-width: 1920px) {
+  .cart-detail-interface-content {
+    width: 380px;
+    max-width: 25vw; /* Máximo 25% en pantallas muy grandes */
+  }
+  
+  .cart-detail-header {
+    padding: 12px 18px; /* Menos padding en pantallas grandes */
+  }
+  
+  .cart-detail-body {
+    padding: 12px; /* Menos padding en pantallas grandes */
+  }
+}
+
 /* Para pantallas de alta resolución */
 @media screen and (min-resolution: 2dppx) {
   .banner-image {
@@ -6183,6 +6226,14 @@ export default {
     height: 100%;
     image-rendering: -webkit-optimize-contrast;
     image-rendering: crisp-edges;
+  }
+}
+
+/* Media query para pantallas medianas - Carrito modal */
+@media (min-width: 1200px) and (max-width: 1919px) {
+  .cart-detail-interface-content {
+    width: 350px;
+    max-width: 28vw;
   }
 }
 
