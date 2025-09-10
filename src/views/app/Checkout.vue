@@ -273,14 +273,14 @@
                           <span class="location-value">{{ selectedOffice ? selectedOffice.phone : 'No disponible' }}</span>
                         </div>
 
-                      <div class="location-item">
+                      <div class="location-item" v-if="selectedOffice.horario">
                         <span class="location-label">Horario:</span>
-                        <span class="location-value">Atención previa coordinación por WhatsApp</span>
+                        <span class="location-value">{{ selectedOffice.horario }}</span>
                       </div>
                       
-                      <div class="location-item">
+                      <div class="location-item" v-if="selectedOffice.dias">
                         <span class="location-label">Días:</span>
-                        <span class="location-value">L - V: 9 am a 6 pm</span>
+                        <span class="location-value">{{ selectedOffice.dias }}</span>
                       </div>
                     </div>
                   </div>
@@ -1038,7 +1038,9 @@ export default {
               phone: office.phone || office.email || 'No disponible', // Usar phone, email como fallback, o mensaje por defecto
               address: office.address || 'Dirección no disponible',
               googleMapsUrl: office.googleMapsUrl || '',
-              accounts: office.accounts || 'Información de cuentas no disponible'
+              accounts: office.accounts || 'Información de cuentas no disponible',
+              horario: office.horario || 'Horario no disponible',
+              dias: office.dias || 'Días no disponible',
             }));
             console.log('Oficinas cargadas desde servidor:', this.offices);
             return;
