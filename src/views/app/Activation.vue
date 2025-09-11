@@ -22,12 +22,15 @@
       
       <!-- Contenido principal (siempre visible, pero opaco durante carga) -->
       <div class="tienda-sifrah-container" :class="{ 'content-loading': loading || !products || products.length === 0 }">
-        <!-- Título principal de la tienda -->
-        <h1 class="store-title">Tienda Sifrah</h1>
+        <!-- Header con título y barra de puntos -->
+        <div class="store-header">
+          <!-- Título principal de la tienda -->
+          <h1 class="store-title">Tienda Sifrah</h1>
 
-        <!-- Barra de puntos del usuario -->
-        <div class="points-bar">
-          <span class="points-icon">💎</span> Puntos: <b>{{ current_points }}</b>
+          <!-- Barra de puntos del usuario -->
+          <div class="points-bar">
+            <span class="points-icon">💎</span> Puntos: <b>{{ current_points }}</b>
+          </div>
         </div>
         
         <!-- Sistema de banners unificado -->
@@ -1719,7 +1722,7 @@ export default {
     gap 15px
   
   .products-catalog-grid
-    grid-template-columns repeat(auto-fit, minmax(240px, 1fr))
+    grid-template-columns repeat(2, 1fr)
     gap 15px
   
   .catalog-filters
@@ -1883,7 +1886,7 @@ export default {
   
   /* Responsive para móviles muy pequeños */
   .products-catalog-grid
-    grid-template-columns repeat(auto-fit, minmax(200px, 1fr))
+    grid-template-columns repeat(2, 1fr)
     gap 12px
   
   .product-catalog-card
@@ -2644,6 +2647,11 @@ export default {
 /*   background: #fafafa;
   border-radius: 20px;
   box-shadow: 0 8px 32px rgba(0,0,0,0.1); */
+}
+
+/* Header del store - comportamiento por defecto (desktop) */
+.store-header {
+  display: block;
 }
 
 /* SECCIÓN DE PRODUCTOS Y COMPRAS */
@@ -4472,7 +4480,7 @@ export default {
   }
   
   .products-catalog-grid {
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    grid-template-columns: repeat(2, 1fr);
     gap: 12px;
   }
   
@@ -4484,6 +4492,13 @@ export default {
   .product-image-container {
     width: 70px;
     height: 70px;
+  }
+  
+  .points-badge {
+    top: 10px;
+    right: 10px;
+    padding: 5px 10px;
+    font-size: 0.75rem;
   }
   
   .product-catalog-name {
@@ -4550,7 +4565,7 @@ export default {
   }
   
   .products-catalog-grid {
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    grid-template-columns: repeat(2, 1fr);
     gap: 10px;
   }
   
@@ -4566,6 +4581,13 @@ export default {
   
   .product-catalog-name {
     font-size: 0.85rem;
+  }
+  
+  .points-badge {
+    top: 8px;
+    right: 8px;
+    padding: 4px 8px;
+    font-size: 0.7rem;
   }
   
   .product-catalog-price {
@@ -4785,6 +4807,86 @@ export default {
   }
 }
 
+/* Tablets y dispositivos intermedios - Transición suave hacia móviles */
+@media (max-width: 900px) {
+  .carrito-compras-container {
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 0 20px;
+  }
+  
+  .sticky-cart-sidebar {
+    width: 100%;
+    max-width: 400px;
+    margin: 18px auto 0 auto;
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+    padding: 20px;
+    background: #fff;
+  }
+  
+  /* Mejorar espaciado interno del carrito en tablets */
+  .cart-items-container {
+    padding: 22px 18px;
+    gap: 18px;
+  }
+  
+  .cart-item {
+    padding: 18px;
+    gap: 14px;
+    margin-bottom: 10px;
+  }
+  
+  .cart-item-img {
+    width: 75px;
+    height: 75px;
+    padding: 7px;
+  }
+  
+  .cart-item-info h4 {
+    font-size: 1.05rem;
+    line-height: 1.3;
+    margin-bottom: 5px;
+  }
+  
+  .cart-item-details {
+    gap: 7px;
+    margin-bottom: 5px;
+  }
+  
+  .cart-item-price {
+    font-size: 1.05rem;
+  }
+  
+  .cart-item-points {
+    font-size: 0.95rem;
+    padding: 4px 7px;
+  }
+  
+  .cart-item-controls {
+    gap: 9px;
+  }
+  
+  .cart-item .qty-control-btn {
+    width: 34px;
+    height: 34px;
+    font-size: 1.05rem;
+  }
+  
+  .cart-item .quantity-display {
+    min-width: 26px;
+    padding: 7px 9px;
+    font-size: 0.95rem;
+  }
+  
+  .remove-btn {
+    width: 34px;
+    height: 34px;
+    font-size: 1.05rem;
+  }
+}
+
 @media (max-width: 768px) {
   .catalog-container {
     flex-direction: column;
@@ -4795,13 +4897,86 @@ export default {
     flex-direction: column;
   }
   
+  /* Centrar el carrito en móviles - Optimizado para Samsung Galaxy S20 Ultra */
+  .carrito-compras-container {
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 0 15px;
+  }
+  
   .sticky-cart-sidebar {
     width: 100%;
+    max-width: 380px;
     position: relative;
     top: 0;
     right: 0;
-    margin-top: 20px;
+    margin: 15px auto 0 auto;
     max-height: none;
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+    padding: 20px;
+    background: #fff;
+  }
+  
+  /* Mejorar espaciado interno del carrito en móviles */
+  .cart-items-container {
+    padding: 20px 15px;
+    gap: 16px;
+  }
+  
+  .cart-item {
+    padding: 16px;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+  
+  .cart-item-img {
+    width: 70px;
+    height: 70px;
+    padding: 6px;
+  }
+  
+  .cart-item-info h4 {
+    font-size: 1rem;
+    line-height: 1.3;
+    margin-bottom: 4px;
+  }
+  
+  .cart-item-details {
+    gap: 6px;
+    margin-bottom: 4px;
+  }
+  
+  .cart-item-price {
+    font-size: 1rem;
+  }
+  
+  .cart-item-points {
+    font-size: 0.9rem;
+    padding: 3px 6px;
+  }
+  
+  .cart-item-controls {
+    gap: 8px;
+  }
+  
+  .cart-item .qty-control-btn {
+    width: 32px;
+    height: 32px;
+    font-size: 1rem;
+  }
+  
+  .cart-item .quantity-display {
+    min-width: 24px;
+    padding: 6px 8px;
+    font-size: 0.9rem;
+  }
+  
+  .remove-btn {
+    width: 32px;
+    height: 32px;
+    font-size: 1rem;
   }
   
   .products-main-area {
@@ -5037,15 +5212,27 @@ export default {
     margin: 0 0 0 10px;
   }
   
+  /* Contenedor flex para título y barra de puntos en móviles */
+  .store-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    gap: 15px;
+  }
+  
   .store-title {
     font-size: 2rem;
     text-align: left;
+    margin: 0;
+    flex: 1;
   }
   
   .points-bar {
-    padding: 12px 20px;
-    font-size: 1rem;
-    margin: 0 0 15px 0;
+    padding: 8px 15px;
+    font-size: 0.9rem;
+    margin: 0;
+    flex-shrink: 0;
   }
   
   .productos-compras-section {
@@ -5061,21 +5248,110 @@ export default {
     margin: 0 0 0 8px;
   }
   
+  /* Contenedor flex para título y barra de puntos en móviles pequeños */
+  .store-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    gap: 10px;
+  }
+  
   .store-title {
     font-size: 1.8rem;
-    margin: 0 0 15px 0;
+    margin: 0;
     text-align: left;
+    flex: 1;
   }
   
   .points-bar {
-    padding: 10px 15px;
-    font-size: 0.9rem;
-    margin: 0 0 10px 0;
+    padding: 6px 12px;
+    font-size: 0.8rem;
+    margin: 0;
+    flex-shrink: 0;
   }
   
   .productos-compras-section {
     margin-top: 15px;
     padding: 10px 0;
+  }
+  
+  /* Centrar el carrito en móviles pequeños - Optimizado para todos los dispositivos */
+  .carrito-compras-container {
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 0 10px;
+  }
+  
+  .sticky-cart-sidebar {
+    width: 100%;
+    max-width: 360px;
+    margin: 12px auto 0 auto;
+    border-radius: 18px;
+    box-shadow: 0 6px 28px rgba(0,0,0,0.1);
+    padding: 18px;
+    background: #fff;
+  }
+  
+  /* Mejorar espaciado interno del carrito en móviles pequeños */
+  .cart-items-container {
+    padding: 18px 12px;
+    gap: 14px;
+  }
+  
+  .cart-item {
+    padding: 14px;
+    gap: 10px;
+    margin-bottom: 6px;
+  }
+  
+  .cart-item-img {
+    width: 65px;
+    height: 65px;
+    padding: 5px;
+  }
+  
+  .cart-item-info h4 {
+    font-size: 0.95rem;
+    line-height: 1.3;
+    margin-bottom: 3px;
+  }
+  
+  .cart-item-details {
+    gap: 5px;
+    margin-bottom: 3px;
+  }
+  
+  .cart-item-price {
+    font-size: 0.95rem;
+  }
+  
+  .cart-item-points {
+    font-size: 0.85rem;
+    padding: 2px 5px;
+  }
+  
+  .cart-item-controls {
+    gap: 6px;
+  }
+  
+  .cart-item .qty-control-btn {
+    width: 30px;
+    height: 30px;
+    font-size: 0.9rem;
+  }
+  
+  .cart-item .quantity-display {
+    min-width: 22px;
+    padding: 5px 6px;
+    font-size: 0.85rem;
+  }
+  
+  .remove-btn {
+    width: 30px;
+    height: 30px;
+    font-size: 0.9rem;
   }
   
   .product-image-container {
@@ -5084,10 +5360,245 @@ export default {
   }
 }
 
+/* Media queries para pantallas estrechas (361px-400px) */
+@media (max-width: 400px) and (min-width: 361px) {
+  .tienda-sifrah-container {
+    padding: 7px;
+    margin: 0 0 0 7px;
+  }
+  
+  .carrito-compras-container {
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 0 6px;
+  }
+  
+  .sticky-cart-sidebar {
+    width: 100%;
+    max-width: 330px;
+    margin: 9px auto 0 auto;
+    border-radius: 16px;
+    box-shadow: 0 4px 22px rgba(0,0,0,0.07);
+    padding: 16px;
+    background: #fff;
+  }
+  
+  .cart-items-container {
+    padding: 16px 10px;
+    gap: 12px;
+  }
+  
+  .cart-item {
+    padding: 10px;
+    gap: 6px;
+    margin-bottom: 6px;
+    flex-direction: row;
+    align-items: center;
+  }
+  
+  .cart-item-img {
+    width: 50px;
+    height: 50px;
+    padding: 3px;
+    flex-shrink: 0;
+  }
+  
+  .cart-item-info {
+    flex: 1;
+    min-width: 0;
+  }
+  
+  .cart-item-info h4 {
+    font-size: 0.85rem;
+    line-height: 1.25;
+    margin-bottom: 2px;
+  }
+  
+  .cart-item-details {
+    gap: 3px;
+    margin-bottom: 2px;
+    justify-content: flex-start;
+  }
+  
+  .cart-item-price {
+    font-size: 0.85rem;
+  }
+  
+  .cart-item-points {
+    font-size: 0.75rem;
+    padding: 2px 3px;
+  }
+  
+  .cart-item-controls {
+    gap: 4px;
+    flex-direction: column;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  
+  .cart-item .qty-control-btn {
+    width: 28px;
+    height: 28px;
+    font-size: 0.85rem;
+  }
+  
+  .cart-item .quantity-display {
+    min-width: 20px;
+    padding: 4px 5px;
+    font-size: 0.8rem;
+  }
+  
+  .remove-btn {
+    width: 28px;
+    height: 28px;
+    font-size: 0.85rem;
+  }
+}
+
+/* Media queries para Samsung Galaxy S8+ y pantallas muy estrechas */
+@media (max-width: 360px) {
+  .tienda-sifrah-container {
+    padding: 6px;
+    margin: 0 0 0 6px;
+  }
+  
+  /* Ajustar el carrito para pantallas muy estrechas */
+  .carrito-compras-container {
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 0 5px;
+  }
+  
+  .sticky-cart-sidebar {
+    width: 100%;
+    max-width: 320px;
+    margin: 8px auto 0 auto;
+    border-radius: 14px;
+    box-shadow: 0 3px 20px rgba(0,0,0,0.06);
+    padding: 14px;
+    background: #fff;
+  }
+  
+  /* Optimizar elementos internos para pantallas muy estrechas */
+  .cart-items-container {
+    padding: 14px 8px;
+    gap: 10px;
+  }
+  
+  .cart-item {
+    padding: 8px;
+    gap: 4px;
+    margin-bottom: 4px;
+    flex-direction: row;
+    align-items: center;
+    text-align: left;
+  }
+  
+  .cart-item-img {
+    width: 45px;
+    height: 45px;
+    padding: 2px;
+    flex-shrink: 0;
+  }
+  
+  .cart-item-info {
+    flex: 1;
+    min-width: 0;
+    margin-bottom: 0;
+  }
+  
+  .cart-item-info h4 {
+    font-size: 0.8rem;
+    line-height: 1.2;
+    margin-bottom: 1px;
+  }
+  
+  .cart-item-details {
+    gap: 2px;
+    margin-bottom: 1px;
+    justify-content: flex-start;
+  }
+  
+  .cart-item-price {
+    font-size: 0.8rem;
+  }
+  
+  .cart-item-points {
+    font-size: 0.7rem;
+    padding: 1px 2px;
+  }
+  
+  .cart-item-controls {
+    gap: 2px;
+    flex-direction: column;
+    justify-content: center;
+    flex-shrink: 0;
+    width: auto;
+  }
+  
+  .cart-item .qty-control-btn {
+    width: 26px;
+    height: 26px;
+    font-size: 0.8rem;
+  }
+  
+  .cart-item .quantity-display {
+    min-width: 18px;
+    padding: 3px 4px;
+    font-size: 0.75rem;
+  }
+  
+  .remove-btn {
+    width: 26px;
+    height: 26px;
+    font-size: 0.8rem;
+  }
+  
+  /* Ajustar el header del carrito */
+  .cart-header {
+    padding: 16px 12px 12px 12px;
+  }
+  
+  .cart-header h3 {
+    font-size: 1.3rem;
+  }
+  
+  .cart-header p {
+    font-size: 0.8rem;
+  }
+  
+  /* Ajustar el resumen */
+  .cart-summary-section {
+    padding: 12px 8px;
+  }
+  
+  .cart-summary-section h4 {
+    font-size: 1rem;
+  }
+  
+  .summary-row {
+    font-size: 0.85rem;
+    padding: 4px 0;
+  }
+  
+  /* Ajustar botones de acción */
+  .cart-actions {
+    padding: 12px 8px;
+    gap: 8px;
+  }
+  
+  .pay-btn, .view-detail-btn {
+    padding: 12px 16px;
+    font-size: 0.9rem;
+  }
+}
+
 /* Media queries para dispositivos móviles pequeños */
 @media (max-width: 479px) {
   .products-catalog-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
     gap: 15px;
   }
   
@@ -5099,6 +5610,91 @@ export default {
   .product-image-container {
     width: 80px;
     height: 80px;
+  }
+  
+  /* Centrar el carrito en móviles muy pequeños - Consistente con Samsung Galaxy S20 Ultra */
+  .carrito-compras-container {
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 0 8px;
+  }
+  
+  .sticky-cart-sidebar {
+    width: 100%;
+    max-width: 340px;
+    margin: 10px auto 0 auto;
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    padding: 16px;
+    background: #fff;
+  }
+  
+  /* Mejorar espaciado interno del carrito en móviles muy pequeños */
+  .cart-items-container {
+    padding: 16px 10px;
+    gap: 12px;
+  }
+  
+  .cart-item {
+    padding: 12px;
+    gap: 8px;
+    margin-bottom: 5px;
+  }
+  
+  .cart-item-img {
+    width: 60px;
+    height: 60px;
+    padding: 4px;
+  }
+  
+  .cart-item-info h4 {
+    font-size: 0.9rem;
+    line-height: 1.3;
+    margin-bottom: 2px;
+  }
+  
+  .cart-item-details {
+    gap: 4px;
+    margin-bottom: 2px;
+  }
+  
+  .cart-item-price {
+    font-size: 0.9rem;
+  }
+  
+  .cart-item-points {
+    font-size: 0.8rem;
+    padding: 2px 4px;
+  }
+  
+  .cart-item-controls {
+    gap: 5px;
+  }
+  
+  .cart-item .qty-control-btn {
+    width: 28px;
+    height: 28px;
+    font-size: 0.85rem;
+  }
+  
+  .cart-item .quantity-display {
+    min-width: 20px;
+    padding: 4px 5px;
+    font-size: 0.8rem;
+  }
+  
+  .remove-btn {
+    width: 28px;
+    height: 28px;
+    font-size: 0.85rem;
+  }
+  
+  .points-badge {
+    top: 6px;
+    right: 6px;
+    padding: 3px 6px;
+    font-size: 0.65rem;
   }
   
   .product-catalog-name {
