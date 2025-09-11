@@ -21,18 +21,13 @@
       </div>
       
       <!-- Contenido principal (siempre visible, pero opaco durante carga) -->
-      <div class="scale-wrapper">
-        <div class="main-content">
-          <div class="tienda-sifrah-container" :class="{ 'content-loading': loading || !products || products.length === 0 }">
-        <!-- Contenedor para título y puntos en móvil -->
-        <div class="title-points-container">
-          <!-- Título principal de la tienda -->
-          <h1 class="store-title">Tienda Sifrah</h1>
+      <div class="tienda-sifrah-container" :class="{ 'content-loading': loading || !products || products.length === 0 }">
+        <!-- Título principal de la tienda -->
+        <h1 class="store-title">Tienda Sifrah</h1>
 
-          <!-- Barra de puntos del usuario -->
-          <div class="points-bar">
-            <span class="points-icon">💎</span> Puntos: <b>{{ current_points }}</b>
-          </div>
+        <!-- Barra de puntos del usuario -->
+        <div class="points-bar">
+          <span class="points-icon">💎</span> Puntos: <b>{{ current_points }}</b>
         </div>
         
         <!-- Sistema de banners unificado -->
@@ -660,8 +655,6 @@
           <span>Procesando orden...</span>
         </button>
       </div>
-        </div>
-      </div>
     </div>
   </App>
 </template>
@@ -694,10 +687,10 @@ export default {
       success: false,
       sending: false,
       pending: false,
-      selectedProduct: null,
-      imageLoaded: false,
-      showCartDetailModal: false,
-      cartItems: [],
+              selectedProduct: null,
+        imageLoaded: false,
+        showCartDetailModal: false,
+        cartItems: [],
       searchTerm: "",
       selectedCategories: [],
       current_points: 0,
@@ -705,6 +698,7 @@ export default {
       balance: 0,
       _balance: 0,
       tab: "Todos",
+      total: 0,
       
       // Banners de activación
       activationBanners: {
@@ -712,7 +706,11 @@ export default {
         centerTop: "",
         centerBottom: "",
         right: ""
-      }
+      },
+      price: 0,
+      points: 0,
+      IGV: 0,
+      remaining: 0,
 
     };
   },
@@ -1702,25 +1700,6 @@ export default {
     flex-direction column
     gap 15px
   
-  /* Escalado proporcional para la sección de productos y carrito */
-  .productos-compras-section {
-    display: flex;
-    flex-direction: row;
-    gap: 20px;
-    width: 100%;
-    /* El escalado se aplicará desde .main-content */
-  }
-  
-  .productos-section {
-    flex: 1;
-    /* Mantener proporciones originales */
-  }
-  
-  .sticky-cart-sidebar {
-    flex: 0 0 350px; /* Ancho fijo proporcional */
-    /* Mantener proporciones originales */
-  }
-  
   .placeholder-main
     height 120px
     margin-right 0
@@ -2659,9 +2638,9 @@ export default {
 /* CONTENEDOR PRINCIPAL DE LA TIENDA SIFRAH */
 .tienda-sifrah-container {
   width: 100%;
-  max-width: 100%; /* Usar todo el ancho disponible */
-  margin: 0; /* Sin márgenes para ocupar todo el espacio */
-  padding: 10px 20px; /* Padding más pequeño en los lados */
+  max-width: 1800px;
+  margin: 0 0 0 20px;
+  padding: 20px;
 /*   background: #fafafa;
   border-radius: 20px;
   box-shadow: 0 8px 32px rgba(0,0,0,0.1); */
@@ -2673,7 +2652,7 @@ export default {
   padding: 20px 0;
 }
 
-/* Barra de puntos del usuario - Definición principal */
+/* Barra de puntos del usuario */
 .points-bar {
   display: flex;
   align-items: center;
@@ -2720,13 +2699,11 @@ export default {
   justify-content: flex-start;
   height: 100%;
   position: relative;
-  /* Asegurar que se mantenga la altura relativa al banner */
-  min-height: 400px;
 }
 
 /* Carrito sticky en el lado derecho */
 .sticky-cart-sidebar {
-  width: 480px; /* Aumentar de 420px a 480px */
+  width: 420px;
   background: #fff;
   border-radius: 15px;
   box-shadow: 0 4px 20px rgba(0,0,0,0.1);
@@ -2736,7 +2713,6 @@ export default {
   min-height: 700px;
   overflow-y: auto;
   position: sticky;
-  /* Asegurar que se mantenga la altura relativa al banner */
   top: 20px;
   align-self: flex-start;
   height: fit-content;
@@ -2745,15 +2721,7 @@ export default {
   margin-top: 0;
   transform: translateZ(0);
   transition: all 0.3s ease;
-  flex: 0 0 450px; /* Aumentar de 380px a 450px */
-}
-
-/* Contenedor para título y puntos */
-.title-points-container {
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-  margin-bottom: 20px;
+  flex: 0 0 380px;
 }
 
 /* Estilos para el título principal de la tienda */
@@ -2781,7 +2749,7 @@ export default {
 /* Sistema de banners unificado - TODO EN UN SOLO DIV PARA ZOOM UNIFORME */
 .banners-unified-wrapper {
   display: flex;
-  gap: 20px; /* Aumentar gap para más espacio */
+  gap: 15px;
   width: 100%;
   margin: 0;
   padding: 0;
@@ -2796,868 +2764,9 @@ export default {
   align-items: stretch;
 }
 
-/* Sistema de escalado proporcional para toda la tienda Sifrah */
-/* RESOLUCIÓN BASE DE REFERENCIA: 2560x1440p (tu monitor) */
-.scale-wrapper {
-  overflow-x: auto;
-  overflow-y: visible;
-  width: 100%;
-  min-height: 100vh;
-  position: relative;
-  /* Asegurar que el scroll funcione correctamente */
-  scroll-behavior: smooth;
-}
-
-/* Estilos para el scroll horizontal cuando sea necesario */
-.scale-wrapper::-webkit-scrollbar {
-  height: 8px;
-}
-
-.scale-wrapper::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 4px;
-}
-
-.scale-wrapper::-webkit-scrollbar-thumb {
-  background: #ff6b35;
-  border-radius: 4px;
-}
-
-.scale-wrapper::-webkit-scrollbar-thumb:hover {
-  background: #e55a2b;
-}
-
-.main-content {
-  /* Ancho base optimizado para 2560x1440p */
-  width: 100%; /* Usar todo el ancho disponible */
-  max-width: 95%; /* Usar casi todo el ancho de la pantalla */
-  transform-origin: top left;
-  margin: 0 auto; /* Centrar el contenido */
-  position: relative;
-  min-height: 100vh;
-}
-
-/* ===== SISTEMA DE ESCALADO BASADO EN TU MONITOR 2560x1440p ===== */
-
-/* TU MONITOR: 2560x1440p - RESOLUCIÓN BASE (centrado y equilibrado) */
-@media screen and (min-width: 2560px) {
-  .main-content {
-    transform: scale(1); /* Tamaño original en tu monitor */
-    width: 100%; /* Usar ancho completo disponible */
-    max-width: 98%; /* Usar casi todo el ancho de la pantalla */
-    margin: 0 auto; /* Centrado para eliminar espacio vacío de la derecha */
-  }
-  
-  /* Ajustar el carrito para que sea más ancho en tu monitor */
-  .sticky-cart-sidebar {
-    flex: 0 0 450px; /* Aumentado de 350px a 450px */
-    max-width: 450px;
-  }
-  
-  /* Ajustar el catálogo para que tenga más espacio */
-  .productos-section {
-    flex: 1;
-    max-width: calc(100% - 450px); /* Ajustado para el carrito más ancho */
-  }
-  
-  /* Ajustar el grid de productos para mostrar más columnas */
-  .products-grid {
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Columnas más anchas */
-    gap: 20px;
-  }
-  
-  /* Ajustar los banners para aprovechar mejor el espacio */
-  .banners-unified-wrapper {
-    gap: 20px; /* Más espacio entre banners */
-  }
-  
-  .banner-left {
-    flex: 4.2; /* Aumentado de 3.8 a 4.2 para más espacio */
-  }
-  
-  .banner-center {
-    flex: 2.0; /* Aumentado de 1.8 a 2.0 */
-  }
-  
-  .banner-right {
-    flex: 2.2; /* Aumentado de 2 a 2.2 */
-  }
-  
-  /* Ajustar las alturas de los banners para mejor proporción */
-  .banner-left,
-  .banner-right {
-    height: 450px; /* Aumentado de 400px a 450px */
-  }
-  
-  .banner-medium-top,
-  .banner-medium-bottom {
-    height: 215px; /* Aumentado de 190px a 215px */
-  }
-  
-  /* Actualizar las alturas de los contenedores de imágenes */
-  .banner-left .banner-placeholder,
-  .banner-left .banner-image-container,
-  .banner-right .banner-placeholder,
-  .banner-right .banner-image-container {
-    height: 450px;
-  }
-  
-  .banner-medium-top .banner-placeholder,
-  .banner-medium-top .banner-image-container,
-  .banner-medium-bottom .banner-placeholder,
-  .banner-medium-bottom .banner-image-container {
-    height: 215px;
-  }
-  
-  /* Optimizar proporciones de imágenes para tu monitor */
-  .banner-left .banner-image {
-    object-fit: cover;
-    object-position: center 30%; /* Ajustar para mostrar mejor el jaguar */
-  }
-  
-  .banner-medium-top .banner-image,
-  .banner-medium-bottom .banner-image {
-    object-fit: cover;
-    object-position: center 40%; /* Centrar verticalmente para banners pequeños */
-  }
-  
-  .banner-right .banner-image {
-    object-fit: cover;
-    object-position: center 35%; /* Ajustar para banner derecho */
-  }
-}
-
-/* MONITOR 1920x1080p - Escalado para mantener las mismas proporciones */
-@media screen and (min-width: 1920px) and (max-width: 2559px) {
-  .main-content {
-    transform: scale(1); /* Sin escalado para evitar espacio vacío */
-    width: 100%; /* Usar ancho completo disponible */
-    max-width: 95%; /* Usar casi todo el ancho de la pantalla */
-    margin: 0 auto; /* Centrado para mejor apariencia */
-  }
-  
-  .scale-wrapper {
-    overflow-x: auto;
-    overflow-y: visible;
-  }
-}
-
-/* MONITOR 1680x1050p - Escalado proporcional */
-@media screen and (min-width: 1680px) and (max-width: 1919px) {
-  .main-content {
-    transform: scale(1); /* Sin escalado para evitar espacio vacío */
-    width: 100%;
-    max-width: 95%;
-    margin: 0 auto; /* Centrado */
-  }
-  
-  .scale-wrapper {
-    overflow-x: auto;
-    overflow-y: visible;
-  }
-}
-
-/* MONITOR 1600x900p - Escalado proporcional */
-@media screen and (min-width: 1600px) and (max-width: 1679px) {
-  .main-content {
-    transform: scale(1); /* Sin escalado para evitar espacio vacío */
-    width: 100%;
-    max-width: 95%;
-    margin: 0 auto; /* Centrado */
-  }
-  
-  .scale-wrapper {
-    overflow-x: auto;
-    overflow-y: visible;
-  }
-}
-
-/* MONITOR 1440x900p (MacBook Air) - Escalado proporcional */
-@media screen and (min-width: 1440px) and (max-width: 1599px) {
-  .main-content {
-    transform: scale(1); /* Sin escalado para evitar espacio vacío */
-    width: 100%;
-    max-width: 1100px;
-    margin: 0 auto; /* Centrado */
-  }
-  
-  .scale-wrapper {
-    overflow-x: auto;
-    overflow-y: visible;
-  }
-}
-
-/* MONITOR 1366x768p - Escalado proporcional */
-@media screen and (min-width: 1366px) and (max-width: 1439px) {
-  .main-content {
-    transform: scale(0.534); /* 1366/2560 = 0.534 */
-    width: 2200px;
-    margin: 0 auto; /* Centrado */
-  }
-  
-  .scale-wrapper {
-    overflow-x: auto;
-    overflow-y: visible;
-  }
-}
-
-/* MONITOR 1280x720p - Escalado proporcional */
-@media screen and (min-width: 1280px) and (max-width: 1365px) {
-  .main-content {
-    transform: scale(0.5); /* 1280/2560 = 0.5 */
-    width: 2200px;
-    margin: 0 auto; /* Centrado */
-  }
-  
-  .scale-wrapper {
-    overflow-x: auto;
-    overflow-y: visible;
-  }
-}
-
-/* MONITOR 1024x768p - Escalado proporcional */
-@media screen and (min-width: 1024px) and (max-width: 1279px) {
-  .main-content {
-    transform: scale(0.4); /* 1024/2560 = 0.4 */
-    width: 2200px;
-    margin: 0 auto; /* Centrado */
-  }
-  
-  .scale-wrapper {
-    overflow-x: auto;
-    overflow-y: visible;
-  }
-}
-
-/* TABLETS - Escalado proporcional */
-@media screen and (min-width: 768px) and (max-width: 1023px) {
-  .main-content {
-    transform: scale(0.3); /* 768/2560 = 0.3 */
-    width: 2200px;
-    margin: 0 auto; /* Centrado */
-  }
-  
-  .scale-wrapper {
-    overflow-x: auto;
-    overflow-y: visible;
-  }
-}
-
-/* MÓVILES GRANDES - Escalado proporcional */
-@media screen and (min-width: 480px) and (max-width: 767px) {
-  .main-content {
-    transform: scale(0.1875); /* 480/2560 = 0.1875 */
-    width: 2200px;
-    margin: 0 auto; /* Centrado */
-  }
-  
-  .scale-wrapper {
-    overflow-x: auto;
-    overflow-y: visible;
-  }
-}
-
-/* MÓVILES PEQUEÑOS - Escalado mínimo */
-@media screen and (max-width: 479px) {
-  .main-content {
-    transform: scale(0.125); /* Escalado mínimo del 12.5% */
-    width: 2200px;
-    margin: 0 auto; /* Centrado */
-  }
-  
-  .scale-wrapper {
-    overflow-x: auto;
-    overflow-y: visible;
-  }
-}
-
-/* ===== DISEÑO MÓVIL ESPECÍFICO ===== */
-/* Para móviles, usar diseño nativo sin escalado */
-@media screen and (max-width: 768px) {
-  .scale-wrapper {
-    overflow-x: visible;
-    overflow-y: visible;
-  }
-  
-  .main-content {
-    transform: none !important; /* Sin escalado en móvil */
-    width: 100% !important;
-    margin: 0 !important;
-    padding: 10px;
-  }
-  
-  /* Layout móvil - Una columna */
-  .tienda-sifrah-container {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-  }
-  
-  /* Contenedor título y puntos en móvil - Lado a lado */
-  .title-points-container {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 15px;
-  }
-  
-  .store-title {
-    margin: 0;
-    font-size: 1.8rem;
-    flex: 1;
-  }
-  
-  .points-bar {
-    margin: 0;
-    padding: 8px 12px;
-    font-size: 0.9rem;
-    border-radius: 20px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    white-space: nowrap;
-  }
-
-  /* Banners en móvil - Diseño vertical apilado como en la segunda imagen */
-  .banners-unified-wrapper {
-    display: flex;
-    flex-direction: column; /* Layout vertical apilado */
-    gap: 15px;
-    width: 100%;
-    align-items: stretch;
-  }
-  
-  .banner-left {
-    width: 100%;
-    height: 200px; /* Banner principal más alto */
-    order: 1; /* Primero en el stack */
-  }
-  
-  .banner-center {
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    gap: 15px;
-    order: 2; /* Segundo en el stack */
-  }
-  
-  .banner-right {
-    width: 100%;
-    height: 150px; /* Banner inferior */
-    order: 3; /* Tercero en el stack */
-  }
-  
-  .banner-medium-top,
-  .banner-medium-bottom {
-    flex: 1;
-    height: 150px; /* Altura para los banners del centro */
-  }
-  
-  /* Ajustar contenedores de imágenes para móvil - Diseño vertical */
-  .banner-left .banner-image-container,
-  .banner-left .banner-placeholder {
-    height: 200px; /* Banner principal más alto */
-  }
-  
-  .banner-center .banner-image-container,
-  .banner-center .banner-placeholder {
-    height: 150px; /* Banners del centro */
-  }
-  
-  .banner-right .banner-image-container,
-  .banner-right .banner-placeholder {
-    height: 150px; /* Banner inferior */
-  }
-  
-  .banner-medium-top .banner-image-container,
-  .banner-medium-top .banner-placeholder,
-  .banner-medium-bottom .banner-image-container,
-  .banner-medium-bottom .banner-placeholder {
-    height: 150px; /* Altura para los banners del centro */
-  }
-  
-  /* Optimizar proporciones de imágenes para el diseño móvil vertical */
-  .banner-left .banner-image {
-    object-fit: cover;
-    object-position: center 30%; /* Mostrar mejor el jaguar en banner principal */
-  }
-  
-  .banner-medium-top .banner-image,
-  .banner-medium-bottom .banner-image {
-    object-fit: cover;
-    object-position: center 40%; /* Centrar verticalmente en banners pequeños */
-  }
-  
-  .banner-right .banner-image {
-    object-fit: cover;
-    object-position: center 35%; /* Ajustar para banner inferior */
-  }
-  
-  /* Sección de productos y carrito en móvil - Layout como en la imagen */
-  .productos-compras-section {
-    display: flex;
-    flex-direction: row; /* Layout horizontal como en la imagen */
-    gap: 15px;
-    width: 100%;
-    margin-top: 15px;
-  }
-  
-  .productos-section {
-    flex: 2; /* Productos ocupan más espacio */
-    order: 1;
-  }
-  
-  .sticky-cart-sidebar {
-    flex: 1; /* Carrito más pequeño */
-    order: 2;
-    position: static;
-    max-width: none;
-    height: fit-content;
-  }
-  
-  /* Grid de productos para móvil - Optimizado para el layout horizontal */
-  .products-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr); /* 2 columnas en móvil */
-    gap: 8px;
-  }
-  
-  /* Ajustar tarjetas de productos para móvil - Layout como en la imagen */
-  .product-card {
-    padding: 8px;
-    font-size: 0.8rem;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  }
-  
-  .product-img {
-    width: 50px;
-    height: 50px;
-  }
-  
-  .product-name {
-    font-size: 0.7rem;
-    font-weight: 600;
-  }
-  
-  .price-amount {
-    font-size: 0.8rem;
-    font-weight: 700;
-  }
-  
-  /* Carrito móvil - Layout como en la imagen */
-  .cart-summary {
-    background: #f8f9fa;
-    border-radius: 8px;
-    padding: 12px;
-    margin-bottom: 10px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  }
-  
-  .cart-empty {
-    text-align: center;
-    padding: 15px;
-  }
-  
-  .cart-empty-icon {
-    font-size: 2.5rem;
-    color: #ccc;
-    margin-bottom: 8px;
-  }
-  
-  /* Botones móviles */
-  .add-btn {
-    padding: 8px 12px;
-    font-size: 0.8rem;
-  }
-  
-  .order-btn {
-    width: 100%;
-    padding: 12px;
-    font-size: 1rem;
-    margin-top: 10px;
-  }
-  
-  /* Catálogo en móvil */
-  .catalog-container {
-    flex-direction: column;
-    padding-top: 0;
-  }
-  
-  .catalog-content-wrapper {
-    flex-direction: column;
-  }
-  
-  .sticky-cart-sidebar {
-    width: 100%;
-    position: relative;
-    top: 0;
-    right: 0;
-    margin-top: 20px;
-    max-height: none;
-  }
-  
-  .products-main-area {
-    min-height: auto;
-    margin-right: 0;
-  }
-  
-  /* Contenedor tienda móvil */
-  .tienda-sifrah-container {
-    max-width: 100%;
-    padding: 10px;
-    border-radius: 15px;
-    margin: 0 0 0 10px;
-  }
-  
-  .store-title {
-    font-size: 2rem;
-    text-align: left;
-  }
-  
-  .productos-compras-section {
-    margin-top: 20px;
-    padding: 15px 0;
-  }
-  
-  /* Banner images móvil */
-  .banner-image {
-    object-fit: cover;
-    object-position: center center;
-    width: 100%;
-    height: 100%;
-  }
-  
-  .banner-image-container {
-    position: relative;
-    overflow: hidden;
-    min-height: 120px;
-  }
-}
-
-/* Móviles muy pequeños - Diseño ultra compacto */
-@media screen and (max-width: 480px) {
-  .main-content {
-    padding: 5px;
-  }
-  
-  /* Banners más compactos */
-  .banner-left,
-  .banner-right {
-    height: 150px;
-  }
-  
-  .banner-medium-top,
-  .banner-medium-bottom {
-    height: 70px;
-  }
-  
-  .banner-left .banner-image-container,
-  .banner-right .banner-image-container {
-    height: 150px;
-  }
-  
-  .banner-medium-top .banner-image-container,
-  .banner-medium-bottom .banner-image-container {
-    height: 70px;
-  }
-  
-  /* Grid de productos - Una columna en móviles muy pequeños */
-  .products-grid {
-    grid-template-columns: 1fr; /* 1 columna en móviles muy pequeños */
-    gap: 8px;
-  }
-  
-  /* Tarjetas de productos más compactas */
-  .product-card {
-    padding: 8px;
-    font-size: 0.8rem;
-  }
-  
-  .product-img {
-    width: 50px;
-    height: 50px;
-  }
-  
-  .product-name {
-    font-size: 0.7rem;
-  }
-  
-  .price-amount {
-    font-size: 0.8rem;
-  }
-  
-  /* Botones más pequeños */
-  .add-btn {
-    padding: 6px 10px;
-    font-size: 0.7rem;
-  }
-  
-  .order-btn {
-    padding: 10px;
-    font-size: 0.9rem;
-  }
-  
-  /* Títulos más pequeños */
-  .store-title {
-    font-size: 1.5rem;
-  }
-  
-  /* points-bar definido en sección principal */
-}
-
-/* Layout responsivo - Mantener diseño actual en todas las resoluciones */
-.banners-unified-wrapper {
-  display: flex;
-  flex-direction: row; /* Mantener diseño horizontal original */
-  gap: 15px;
-  width: 100%;
-  /* El escalado se encarga de reducir el tamaño proporcionalmente */
-}
-
-/* Banner izquierdo - proporciones expandidas */
-.banner-left {
-  flex: 4.2; /* Aumentar de 3.8 a 4.2 para más ancho */
-  height: 400px; /* Altura original */
-}
-
-/* Banners del centro - proporciones originales */
-.banner-center {
-  flex: 1.8;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.banner-medium-top,
-.banner-medium-bottom {
-  height: 190px; /* Altura original */
-}
-
-/* Banner derecho - proporciones originales */
-.banner-right {
-  flex: 2;
-  height: 400px; /* Altura original */
-}
-
-/* Mantener alturas originales para todos los contenedores */
-.banner-left .banner-placeholder,
-.banner-left .banner-image-container,
-.banner-right .banner-placeholder,
-.banner-right .banner-image-container {
-  height: 400px;
-}
-
-.banner-medium-top .banner-placeholder,
-.banner-medium-top .banner-image-container,
-.banner-medium-bottom .banner-placeholder,
-.banner-medium-bottom .banner-image-container {
-  height: 190px;
-}
-
-/* Estilos para pantallas grandes (1600px y más) */
-@media screen and (min-width: 1600px) {
-  /* Contenedor principal con alineación estable */
-  .banners-unified-wrapper {
-    display: flex;
-    flex-direction: row;
-    gap: 15px;
-    width: 100%;
-    position: relative;
-    /* Estabilizar contra zoom del navegador */
-    transform-origin: top left;
-    will-change: auto;
-    contain: layout style paint;
-    /* Prevenir cambios de alineación */
-    align-items: stretch;
-    justify-content: flex-start;
-  }
-  
-  /* Banner izquierdo - Alineación estable */
-  .banner-left {
-    flex: 3.8;
-    min-width: 0;
-    position: relative;
-    align-self: stretch;
-    /* Mantener proporciones fijas */
-    width: calc(3.8 / 7.6 * 100% - 10px);
-    max-width: calc(3.8 / 7.6 * 100% - 10px);
-    /* Estabilizar contra zoom */
-    transform-origin: top left;
-    will-change: auto;
-  }
-  
-  /* Banners del centro - Alineación estable */
-  .banner-center {
-    flex: 1.8;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    min-width: 0;
-    position: relative;
-    justify-content: space-between;
-    align-self: stretch;
-    /* Mantener proporciones fijas */
-    width: calc(1.8 / 7.6 * 100% - 5px);
-    max-width: calc(1.8 / 7.6 * 100% - 5px);
-    /* Estabilizar contra zoom */
-    transform-origin: top left;
-    will-change: auto;
-  }
-  
-  /* Banner derecho - Alineación estable */
-  .banner-right {
-    flex: 2;
-    min-width: 0;
-    position: relative;
-    align-self: stretch;
-    /* Mantener proporciones fijas */
-    width: calc(2 / 7.6 * 100% - 5px);
-    max-width: calc(2 / 7.6 * 100% - 5px);
-    /* Estabilizar contra zoom */
-    transform-origin: top left;
-    will-change: auto;
-  }
-  
-  /* Estabilizar placeholders e imágenes */
-  .banner-left .banner-placeholder,
-  .banner-left .banner-image-container,
-  .banner-right .banner-placeholder,
-  .banner-right .banner-image-container {
-    /* Mantener alturas fijas */
-    height: 400px;
-    min-height: 400px;
-    max-height: 400px;
-    /* Estabilizar contenido */
-    position: relative;
-    overflow: hidden;
-  }
-  
-  .banner-medium-top .banner-placeholder,
-  .banner-medium-top .banner-image-container,
-  .banner-medium-bottom .banner-placeholder,
-  .banner-medium-bottom .banner-image-container {
-    /* Mantener alturas fijas */
-    height: 190px;
-    min-height: 190px;
-    max-height: 190px;
-    /* Estabilizar contenido */
-    position: relative;
-    overflow: hidden;
-  }
-}
-
-/* Media queries para estabilizar alineación en diferentes zooms - Solo para pantallas grandes */
-@media screen and (min-width: 1600px) and (min-resolution: 1.1dppx) {
-  .banners-unified-wrapper {
-    gap: 15px;
-    /* Mantener alineación estable */
-    align-items: stretch;
-    justify-content: flex-start;
-  }
-  
-  .banner-left {
-    width: calc(3.8 / 7.6 * 100% - 10px);
-    max-width: calc(3.8 / 7.6 * 100% - 10px);
-  }
-  
-  .banner-center {
-    width: calc(1.8 / 7.6 * 100% - 5px);
-    max-width: calc(1.8 / 7.6 * 100% - 5px);
-  }
-  
-  .banner-right {
-    width: calc(2 / 7.6 * 100% - 5px);
-    max-width: calc(2 / 7.6 * 100% - 5px);
-  }
-}
-
-@media screen and (min-width: 1600px) and (min-resolution: 1.5dppx) {
-  .banners-unified-wrapper {
-    gap: 15px;
-    /* Mantener alineación estable */
-    align-items: stretch;
-    justify-content: flex-start;
-  }
-  
-  .banner-left {
-    width: calc(3.8 / 7.6 * 100% - 10px);
-    max-width: calc(3.8 / 7.6 * 100% - 10px);
-  }
-  
-  .banner-center {
-    width: calc(1.8 / 7.6 * 100% - 5px);
-    max-width: calc(1.8 / 7.6 * 100% - 5px);
-  }
-  
-  .banner-right {
-    width: calc(2 / 7.6 * 100% - 5px);
-    max-width: calc(2 / 7.6 * 100% - 5px);
-  }
-}
-
-/* Media queries para zoom del navegador - Solo para pantallas grandes */
-@media screen and (min-width: 1600px) and (min-zoom: 1.1) {
-  .banners-unified-wrapper {
-    gap: 15px;
-    /* Mantener alineación estable */
-    align-items: stretch;
-    justify-content: flex-start;
-  }
-}
-
-@media screen and (min-width: 1600px) and (min-zoom: 1.5) {
-  .banners-unified-wrapper {
-    gap: 15px;
-    /* Mantener alineación estable */
-    align-items: stretch;
-    justify-content: flex-start;
-  }
-}
-
-@media screen and (min-width: 1600px) and (min-zoom: 2) {
-  .banners-unified-wrapper {
-    gap: 15px;
-    /* Mantener alineación estable */
-    align-items: stretch;
-    justify-content: flex-start;
-  }
-}
-
-/* Estilos adicionales para mantener alineación estable */
-@media screen and (min-width: 1600px) {
-  /* Prevenir que el zoom afecte la alineación */
-  .banners-unified-wrapper {
-    /* Forzar alineación estable */
-    display: flex !important;
-    flex-direction: row !important;
-    align-items: stretch !important;
-    justify-content: flex-start !important;
-  }
-  
-  /* Mantener proporciones exactas */
-  .banner-left {
-    flex: 3.8 !important;
-    width: calc(3.8 / 7.6 * 100% - 10px) !important;
-    max-width: calc(3.8 / 7.6 * 100% - 10px) !important;
-  }
-  
-  .banner-center {
-    flex: 1.8 !important;
-    width: calc(1.8 / 7.6 * 100% - 5px) !important;
-    max-width: calc(1.8 / 7.6 * 100% - 5px) !important;
-  }
-  
-  .banner-right {
-    flex: 2 !important;
-    width: calc(2 / 7.6 * 100% - 5px) !important;
-    max-width: calc(2 / 7.6 * 100% - 5px) !important;
-  }
-}
-
 /* Banner izquierda - El más ancho */
 .banner-left {
-  flex: 4.5; /* Aumentar de 3.8 a 4.5 para más ancho */
+  flex: 3.8;
   min-width: 0;
   position: relative;
   align-self: stretch;
@@ -3686,7 +2795,7 @@ export default {
 
 /* Banners del centro - Medianos */
 .banner-center {
-  flex: 2.2; /* Aumentar de 1.8 a 2.2 para más ancho */
+  flex: 1.8;
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -3707,7 +2816,7 @@ export default {
 
 /* Banner derecha - El más cuadrado */
 .banner-right {
-  flex: 2.5; /* Aumentar de 2 a 2.5 para más ancho */
+  flex: 2;
   min-width: 0;
   position: relative;
   align-self: stretch;
@@ -4176,7 +3285,7 @@ export default {
 
 
 
-.product-catalog-price {
+.product-catalog-prrce {
   font-size: 0.9rem;
   color: #388e3c;
   font-weight: 500;
@@ -4933,7 +4042,7 @@ export default {
   right: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.6); /* Fondo menos opaco */
+  background: rgba(0, 0, 0, 0.8);
   z-index: 2000;
   display: flex;
   justify-content: flex-end;
@@ -4941,8 +4050,7 @@ export default {
 
 .cart-detail-interface-content {
   background: #fff;
-  width: 400px; /* Reducir de 450px a 400px */
-  max-width: 30vw; /* Limitar al 30% del ancho de viewport */
+  width: 450px;
   height: 100vh;
   overflow-y: auto;
   box-shadow: -10px 0 30px rgba(0, 0, 0, 0.3);
@@ -4962,17 +4070,17 @@ export default {
 .cart-detail-header {
   background: #fff;
   color: #333;
-  padding: 15px 20px; /* Reducir padding */
+  padding: 20px 25px;
   border-bottom: 2px solid #f0f0f0;
   text-align: center;
   position: relative;
 }
 
 .cart-detail-header h2 {
-  font-size: 1.3rem; /* Reducir de 1.5rem a 1.3rem */
+  font-size: 1.5rem;
   font-weight: 700;
   color: #ff9800;
-  margin: 0 0 6px 0; /* Reducir margen */
+  margin: 0 0 8px 0;
 }
 
 .cart-detail-header p {
@@ -5001,7 +4109,7 @@ export default {
 }
 
 .cart-detail-body {
-  padding: 15px; /* Reducir de 20px a 15px */
+  padding: 20px;
 }
 
 .cart-detail-items h3 {
@@ -5016,11 +4124,11 @@ export default {
 .cart-detail-item {
   display: flex;
   align-items: center;
-  gap: 12px; /* Reducir de 15px a 12px */
-  padding: 12px; /* Reducir de 15px a 12px */
+  gap: 15px;
+  padding: 15px;
   background: #fff;
   border-radius: 8px;
-  margin-bottom: 10px; /* Reducir de 12px a 10px */
+  margin-bottom: 12px;
   border: 1px solid #e0e0e0;
   box-shadow: 0 2px 6px rgba(0,0,0,0.05);
 }
@@ -5442,7 +4550,7 @@ export default {
   }
   
   .products-catalog-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
     gap: 10px;
   }
   
@@ -5677,107 +4785,28 @@ export default {
   }
 }
 
-/* Media queries para hacer el carrito responsivo y que se aplaste */
-@media (max-width: 1400px) {
-  .sticky-cart-sidebar {
-    width: 380px;
-    /* Mantener altura y posición relativa al banner */
-    top: 20px;
-    max-height: calc(100vh - 40px);
+@media (max-width: 768px) {
+  .catalog-container {
+    flex-direction: column;
+    padding-top: 0;
   }
-}
-
-@media (max-width: 1200px) {
-  .sticky-cart-sidebar {
-    width: 320px;
-    /* Ajustar altura para mantener proximidad al banner */
-    top: 20px;
-    max-height: calc(100vh - 40px);
+  
+  .catalog-content-wrapper {
+    flex-direction: column;
   }
-}
-
-@media (max-width: 1000px) {
-  .sticky-cart-sidebar {
-    width: 280px;
-    /* Reducir altura para acercarse más al banner */
-    top: 15px;
-    max-height: calc(100vh - 30px);
-  }
-}
-
-@media (max-width: 900px) {
-  .sticky-cart-sidebar {
-    width: 250px;
-    /* Ajustar altura para mantener proximidad */
-    top: 15px;
-    max-height: calc(100vh - 30px);
-  }
-}
-
-@media (max-width: 800px) {
-  .sticky-cart-sidebar {
-    width: 220px;
-    /* Reducir altura para acercarse más al banner */
-    top: 10px;
-    max-height: calc(100vh - 20px);
-  }
-}
-
-/* Media query 768px consolidado arriba */
-
-/* Media queries adicionales para hacer el carrito responsivo y que se aplaste */
-@media (max-width: 600px) {
+  
   .sticky-cart-sidebar {
     width: 100%;
-    margin: 10px 0;
-    border-radius: 10px;
-    /* Mantener altura relativa al banner */
-    top: 10px;
-    max-height: calc(100vh - 20px);
+    position: relative;
+    top: 0;
+    right: 0;
+    margin-top: 20px;
+    max-height: none;
   }
   
-  .carrito-compras-container {
-    width: 100%;
-    align-items: stretch;
-    min-height: 350px;
-  }
-}
-
-@media (max-width: 480px) {
-  .sticky-cart-sidebar {
-    width: 100%;
-    margin: 5px 0;
-    border-radius: 8px;
-    min-height: 400px;
-    /* Ajustar altura para mantener proximidad al banner */
-    top: 5px;
-    max-height: calc(100vh - 10px);
-  }
-  
-  .carrito-compras-container {
-    min-height: 300px;
-  }
-  
-  .cart-header h3 {
-    font-size: 1.1rem;
-  }
-  
-  .cart-header p {
-    font-size: 0.85rem;
-  }
-}
-
-/* Estilos adicionales para mantener la altura relativa al banner */
-@media (max-width: 1600px) {
-  .carrito-compras-container {
-    /* Ajustar altura para pantallas menores a 1600px */
-    min-height: 350px;
-  }
-  
-  .sticky-cart-sidebar {
-    /* Mantener proximidad al banner */
-    top: 15px;
-    max-height: calc(100vh - 30px);
+  .products-main-area {
+    min-height: auto;
+    margin-right: 0;
   }
 }
 
@@ -5956,12 +4985,6 @@ export default {
     min-height: 260px;
     padding: 16px;
   }
-  
-  /* Ajustar carrito modal en tablets */
-  .cart-detail-interface-content {
-    width: 350px;
-    max-width: 40vw;
-  }
 }
 
 /* Media queries para dispositivos móviles grandes */
@@ -5978,20 +5001,6 @@ export default {
   .product-catalog-card {
     min-height: 240px;
     padding: 14px;
-  }
-  
-  /* Ajustar carrito modal en móviles grandes */
-  .cart-detail-interface-content {
-    width: 320px;
-    max-width: 85vw;
-  }
-}
-
-/* Media query para pantallas muy grandes */
-@media (min-width: 1920px) {
-  .cart-detail-interface-content {
-    width: 380px;
-    max-width: 25vw; /* Máximo 25% en pantallas muy grandes */
   }
 }
 
@@ -6020,7 +5029,30 @@ export default {
   }
 }
 
-/* Media query 768px ya consolidado */
+@media (max-width: 768px) {
+  .tienda-sifrah-container {
+    max-width: 100%;
+    padding: 10px;
+    border-radius: 15px;
+    margin: 0 0 0 10px;
+  }
+  
+  .store-title {
+    font-size: 2rem;
+    text-align: left;
+  }
+  
+  .points-bar {
+    padding: 12px 20px;
+    font-size: 1rem;
+    margin: 0 0 15px 0;
+  }
+  
+  .productos-compras-section {
+    margin-top: 20px;
+    padding: 15px 0;
+  }
+}
 
 @media (max-width: 480px) {
   .tienda-sifrah-container {
@@ -6035,7 +5067,11 @@ export default {
     text-align: left;
   }
   
-  /* points-bar móvil definido arriba */
+  .points-bar {
+    padding: 10px 15px;
+    font-size: 0.9rem;
+    margin: 0 0 10px 0;
+  }
   
   .productos-compras-section {
     margin-top: 15px;
@@ -6051,7 +5087,7 @@ export default {
 /* Media queries para dispositivos móviles pequeños */
 @media (max-width: 479px) {
   .products-catalog-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: 1fr;
     gap: 15px;
   }
   
@@ -6088,81 +5124,10 @@ export default {
 .banner-image {
   width: 100%;
   height: 100%;
-  object-fit: cover; /* Mantener 'cover' para llenar el espacio */
-  object-position: center center; /* Centrar la imagen */
+  object-fit: cover;
+  object-position: center;
   border-radius: 12px;
   transition: all 0.3s ease;
-  /* Asegurar que la imagen llene completamente el contenedor */
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-}
-
-/* Ajustes específicos para el banner izquierdo (más ancho) */
-.banner-left .banner-image {
-  object-fit: cover;
-  object-position: center center; /* Centrar horizontalmente y verticalmente */
-}
-
-/* Ajustes para banners del centro (más cuadrados) */
-.banner-medium-top .banner-image,
-.banner-medium-bottom .banner-image {
-  object-fit: cover;
-  object-position: center center; /* Centrar para mejor visualización */
-}
-
-/* Ajustes para banner derecho (más alto que ancho) */
-.banner-right .banner-image {
-  object-fit: cover;
-  object-position: center center; /* Centrar para mantener proporciones */
-}
-
-/* Ajustes de proporciones para diferentes resoluciones */
-@media screen and (min-width: 1920px) and (max-width: 2559px) {
-  .banner-left .banner-image {
-    object-position: center 30%; /* Mantener proporción del jaguar */
-  }
-  
-  .banner-medium-top .banner-image,
-  .banner-medium-bottom .banner-image {
-    object-position: center 40%;
-  }
-  
-  .banner-right .banner-image {
-    object-position: center 35%;
-  }
-}
-
-@media screen and (min-width: 1600px) and (max-width: 1919px) {
-  .banner-left .banner-image {
-    object-position: center 30%;
-  }
-  
-  .banner-medium-top .banner-image,
-  .banner-medium-bottom .banner-image {
-    object-position: center 40%;
-  }
-  
-  .banner-right .banner-image {
-    object-position: center 35%;
-  }
-}
-
-@media screen and (min-width: 1440px) and (max-width: 1599px) {
-  .banner-left .banner-image {
-    object-position: center 30%;
-  }
-  
-  .banner-medium-top .banner-image,
-  .banner-medium-bottom .banner-image {
-    object-position: center 40%;
-  }
-  
-  .banner-right .banner-image {
-    object-position: center 35%;
-  }
 }
 
 .banner-image:hover {
@@ -6181,60 +5146,6 @@ export default {
 
 .banner-right .banner-image-container {
   height: 400px;
-}
-
-/* Estilos responsivos para mantener proporcionalidad en diferentes resoluciones */
-@media screen and (max-width: 1599px) {
-  .banner-image {
-    object-fit: cover;
-    object-position: center center;
-    width: 100%;
-    height: 100%;
-  }
-  
-  .banner-image-container {
-    position: relative;
-    overflow: hidden;
-  }
-}
-
-/* Para pantallas muy pequeñas (móviles) */
-/* Media query 768px consolidado al inicio */
-
-/* Media query para pantallas muy grandes - Carrito modal */
-@media (min-width: 1920px) {
-  .cart-detail-interface-content {
-    width: 380px;
-    max-width: 25vw; /* Máximo 25% en pantallas muy grandes */
-  }
-  
-  .cart-detail-header {
-    padding: 12px 18px; /* Menos padding en pantallas grandes */
-  }
-  
-  .cart-detail-body {
-    padding: 12px; /* Menos padding en pantallas grandes */
-  }
-}
-
-/* Para pantallas de alta resolución */
-@media screen and (min-resolution: 2dppx) {
-  .banner-image {
-    object-fit: cover;
-    object-position: center center;
-    width: 100%;
-    height: 100%;
-    image-rendering: -webkit-optimize-contrast;
-    image-rendering: crisp-edges;
-  }
-}
-
-/* Media query para pantallas medianas - Carrito modal */
-@media (min-width: 1200px) and (max-width: 1919px) {
-  .cart-detail-interface-content {
-    width: 350px;
-    max-width: 28vw;
-  }
 }
 
 </style>
