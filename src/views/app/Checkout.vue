@@ -1846,6 +1846,7 @@ export default {
   display flex
   gap 15px
   margin 0 30px 30px 30px
+  margin-bottom -10px
 
 .delivery-method
   flex 1
@@ -1871,6 +1872,7 @@ export default {
 
 .pickup-selector
   margin-bottom 30px
+  margin-top -15px
   
   label
     display block
