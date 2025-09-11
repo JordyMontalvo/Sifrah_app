@@ -143,6 +143,12 @@ class API {
   testEmailService() {
     return axios.get("/email/test");
   }
+  getDeliveryInfo(params = {}) {
+    const queryString = Object.keys(params).length > 0 
+      ? '?' + new URLSearchParams(params).toString() 
+      : '';
+    return axios.get(`/app/delivery${queryString}`);
+  }
 }
 
 class Profile {

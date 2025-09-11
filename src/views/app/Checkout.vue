@@ -33,6 +33,30 @@
                   <div class="cart-item-price">S/ {{ getProductPrice(item) }} - {{ item.points }} pts</div>
                 </div>
               </div>
+              
+              <!-- Card de Delivery integrada como producto -->
+              <div v-if="deliveryZoneInfo && deliveryData.department === 'lima'" class="cart-item delivery-item">
+                <div class="delivery-item-icon">
+                  🚚
+                </div>
+                <div class="cart-item-details">
+                  <div class="cart-item-quantity">Delivery</div>
+                  <div class="cart-item-name">{{ deliveryZoneInfo.zone_name }}</div>
+                  <div class="cart-item-price">S/ {{ deliveryZoneInfo.price.toFixed(2) }}</div>
+                </div>
+              </div>
+
+              <!-- Card para delivery por agencia (provincias) -->
+              <div v-if="showAgencyField && deliveryData.department !== 'lima' && deliveryData.agency" class="cart-item delivery-item agency-item">
+                <div class="delivery-item-icon">
+                  📦
+                </div>
+                <div class="cart-item-details">
+                  <div class="cart-item-quantity">Envío</div>
+                  <div class="cart-item-name">{{ getAgencyName() }}</div>
+                  <div class="cart-item-price">Consultar costo</div>
+                </div>
+              </div>
             </div>
 
             <!-- Resumen de la orden -->
@@ -45,11 +69,22 @@
                 <span>Puntos:</span>
                 <span>{{ cartPoints.toFixed(2) }}</span>
               </div>
-              <div class="summary-row total">
-                <span>Total:</span>
+              <div class="summary-row">
+                <span>Subtotal:</span>
                 <span>S/ {{ cartTotal.toFixed(2) }}</span>
               </div>
+              <!-- Línea de delivery cuando hay zona seleccionada -->
+              <div v-if="deliveryZoneInfo && deliveryData.department === 'lima'" class="summary-row delivery-row">
+                <span>🚚 Delivery:</span>
+                <span>S/ {{ deliveryZoneInfo.price.toFixed(2) }}</span>
+              </div>
+              <div class="summary-row total">
+                <span>Total:</span>
+                <span>S/ {{ finalTotal.toFixed(2) }}</span>
+              </div>
             </div>
+
+
 
             <!-- Botón para volver a la tienda -->
             <div class="return-to-store">
@@ -171,7 +206,7 @@
                       
                       <div class="form-group">
                         <label>Distrito</label>
-                        <select v-model="deliveryData.district" class="form-select district-select">
+                        <select v-model="deliveryData.district" class="form-select district-select" @change="onDistrictChange">
                           <option value="">Selecciona</option>
                           <option v-for="district in availableDistricts" :key="district" :value="district">
                             {{ district }}
@@ -187,17 +222,17 @@
                         <label>Agencia</label>
                         <select v-model="deliveryData.agency" class="form-select agency-select">
                           <option value="">Seleccione el PDE</option>
-                          <option value="olva">Olva Courier</option>
-                          <option value="serpost">Serpost</option>
-                          <option value="dhl">DHL Express</option>
-                          <option value="fedex">FedEx</option>
-                          <option value="cruz-del-sur">Cruz del Sur</option>
+                          <option v-for="agency in availableAgencies" :key="agency._id" :value="agency.agency_code">
+                            {{ agency.agency_name }}
+                          </option>
                         </select>
                       </div>
                     </div>
                     
+
+                    
                     <div v-if="showAgencyField" class="delivery-note">
-                      <p>💡 En caso de no haber cargo por delivery, el pago del delivery será al momento de la entrega.</p>
+                      <p>💡 El costo de envío varía según la agencia y destino. Consulta directamente con la agencia seleccionada.</p>
                     </div>
                 </div>
               </div>
@@ -650,6 +685,10 @@ export default {
       // Oficinas disponibles para recogida
       offices: [],
       
+      // Delivery zones y agencies
+      availableAgencies: [],
+      deliveryZoneInfo: null,
+      
       // Instancia del mapa de Leaflet
       map: null,
       
@@ -776,6 +815,15 @@ export default {
       return this.cartItems.reduce((sum, item) => sum + item.total, 0);
     },
     
+    finalTotal() {
+      let total = this.cartTotal;
+      // Agregar costo de delivery para Lima
+      if (this.deliveryZoneInfo && this.deliveryData.department === 'lima') {
+        total += this.deliveryZoneInfo.price;
+      }
+      return total;
+    },
+    
     canProceedToNextStep() {
       if (this.currentStep === 1) {
         if (this.deliveryMethod === 'delivery') {
@@ -868,10 +916,25 @@ export default {
     selectedOffice() {
       if (!this.selectedPickupPoint) return null;
       return this.offices.find(office => office.id == this.selectedPickupPoint);
+    },
+    
+    hasDeliveryInfo() {
+      return this.deliveryMethod === 'delivery' && 
+             ((this.deliveryZoneInfo && this.deliveryData.department === 'lima') ||
+              (this.deliveryData.agency && this.deliveryData.department !== 'lima'));
     }
   },
   
   methods: {
+    getAgencyName() {
+      // Buscar el nombre de la agencia seleccionada
+      if (this.availableAgencies && this.deliveryData.agency) {
+        const agency = this.availableAgencies.find(a => a.agency_id === this.deliveryData.agency || a._id === this.deliveryData.agency);
+        return agency ? agency.agency_name : this.deliveryData.agency;
+      }
+      return this.deliveryData.agency || 'Agencia seleccionada';
+    },
+    
     getProductPrice(product) {
       // Usa el precio por plan si existe, si no el general
       const planId =
@@ -975,22 +1038,38 @@ export default {
       }
     },
     
-    onDepartmentChange() {
+    async onDepartmentChange() {
       // Resetear provincia, distrito y agencia cuando cambia el departamento
       this.deliveryData.province = '';
       this.deliveryData.district = '';
       this.deliveryData.agency = '';
+      this.deliveryZoneInfo = null;
+      
       console.log('Departamento cambiado:', this.deliveryData.department);
+      
+      // Si no es Lima, cargar agencias disponibles
+      if (this.deliveryData.department && this.deliveryData.department !== 'lima') {
+        await this.loadAgenciesForDepartment(this.deliveryData.department);
+      }
+      
       console.log('Provincias disponibles:', this.availableProvinces);
       console.log('showAgencyField:', this.showAgencyField);
     },
     
-    onProvinceChange() {
+    async onProvinceChange() {
       // Resetear distrito y agencia cuando cambia la provincia
       this.deliveryData.district = '';
       this.deliveryData.agency = '';
+      this.deliveryZoneInfo = null;
       console.log('Provincia cambiada:', this.deliveryData.province);
       console.log('showAgencyField:', this.showAgencyField);
+    },
+    
+    async onDistrictChange() {
+      // Si es Lima, buscar la zona de delivery
+      if (this.deliveryData.department === 'lima' && this.deliveryData.district) {
+        await this.loadZoneForDistrict(this.deliveryData.district);
+      }
     },
     
     nextStep() {
@@ -1093,6 +1172,33 @@ export default {
       console.log('Oficina seleccionada:', this.selectedOffice);
     },
     
+    async loadAgenciesForDepartment(department) {
+      try {
+        const { data } = await api.getDeliveryInfo({ type: 'agencies', department: department });
+        this.availableAgencies = data.agencies || [];
+        console.log('Agencias cargadas para', department, ':', this.availableAgencies);
+      } catch (error) {
+        console.error('Error cargando agencias:', error);
+        // Fallback con datos por defecto
+        this.availableAgencies = [
+          { _id: '1', agency_name: 'Shalom', agency_code: 'shalom' },
+          { _id: '2', agency_name: 'Olva Courier', agency_code: 'olva' },
+          { _id: '3', agency_name: 'Serpost', agency_code: 'serpost' }
+        ];
+      }
+    },
+    
+    async loadZoneForDistrict(district) {
+      try {
+        const { data } = await api.getDeliveryInfo({ type: 'zone-by-district', district: district });
+        this.deliveryZoneInfo = data.zone || null;
+        console.log('Zona de delivery para', district, ':', this.deliveryZoneInfo);
+      } catch (error) {
+        console.error('Error cargando zona de delivery:', error);
+        this.deliveryZoneInfo = null;
+      }
+    },
+
     async refreshOffices() {
       console.log('Actualizando oficinas...');
       await this.loadOffices();
@@ -1263,6 +1369,13 @@ export default {
           }
         }
       }
+    },
+
+    // Computed para mostrar info de delivery
+    hasDeliveryInfo() {
+      return this.deliveryMethod === 'delivery' && 
+             ((this.deliveryZoneInfo && this.deliveryData.department === 'lima') ||
+              (this.deliveryData.agency && this.deliveryData.department !== 'lima'));
     }
   },
   
@@ -1610,6 +1723,60 @@ export default {
   display inline-block
   width fit-content
 
+// Estilos específicos para los items de delivery
+.delivery-item
+  background linear-gradient(135deg, #ff8c00 0%, #ff9800 100%) !important
+  border-color #ff6b00 !important
+  color white !important
+  
+  &:hover
+    border-color #ff6b00 !important
+    box-shadow 0 6px 20px rgba(255, 107, 0, 0.3) !important
+    transform translateY(-2px) !important
+  
+  .cart-item-details
+    .cart-item-quantity
+      color rgba(255,255,255,0.9) !important
+      font-weight 600 !important
+      text-transform uppercase !important
+      letter-spacing 0.5px !important
+      font-size 0.85rem !important
+    
+    .cart-item-name
+      color white !important
+      font-weight 700 !important
+      text-shadow 0 1px 2px rgba(0,0,0,0.2) !important
+    
+    .cart-item-price
+      color white !important
+      font-weight 700 !important
+      text-shadow 0 1px 2px rgba(0,0,0,0.2) !important
+      font-size 1.2rem !important
+
+.delivery-item-icon
+  width 80px
+  height 80px
+  margin-right 20px
+  flex-shrink 0
+  display flex
+  align-items center
+  justify-content center
+  font-size 2.5rem
+  background rgba(255,255,255,0.2)
+  border-radius 12px
+  backdrop-filter blur(10px)
+  border 2px solid rgba(255,255,255,0.3)
+  text-shadow 0 2px 4px rgba(0,0,0,0.2)
+
+// Estilo especial para delivery por agencia
+.agency-item
+  background linear-gradient(135deg, #2196f3 0%, #1976d2 100%) !important
+  border-color #1565c0 !important
+  
+  &:hover
+    border-color #1565c0 !important
+    box-shadow 0 6px 20px rgba(21, 101, 192, 0.3) !important
+
 .order-summary
   border-top 2px solid #ffe4d6
   padding-top 25px
@@ -1669,6 +1836,23 @@ export default {
       span:last-child
         font-weight 700
         color #388e3c
+
+  .delivery-row
+    background linear-gradient(135deg, rgba(255, 140, 0, 0.1) 0%, rgba(255, 140, 0, 0.05) 100%)
+    padding 12px 15px
+    border-radius 8px
+    border-left 4px solid #ff8c00
+    margin 8px 0
+    
+    span:first-child
+      color #ff8c00
+      font-weight 700
+      font-size 1rem
+    
+    span:last-child
+      color #ff8c00
+      font-weight 700
+      font-size 1.1rem
 
 .summary-details .concept-value
   font-weight 600
@@ -2847,4 +3031,210 @@ export default {
 .leaflet-popup-content
   margin 0
   padding 0
+
+// Estilos para la información de zona de delivery
+.delivery-cost-info
+  margin-top 25px
+  animation slideInUp 0.5s ease-out
+
+.zone-info-card
+  background linear-gradient(135deg, #fff3e0 0%, #ffecb3 100%)
+  border 2px solid #ff8c00
+  border-radius 15px
+  padding 25px
+  box-shadow 0 4px 20px rgba(255,140,0,0.15)
+  position relative
+  overflow hidden
+  
+  &::before
+    content ''
+    position absolute
+    top 0
+    left 0
+    right 0
+    height 4px
+    background linear-gradient(90deg, #ff8c00 0%, #f57c00 100%)
+  
+  h4
+    color #e65100
+    font-size 1.2rem
+    font-weight 700
+    margin 0 0 15px 0
+    display flex
+    align-items center
+    gap 8px
+  
+  .zone-details
+    p
+      margin 8px 0
+      color #333
+      font-size 1rem
+      
+      strong
+        color #e65100
+        font-weight 600
+  
+  .price-highlight
+    background linear-gradient(135deg, #4caf50 0%, #2e7d32 100%)
+    color white
+    padding 4px 12px
+    border-radius 20px
+    font-size 1.1rem
+    font-weight 700
+    box-shadow 0 2px 8px rgba(76,175,80,0.3)
+  
+  .delivery-note
+    background rgba(76,175,80,0.1)
+    border-left 4px solid #4caf50
+    padding 10px 15px
+    margin-top 15px
+    border-radius 8px
+    font-size 0.9rem
+    color #2e7d32
+    font-weight 500
+
+// Animación para la información de zona
+@keyframes slideInUp
+  from
+    opacity 0
+    transform translateY(20px)
+  to
+    opacity 1
+    transform translateY(0)
+
+// Responsive para la información de delivery
+@media (max-width: 768px)
+  .zone-info-card
+    padding 20px
+    
+  .zone-info-card h4
+    font-size 1.1rem
+    
+  .price-highlight
+    font-size 1rem
+
+// Estilos para la nueva card de delivery
+.delivery-card
+  background linear-gradient(135deg, #ff8c00 0%, #ff6b00 100%)
+  border-radius 16px
+  margin 20px 0
+  padding 0
+  box-shadow 0 8px 25px rgba(255, 140, 0, 0.25)
+  overflow hidden
+  position relative
+  
+  &::before
+    content ''
+    position absolute
+    top 0
+    right 0
+    width 120px
+    height 120px
+    background url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="2"/><circle cx="30" cy="30" r="15" fill="rgba(255,255,255,0.05)"/></svg>')
+    background-size contain
+    opacity 0.3
+
+.delivery-card-header
+  display flex
+  align-items center
+  padding 20px 20px 15px 20px
+  
+.delivery-icon
+  font-size 2rem
+  margin-right 12px
+  filter drop-shadow(0 2px 4px rgba(0,0,0,0.1))
+  
+.delivery-card-header h3
+  color white
+  font-size 1.3rem
+  font-weight 600
+  margin 0
+  text-shadow 0 1px 2px rgba(0,0,0,0.1)
+
+.delivery-card-body
+  padding 0 20px 20px 20px
+
+.delivery-info
+  display flex
+  justify-content space-between
+  align-items center
+  margin-bottom 15px
+
+.delivery-zone, .delivery-agency
+  display flex
+  flex-direction column
+  
+.zone-label, .agency-label, .price-label
+  color rgba(255,255,255,0.8)
+  font-size 0.85rem
+  font-weight 500
+  margin-bottom 4px
+  text-transform uppercase
+  letter-spacing 0.5px
+
+.zone-name, .agency-name
+  color white
+  font-size 1.1rem
+  font-weight 600
+  text-shadow 0 1px 2px rgba(0,0,0,0.1)
+
+.delivery-price
+  display flex
+  flex-direction column
+  align-items flex-end
+
+.price-value
+  color white
+  font-size 1.4rem
+  font-weight 700
+  text-shadow 0 1px 2px rgba(0,0,0,0.2)
+  
+.delivery-note
+  display flex
+  align-items center
+  padding 12px 16px
+  background rgba(255,255,255,0.15)
+  border-radius 10px
+  backdrop-filter blur(10px)
+  
+.note-icon
+  font-size 1.1rem
+  margin-right 8px
+
+.note-text
+  color white
+  font-size 0.9rem
+  font-weight 500
+  text-shadow 0 1px 2px rgba(0,0,0,0.1)
+
+// Responsive para la card de delivery
+@media (max-width: 768px)
+  .delivery-card
+    margin 15px 0
+    
+  .delivery-card-header
+    padding 16px 16px 12px 16px
+    
+  .delivery-icon
+    font-size 1.8rem
+    
+  .delivery-card-header h3
+    font-size 1.2rem
+    
+  .delivery-card-body
+    padding 0 16px 16px 16px
+    
+  .delivery-info
+    flex-direction column
+    align-items flex-start
+    gap 12px
+    
+  .delivery-price
+    align-items flex-start
+    
+  .delivery-note
+    padding 10px 12px
+    
+  .note-text
+    font-size 0.85rem
 </style> 
