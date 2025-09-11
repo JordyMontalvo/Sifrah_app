@@ -143,11 +143,27 @@ class API {
   testEmailService() {
     return axios.get("/email/test");
   }
+  
   getDeliveryInfo(params = {}) {
     const queryString = Object.keys(params).length > 0 
       ? '?' + new URLSearchParams(params).toString() 
       : '';
     return axios.get(`/app/delivery${queryString}`);
+  }
+
+  // Obtener departamentos desde la base de datos
+  getDepartments() {
+    return axios.get('/app/delivery?type=departments');
+  }
+
+  // Obtener provincias por departamento
+  getProvinces(department) {
+    return axios.get(`/app/delivery?type=provinces&department=${department}`);
+  }
+
+  // Obtener distritos por departamento y provincia
+  getDistricts(department, province) {
+    return axios.get(`/app/delivery?type=districts&department=${department}&province=${province}`);
   }
 }
 

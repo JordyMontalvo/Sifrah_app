@@ -41,7 +41,6 @@
                 </div>
                 <div class="cart-item-details">
                   <div class="cart-item-quantity">Delivery</div>
-                  <div class="cart-item-name">{{ deliveryZoneInfo.zone_name }}</div>
                   <div class="cart-item-price">S/ {{ deliveryZoneInfo.price.toFixed(2) }}</div>
                 </div>
               </div>
@@ -183,13 +182,9 @@
                           <label>Departamento</label>
                           <select v-model="deliveryData.department" class="form-select" @change="onDepartmentChange">
                             <option value="">Selecciona</option>
-                            <option value="lima">Lima</option>
-                            <option value="arequipa">Arequipa</option>
-                            <option value="cusco">Cusco</option>
-                            <option value="piura">Piura</option>
-                            <option value="la-libertad">La Libertad</option>
-                            <option value="lambayeque">Lambayeque</option>
-                            <option value="junin">Junín</option>
+                            <option v-for="dept in availableDepartments" :key="dept.value" :value="dept.value">
+                              {{ dept.name }}
+                            </option>
                           </select>
                         </div>
                         
@@ -208,8 +203,8 @@
                         <label>Distrito</label>
                         <select v-model="deliveryData.district" class="form-select district-select" @change="onDistrictChange">
                           <option value="">Selecciona</option>
-                          <option v-for="district in availableDistricts" :key="district" :value="district">
-                            {{ district }}
+                          <option v-for="district in availableDistricts" :key="district.value" :value="district.value">
+                            {{ district.name }}
                           </option>
                         </select>
                       </div>
@@ -220,7 +215,7 @@
                       <h4>Agencia de Transporte</h4>
                       <div class="form-group">
                         <label>Agencia</label>
-                        <select v-model="deliveryData.agency" class="form-select agency-select">
+                        <select v-model="deliveryData.agency" class="form-select agency-select" @change="console.log('Agencia seleccionada:', deliveryData.agency)">
                           <option value="">Seleccione el PDE</option>
                           <option v-for="agency in availableAgencies" :key="agency._id" :value="agency.agency_code">
                             {{ agency.agency_name }}
@@ -422,71 +417,8 @@
                   << Regresar
                 </button>
                 <button 
-                  @click="processOrder" 
-                  :disabled="!canProceedToProofStep"
-                  class="continue-btn"
-                >
-                  Terminar Pedido
-                </button>
-              </div>
-            </div>
-
-            <!-- Paso 3: Facturación -->
-            <div v-if="currentStep === 3" class="checkout-step">
-              <div class="billing-section">
-                <div class="section-header">
-                  <h3>Información de Facturación</h3>
-                  <p>Completa tus datos para la facturación.</p>
-                </div>
-                
-                <div class="billing-form">
-                  <div class="form-row">
-                    <div class="form-group">
-                      <label>Nombre</label>
-                      <input v-model="billingData.firstName" type="text" placeholder="Tu nombre" required />
-                    </div>
-                    <div class="form-group">
-                      <label>Apellido</label>
-                      <input v-model="billingData.lastName" type="text" placeholder="Tu apellido" required />
-                    </div>
-                  </div>
-                  
-                  <div class="form-group">
-                    <label>Email</label>
-                    <input v-model="billingData.email" type="email" placeholder="tu@email.com" required />
-                  </div>
-                  
-                  <div class="form-group">
-                    <label>Teléfono</label>
-                    <input v-model="billingData.phone" type="tel" placeholder="+51 999 999 999" required />
-                  </div>
-                  
-                  <div class="form-row">
-                    <div class="form-group">
-                      <label>Ciudad</label>
-                      <input v-model="billingData.city" type="text" placeholder="Lima" required />
-                    </div>
-                    <div class="form-group">
-                      <label>Código Postal</label>
-                      <input v-model="billingData.zipCode" type="text" placeholder="15001" />
-                    </div>
-                  </div>
-                  
-                  <div class="form-group">
-                    <label>Dirección</label>
-                    <textarea v-model="billingData.address" placeholder="Tu dirección completa" required></textarea>
-                  </div>
-                </div>
-              </div>
-              
-              <!-- Botones de navegación -->
-              <div class="step-actions">
-                <button @click="previousStep" class="back-btn">
-                  << Volver
-                </button>
-                <button 
                   @click="nextStep" 
-                  :disabled="!canProceedToNextStep"
+                  :disabled="!canProceedToProofStep"
                   class="continue-btn"
                 >
                   Continuar >>
@@ -495,7 +427,7 @@
             </div>
 
             <!-- Paso 3: Pago -->
-            <div v-if="currentStep === 4" class="checkout-step">
+            <div v-if="currentStep === 3" class="checkout-step">
               <div class="payment-section">
                 <div class="section-header">
                   <h3>Método de Pago</h3>
@@ -509,7 +441,7 @@
                       id="credit-card" 
                       name="payment" 
                       value="credit-card"
-                      v-model="paymentMethod"
+                      v-model="pay_method"
                     />
                     <label for="credit-card">
                       <i class="fas fa-credit-card"></i>
@@ -520,10 +452,10 @@
                   <div class="payment-method">
                     <input 
                       type="radio" 
-                      id="transfer" 
+                      id="'bank'" 
                       name="payment" 
-                      value="transfer"
-                      v-model="paymentMethod"
+                      value="bank"
+                      v-model="pay_method"
                     />
                     <label for="transfer">
                       <i class="fas fa-university"></i>
@@ -537,9 +469,9 @@
                       id="cash" 
                       name="payment" 
                       value="cash"
-                      v-model="paymentMethod"
+                      v-model="pay_method"
                     />
-                    <label for="cash">
+                    <label for="'cash'">
                       <i class="fas fa-money-bill-wave"></i>
                       <span>Efectivo</span>
                     </label>
@@ -547,7 +479,7 @@
                 </div>
                 
                 <!-- Información de transferencia -->
-                <div v-if="paymentMethod === 'transfer'" class="transfer-info">
+                <div v-if= "pay_method === 'bank' "class="transfer-info">
                   <div class="section-header">
                     <h3>Datos Bancarios</h3>
                   </div>
@@ -566,6 +498,30 @@
                       <strong>Tipo:</strong> Cuenta Corriente
                     </div>
                   </div>
+                  
+                  <div class="form-group">
+                    <label>Nombre del Banco</label>
+                    <input v-model="bankName" type="text" placeholder="Ej: BCP, BBVA, Interbank..." required />
+                  </div>
+                  <div class="form-group">
+                    <label>Fecha de Pago</label>
+                    <input v-model="paymentDate" type="date" required />
+                  </div>
+                  <div class="form-group">
+                    <label>Número de Operación/Voucher</label>
+                    <input v-model="voucherNumber" type="text" placeholder="Número de operación" @input="onlyNumbers($event, 'voucherNumber')" required />
+                  </div>
+                  <div class="form-group">
+                    <label>Comprobante de Pago</label>
+                    <div class="file-upload">
+                      <input type="file" @change="onVoucherFileChange" id="voucher-file" />
+                      <label for="voucher-file" class="file-label">
+                        <i class="fas fa-upload"></i>
+                        <span>{{ voucherPreview ? 'Cambiar archivo' : 'Seleccionar archivo' }}</span>
+                      </label>
+                    </div>
+                    <img v-if="voucherPreview" :src="voucherPreview" class="voucher-preview-img" />
+                  </div>
                 </div>
                 
                 <!-- Resumen final -->
@@ -581,28 +537,41 @@
                     </div>
                     <div class="summary-item">
                       <span>Envío:</span>
-                      <span>S/ 0.00</span>
+                      <span v-if="deliveryZoneInfo && deliveryData.department === 'lima'">S/ {{ deliveryZoneInfo.price.toFixed(2) }}</span>
+                      <span v-else-if="showAgencyField && deliveryData.agency">Consultar</span>
+                      <span v-else>S/ 0.00</span>
                     </div>
                     <div class="summary-item total">
                       <span>Total:</span>
-                      <span>S/ {{ cartTotal.toFixed(2) }}</span>
+                      <span>S/ {{ finalTotal.toFixed(2) }}</span>
                     </div>
                   </div>
                 </div>
-              </div>
-              
-              <!-- Botones finales -->
-              <div class="step-actions">
-                <button @click="previousStep" class="back-btn">
-                  << Volver
-                </button>
-                <button 
-                  @click="processOrder" 
-                  :disabled="!canProcessOrder"
-                  class="process-btn"
-                >
-                  Confirmar y Pagar
-                </button>
+                
+                <!-- Mensajes de estado de activación -->
+                <div v-if="activationError" class="error-message">
+                  <i class="fas fa-exclamation-triangle"></i>
+                  <span>{{ activationError }}</span>
+                </div>
+                <div v-if="activationSuccess" class="success-message">
+                  <i class="fas fa-check-circle"></i>
+                  <span>¡Orden enviada exitosamente!</span>
+                </div>
+
+                <!-- Botones finales -->
+                <div class="step-actions">
+                  <button @click="previousStep" class="back-btn">
+                    << Volver
+                  </button>
+                  <button 
+                    @click="processOrder" 
+                    :disabled="!canProcessOrder || sending"
+                    class="process-btn"
+                  >
+                    <span v-if="!sending">Confirmar y Pagar</span>
+                    <span v-else><i class="fas fa-spinner fa-spin"></i> Procesando...</span>
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -636,6 +605,7 @@
   <script>
 import App from "@/views/layouts/App";
 import api from "@/api";
+import lib from "@/lib";
 
 export default {
   name: 'Checkout',
@@ -647,7 +617,7 @@ export default {
       currentStep: 1,
       deliveryMethod: 'pickup',
       selectedPickupPoint: '',
-      paymentMethod: '',
+      pay_method: "",
       showConfirmation: false,
       orderNumber: '',
       
@@ -689,6 +659,11 @@ export default {
       availableAgencies: [],
       deliveryZoneInfo: null,
       
+      // Datos geográficos dinámicos (cargados desde DB)
+      availableDepartments: [],
+      availableProvinces: [],
+      availableDistricts: [],
+      
       // Instancia del mapa de Leaflet
       map: null,
       
@@ -697,101 +672,16 @@ export default {
       
       // Datos del usuario (simulados)
       userBalance: 150.00,
-      
-      // Datos geográficos del Perú
-      peruData: {
-        lima: {
-          name: 'Lima',
-          provincias: {
-            lima: {
-              name: 'Lima',
-              distritos: ['Lima', 'Miraflores', 'San Isidro', 'Barranco', 'Chorrillos', 'Surco', 'San Borja', 'La Molina', 'Santiago de Surco', 'Villa El Salvador']
-            },
-            callao: {
-              name: 'Callao',
-              distritos: ['Callao', 'Bellavista', 'Carmen de la Legua', 'La Perla', 'La Punta', 'Ventanilla']
-            }
-          }
-        },
-        arequipa: {
-          name: 'Arequipa',
-          provincias: {
-            arequipa: {
-              name: 'Arequipa',
-              distritos: ['Arequipa', 'Alto Selva Alegre', 'Cayma', 'Cerro Colorado', 'Characato', 'Chiguata', 'Jacobo Hunter', 'La Joya', 'Mariano Melgar', 'Miraflores', 'Mollebaya', 'Paucarpata', 'Pocsi', 'Polobaya', 'Quequeña', 'Sabandía', 'Sachaca', 'San Juan de Siguas', 'San Juan de Tarucani', 'Santa Isabel de Siguas', 'Santa Rita de Siguas', 'Socabaya', 'Tiabaya', 'Uchumayo', 'Vitor', 'Yanahuara', 'Yarabamba', 'Yura']
-            },
-            camana: {
-              name: 'Camaná',
-              distritos: ['Camaná', 'José María Quimper', 'Mariano Nicolás Valcárcel', 'Mariscal Cáceres', 'Nicolás de Piérola', 'Ocoña', 'Quilca']
-            }
-          }
-        },
-        cusco: {
-          name: 'Cusco',
-          provincias: {
-            cusco: {
-              name: 'Cusco',
-              distritos: ['Cusco', 'Ccorca', 'Poroy', 'San Jerónimo', 'San Sebastián', 'Santiago', 'Saylla', 'Wanchaq']
-            },
-            urubamba: {
-              name: 'Urubamba',
-              distritos: ['Urubamba', 'Chinchero', 'Huayllabamba', 'Machupicchu', 'Maras', 'Ollantaytambo', 'Yucay']
-            }
-          }
-        },
-        piura: {
-          name: 'Piura',
-          provincias: {
-            piura: {
-              name: 'Piura',
-              distritos: ['Piura', 'Castilla', 'Catacaos', 'Cura Mori', 'El Tallán', 'La Arena', 'La Unión', 'Las Lomas', 'Tambo Grande', 'Veintiséis de Octubre']
-            },
-            talara: {
-              name: 'Talara',
-              distritos: ['Talara', 'El Alto', 'La Brea', 'Lobitos', 'Los Organos', 'Mancora', 'Pariñas']
-            }
-          }
-        },
-        'la-libertad': {
-          name: 'La Libertad',
-          provincias: {
-            trujillo: {
-              name: 'Trujillo',
-              distritos: ['Trujillo', 'El Porvenir', 'Florencia de Mora', 'Huanchaco', 'La Esperanza', 'Laredo', 'Moche', 'Poroto', 'Salaverry', 'Simbal', 'Victor Larco Herrera']
-            },
-            chepen: {
-              name: 'Chepén',
-              distritos: ['Chepén', 'Pacanga', 'Pueblo Nuevo']
-            }
-          }
-        },
-        lambayeque: {
-          name: 'Lambayeque',
-          provincias: {
-            chiclayo: {
-              name: 'Chiclayo',
-              distritos: ['Chiclayo', 'Chongoyape', 'Eten', 'Eten Puerto', 'José Leonardo Ortiz', 'La Victoria', 'Lagunas', 'Monsefú', 'Nueva Arica', 'Oyotún', 'Picsi', 'Pimentel', 'Reque', 'Santa Rosa', 'Saña', 'Tuman']
-            },
-            lambayeque: {
-              name: 'Lambayeque',
-              distritos: ['Lambayeque', 'Chochope', 'Illimo', 'Jayanca', 'Mochumi', 'Mórrope', 'Motupe', 'Olmos', 'Pacora', 'Salas', 'San José', 'Tucume']
-            }
-          }
-        },
-        junin: {
-          name: 'Junín',
-          provincias: {
-            huancayo: {
-              name: 'Huancayo',
-              distritos: ['Huancayo', 'Chacapampa', 'Chicche', 'Chilca', 'Chongos Alto', 'Chupaca', 'Colca', 'Cullhuas', 'El Tambo', 'Huacrapuquio', 'Hualhuas', 'Huancan', 'Huasicancha', 'Huayucachi', 'Ingenio', 'Pariahuanca', 'Pilcomayo', 'Pucara', 'Quichuay', 'Quilcas', 'San Agustín', 'San Jerónimo de Tunan', 'Saño', 'Sapallanga', 'Sicaya', 'Santo Domingo de Acobamba', 'Viques']
-            },
-            tarma: {
-              name: 'Tarma',
-              distritos: ['Tarma', 'Acobamba', 'Huaricolca', 'Huasahuasi', 'La Unión', 'Palca', 'Palcamayo', 'San Pedro de Cajas', 'Tapo']
-            }
-          }
-        }
-      }
+
+      // Datos para la subida de activación
+      sending: false,
+      voucherFile: null,
+      voucherPreview: null,
+      bankName: '',
+      paymentDate: '',
+      voucherNumber: '',
+      activationError: null,
+      activationSuccess: false
     }
   },
   
@@ -825,9 +715,10 @@ export default {
     },
     
     canProceedToNextStep() {
+      console.log('Validando paso', this.currentStep, 'con deliveryMethod:', this.deliveryMethod);
       if (this.currentStep === 1) {
         if (this.deliveryMethod === 'delivery') {
-          // Para delivery, validar que se complete la información básica
+          console.log('Delivery Data:', this.deliveryData);
           const basicInfo = this.deliveryData.recipientName && 
                            this.deliveryData.document && 
                            this.deliveryData.document.length === 8 &&
@@ -835,24 +726,22 @@ export default {
                            this.deliveryData.department &&
                            this.deliveryData.province &&
                            this.deliveryData.district;
+          console.log('Basic Info Valid:', basicInfo);
           
-          // Si es fuera de Lima, también validar que se seleccione agencia
           if (this.showAgencyField) {
+            console.log('Show Agency Field:', this.showAgencyField, 'Agency selected:', this.deliveryData.agency);
+            console.log('Available Agencies:', this.availableAgencies); // Añadido para depuración
             return basicInfo && this.deliveryData.agency;
           }
           
           return basicInfo;
         }
+        console.log('Pickup selected:', this.selectedPickupPoint);
         return this.deliveryMethod && this.selectedPickupPoint;
       }
       if (this.currentStep === 2) {
+        console.log('Proof Data:', this.proofData);
         return this.proofData.type && this.proofData.document && this.proofData.document.length === 8;
-      }
-      if (this.currentStep === 3) {
-        return this.billingData.firstName && 
-               this.billingData.lastName && 
-               this.billingData.email && 
-               this.billingData.phone;
       }
       return true;
     },
@@ -870,29 +759,7 @@ export default {
              (this.deliveryData.province && this.deliveryData.province !== 'lima');
     },
     
-    // Obtener provincias del departamento seleccionado
-    availableProvinces() {
-      if (!this.deliveryData.department) return [];
-      const dept = this.peruData[this.deliveryData.department];
-      if (!dept) return [];
-      
-      return Object.keys(dept.provincias).map(key => ({
-        value: key,
-        name: dept.provincias[key].name
-      }));
-    },
-    
-    // Obtener distritos de la provincia seleccionada
-    availableDistricts() {
-      if (!this.deliveryData.department || !this.deliveryData.province) return [];
-      const dept = this.peruData[this.deliveryData.department];
-      if (!dept) return [];
-      
-      const province = dept.provincias[this.deliveryData.province];
-      if (!province) return [];
-      
-      return province.distritos;
-    },
+
     
     canProceedToProofStep() {
       // Para boleta solo requiere documento con exactamente 8 números
@@ -910,7 +777,7 @@ export default {
     },
     
     canProcessOrder() {
-      return this.paymentMethod && this.cartItems.length > 0;
+      return this.pay_method && this.cartItems.length > 0;
     },
     
     selectedOffice() {
@@ -1039,35 +906,52 @@ export default {
     },
     
     async onDepartmentChange() {
-      // Resetear provincia, distrito y agencia cuando cambia el departamento
+      console.log('🌍 Departamento cambiado a:', this.deliveryData.department);
+      
+      // Resetear campos dependientes
       this.deliveryData.province = '';
       this.deliveryData.district = '';
       this.deliveryData.agency = '';
-      this.deliveryZoneInfo = null;
+      this.deliveryZoneInfo = null; // Asegurar que deliveryZoneInfo se resetea
+      this.availableProvinces = [];
+      this.availableDistricts = [];
+      this.availableAgencies = []; // Asegurar que las agencias se reseteen al cambiar de departamento
       
-      console.log('Departamento cambiado:', this.deliveryData.department);
+      if (!this.deliveryData.department) return;
       
-      // Si no es Lima, cargar agencias disponibles
-      if (this.deliveryData.department && this.deliveryData.department !== 'lima') {
+      // 1. Cargar provincias para el departamento
+      await this.loadProvincesForDepartment(this.deliveryData.department);
+      
+      // 2. Si no es Lima, cargar agencias
+      if (this.deliveryData.department !== 'lima') {
         await this.loadAgenciesForDepartment(this.deliveryData.department);
       }
-      
-      console.log('Provincias disponibles:', this.availableProvinces);
-      console.log('showAgencyField:', this.showAgencyField);
     },
     
     async onProvinceChange() {
-      // Resetear distrito y agencia cuando cambia la provincia
+      console.log('🏙️ Provincia cambiada a:', this.deliveryData.province);
+      
+      // Resetear campos dependientes
       this.deliveryData.district = '';
-      this.deliveryData.agency = '';
       this.deliveryZoneInfo = null;
-      console.log('Provincia cambiada:', this.deliveryData.province);
-      console.log('showAgencyField:', this.showAgencyField);
+      this.availableDistricts = [];
+      
+      if (!this.deliveryData.department || !this.deliveryData.province) return;
+      
+      // Cargar distritos para departamento + provincia
+      await this.loadDistrictsForProvince(this.deliveryData.department, this.deliveryData.province);
     },
     
     async onDistrictChange() {
-      // Si es Lima, buscar la zona de delivery
-      if (this.deliveryData.department === 'lima' && this.deliveryData.district) {
+      console.log('🏘️ Distrito cambiado a:', this.deliveryData.district);
+      
+      // Reset zona info
+      this.deliveryZoneInfo = null;
+      
+      if (!this.deliveryData.district) return;
+      
+      // Si es Lima, buscar zona de delivery
+      if (this.deliveryData.department === 'lima') {
         await this.loadZoneForDistrict(this.deliveryData.district);
       }
     },
@@ -1090,14 +974,8 @@ export default {
     
     processOrder() {
       if (!this.canProcessOrder) return;
-      
-      // Generar número de orden
-      this.orderNumber = 'ORD-' + Date.now();
-      
-      // Simular procesamiento
-      setTimeout(() => {
-        this.showConfirmation = true;
-      }, 1000);
+
+      this.submitActivation();
     },
     
     goToDashboard() {
@@ -1172,19 +1050,48 @@ export default {
       console.log('Oficina seleccionada:', this.selectedOffice);
     },
     
+    async loadDepartments() {
+      try {
+        const { data } = await api.getDeliveryInfo({ type: 'departments' });
+        this.availableDepartments = data.departments || [];
+        console.log('✅ Departamentos cargados:', this.availableDepartments);
+      } catch (error) {
+        console.error('❌ Error cargando departamentos:', error);
+        this.availableDepartments = [];
+      }
+    },
+
+    async loadProvincesForDepartment(department) {
+      try {
+        const { data } = await api.getDeliveryInfo({ type: 'provinces', department: department });
+        this.availableProvinces = data.provinces || [];
+        console.log('✅ Provincias cargadas para', department, ':', this.availableProvinces);
+      } catch (error) {
+        console.error('❌ Error cargando provincias:', error);
+        this.availableProvinces = [];
+      }
+    },
+
+    async loadDistrictsForProvince(department, province) {
+      try {
+        const { data } = await api.getDeliveryInfo({ type: 'districts', department: department, province: province });
+        this.availableDistricts = data.districts || [];
+        console.log('✅ Distritos cargados para', department, '/', province, ':', this.availableDistricts);
+      } catch (error) {
+        console.error('❌ Error cargando distritos:', error);
+        this.availableDistricts = [];
+      }
+    },
+
     async loadAgenciesForDepartment(department) {
       try {
-        const { data } = await api.getDeliveryInfo({ type: 'agencies', department: department });
+        const { data } = await api.getDeliveryInfo({ type: 'agencies-by-department', department: department });
         this.availableAgencies = data.agencies || [];
         console.log('Agencias cargadas para', department, ':', this.availableAgencies);
       } catch (error) {
         console.error('Error cargando agencias:', error);
-        // Fallback con datos por defecto
-        this.availableAgencies = [
-          { _id: '1', agency_name: 'Shalom', agency_code: 'shalom' },
-          { _id: '2', agency_name: 'Olva Courier', agency_code: 'olva' },
-          { _id: '3', agency_name: 'Serpost', agency_code: 'serpost' }
-        ];
+        // Eliminamos el fallback con datos por defecto para depender completamente de la API
+        this.availableAgencies = []; 
       }
     },
     
@@ -1192,9 +1099,9 @@ export default {
       try {
         const { data } = await api.getDeliveryInfo({ type: 'zone-by-district', district: district });
         this.deliveryZoneInfo = data.zone || null;
-        console.log('Zona de delivery para', district, ':', this.deliveryZoneInfo);
+        console.log('🎯 Zona encontrada para', district, ':', this.deliveryZoneInfo);
       } catch (error) {
-        console.error('Error cargando zona de delivery:', error);
+        console.error('❌ Error cargando zona:', error);
         this.deliveryZoneInfo = null;
       }
     },
@@ -1349,7 +1256,145 @@ export default {
       } catch (error) {
         console.error('Error al inicializar el mapa:', error);
       }
-    }
+    },
+    
+    onVoucherFileChange(event) {
+      const file = event.target.files[0];
+      if (file) {
+        this.voucherFile = file;
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          this.voucherPreview = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      } else {
+        this.voucherFile = null;
+        this.voucherPreview = null;
+      }
+    },
+    
+    async submitActivation() {
+      this.activationError = null;
+      this.activationSuccess = false;
+      this.sending = true;
+
+      try {
+        let voucherUrl = null;
+        if (this.pay_method === 'bank' && this.voucherFile) {
+          voucherUrl = await lib.upload(this.voucherFile, this.voucherFile.name, 'activations');
+        }
+
+        // Preparar los productos del carrito para la API, incluyendo todos los detalles y filtrando por cantidad
+        const productsToActivate = this.cartItems
+          .filter(item => item.total > 0) // Filtrar productos con cantidad mayor a 0
+          .map(item => ({ // Incluir todos los detalles relevantes del producto
+            ...item, // Copiar todas las propiedades existentes del item
+            price: this.getProductPrice(item), // Asegurarse de usar el precio correcto según el plan
+            // Asegurarse de que `total` sea el que se muestra en el carrito si es diferente del `total` original del producto
+            total: item.total 
+          }));
+
+        const payload = {
+          products: productsToActivate,
+          deliveryMethod: this.deliveryMethod,
+          pay_method: this.pay_method,
+          orderTotal: this.finalTotal, // El total final con delivery
+          orderPoints: this.cartPoints,
+          
+          // Información de Delivery o Recogida
+          deliveryInfo: {},
+
+          // Información de facturación (boleta/factura)
+          proofType: this.proofData.type,
+          proofDocument: this.proofData.document,
+          proofRUC: this.proofData.ruc,
+          proofRazonSocial: this.proofData.razonSocial,
+          proofDireccionFiscal: this.proofData.direccionFiscal,
+
+          // Datos del voucher (si aplica)
+          voucher: voucherUrl,
+          bank: this.bankName,
+          date: this.paymentDate,
+          voucher_number: this.voucherNumber,
+        };
+
+        if (this.deliveryMethod === 'pickup') {
+          if (!this.selectedOffice) {
+            this.activationError = 'Por favor, selecciona un punto de recogida.';
+            this.sending = false;
+            return;
+          }
+          payload.deliveryInfo.type = 'pickup';
+          payload.deliveryInfo.officeId = this.selectedOffice.id;
+          payload.deliveryInfo.officeName = this.selectedOffice.name;
+        } else if (this.deliveryMethod === 'delivery') {
+          if (!this.deliveryData.department || !this.deliveryData.province || !this.deliveryData.district) {
+            this.activationError = 'Por favor, completa todos los campos de ubicación para el delivery.';
+            this.sending = false;
+            return;
+          }
+          payload.deliveryInfo.type = 'delivery';
+          payload.deliveryInfo.recipientName = this.deliveryData.recipientName;
+          payload.deliveryInfo.document = this.deliveryData.document;
+          payload.deliveryInfo.recipientPhone = this.deliveryData.recipientPhone;
+          payload.deliveryInfo.department = this.deliveryData.department;
+          payload.deliveryInfo.province = this.deliveryData.province;
+          payload.deliveryInfo.district = this.deliveryData.district;
+          if (this.showAgencyField) {
+            payload.deliveryInfo.agency = this.deliveryData.agency;
+          }
+        }
+
+        // Validaciones finales antes de enviar
+        if (this.cartItems.length === 0) {
+          this.activationError = 'No hay productos en el carrito.';
+          this.sending = false;
+          return;
+        }
+        if (payload.proofType === 'boleta' && (!payload.proofDocument || payload.proofDocument.length !== 8)) {
+          this.activationError = 'El documento para boleta debe tener 8 dígitos.';
+          this.sending = false;
+          return;
+        }
+        if (payload.proofType === 'factura' && (!payload.proofRUC || payload.proofRUC.length !== 11 || !payload.proofRazonSocial || !payload.proofDireccionFiscal)) {
+          this.activationError = 'Para factura, completa RUC (11 dígitos), Razón Social y Dirección Fiscal.';
+          this.sending = false;
+          return;
+        }
+        if (!payload.pay_method) {
+          this.activationError = 'Por favor, selecciona un método de pago.';
+          this.sending = false;
+          return;
+        }
+        if (payload.pay_method === 'bank' && (!payload.bank || !payload.date || !payload.voucher_number || !payload.voucher)) {
+          this.activationError = 'Para transferencia, completa todos los datos del banco y sube el voucher.';
+          this.sending = false;
+          return;
+        }
+
+        console.log('Payload de activación final a enviar:', payload);
+        const session = this.$store.state.session;
+        const { data } = await api.Activation.POST(session, payload);
+
+        if (data.error) {
+          throw new Error(data.msg || 'Error al procesar la activación.');
+        }
+
+        // Éxito en la activación
+        this.orderNumber = data.orderNumber || 'N/A'; // Suponiendo que la API devuelve un número de orden
+        this.activationSuccess = true;
+        this.showConfirmation = true;
+        this.$store.commit('setCartItems', []); // Limpiar el carrito en el store
+        // Opcional: limpiar los datos del formulario aquí si no se va a redirigir
+        // this.$router.push('/dashboard'); // Redirigir al dashboard o a una página de éxito
+
+      } catch (error) {
+        console.error('Error en submitActivation:', error);
+        this.activationError = error.message || 'Error al procesar la orden. Intenta nuevamente.';
+      } finally {
+        this.sending = false;
+      }
+    },
   },
   
   watch: {
@@ -1387,6 +1432,9 @@ export default {
     
     // Cargar las oficinas disponibles
     await this.loadOffices();
+    
+    // Cargar departamentos disponibles
+    await this.loadDepartments();
     
     // Configurar actualización automática cada 30 segundos
     this.officesUpdateInterval = setInterval(async () => {
@@ -3237,4 +3285,34 @@ export default {
     
   .note-text
     font-size 0.85rem
+
+.file-label
+  // ... existing code ...
+
+.voucher-preview-img
+  max-width 150px
+  max-height 150px
+  border-radius 8px
+  margin-top 15px
+  border 1px solid #e0e0e0
+  box-shadow 0 2px 8px rgba(0,0,0,0.1)
+
+.payment-section
+  .error-message, .success-message
+    display flex
+    align-items center
+    justify-content center
+    margin-top 20px
+    padding 10px 20px
+    border-radius 8px
+    font-size 1rem
+    font-weight 600
+
+  .error-message
+    background #ffcccc
+    color #cc0000
+
+  .success-message
+    background #ccffcc
+    color #00cc00
 </style> 
