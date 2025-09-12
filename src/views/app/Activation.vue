@@ -5813,7 +5813,6 @@ export default {
 .banner-image {
   width: 100%;
   height: 100%;
-  object-fit: cover;
   object-position: center;
   border-radius: 12px;
   transition: all 0.3s ease;
