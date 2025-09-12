@@ -33,9 +33,9 @@
           </div>
         </div>
         
-        <!-- Sistema de banners unificado -->
-        <div class="banners-unified-wrapper">
-          <!-- Banner izquierda - El más ancho -->
+        <!-- Sistema de banners con Grid - Izquierda separada, Derecha con centro integrado -->
+        <div class="banners-grid-wrapper">
+          <!-- Banner izquierda - Columna izquierda -->
           <div class="banner-left">
             <div v-if="activationBanners.left" class="banner-image-container">
               <img :src="activationBanners.left" alt="Banner Izquierda" class="banner-image" />
@@ -45,33 +45,39 @@
             </div>
           </div>
           
-          <!-- Banners del centro - Medianos -->
-          <div class="banner-center">
-            <div class="banner-medium-top">
-              <div v-if="activationBanners.centerTop" class="banner-image-container">
-                <img :src="activationBanners.centerTop" alt="Banner Centro Arriba" class="banner-image" />
+          <!-- Banner derecha con centro integrado - Columna derecha -->
+          <div class="banner-right-with-center">
+            <!-- Banners del centro uno debajo del otro -->
+            <div class="banner-center-column">
+              <!-- Banner centro superior -->
+              <div class="banner-center-top">
+                <div v-if="activationBanners.centerTop" class="banner-image-container">
+                  <img :src="activationBanners.centerTop" alt="Banner Centro Arriba" class="banner-image" />
+                </div>
+                <div v-else class="banner-placeholder">
+                  <span class="banner-text">Banner Centro Arriba</span>
+                </div>
+              </div>
+              
+              <!-- Banner centro inferior -->
+              <div class="banner-center-bottom">
+                <div v-if="activationBanners.centerBottom" class="banner-image-container">
+                  <img :src="activationBanners.centerBottom" alt="Banner Centro Abajo" class="banner-image" />
+                </div>
+                <div v-else class="banner-placeholder">
+                  <span class="banner-text">Banner Centro Abajo</span>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Banner derecha principal -->
+            <div class="banner-right-main">
+              <div v-if="activationBanners.right" class="banner-image-container">
+                <img :src="activationBanners.right" alt="Banner Derecha" class="banner-image" />
               </div>
               <div v-else class="banner-placeholder">
-                <span class="banner-text">Banner Centro Arriba</span>
+                <span class="banner-text">Banner Derecha</span>
               </div>
-            </div>
-            <div class="banner-medium-bottom">
-              <div v-if="activationBanners.centerBottom" class="banner-image-container">
-                <img :src="activationBanners.centerBottom" alt="Banner Centro Abajo" class="banner-image" />
-              </div>
-              <div v-else class="banner-placeholder">
-                <span class="banner-text">Banner Centro Abajo</span>
-              </div>
-            </div>
-          </div>
-          
-          <!-- Banner derecha - El más cuadrado -->
-          <div class="banner-right">
-            <div v-if="activationBanners.right" class="banner-image-container">
-              <img :src="activationBanners.right" alt="Banner Derecha" class="banner-image" />
-            </div>
-            <div v-else class="banner-placeholder">
-              <span class="banner-text">Banner Derecha</span>
             </div>
           </div>
         </div>
@@ -2754,9 +2760,10 @@ export default {
   padding-left: 15px;
 }
 
-/* Sistema de banners unificado - TODO EN UN SOLO DIV PARA ZOOM UNIFORME */
-.banners-unified-wrapper {
-  display: flex;
+/* Sistema de banners con Grid - Izquierda separada, Derecha con centro integrado */
+.banners-grid-wrapper {
+  display: grid;
+  grid-template-columns: 3.8fr 3.8fr; /* Dos columnas de igual proporción */
   gap: 15px;
   width: 100%;
   margin: 0;
@@ -2772,9 +2779,9 @@ export default {
   align-items: stretch;
 }
 
-/* Banner izquierda - El más ancho */
+/* Banner izquierda - Columna izquierda del grid */
 .banner-left {
-  flex: 3.8;
+  grid-column: 1;
   min-width: 0;
   position: relative;
   align-self: stretch;
@@ -2802,42 +2809,70 @@ export default {
 }
 
 /* Banners del centro - Medianos */
-.banner-center {
-  flex: 1.8;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+/* Banner derecha con centro integrado - Columna derecha del grid */
+.banner-right-with-center {
+  grid-column: 2;
+  display: grid;
+  grid-template-columns: 1.4fr 1.6fr; /* Banners del centro más anchos, banner derecho más estrecho */
+  gap: 8px;
   min-width: 0;
   position: relative;
-  justify-content: space-between;
-  align-self: stretch;
+  align-items: start; /* Alinear todos los elementos al inicio */
 }
 
-.banner-medium-top,
-.banner-medium-bottom {
+/* Columna de banners del centro uno debajo del otro */
+.banner-center-column {
+  grid-column: 1;
+  display: grid;
+  grid-template-rows: 1fr 1fr; /* Dos filas iguales para los banners del centro */
+  gap: 4px; /* Gap más pequeño para que estén más juntos */
   width: 100%;
-  height: 190px;
+  position: relative;
+  align-items: stretch;
+  align-self: start; /* Alinear al inicio para que esté al mismo nivel */
+}
+
+/* Banner centro superior */
+.banner-center-top {
+  grid-row: 1;
+  width: 100%;
+  height: 200px; /* Altura uniforme con el resto */
   position: relative;
   overflow: hidden;
-  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-/* Banner derecha - El más cuadrado */
-.banner-right {
-  flex: 2;
-  min-width: 0;
+/* Banner centro inferior */
+.banner-center-bottom {
+  grid-row: 2;
+  width: 100%;
+  height: 200px; /* Altura uniforme con el resto */
   position: relative;
-  align-self: stretch;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.banner-right .banner-placeholder {
-  height: 400px;
+/* Banner derecha principal */
+.banner-right-main {
+  grid-column: 2;
+  width: 100%;
+  height: 400px; /* Banner principal */
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-self: start; /* Alinear al inicio para que esté al mismo nivel */
 }
 
-/* Estilos para los placeholders de banners del centro y derecha */
-.banner-medium-top .banner-placeholder,
-.banner-medium-bottom .banner-placeholder,
-.banner-right .banner-placeholder {
+/* Estilos para los placeholders de banners */
+.banner-center-top .banner-placeholder,
+.banner-center-bottom .banner-placeholder,
+.banner-right-main .banner-placeholder {
   width: 100%;
   height: 100%;
   background: repeating-conic-gradient(
@@ -2854,10 +2889,10 @@ export default {
   box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
 
-/* Estilos para los textos de banners del centro y derecha */
-.banner-medium-top .banner-text,
-.banner-medium-bottom .banner-text,
-.banner-right .banner-text {
+/* Estilos para los textos de banners */
+.banner-center-top .banner-text,
+.banner-center-bottom .banner-text,
+.banner-right-main .banner-text {
   font-size: 16px;
   font-weight: 600;
   color: #666;
@@ -5027,7 +5062,7 @@ export default {
   .banner-left-text,
   .banner-center-top-text,
   .banner-center-bottom-text,
-  .banner-right-text {
+  .banner-right-main-text {
     font-size: 15px;
   }
 }
@@ -5040,7 +5075,7 @@ export default {
   .banner-left-text,
   .banner-center-top-text,
   .banner-center-bottom-text,
-  .banner-right-text {
+  .banner-right-main-text {
     font-size: 16px;
   }
 }
@@ -5048,7 +5083,7 @@ export default {
 /* Media queries para diferentes escalas de zoom del navegador */
 @media screen and (min-width: 1200px) and (max-width: 1400px) {
   .banner-left-element,
-  .banner-right-element {
+  .banner-right-main-element {
     height: 300px;
   }
   
@@ -5060,7 +5095,7 @@ export default {
 
 @media screen and (min-width: 1400px) and (max-width: 1800px) {
   .banner-left-element,
-  .banner-right-element {
+  .banner-right-main-element {
     height: 320px;
   }
   
@@ -5072,7 +5107,7 @@ export default {
 
 @media screen and (min-width: 1800px) {
   .banner-left-element,
-  .banner-right-element {
+  .banner-right-main-element {
     height: 350px;
   }
   
@@ -5098,25 +5133,25 @@ export default {
 
 /* Media queries para diferentes escalas de zoom del navegador */
 @media (min-zoom: 1.1) {
-  .banners-unified-wrapper {
+  .banners-grid-wrapper {
     gap: 22px;
   }
 }
 
 @media (min-zoom: 1.5) {
-  .banners-unified-wrapper {
+  .banners-grid-wrapper {
     gap: 25px;
   }
 }
 
 @media (min-zoom: 2) {
-  .banners-unified-wrapper {
+  .banners-grid-wrapper {
     gap: 28px;
   }
 }
 
 /* Estilos adicionales para mejorar la experiencia del zoom */
-.banner-left, .banner-center, .banner-right {
+.banner-left, .banner-right-with-center {
   transform-origin: center;
   will-change: transform;
   backface-visibility: hidden;
@@ -5140,14 +5175,14 @@ export default {
 }
 
 /* Asegurar que los banners mantengan su proporción en todos los niveles de zoom */
-.banner-left, .banner-center, .banner-right {
+.banner-left, .banner-right-with-center {
   min-width: 0;
   max-width: 100%;
 }
 
 /* Media queries para tablets */
 @media (min-width: 768px) and (max-width: 1024px) {
-  .banners-unified-wrapper {
+  .banners-grid-wrapper {
     gap: 25px;
   }
   
@@ -5164,7 +5199,7 @@ export default {
 
 /* Media queries para dispositivos móviles grandes */
 @media (min-width: 480px) and (max-width: 767px) {
-  .banners-unified-wrapper {
+  .banners-grid-wrapper {
     gap: 20px;
   }
   
@@ -5176,6 +5211,64 @@ export default {
   .product-catalog-card {
     min-height: 240px;
     padding: 14px;
+  }
+}
+
+/* Media queries para dispositivos móviles - Banner izquierdo arriba, derecho abajo */
+@media (max-width: 767px) {
+  .banners-grid-wrapper {
+    display: grid;
+    grid-template-columns: 1fr; /* Una sola columna en móvil */
+    grid-template-rows: auto auto; /* Banner izquierdo arriba, derecho abajo */
+    gap: 30px; /* Separación más clara entre banner izquierdo y derecho */
+  }
+  
+  .banner-left {
+    grid-column: 1;
+    grid-row: 1;
+    width: 100%;
+    height: 430px; /* Altura reducida para mejor proporción en móvil */
+  }
+  
+  .banner-right-with-center {
+    grid-column: 1;
+    grid-row: 2;
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Banners del centro y derecho lado a lado en móvil */
+    gap: 8px;
+    width: 100%;
+    margin-top: 10px; /* Separación adicional para crear más espacio visual */
+  }
+  
+  .banner-center-column {
+    grid-column: 1;
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+    gap: 6px; /* Gap más pequeño para mejor proporción */
+  }
+  
+  .banner-center-top,
+  .banner-center-bottom {
+    height: px; /* Altura reducida para móvil */
+  }
+  
+  .banner-right-main {
+    grid-column: 2;
+    height: 410px; /* Altura reducida que coincida con los dos banners del centro + gap */
+  }
+  
+  /* Ajustar alturas de contenedores de imágenes en móvil */
+  .banner-left .banner-image-container {
+    height: 140px;
+  }
+  
+  .banner-center-top .banner-image-container,
+  .banner-center-bottom .banner-image-container {
+    height: 70px;
+  }
+  
+  .banner-right-main .banner-image-container {
+    height: 146px;
   }
 }
 
@@ -5735,12 +5828,12 @@ export default {
   height: 400px;
 }
 
-.banner-medium-top .banner-image-container,
-.banner-medium-bottom .banner-image-container {
-  height: 190px;
+.banner-center-top .banner-image-container,
+.banner-center-bottom .banner-image-container {
+  height: 200px;
 }
 
-.banner-right .banner-image-container {
+.banner-right-main .banner-image-container {
   height: 400px;
 }
 
