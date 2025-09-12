@@ -434,7 +434,30 @@
                   <p>Selecciona tu método de pago preferido.</p>
                 </div>
                 
-                <div class="payment-methods">
+                <!-- Opción de saldo -->
+                <div class="balance-option">
+                  <label class="balance-checkbox">
+                    <input type="checkbox" v-model="check" />
+                    <span class="checkmark"></span>
+                    <span class="balance-text">Usar mi saldo disponible</span>
+                  </label>
+                  <div v-show="check" class="balance-details">
+                    <div class="balance-item">
+                      <span>Saldo disponible:</span>
+                      <span class="balance-amount">S/ {{ balance.toFixed(2) }}</span>
+                    </div>
+                    <div class="balance-item">
+                      <span>Saldo no disponible:</span>
+                      <span class="balance-amount">S/ {{ _balance.toFixed(2) }}</span>
+                    </div>
+                    <div v-if="remaining > 0" class="balance-item remaining">
+                      <span>Restante a pagar:</span>
+                      <span class="balance-amount">S/ {{ remaining.toFixed(2) }}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div v-show="!(check && remaining == 0)" class="payment-methods">
                   <div class="payment-method">
                     <input 
                       type="radio" 
@@ -672,7 +695,12 @@ export default {
       
       // Datos del usuario (simulados)
       userBalance: 150.00,
-
+      
+      // Nuevos datos para el saldo
+      check: false, // Controla si se usa el saldo
+      balance: 0,   // Saldo disponible
+      _balance: 0,  // Saldo no disponible
+      // remaining: 0, // El restante a pagar se calculará en una propiedad computada
       // Datos para la subida de activación
       sending: false,
       voucherFile: null,
@@ -712,6 +740,17 @@ export default {
         total += this.deliveryZoneInfo.price;
       }
       return total;
+    },
+    
+    // Propiedad computada para el monto restante a pagar después de aplicar el saldo
+    remaining() {
+      if (this.check) {
+        const saldoTotal = (this.balance || 0) + (this._balance || 0);
+        let ret = this.finalTotal - saldoTotal;
+        return ret > 0 ? ret : 0;
+      } else {
+        return this.finalTotal;
+      }
     },
     
     canProceedToNextStep() {
@@ -777,7 +816,7 @@ export default {
     },
     
     canProcessOrder() {
-      return this.pay_method && this.cartItems.length > 0;
+      return this.cartItems.length > 0 && ((this.check && this.remaining === 0) || this.pay_method);
     },
     
     selectedOffice() {
@@ -1300,6 +1339,7 @@ export default {
           pay_method: this.pay_method,
           orderTotal: this.finalTotal, // El total final con delivery
           orderPoints: this.cartPoints,
+          check: this.check, // Añadir el estado del checkbox de usar saldo
           
           // Información de Delivery o Recogida
           deliveryInfo: {},
@@ -1361,11 +1401,16 @@ export default {
           this.sending = false;
           return;
         }
-        if (!payload.pay_method) {
-          this.activationError = 'Por favor, selecciona un método de pago.';
-          this.sending = false;
-          return;
+
+        // Validar método de pago si el saldo no cubre el total
+        if (!this.check || this.remaining > 0) {
+          if (!payload.pay_method) {
+            this.activationError = 'Por favor, selecciona un método de pago.';
+            this.sending = false;
+            return;
+          }
         }
+
         if (payload.pay_method === 'bank' && (!payload.bank || !payload.date || !payload.voucher_number || !payload.voucher)) {
           this.activationError = 'Para transferencia, completa todos los datos del banco y sube el voucher.';
           this.sending = false;
@@ -1433,6 +1478,19 @@ export default {
     // Cargar las oficinas disponibles
     await this.loadOffices();
     
+    // Cargar el saldo del usuario
+    try {
+      const { data } = await api.Activation.GET(this.$store.state.session);
+      if (data) {
+        this.balance = data.balance || 0;
+        this._balance = data._balance || 0;
+        console.log('✅ Saldo de usuario cargado:', { balance: this.balance, _balance: this._balance });
+      }
+    } catch (error) {
+      console.error('❌ Error cargando el saldo del usuario:', error);
+      // Opcional: mostrar un mensaje de error al usuario
+    }
+
     // Cargar departamentos disponibles
     await this.loadDepartments();
     
@@ -1658,7 +1716,7 @@ export default {
   align-items center
   margin-bottom 15px
   padding-bottom 15px
-  border-bottom 1px solid #e0e0e0
+  border-bottom 1px solid #e0e0e8
 
   h3
     margin 0
@@ -3315,4 +3373,63 @@ export default {
   .success-message
     background #ccffcc
     color #00cc00
+
+.balance-option
+  margin-bottom 20px
+
+.balance-checkbox
+  display flex
+  align-items center
+  font-weight 500
+  color #333
+
+.checkmark
+  width 20px
+  height 20px
+  border 2px solid #ff8c00
+  border-radius 4px
+  margin-right 10px
+  transition all 0.3s ease
+  position relative // Añadir para posicionar el icono
+  
+  &::after // Estilo para el icono de check
+    content '\f00c' // Código Unicode para el icono de check de Font Awesome
+    font-family '"Font Awesome 5 Free"', "Font Awesome 5 Pro" // Especificar la fuente del icono
+    font-weight 900 // Para iconos sólidos de Font Awesome
+    position absolute
+    top 50%
+    left 50%
+    transform translate(-50%, -50%) scale(0) // Inicialmente oculto y escalado a 0
+    color white
+    font-size 14px
+    transition all 0.3s ease // Transición para la aparición del icono
+
+.balance-checkbox input[type="checkbox"]
+  display none
+
+.balance-checkbox input[type="checkbox"]:checked + .checkmark
+  background-color #ff8c00
+  border-color #ff8c00
+  
+  &::after
+    transform translate(-50%, -50%) scale(1) // Mostrar el icono cuando esté marcado
+
+.balance-text
+  font-size 0.9rem
+  color #555
+
+.balance-details
+  margin-top 10px
+  padding-left 25px
+
+.balance-item
+  display flex
+  justify-content space-between
+  margin-bottom 5px
+  font-size 0.9rem
+  color #666
+
+.balance-amount
+  font-weight 600
+  color #333
 </style> 
