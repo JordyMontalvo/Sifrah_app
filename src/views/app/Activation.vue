@@ -2813,7 +2813,7 @@ export default {
 .banner-right-with-center {
   grid-column: 2;
   display: grid;
-  grid-template-columns: 1.4fr 1.6fr; /* Banners del centro más anchos, banner derecho más estrecho */
+  grid-template-columns: 1fr 1fr; /* Banners del centro más anchos, banner derecho más estrecho */
   gap: 8px;
   min-width: 0;
   position: relative;
@@ -2822,8 +2822,12 @@ export default {
 
 /* Columna de banners del centro uno debajo del otro */
 .banner-center-column {
-  grid-column: 1;
-  display: grid;
+  display flex
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+/*   grid-column: 1;
+  display: grid; */
   grid-template-rows: 1fr 1fr; /* Dos filas iguales para los banners del centro */
   gap: 4px; /* Gap más pequeño para que estén más juntos */
   width: 100%;
@@ -2836,7 +2840,7 @@ export default {
 .banner-center-top {
   grid-row: 1;
   width: 100%;
-  height: 200px; /* Altura uniforme con el resto */
+ /* Altura uniforme con el resto */
   position: relative;
   overflow: hidden;
   display: flex;
@@ -2848,7 +2852,7 @@ export default {
 .banner-center-bottom {
   grid-row: 2;
   width: 100%;
-  height: 200px; /* Altura uniforme con el resto */
+ /* Altura uniforme con el resto */
   position: relative;
   overflow: hidden;
   display: flex;
@@ -2860,7 +2864,7 @@ export default {
 .banner-right-main {
   grid-column: 2;
   width: 100%;
-  height: 400px; /* Banner principal */
+/* Banner principal */
   position: relative;
   overflow: hidden;
   display: flex;
@@ -2874,7 +2878,6 @@ export default {
 .banner-center-bottom .banner-placeholder,
 .banner-right-main .banner-placeholder {
   width: 100%;
-  height: 100%;
   background: repeating-conic-gradient(
     #f0f0f0 0deg 90deg,
     #e0e0e0 90deg 180deg
@@ -2907,7 +2910,7 @@ export default {
 
 .banner-placeholder {
   width: 100%;
-  height: 100%;
+
   background: repeating-conic-gradient(
     #f0f0f0 0deg 90deg,
     #e0e0e0 90deg 180deg
@@ -5108,12 +5111,12 @@ export default {
 @media screen and (min-width: 1800px) {
   .banner-left-element,
   .banner-right-main-element {
-    height: 350px;
+
   }
   
   .banner-center-top-placeholder,
   .banner-center-bottom-placeholder {
-    height: 165px;
+
   }
 }
 
@@ -5227,7 +5230,7 @@ export default {
     grid-column: 1;
     grid-row: 1;
     width: 100%;
-    height: 430px; /* Altura reducida para mejor proporción en móvil */
+/* Altura reducida para mejor proporción en móvil */
   }
   
   .banner-right-with-center {
@@ -5254,21 +5257,21 @@ export default {
   
   .banner-right-main {
     grid-column: 2;
-    height: 410px; /* Altura reducida que coincida con los dos banners del centro + gap */
+/* Altura reducida que coincida con los dos banners del centro + gap */
   }
   
   /* Ajustar alturas de contenedores de imágenes en móvil */
   .banner-left .banner-image-container {
-    height: 140px;
+
   }
   
   .banner-center-top .banner-image-container,
   .banner-center-bottom .banner-image-container {
-    height: 70px;
+
   }
   
   .banner-right-main .banner-image-container {
-    height: 146px;
+
   }
 }
 
@@ -5802,7 +5805,6 @@ export default {
 /* Estilos para las imágenes de banners */
 .banner-image-container {
   width: 100%;
-  height: 100%;
   position: relative;
   overflow: hidden;
   border-radius: 12px;
@@ -5812,7 +5814,6 @@ export default {
 
 .banner-image {
   width: 100%;
-  height: 100%;
   object-position: center;
   border-radius: 12px;
   transition: all 0.3s ease;
@@ -5824,16 +5825,16 @@ export default {
 
 /* Asegurar que las imágenes tengan las mismas dimensiones que los placeholders */
 .banner-left .banner-image-container {
-  height: 400px;
+
 }
 
 .banner-center-top .banner-image-container,
 .banner-center-bottom .banner-image-container {
-  height: 200px;
+
 }
 
 .banner-right-main .banner-image-container {
-  height: 400px;
+
 }
 
 </style>
