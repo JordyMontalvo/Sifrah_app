@@ -507,43 +507,45 @@
                     <h3>Datos Bancarios</h3>
                   </div>
                   
-                  <div class="bank-details">
-                    <div class="bank-item">
+                  <div class="bank-details-simple">
+                    <div class="bank-info-item">
                       <strong>Banco:</strong> Banco de Crédito del Perú
                     </div>
-                    <div class="bank-item">
+                    <div class="bank-info-item">
                       <strong>Cuenta:</strong> 193-12345678-0-12
                     </div>
-                    <div class="bank-item">
+                    <div class="bank-info-item">
                       <strong>Titular:</strong> SIFRAH SAC
                     </div>
-                    <div class="bank-item">
+                    <div class="bank-info-item">
                       <strong>Tipo:</strong> Cuenta Corriente
                     </div>
                   </div>
                   
-                  <div class="form-group">
-                    <label>Nombre del Banco</label>
-                    <input v-model="bankName" type="text" placeholder="Ej: BCP, BBVA, Interbank..." required />
-                  </div>
-                  <div class="form-group">
-                    <label>Fecha de Pago</label>
-                    <input v-model="paymentDate" type="date" required />
-                  </div>
-                  <div class="form-group">
-                    <label>Número de Operación/Voucher</label>
-                    <input v-model="voucherNumber" type="text" placeholder="Número de operación" @input="onlyNumbers($event, 'voucherNumber')" required />
-                  </div>
-                  <div class="form-group">
-                    <label>Comprobante de Pago</label>
-                    <div class="file-upload">
-                      <input type="file" @change="onVoucherFileChange" id="voucher-file" />
-                      <label for="voucher-file" class="file-label">
-                        <i class="fas fa-upload"></i>
-                        <span>{{ voucherPreview ? 'Cambiar archivo' : 'Seleccionar archivo' }}</span>
-                      </label>
+                  <div class="payment-form-simple">
+                    <div class="form-field-simple">
+                      <label>Nombre del Banco</label>
+                      <input v-model="bankName" type="text" placeholder="Ej: BCP, BBVA, Interbank..." required />
                     </div>
-                    <img v-if="voucherPreview" :src="voucherPreview" class="voucher-preview-img" />
+                    <div class="form-field-simple">
+                      <label>Fecha de Pago</label>
+                      <input v-model="paymentDate" type="date" required />
+                    </div>
+                    <div class="form-field-simple">
+                      <label>Número de Operación/Voucher</label>
+                      <input v-model="voucherNumber" type="text" placeholder="Número de operación" @input="onlyNumbers($event, 'voucherNumber')" required />
+                    </div>
+                    <div class="form-field-simple">
+                      <label>Comprobante de Pago</label>
+                      <div class="file-upload-simple">
+                        <input type="file" @change="onVoucherFileChange" id="voucher-file" />
+                        <label for="voucher-file" class="file-label-simple">
+                          <i class="fas fa-upload"></i>
+                          <span>{{ voucherPreview ? 'Cambiar archivo' : 'Seleccionar archivo' }}</span>
+                        </label>
+                      </div>
+                      <img v-if="voucherPreview" :src="voucherPreview" class="voucher-preview-img" />
+                    </div>
                   </div>
                 </div>
                 
@@ -2890,16 +2892,93 @@ export default {
   padding 20px
   margin-bottom 30px
 
-.bank-details
-  .bank-item
-    display flex
-    justify-content space-between
-    margin-bottom 10px
+.bank-details-simple
+  background #f8f9fa
+  border-radius 8px
+  padding 20px
+  margin-bottom 25px
+  border 1px solid #e0e0e0
+
+.bank-info-item
+  display flex
+  justify-content space-between
+  margin-bottom 10px
+  font-size 0.95rem
+  padding 8px 0
+  
+  &:last-child
+    margin-bottom 0
+  
+  strong
+    font-weight 600
+    color #333
+    min-width 80px
+
+.payment-form-simple
+  background #f8f9fa
+  border-radius 8px
+  padding 20px
+  margin-bottom 25px
+  border 1px solid #e0e0e0
+
+.form-field-simple
+  margin-bottom 20px
+  
+  &:last-child
+    margin-bottom 0
+  
+  label
+    display block
+    margin-bottom 8px
+    font-weight 600
+    color #333
     font-size 0.95rem
+  
+  input[type="text"], input[type="date"]
+    width 100%
+    padding 12px 15px
+    border 1px solid #e0e0e0
+    border-radius 6px
+    font-size 0.95rem
+    background white
+    transition all 0.3s ease
     
-    span
-      font-weight 500
-      color #333
+    &:focus
+      outline none
+      border-color #ff8c00
+      box-shadow 0 0 0 2px rgba(255, 140, 0, 0.1)
+    
+    &::placeholder
+      color #999
+      font-size 0.9rem
+
+.file-upload-simple
+  position relative
+  
+  input[type="file"]
+    display none
+  
+  .file-label-simple
+    display flex
+    align-items center
+    justify-content center
+    padding 12px 15px
+    border 2px dashed #e0e0e0
+    border-radius 6px
+    background white
+    cursor pointer
+    transition all 0.3s ease
+    font-size 0.95rem
+    color #666
+    
+    &:hover
+      border-color #ff8c00
+      background #fafafa
+    
+    i
+      margin-right 8px
+      color #ff8c00
+      font-size 1rem
 
 .final-summary
   background #f8f9fa
