@@ -1041,10 +1041,12 @@ export default {
 
           openCartDetailModal() {
         this.showCartDetailModal = true;
+        document.body.style.overflow = 'hidden';
       },
       
       closeCartDetailModal() {
         this.showCartDetailModal = false;
+        document.body.style.overflow = 'auto';
       },
       
       scrollToProducts() {
