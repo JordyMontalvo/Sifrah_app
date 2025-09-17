@@ -354,6 +354,7 @@
       <!-- Interfaz del carrito detallado (pegada a la derecha) -->
       <div v-if="showCartDetailModal" class="cart-detail-interface">
         <div class="cart-detail-interface-content">
+
           <div class="cart-detail-header">
             <h2>Carrito de Compras</h2>
             <p>Puedes hacer scroll para ver todos tus productos.</p>
@@ -403,7 +404,9 @@
                   <span>Agregar productos para comenzar</span>
               </div>
             </div>
-            
+          </div>
+          
+          <div class="cart-detail-footer">
             <!-- Resumen del carrito -->
             <div class="cart-detail-summary">
               <h3>Resumen</h3>
@@ -434,6 +437,7 @@
               </button>
             </div>
           </div>
+
         </div>
       </div>
     </div>
@@ -3877,6 +3881,9 @@ export default {
   box-shadow: -10px 0 30px rgba(0, 0, 0, 0.3);
   position: relative;
   animation: slideInRight 0.3s ease-out;
+
+  display: flex;
+  flex-direction: column;
 }
 
 @keyframes slideInRight {
@@ -3931,6 +3938,9 @@ export default {
 
 .cart-detail-body {
   padding: 20px;
+  
+  flex: 1;
+  overflow: auto;
 }
 
 .cart-detail-items h3 {
