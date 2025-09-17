@@ -1,4 +1,4 @@
-<template>
+                                                                                                                                                                                                                                                                                                                                                                                  <template>
   <App>
     <!-- Título principal del checkout -->
     <div class="checkout-main-title">
@@ -12,93 +12,91 @@
 
       <div class="checkout-container">
         
-        <div class="checkout-content">
-          <!-- Columna izquierda - Resumen del carrito -->
-          <div class="cart-summary">
-            <!-- Título del carrito -->
-            <div class="cart-title">
-              <h2>Carrito de compras</h2>
-              <p>Estos son los productos que has elegido</p>
-            </div>
-            
-            <!-- Productos del carrito -->
-            <div class="cart-items">
-              <div v-for="item in cartItems" :key="item.id" class="cart-item">
-                <div class="cart-item-image">
-                  <img :src="item.img" :alt="item.name" />
-                </div>
-                <div class="cart-item-details">
-                  <div class="cart-item-quantity">{{ item.total }} Unid.</div>
-                  <div class="cart-item-name">{{ item.name }}</div>
-                  <div class="cart-item-price">S/ {{ getProductPrice(item) }} - {{ item.points }} pts</div>
-                </div>
+          <div class="checkout-content">
+            <!-- Columna izquierda - Resumen del carrito -->
+            <div class="cart-summary">
+              <!-- Título del carrito -->
+              <div class="cart-title">
+                <h2>Carrito de compras</h2>
+                <p>Estos son los productos que has elegido</p>
               </div>
               
-              <!-- Card de Delivery integrada como producto -->
-              <div v-if="deliveryZoneInfo && deliveryData.department === 'lima'" class="cart-item delivery-item">
-                <div class="delivery-item-icon">
-                  🚚
+              <!-- Productos del carrito -->
+              <div class="cart-items">
+                <div v-for="item in cartItems" :key="item.id" class="cart-item">
+                  <div class="cart-item-image">
+                    <img :src="item.img" :alt="item.name" />
+                  </div>
+                  <div class="cart-item-details">
+                    <div class="cart-item-quantity">{{ item.total }} Unid.</div>
+                    <div class="cart-item-name">{{ item.name }}</div>
+                    <div class="cart-item-price">S/ {{ getProductPrice(item) }} - {{ item.points }} pts</div>
+                  </div>
                 </div>
-                <div class="cart-item-details">
-                  <div class="cart-item-quantity">Delivery</div>
-                  <div class="cart-item-price">S/ {{ deliveryZoneInfo.price.toFixed(2) }}</div>
+                
+                <!-- Card de Delivery integrada como producto -->
+                <div v-if="deliveryZoneInfo && deliveryData.department === 'lima'" class="cart-item delivery-item">
+                  <div class="delivery-item-icon">
+                    🚚
+                  </div>
+                  <div class="cart-item-details">
+                    <div class="cart-item-quantity">Delivery</div>
+                    <div class="cart-item-price">S/ {{ deliveryZoneInfo.price.toFixed(2) }}</div>
+                  </div>
+                </div>
+
+                <!-- Card para delivery por agencia (provincias) -->
+                <div v-if="showAgencyField && deliveryData.department !== 'lima' && deliveryData.agency" class="cart-item delivery-item agency-item">
+                  <div class="delivery-item-icon">
+                    📦
+                  </div>
+                  <div class="cart-item-details">
+                    <div class="cart-item-quantity">Envío</div>
+                    <div class="cart-item-name">{{ getAgencyName() }}</div>
+                    <div class="cart-item-price">Consultar costo</div>
+                  </div>
                 </div>
               </div>
 
-              <!-- Card para delivery por agencia (provincias) -->
-              <div v-if="showAgencyField && deliveryData.department !== 'lima' && deliveryData.agency" class="cart-item delivery-item agency-item">
-                <div class="delivery-item-icon">
-                  📦
+              <!-- Resumen de la orden -->
+              <div class="order-summary">
+                <div class="summary-row">
+                  <span>Total productos:</span>
+                  <span>{{ cartItemsTotal }} items</span>
                 </div>
-                <div class="cart-item-details">
-                  <div class="cart-item-quantity">Envío</div>
-                  <div class="cart-item-name">{{ getAgencyName() }}</div>
-                  <div class="cart-item-price">Consultar costo</div>
+                <div class="summary-row">
+                  <span>Puntos:</span>
+                  <span>{{ cartPoints.toFixed(2) }}</span>
                 </div>
+                <div class="summary-row">
+                  <span>Subtotal:</span>
+                  <span>S/ {{ cartTotal.toFixed(2) }}</span>
+                </div>
+                <!-- Línea de delivery cuando hay zona seleccionada -->
+                <div v-if="deliveryZoneInfo && deliveryData.department === 'lima'" class="summary-row delivery-row">
+                  <span>🚚 Delivery:</span>
+                  <span>S/ {{ deliveryZoneInfo.price.toFixed(2) }}</span>
+                </div>
+                <div class="summary-row total">
+                  <span>Total:</span>
+                  <span>S/ {{ finalTotal.toFixed(2) }}</span>
+                </div>
+              </div>
+
+              <!-- Botón para volver a la tienda -->
+              <div class="return-to-store">
+                <p>¿Olvidaste algún producto?</p>
+                <button @click="returnToStore" class="return-btn">
+                  Volver a la tienda
+                </button>
               </div>
             </div>
 
-            <!-- Resumen de la orden -->
-            <div class="order-summary">
-              <div class="summary-row">
-                <span>Total productos:</span>
-                <span>{{ cartItemsTotal }} items</span>
-              </div>
-              <div class="summary-row">
-                <span>Puntos:</span>
-                <span>{{ cartPoints.toFixed(2) }}</span>
-              </div>
-              <div class="summary-row">
-                <span>Subtotal:</span>
-                <span>S/ {{ cartTotal.toFixed(2) }}</span>
-              </div>
-              <!-- Línea de delivery cuando hay zona seleccionada -->
-              <div v-if="deliveryZoneInfo && deliveryData.department === 'lima'" class="summary-row delivery-row">
-                <span>🚚 Delivery:</span>
-                <span>S/ {{ deliveryZoneInfo.price.toFixed(2) }}</span>
-              </div>
-              <div class="summary-row total">
-                <span>Total:</span>
-                <span>S/ {{ finalTotal.toFixed(2) }}</span>
-              </div>
-            </div>
+            <!-- Columna derecha - Proceso de checkout -->
+            <div class="checkout-process">
 
-
-
-            <!-- Botón para volver a la tienda -->
-            <div class="return-to-store">
-              <p>¿Olvidaste algún producto?</p>
-              <button @click="returnToStore" class="return-btn">
-                Volver a la tienda
-              </button>
-            </div>
-          </div>
-
-          <!-- Columna derecha - Proceso de checkout -->
-          <div class="checkout-process">
-
-            <!-- Barra de progreso (siempre visible) -->
-            <div class="top-progress-bar" :style="{ '--current-step': currentStep }">
+            <!-- Barra de progreso (visible solo en pasos 1 y 2) -->
+            <div v-if="currentStep !== 3" class="top-progress-bar" :style="{ '--current-step': currentStep }">
               <div class="progress-step" :class="{ active: currentStep >= 1 }">
                 <div class="step-number">1</div>
                 <div class="step-label">Despacho</div>
@@ -262,7 +260,7 @@
                     <div class="map-container">
                       <div id="map" style="height: 300px; border-radius: 12px;"></div>
                       <div class="map-info">
-                        <div class="location-name">{{ selectedOffice ? selectedOffice.name : 'Oficina seleccionada' }}</div>
+                        <div class="map-location-label">Ubicación en Mapa:</div>
                         <a 
                           v-if="selectedOffice && selectedOffice.googleMapsUrl" 
                           :href="selectedOffice.googleMapsUrl" 
@@ -428,11 +426,113 @@
 
             <!-- Paso 3: Pago -->
             <div v-if="currentStep === 3" class="checkout-step">
-              <div class="payment-section">
-                <div class="section-header">
-                  <h3>Método de Pago</h3>
-                  <p>Selecciona tu método de pago preferido.</p>
+              <div class="three-cards-container">
+                <!-- Card 1: Datos de Despacho -->
+                <div class="delivery-data-card">
+                  <div class="delivery-data-header">
+                    <h3>Datos de Despacho</h3>
+                  </div>
+                  
+                  <div class="delivery-data-content">
+                    <!-- Información de Pickup -->
+                    <div v-if="deliveryMethod === 'pickup' && selectedOffice">
+                      <div class="delivery-info-item">
+                        <span class="delivery-label">Recojo en:</span>
+                        <span class="delivery-value">{{ selectedOffice.name }}</span>
+                      </div>
+                      <div class="delivery-info-item">
+                        <span class="delivery-label">Dirección:</span>
+                        <span class="delivery-value">{{ selectedOffice.address }}</span>
+                      </div>
+                      <div class="delivery-info-item">
+                        <span class="delivery-label">Teléfono:</span>
+                        <span class="delivery-value">
+                          +51 {{ selectedOffice.phone }}
+                          <i class="fab fa-whatsapp whatsapp-icon" v-if="selectedOffice.phone && selectedOffice.phone !== 'No disponible'"></i>
+                        </span>
+                      </div>
+                      <div class="delivery-info-item" v-if="selectedOffice.horario">
+                        <span class="delivery-label">Horario:</span>
+                        <span class="delivery-value">{{ selectedOffice.horario }}</span>
+                      </div>
+                      <div class="delivery-info-item" v-if="selectedOffice.dias">
+                        <span class="delivery-label">Días:</span>
+                        <span class="delivery-value">{{ selectedOffice.dias }}</span>
+                      </div>
+                      <div class="delivery-info-item map-location-section" v-if="selectedOffice.googleMapsUrl">
+                        <div class="map-location-label">Ubicación en Mapa:</div>
+                        <a :href="selectedOffice.googleMapsUrl" target="_blank" class="map-link">
+                          Ver en Google Maps
+                        </a>
+                      </div>
+                    </div>
+                    
+                    <!-- Información de Delivery -->
+                    <div v-if="deliveryMethod === 'delivery'">
+                      <div class="delivery-info-item">
+                        <span class="delivery-label">Receptor:</span>
+                        <span class="delivery-value">{{ deliveryData.recipientName }}</span>
+                      </div>
+                      <div class="delivery-info-item">
+                        <span class="delivery-label">Documento:</span>
+                        <span class="delivery-value">{{ deliveryData.document }}</span>
+                      </div>
+                      <div class="delivery-info-item">
+                        <span class="delivery-label">Celular:</span>
+                        <span class="delivery-value">{{ deliveryData.recipientPhone }}</span>
+                      </div>
+                      <div class="delivery-info-item">
+                        <span class="delivery-label">Ubicación:</span>
+                        <span class="delivery-value">
+                          {{ getLocationString() }}
+                        </span>
+                      </div>
+                      <div v-if="showAgencyField && deliveryData.agency" class="delivery-info-item">
+                        <span class="delivery-label">Agencia:</span>
+                        <span class="delivery-value">{{ getAgencyName() }}</span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
+
+                <!-- Card 2: Datos del Comprobante -->
+                <div class="voucher-data-card">
+                  <div class="voucher-data-header">
+                    <h3>Datos del Comprobante</h3>
+                  </div>
+                  
+                  <div class="voucher-data-content">
+                    <div class="voucher-row-three">
+                      <div class="voucher-info-item third-width">
+                        <span class="voucher-label">Tipo Documento:</span>
+                        <span class="voucher-value">Boleta</span>
+                      </div>
+                      <div class="voucher-info-item third-width">
+                        <span class="voucher-label">Serie:</span>
+                        <span class="voucher-value">---</span>
+                      </div>
+                      <div class="voucher-info-item third-width">
+                        <span class="voucher-label">Correlativo:</span>
+                        <span class="voucher-value">---</span>
+                      </div>
+                    </div>
+                    <div class="voucher-info-item">
+                      <span class="voucher-label">Nro. Documento:</span>
+                      <span class="voucher-value">{{ userDocument || '---' }}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Card 3: Método de Pago y Resumen -->
+                <div class="payment-card">
+                  <div class="payment-card-header">
+                    <h3>Método de Pago</h3>
+                  </div>
+                  
+                  <div class="payment-card-content">
+                    <div class="payment-instruction">
+                      <p>Selecciona tu método de pago preferido.</p>
+                    </div>
                 
                 <!-- Opción de saldo -->
                 <div class="balance-option">
@@ -549,29 +649,6 @@
                   </div>
                 </div>
                 
-                <!-- Resumen final -->
-                <div class="final-summary">
-                  <div class="summary-header">
-                    <h3>Resumen de tu Orden</h3>
-                  </div>
-                  
-                  <div class="summary-details">
-                    <div class="summary-item">
-                      <span>Subtotal:</span>
-                      <span>S/ {{ cartTotal.toFixed(2) }}</span>
-                    </div>
-                    <div class="summary-item">
-                      <span>Envío:</span>
-                      <span v-if="deliveryZoneInfo && deliveryData.department === 'lima'">S/ {{ deliveryZoneInfo.price.toFixed(2) }}</span>
-                      <span v-else-if="showAgencyField && deliveryData.agency">Consultar</span>
-                      <span v-else>S/ 0.00</span>
-                    </div>
-                    <div class="summary-item total">
-                      <span>Total:</span>
-                      <span>S/ {{ finalTotal.toFixed(2) }}</span>
-                    </div>
-                  </div>
-                </div>
                 
                 <!-- Mensajes de estado de activación -->
                 <div v-if="activationError" class="error-message">
@@ -583,19 +660,21 @@
                   <span>¡Orden enviada exitosamente!</span>
                 </div>
 
-                <!-- Botones finales -->
-                <div class="step-actions">
-                  <button @click="previousStep" class="back-btn">
-                    << Volver
-                  </button>
-                  <button 
-                    @click="processOrder" 
-                    :disabled="!canProcessOrder || sending"
-                    class="process-btn"
-                  >
-                    <span v-if="!sending">Confirmar y Pagar</span>
-                    <span v-else><i class="fas fa-spinner fa-spin"></i> Procesando...</span>
-                  </button>
+                    <!-- Botones finales -->
+                    <div class="step-actions">
+                      <button @click="previousStep" class="back-btn">
+                        << Volver
+                      </button>
+                      <button 
+                        @click="processOrder" 
+                        :disabled="!canProcessOrder || sending"
+                        class="process-btn"
+                      >
+                        <span v-if="!sending">Confirmar y Pagar</span>
+                        <span v-else><i class="fas fa-spinner fa-spin"></i> Procesando...</span>
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -841,6 +920,15 @@ export default {
         return agency ? agency.agency_name : this.deliveryData.agency;
       }
       return this.deliveryData.agency || 'Agencia seleccionada';
+    },
+    
+    getLocationString() {
+      // Crear string legible de la ubicación de delivery
+      const parts = [];
+      if (this.deliveryData.district) parts.push(this.deliveryData.district);
+      if (this.deliveryData.province) parts.push(this.deliveryData.province);
+      if (this.deliveryData.department) parts.push(this.deliveryData.department);
+      return parts.join(', ') || 'Ubicación no especificada';
     },
     
     getProductPrice(product) {
@@ -1679,16 +1767,16 @@ export default {
 .cart-summary
   background linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%)
   padding 35px
-  height fit-content
-  min-height 600px
+  height 898px
   border-radius 18px
   box-shadow 0 8px 32px rgba(0,0,0,0.12)
-  min-width 350px
-  width 90%
+  width 445px
   border 1px solid #e8e8e8
   position relative
   z-index 10
   margin-top 20px
+  display flex
+  flex-direction column
 
 .cart-title
   text-align center
@@ -1759,7 +1847,7 @@ export default {
 
 .cart-items
   margin-bottom 30px
-  max-height 350px /* Altura máxima para el scroll */
+  flex 1
   overflow-y auto
   -webkit-overflow-scrolling touch
   padding-right 15px
@@ -1887,19 +1975,21 @@ export default {
 
 .order-summary
   border-top 2px solid #ffe4d6
-  padding-top 25px
-  margin-bottom 30px
+  padding-top 10px
+  margin-top 0px
+  margin-bottom 15px
   background linear-gradient(135deg, #ffffff 0%, #fefefe 100%)
-  padding 28px
+  padding 15px
   border-radius 14px
   box-shadow 0 4px 16px rgba(0,0,0,0.08)
   border 1px solid #f0f0f0
+  flex-shrink 0
 
   .summary-row
     display flex
     justify-content space-between
-    margin-bottom 10px
-    font-size 0.95rem
+    margin-bottom 5px
+    font-size 0.85rem
     align-items center
     
     span:first-child
@@ -1976,11 +2066,12 @@ export default {
 
 .return-to-store
   text-align center
-  margin-top 30px
+  margin-top auto
   padding 20px
   background rgba(255, 140, 0, 0.03)
   border-radius 12px
   border 1px solid rgba(255, 140, 0, 0.1)
+  flex-shrink 0
   
   p
     margin-bottom 20px
@@ -2856,12 +2947,12 @@ export default {
 
 // Métodos de pago
 .payment-methods
-  margin-bottom 30px
+  margin-bottom 15px
 
 .payment-method
   display flex
   align-items center
-  padding 15px
+  padding 12px
   border 2px solid #e0e0e0
   border-radius 10px
   margin-bottom 15px
@@ -2992,13 +3083,54 @@ export default {
     margin-bottom 10px
     font-size 0.95rem
     
+    // Estilos para Total productos
+    &:nth-child(1)
+      font-weight 700
+      span:first-child
+        color #333
+      span:last-child
+        color #333
+        font-weight 700
+    
+    // Estilos para Puntos
+    &:nth-child(2)
+      font-weight 700
+      span:first-child
+        color #333
+      span:last-child
+        color #ff8c00
+        font-weight 700
+    
+    // Estilos para Subtotal
+    &:nth-child(3)
+      span:first-child
+        color #333
+        font-weight 600
+      span:last-child
+        color #666
+        font-weight 500
+    
+    // Estilos para Envío
+    &:nth-child(4)
+      span:first-child
+        color #333
+        font-weight 600
+      span:last-child
+        color #666
+        font-weight 500
+    
     &.total
       font-weight 700
       font-size 1.1rem
-      color #667eea
+      color #388e3c
       border-top 1px solid #e0e0e0
       padding-top 10px
       margin-top 10px
+      
+      span:first-child
+        color #333
+      span:last-child
+        color #388e3c
 
 // Modal de confirmación
 .confirmation-modal
@@ -3182,6 +3314,12 @@ export default {
   border-radius 0 0 12px 12px
   border-top 1px solid #e0e0e0
   
+  .map-location-label
+    font-weight 600
+    color #ff8c00
+    margin-bottom 5px
+    font-size 0.9rem
+  
   .location-name
     font-weight 600
     color #333
@@ -3192,7 +3330,7 @@ export default {
     color #ff8c00
     text-decoration none
     font-weight 500
-    font-size 0.9rem
+    font-size 0.85rem
     
     &:hover
       text-decoration underline
@@ -3454,7 +3592,7 @@ export default {
     color #00cc00
 
 .balance-option
-  margin-bottom 20px
+  margin-bottom 15px
 
 .balance-checkbox
   display flex
@@ -3498,17 +3636,304 @@ export default {
   color #555
 
 .balance-details
-  margin-top 10px
-  padding-left 25px
+  margin-top 5px
+  padding-left 15px
 
 .balance-item
   display flex
   justify-content space-between
-  margin-bottom 5px
-  font-size 0.9rem
+  margin-bottom 2px
+  font-size 0.8rem
   color #666
 
 .balance-amount
   font-weight 600
   color #333
+
+// Contenedor para las dos cards en el paso 3
+.three-cards-container
+  display grid
+  grid-template-columns 445px 445px
+  grid-template-rows auto auto
+  gap 30px
+  justify-content center
+  max-width 950px
+  margin 0 auto
+  align-items start
+  
+  // Primera fila: Datos de Despacho (ocupa toda la fila)
+  .delivery-data-card
+    grid-column 1 / 2
+    grid-row 1 / 3
+    
+  // Segunda fila: Datos del Comprobante arriba de Método de Pago
+  .voucher-data-card
+    grid-column 2 / 3
+    grid-row 1 / 2
+    align-self start
+    
+  .payment-card
+    grid-column 2 / 3
+    grid-row 2 / 3
+    align-self start
+
+// Estilos para las cards principales
+.delivery-data-card
+  background white
+  border-radius 12px
+  box-shadow 0 4px 20px rgba(0,0,0,0.1)
+  overflow hidden
+  border 1px solid #e8e8e8
+  width 445px
+  height 770px
+  min-height 500px
+  display flex
+  flex-direction column
+
+.payment-card
+  background white
+  border-radius 12px
+  box-shadow 0 4px 20px rgba(0,0,0,0.1)
+  overflow hidden
+  border 1px solid #e8e8e8
+  width 445px
+  height auto
+  min-height 500px
+  display flex
+  flex-direction column
+
+// Card de Datos del Comprobante más pequeña
+.voucher-data-card
+  background white
+  border-radius 12px
+  box-shadow 0 4px 20px rgba(0,0,0,0.1)
+  overflow hidden
+  border 1px solid #e8e8e8
+  width 445px
+  height auto
+  min-height 200px
+  display flex
+  flex-direction column
+
+// Headers de las cards - todos con la misma altura compacta
+.delivery-data-header, .voucher-data-header, .payment-card-header
+  background #ff8c00
+  padding 15px 20px
+  margin 0
+  
+  h3
+    color white
+    font-size 1.1rem
+    font-weight 600
+    margin 0
+    text-align left
+  
+  p
+    color rgba(255,255,255,0.9)
+    font-size 0.9rem
+    margin 5px 0 0 0
+
+// Contenido de las cards
+.delivery-data-content
+  padding 25px
+  flex 1
+  display flex
+  flex-direction column
+  overflow-y auto
+
+// Contenido más compacto para la card de pago
+.payment-card-content
+  padding 15px
+  flex 1
+  display flex
+  flex-direction column
+  overflow-y auto
+
+// Instrucción de pago dentro del contenido
+.payment-instruction
+  margin-bottom 20px
+  
+  p
+    color #333
+    font-size 0.9rem
+    font-weight 500
+    margin 0
+    text-align left
+
+// Contenido más compacto para la card de comprobante
+.voucher-data-content
+  padding 20px
+  flex 1
+  display flex
+  flex-direction column
+  overflow visible
+
+.delivery-info-section
+  background transparent
+  padding 0
+
+.delivery-info-item
+  display flex
+  flex-direction column
+  margin-bottom 20px
+  padding 0
+  
+  &:last-child
+    margin-bottom 0
+  
+  .delivery-label
+    color #ff8c00
+    font-size 0.9rem
+    font-weight 600
+    margin-bottom 8px
+    text-transform none
+    letter-spacing 0
+  
+.delivery-value
+  color #333
+  font-size 0.9rem
+  font-weight 400
+  line-height 1.5
+  text-align left
+  
+  .whatsapp-icon
+    color #25d366
+    margin-left 6px
+    font-size 0.9rem
+    vertical-align middle
+
+// Estilos específicos para la sección de ubicación en mapa en datos de despacho
+.map-location-section
+  display flex
+  flex-direction column
+  margin-bottom 0
+  padding 0
+  
+  .map-location-label
+    color #ff8c00
+    font-size 0.9rem
+    font-weight 600
+    margin-bottom 5px
+    text-transform none
+    letter-spacing 0
+    
+  .map-link
+    color #ff8c00
+    text-decoration none
+    font-weight 500
+    font-size 0.85rem
+    
+    &:hover
+      text-decoration underline
+
+// Estilos específicos para la card de Datos del Comprobante
+.voucher-info-item
+  display flex
+  flex-direction column
+  margin-bottom 12px
+  padding 8px 0
+  
+  &:last-child
+    margin-bottom 0
+
+// Fila para dos elementos (Serie y Correlativo)
+.voucher-row
+  display flex
+  gap 15px
+  margin-bottom 12px
+
+// Fila para tres elementos (Tipo Documento, Serie, Correlativo)
+.voucher-row-three
+  display flex
+  gap 15px
+  margin-bottom 12px
+  justify-content space-between
+
+// Elementos de media columna
+.half-width
+  flex 1
+  margin-bottom 0
+  padding 8px 0
+
+// Elementos de un tercio de columna
+.third-width
+  flex 1
+  margin-bottom 0
+  padding 8px 0
+  
+  // Elemento del medio (Serie) con más espacio
+  &:nth-child(2)
+    flex 1.2
+    text-align center
+
+.voucher-label
+  color #ff8c00
+  font-size 0.85rem
+  font-weight 600
+  text-transform none
+  letter-spacing 0
+  margin-bottom 4px
+
+.voucher-value
+  color #333
+  font-size 0.9rem
+  font-weight 500
+  text-align left
+    
+    .whatsapp-icon
+      color #25d366
+      margin-left 6px
+      font-size 1rem
+      vertical-align middle
+
+.map-link
+  color #ff8c00
+  text-decoration none
+  font-weight 500
+  padding 0
+  background transparent
+  border-radius 0
+  transition all 0.3s ease
+  display inline-block
+  
+  &:hover
+    color #e65100
+    text-decoration underline
+
+// Responsive para el layout de tres cards
+@media (max-width: 1400px)
+  .three-cards-container
+    grid-template-columns 445px 445px
+    gap 20px
+    justify-content center
+    max-width 950px
+
+@media (max-width: 950px)
+  .three-cards-container
+    grid-template-columns 445px
+    gap 20px
+    justify-content center
+    max-width 500px
+    
+  .delivery-data-card, .voucher-data-card, .payment-card
+    margin 0
+    
+  .delivery-data-header, .voucher-data-header, .payment-card-header
+    padding 16px 20px
+    
+    h3
+      font-size 1.1rem
+    
+  .delivery-data-content, .voucher-data-content, .payment-card-content
+    padding 20px
+    
+  .delivery-info-item
+    margin-bottom 18px
+    
+    .delivery-label
+      font-size 0.85rem
+      margin-bottom 6px
+    
+    .delivery-value
+      font-size 0.95rem
 </style> 

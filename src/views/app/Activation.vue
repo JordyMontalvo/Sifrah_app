@@ -4996,7 +4996,7 @@ export default {
     display: grid;
     grid-template-columns: 1fr; /* Una sola columna en móvil */
     grid-template-rows: auto auto; /* Banner izquierdo arriba, derecho abajo */
-    gap: 15px; /* Separación reducida entre banner izquierdo y derecho */
+    gap: 6px; /* Separación reducida entre banner izquierdo y derecho */
   }
   
   .banner-left {
