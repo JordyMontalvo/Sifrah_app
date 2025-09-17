@@ -1573,9 +1573,48 @@ export default {
           payload.deliveryInfo.department = this.deliveryData.department;
           payload.deliveryInfo.province = this.deliveryData.province;
           payload.deliveryInfo.district = this.deliveryData.district;
-          if (this.showAgencyField) {
+          
+          //  MEJORADO: Agregar precio del delivery con mejor manejo y depuración
+          console.log('🚚 Debug Delivery Info:', {
+            deliveryZoneInfo: this.deliveryZoneInfo,
+            department: this.deliveryData.department,
+            showAgencyField: this.showAgencyField,
+            agency: this.deliveryData.agency
+          });
+          
+          // Inicializar campos de delivery
+          payload.deliveryInfo.deliveryPrice = 0;
+          payload.deliveryInfo.deliveryType = 'unknown';
+          
+          if (this.deliveryZoneInfo && this.deliveryData.department === 'lima') {
+            // Para Lima: incluir información de zona y precio
+            console.log('🏙️ Lima - Zona encontrada:', this.deliveryZoneInfo);
+            payload.deliveryInfo.deliveryZone = {
+              zone_id: this.deliveryZoneInfo.zone_id,
+              zone_name: this.deliveryZoneInfo.zone_name,
+              price: this.deliveryZoneInfo.price
+            };
+            payload.deliveryInfo.deliveryPrice = parseFloat(this.deliveryZoneInfo.price) || 0;
+            payload.deliveryInfo.deliveryType = 'zone';
+            console.log('💰 Precio de delivery Lima:', payload.deliveryInfo.deliveryPrice);
+          } else if (this.showAgencyField && this.deliveryData.agency) {
+            // Para provincias: incluir agencia
+            console.log('🏔️ Provincia - Agencia seleccionada:', this.deliveryData.agency);
             payload.deliveryInfo.agency = this.deliveryData.agency;
+            payload.deliveryInfo.deliveryPrice = 0; // Precio por consultar
+            payload.deliveryInfo.deliveryNote = 'Costo por confirmar con la agencia';
+            payload.deliveryInfo.deliveryType = 'agency';
+            console.log('📦 Precio de delivery Provincia: Por consultar');
+          } else {
+            // Caso por defecto - sin información de delivery
+            console.log('⚠️ Sin información de delivery válida');
+            payload.deliveryInfo.deliveryPrice = 0;
+            payload.deliveryInfo.deliveryType = 'none';
+            payload.deliveryInfo.deliveryNote = 'Información de delivery no disponible';
           }
+          
+          // Log final del payload de delivery
+          console.log('📋 Payload Delivery Info Final:', payload.deliveryInfo);
         }
 
         // Validaciones finales antes de enviar
