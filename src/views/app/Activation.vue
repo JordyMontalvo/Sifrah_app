@@ -132,6 +132,12 @@
                     </div>
                   </div>
 
+
+                  <div class="cart-button-container-mobile">
+                    <p>Carrito de Compras</p>
+                    <button>Nuevo Boton Carrito</button>
+                  </div>
+
                   <!-- Grid de productos -->
                   <div class="products-catalog-grid">
                     <!-- Indicador de productos mostrados -->
@@ -1046,11 +1052,17 @@ export default {
           openCartDetailModal() {
         this.showCartDetailModal = true;
         document.body.style.overflow = 'hidden';
+
+        console.log('1')
+
+        document.getElementsByClassName('content')[0].style.transform = 'none'
       },
       
       closeCartDetailModal() {
         this.showCartDetailModal = false;
         document.body.style.overflow = 'auto';
+        // No need to reset transform here; removing the line as requested.
+        document.getElementsByClassName('content')[0].style.removeProperty('transform');
       },
       
       scrollToProducts() {
@@ -2487,6 +2499,7 @@ export default {
 /* DIV PADRE DEL CARRITO DE COMPRAS */
 .carrito-compras-container {
   display: flex;
+  // display: none;
   flex-direction: column;
   align-items: flex-end;
   justify-content: flex-start;
@@ -2550,11 +2563,11 @@ export default {
   position: relative;
   background: transparent;
   transform-origin: top left;
-  will-change: transform;
+  /* will-change: transform; */
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
   overflow: hidden;
-  contain: layout style paint;
+  // contain: layout style paint;
   align-items: stretch;
 }
 
@@ -4631,6 +4644,17 @@ export default {
 }
 
 /* Tablets y dispositivos intermedios - Transición suave hacia móviles */
+@media (min-width: 1060px) {
+  .carrito-compras-container {
+    display: flex;
+  }
+
+  .cart-button-container-mobile {
+    display: none;
+  }
+}
+
+
 @media (max-width: 900px) {
   .carrito-compras-container {
     align-items: center;
@@ -4824,7 +4848,7 @@ export default {
   max-height: calc(100vh - 140px);
   overflow-y: auto;
   transition: all 0.3s ease;
-  will-change: transform;
+  /* will-change: transform; */
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
   -webkit-transform: translateZ(0);
@@ -4941,7 +4965,7 @@ export default {
 /* Estilos adicionales para mejorar la experiencia del zoom */
 .banner-left, .banner-right-with-center {
   transform-origin: center;
-  will-change: transform;
+  /* will-change: transform; */
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
 }
