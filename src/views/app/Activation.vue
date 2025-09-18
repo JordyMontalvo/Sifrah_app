@@ -412,7 +412,7 @@
             </div>
           </div>
           
-          <div class="cart-detail-footer">
+          <div class="cart-detail-footer" style="padding: 10px">
             <!-- Resumen del carrito -->
             <div class="cart-detail-summary">
               <h3>Resumen</h3>
