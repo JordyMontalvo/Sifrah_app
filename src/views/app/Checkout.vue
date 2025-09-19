@@ -3457,6 +3457,27 @@ export default {
           color #ff8c00
           font-weight 700
   
+  // Intercambiar posición del carrito con método de pago en móvil
+  .checkout-content
+    display flex
+    flex-direction column
+    gap 20px
+    
+  .cart-summary
+    order 1
+    width 100%
+    max-width 100%
+    margin 0
+    padding 25px
+    min-height auto
+    height auto
+    
+  .checkout-process
+    order 2
+    width 100%
+    max-width 100%
+    margin 0
+    
   // Mejoras específicas para opciones de despacho en móvil
   .delivery-options
     margin-bottom 20px
@@ -3529,11 +3550,19 @@ export default {
     padding 20px
   
   .cart-summary
-    padding 25px
+    padding 20px
     min-width 100%
-    min-height 650px
+    min-height auto
+    height auto
     z-index 10
-    margin-top -10px
+    margin-top 0
+    order 1
+    
+  .checkout-process
+    order 2
+    width 100%
+    max-width 100%
+    margin 0
   
   .top-progress-bar
     padding 20px 15px
@@ -4269,6 +4298,233 @@ export default {
     
     .delivery-value
       font-size 0.95rem
+
+// Responsive para móvil - orden específico como en la imagen
+@media (max-width: 768px)
+  .three-cards-container
+    display flex
+    flex-direction column
+    gap 15px
+    max-width 100%
+    width 100%
+    padding 0 10px
+    
+  // Orden específico para móvil:
+  // 1. Datos del Comprobante (primero)
+  .voucher-data-card
+    order 1
+    width 100%
+    max-width 100%
+    margin 0
+    border-radius 8px
+    
+  // 2. Método de Pago (segundo)  
+  .payment-card
+    order 2
+    width 100%
+    max-width 100%
+    margin 0
+    border-radius 8px
+    
+  // 3. Datos de Despacho (tercero)
+  .delivery-data-card
+    order 3
+    width 100%
+    max-width 100%
+    margin 0
+    border-radius 8px
+    height auto
+    min-height auto
+    
+  // Headers más compactos para móvil
+  .voucher-data-header, .payment-card-header, .delivery-data-header
+    padding 12px 16px
+    
+    h3
+      font-size 1rem
+      text-align center
+      font-weight 700
+  
+  // Contenido más compacto para móvil
+  .voucher-data-content, .payment-card-content, .delivery-data-content
+    padding 15px
+    
+  // Mejoras específicas para Datos del Comprobante en móvil
+  .voucher-data-card
+    .voucher-row-three
+      display flex
+      flex-direction column
+      gap 10px
+      
+    .voucher-info-item
+      margin-bottom 8px
+      padding 6px 0
+      text-align left
+      
+      .voucher-label
+        font-size 0.85rem
+        font-weight 600
+        color #666
+        margin-bottom 4px
+        
+      .voucher-value
+        font-size 0.9rem
+        font-weight 500
+        color #333
+      
+      // Específicamente para el campo Serie en móvil
+      &.third-width:nth-child(2)
+        text-align left
+        flex 1
+  
+  // Mejoras específicas para Método de Pago en móvil
+  .payment-card
+    .payment-instruction
+      margin-bottom 15px
+      text-align center
+      
+      p
+        font-size 0.9rem
+        color #666
+    
+    .balance-option
+      margin-bottom 15px
+      
+    .payment-options
+      .payment-option
+        margin-bottom 12px
+        padding 12px
+        border-radius 8px
+        border 2px solid #e0e0e0
+        
+        &:hover
+          border-color #ff8c00
+          background #f8f9fa
+        
+        &.selected
+          border-color #ff8c00
+          background #fff8f0
+          
+        .payment-option-content
+          display flex
+          align-items center
+          gap 10px
+          
+          .payment-icon
+            font-size 1.2rem
+            color #ff8c00
+            
+          .payment-text
+            font-size 0.9rem
+            font-weight 500
+            color #333
+  
+  // Mejoras específicas para Datos de Despacho en móvil
+  .delivery-data-card
+    .delivery-info-item
+      margin-bottom 12px
+      padding 8px 0
+      
+      .delivery-label
+        font-size 0.85rem
+        font-weight 600
+        color #666
+        margin-bottom 4px
+        
+      .delivery-value
+        font-size 0.9rem
+        font-weight 500
+        color #333
+        
+    .map-container
+      margin-top 15px
+      
+      #map
+        height 200px
+        border-radius 8px
+
+// Responsive para pantallas muy pequeñas (480px)
+@media (max-width: 480px)
+  .three-cards-container
+    padding 0 5px
+    gap 12px
+    
+  .voucher-data-card, .payment-card, .delivery-data-card
+    border-radius 6px
+    
+  .voucher-data-header, .payment-card-header, .delivery-data-header
+    padding 10px 12px
+    
+    h3
+      font-size 0.95rem
+  
+  .voucher-data-content, .payment-card-content, .delivery-data-content
+    padding 12px
+    
+  // Mejoras para Datos del Comprobante en pantallas muy pequeñas
+  .voucher-data-card
+    .voucher-row-three
+      gap 8px
+      
+    .voucher-info-item
+      margin-bottom 6px
+      padding 4px 0
+      text-align left
+      
+      .voucher-label
+        font-size 0.8rem
+        
+      .voucher-value
+        font-size 0.85rem
+      
+      // Específicamente para el campo Serie en pantallas muy pequeñas
+      &.third-width:nth-child(2)
+        text-align left
+        flex 1
+  
+  // Mejoras para Método de Pago en pantallas muy pequeñas
+  .payment-card
+    .payment-instruction
+      margin-bottom 12px
+      
+      p
+        font-size 0.85rem
+    
+    .balance-option
+      margin-bottom 12px
+      
+    .payment-options
+      .payment-option
+        margin-bottom 10px
+        padding 10px
+        
+        .payment-option-content
+          gap 8px
+          
+          .payment-icon
+            font-size 1.1rem
+            
+          .payment-text
+            font-size 0.85rem
+  
+  // Mejoras para Datos de Despacho en pantallas muy pequeñas
+  .delivery-data-card
+    .delivery-info-item
+      margin-bottom 10px
+      padding 6px 0
+      
+      .delivery-label
+        font-size 0.8rem
+        
+      .delivery-value
+        font-size 0.85rem
+        
+    .map-container
+      margin-top 12px
+      
+      #map
+        height 180px
+        border-radius 6px
 
 .small-map-container
   margin-top 10px
