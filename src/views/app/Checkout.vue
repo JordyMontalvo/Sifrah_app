@@ -3538,6 +3538,76 @@ export default {
     .form-row
       grid-template-columns 1fr
   
+  // Arreglar formularios de delivery en móvil
+  .delivery-form
+    padding 20px
+    margin-top 20px
+    
+    .form-section
+      margin-bottom 25px
+      
+      h4
+        font-size 1.1rem
+        margin-bottom 15px
+        color #ff8c00
+        font-weight 600
+    
+    .form-row
+      display flex
+      flex-direction column
+      gap 15px
+      margin-bottom 15px
+    
+    .form-group
+      margin-bottom 15px
+      width 100%
+      
+      label
+        font-size 0.9rem
+        margin-bottom 6px
+        color #333
+        font-weight 600
+      
+      .input-with-icon
+        input, .form-select
+          width 100%
+          min-width auto
+          padding 14px 16px
+          font-size 0.9rem
+          border-radius 8px
+          border 2px solid #e8e8e8
+          
+          &:focus
+            border-color #ff8c00
+            box-shadow 0 0 0 3px rgba(255, 140, 0, 0.1)
+        
+        i
+          font-size 0.9rem
+          right 12px
+      
+      .form-select
+        min-width auto
+        width 100%
+        padding 14px 16px
+        font-size 0.9rem
+        border-radius 8px
+        background white
+        cursor pointer
+        
+        &:focus
+          border-color #ff8c00
+          box-shadow 0 0 0 3px rgba(255, 140, 0, 0.1)
+    
+    // Campos específicos para ubicación
+    .department-field, .province-field
+      .form-select
+        min-width auto
+        width 100%
+    
+    .district-select, .agency-select
+      min-width auto
+      width 100%
+  
   .step-actions
     flex-direction column
     gap 15px
@@ -4524,6 +4594,44 @@ export default {
       
       #map
         height 180px
+        border-radius 6px
+  
+  // Mejoras adicionales para formularios de delivery en pantallas muy pequeñas
+  .delivery-form
+    padding 15px
+    margin-top 15px
+    
+    .form-section
+      margin-bottom 20px
+      
+      h4
+        font-size 1rem
+        margin-bottom 12px
+    
+    .form-row
+      gap 12px
+      margin-bottom 12px
+    
+    .form-group
+      margin-bottom 12px
+      
+      label
+        font-size 0.85rem
+        margin-bottom 5px
+      
+      .input-with-icon
+        input, .form-select
+          padding 12px 14px
+          font-size 0.85rem
+          border-radius 6px
+        
+        i
+          font-size 0.85rem
+          right 10px
+      
+      .form-select
+        padding 12px 14px
+        font-size 0.85rem
         border-radius 6px
 
 .small-map-container
