@@ -3363,19 +3363,46 @@ export default {
     margin-top -20px
   
   .top-progress-bar
-    padding 25px
+    padding 30px 25px
     margin-right auto
     max-width 600px
+    margin-bottom 15px
     
     &::before, &::after
-      left 30px
-      right 30px
-      height 6px
-      border-radius 4px
+      left 35px
+      right 35px
+      height 7px
+      border-radius 5px
+      top 50%
+      transform translateY(-50%)
     
     &::after
-      left 30px
-      width calc((100% - 60px) * (var(--current-step, 1) / 3))
+      left 35px
+      width calc((100% - 70px) * (var(--current-step, 1) / 3))
+    
+    .progress-step
+      .step-number
+        width 52px
+        height 52px
+        font-size 1.15rem
+        border 3px solid #e0e0e0
+        box-shadow 0 3px 12px rgba(0,0,0,0.1)
+      
+      .step-label
+        font-size 1rem
+        font-weight 600
+        margin-top 10px
+        letter-spacing 0.3px
+      
+      &.active
+        .step-number
+          border-color #ff8c00
+          box-shadow 0 4px 18px rgba(255,140,0,0.3)
+          transform scale(1.05)
+        
+        .step-label
+          color #ff8c00
+          font-weight 700
 
 @media (max-width: 768px)
   .checkout-page
@@ -3389,29 +3416,102 @@ export default {
       font-size 1rem
   
   .top-progress-bar
-    padding 20px
+    padding 25px 20px
     margin-right auto
+    margin-bottom 10px
     
     &::before, &::after
-      left 20px
-      right 20px
-      height 6px
-      border-radius 4px
+      left 25px
+      right 25px
+      height 8px
+      border-radius 6px
+      top 50%
+      transform translateY(-50%)
     
     &::after
-      left 20px
-      width calc((100% - 40px) * (var(--current-step, 1) / 3))
+      left 25px
+      width calc((100% - 50px) * (var(--current-step, 1) / 3))
     
     .progress-step
       .step-number
-        width 45px
-        height 45px
+        width 50px
+        height 50px
+        font-size 1.1rem
+        font-weight 700
+        border 3px solid #e0e0e0
+        box-shadow 0 3px 12px rgba(0,0,0,0.1)
       
       .step-label
-        font-size 0.9rem
+        font-size 0.95rem
+        font-weight 600
+        margin-top 8px
+        letter-spacing 0.2px
+      
+      &.active
+        .step-number
+          border-color #ff8c00
+          box-shadow 0 4px 16px rgba(255,140,0,0.3)
+          transform scale(1.05)
+        
+        .step-label
+          color #ff8c00
+          font-weight 700
+  
+  // Mejoras específicas para opciones de despacho en móvil
+  .delivery-options
+    margin-bottom 20px
+    
+  .delivery-header
+    padding 15px 20px
+    
+    h3
+      font-size 1.2rem
+      text-align center
+  
+  .delivery-content
+    padding 20px 0
+    
+  .delivery-description
+    padding 0 20px 15px 20px
+    
+    p
+      font-size 0.95rem
+      text-align center
   
   .delivery-methods
     flex-direction column
+    margin 0 20px 20px 20px
+    gap 12px
+  
+  .delivery-method
+    padding 16px 20px
+    font-size 0.95rem
+    text-align center
+    min-height 50px
+    display flex
+    align-items center
+    justify-content center
+  
+  .pickup-center
+    padding 0 20px
+    
+  .pickup-selector
+    margin-bottom 20px
+    margin-top 0
+    
+    label
+      font-size 0.95rem
+      margin-bottom 10px
+      text-align center
+      display block
+      font-weight 600
+      color #333
+  
+  .pickup-select
+    padding 14px 15px
+    font-size 0.95rem
+    border-radius 10px
+    min-height 50px
   
   .billing-form
     .form-row
@@ -3436,27 +3536,93 @@ export default {
     margin-top -10px
   
   .top-progress-bar
-    padding 15px
+    padding 20px 15px
     margin-right auto
     max-width 400px
+    margin-bottom 15px
     
     &::before, &::after
-      left 15px
-      right 15px
-      height 6px
-      border-radius 4px
+      left 20px
+      right 20px
+      height 7px
+      border-radius 5px
+      top 50%
+      transform translateY(-50%)
     
     &::after
-      left 15px
-      width calc((100% - 30px) * (var(--current-step, 1) / 3))
+      left 20px
+      width calc((100% - 40px) * (var(--current-step, 1) / 3))
     
     .progress-step
       .step-number
-        width 40px
-        height 40px
+        width 45px
+        height 45px
+        font-size 1rem
+        font-weight 700
+        border 2px solid #e0e0e0
+        box-shadow 0 2px 10px rgba(0,0,0,0.08)
       
       .step-label
-        font-size 0.85rem
+        font-size 0.9rem
+        font-weight 600
+        margin-top 6px
+        letter-spacing 0.1px
+      
+      &.active
+        .step-number
+          border-color #ff8c00
+          box-shadow 0 3px 14px rgba(255,140,0,0.25)
+          transform scale(1.03)
+        
+        .step-label
+          color #ff8c00
+          font-weight 700
+  
+  // Mejoras adicionales para pantallas muy pequeñas
+  .delivery-options
+    margin-bottom 15px
+    border-radius 10px
+    
+  .delivery-header
+    padding 12px 15px
+    
+    h3
+      font-size 1.1rem
+  
+  .delivery-content
+    padding 15px 0
+    
+  .delivery-description
+    padding 0 15px 12px 15px
+    
+    p
+      font-size 0.9rem
+  
+  .delivery-methods
+    margin 0 15px 15px 15px
+    gap 10px
+  
+  .delivery-method
+    padding 14px 16px
+    font-size 0.9rem
+    min-height 48px
+    border-radius 10px
+  
+  .pickup-center
+    padding 0 15px
+    
+  .pickup-selector
+    margin-bottom 15px
+    
+    label
+      font-size 0.9rem
+      margin-bottom 8px
+  
+  .pickup-select
+    padding 12px 14px
+    font-size 0.9rem
+    min-height 48px
+    border-radius 8px
 
 // Fix para resetear el estado de enfoque del campo de documento
 .boleta-fields .input-with-icon input:not(:focus)
