@@ -688,6 +688,10 @@ export default {
         }
       },
       immediate: true
+    },
+    $route() {
+      // Limpiar la clase modal-open cuando cambie la ruta
+      document.body.classList.remove('modal-open');
     }
   },
   async created() {
@@ -755,6 +759,16 @@ export default {
     } finally {
       this.loading = false;
     }
+  },
+
+  mounted() {
+    // Asegurar que el scroll esté habilitado al montar el componente
+    document.body.classList.remove('modal-open');
+  },
+
+  beforeDestroy() {
+    // Limpiar la clase antes de destruir el componente
+    document.body.classList.remove('modal-open');
   },
 
   methods: {
@@ -973,13 +987,13 @@ export default {
       this.selectedProduct = product;
       this.imageLoaded = false; // Resetear la carga de imagen al abrir el modal
       // Prevenir scroll del body cuando el modal está abierto
-      document.body.style.overflow = 'hidden';
+      document.body.classList.add('modal-open');
     },
     closeProductModal() {
       this.selectedProduct = null;
       this.imageLoaded = false; // Resetear la carga de imagen al cerrar el modal
       // Restaurar scroll del body
-      document.body.style.overflow = 'auto';
+      document.body.classList.remove('modal-open');
     },
     addToCart(product) {
       const existingItem = this.cartItems.find(item => item.id === product.id);
@@ -1093,17 +1107,14 @@ export default {
 
           openCartDetailModal() {
         this.showCartDetailModal = true;
-        document.body.style.overflow = 'hidden';
-
-        console.log('1')
-
-        document.getElementsByClassName('content')[0].style.transform = 'none'
+        document.body.classList.add('modal-open');
+        console.log('1');
+        document.getElementsByClassName('content')[0].style.transform = 'none';
       },
       
       closeCartDetailModal() {
         this.showCartDetailModal = false;
-        document.body.style.overflow = 'auto';
-        // No need to reset transform here; removing the line as requested.
+        document.body.classList.remove('modal-open');
         document.getElementsByClassName('content')[0].style.removeProperty('transform');
       },
       
@@ -1120,6 +1131,7 @@ export default {
       this.$store.commit('setCartItems', this.cartItems);
       // Redirigir al checkout
       this.$router.push('/checkout');
+      
     },
 
     getProductDescription(product) {
@@ -1778,7 +1790,7 @@ export default {
   
   .cart-item-img
     width 50px
-    height 50px
+    height: 50px
   
   .cart-item-info h4
     font-size 0.9rem
@@ -5966,6 +5978,11 @@ export default {
 
 .banner-right-main .banner-image-container {
 
+}
+
+// Clase para deshabilitar scroll cuando el modal está abierto
+body.modal-open {
+  overflow: hidden;
 }
 
 </style>
