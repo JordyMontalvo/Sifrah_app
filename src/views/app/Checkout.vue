@@ -411,15 +411,15 @@
               
               <!-- Botones de navegación -->
               <div class="step-actions">
-                <button @click="previousStep" class="back-btn">
-                  << Regresar
-                </button>
                 <button 
                   @click="nextStep" 
                   :disabled="!canProceedToProofStep"
                   class="continue-btn"
                 >
                   Continuar >>
+                </button>
+                <button @click="previousStep" class="back-btn">
+                  << Regresar
                 </button>
               </div>
             </div>
@@ -3113,36 +3113,11 @@ export default {
         font-size 1rem
 
 // Métodos de pago
-.payment-methods
-  margin-bottom 15px
-
-.payment-method
-  display flex
-  align-items center
-  padding 12px
-  border 2px solid #e0e0e0
-  border-radius 10px
-  margin-bottom 15px
-  cursor pointer
-  transition all 0.3s ease
-  
-  &:hover
-    border-color #667eea
-  
-  input[type="radio"]
-    margin-right 15px
-    transform scale(1.2)
-  
-  label
-    display flex
-    align-items center
-    cursor pointer
-    font-weight 500
-    
-    i
-      margin-right 10px
-      color #667eea
-      font-size 1.1rem
+@media (max-width: 768px) {
+  .factura-fields .form-row {
+    display block
+  }
+}
 
 .transfer-info
   background #f8f9fa
