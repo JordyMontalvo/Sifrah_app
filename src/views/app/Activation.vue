@@ -1563,6 +1563,7 @@ export default {
   .products-catalog-grid
     grid-template-columns repeat(2, 1fr)
     gap 15px
+    margin-top: -16px;
   
   .catalog-filters
     flex-direction column
