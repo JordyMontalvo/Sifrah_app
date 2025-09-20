@@ -1093,17 +1093,7 @@ export default {
 
           openCartDetailModal() {
         this.showCartDetailModal = true;
-        
-        // Mejor manejo del scroll para móviles
-        if (window.innerWidth <= 768) {
-          // En móviles, solo prevenir el scroll del body sin bloquear completamente
-          document.body.style.position = 'fixed';
-          document.body.style.width = '100%';
-          document.body.style.top = `-${window.scrollY}px`;
-        } else {
-          // En escritorio, usar el método tradicional
-          document.body.style.overflow = 'hidden';
-        }
+        document.body.style.overflow = 'hidden';
 
         console.log('1')
 
@@ -1112,22 +1102,7 @@ export default {
       
       closeCartDetailModal() {
         this.showCartDetailModal = false;
-        
-        // Restaurar el scroll correctamente
-        if (window.innerWidth <= 768) {
-          // En móviles, restaurar la posición de scroll
-          const scrollY = document.body.style.top;
-          document.body.style.position = '';
-          document.body.style.width = '';
-          document.body.style.top = '';
-          if (scrollY) {
-            window.scrollTo(0, parseInt(scrollY || '0') * -1);
-          }
-        } else {
-          // En escritorio, restaurar overflow
-          document.body.style.overflow = 'auto';
-        }
-        
+        document.body.style.overflow = 'auto';
         // No need to reset transform here; removing the line as requested.
         document.getElementsByClassName('content')[0].style.removeProperty('transform');
       },
@@ -5006,6 +4981,105 @@ export default {
     background: #ff4444;
     color: #fff;
   }
+  
+  /* Estilos específicos para el modal del carrito en móviles */
+  .cart-detail-interface {
+    justify-content: flex-end;
+    align-items: stretch;
+  }
+  
+  .cart-detail-interface-content {
+    width: 100%;
+    height: 100vh;
+    border-radius: 0;
+    overflow: hidden;
+    animation: slideInRight 0.3s ease-out;
+  }
+  
+  .cart-detail-body {
+    padding: 10px;
+    flex: 1;
+    overflow-y: auto;
+    max-height: calc(100vh - 180px);
+  }
+  
+  .cart-detail-item {
+    padding: 8px;
+    margin-bottom: 8px;
+  }
+  
+  .cart-detail-item-image {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .cart-detail-item-info h4 {
+    font-size: 0.85rem;
+    margin-bottom: 4px;
+  }
+  
+  .cart-detail-item-details {
+    gap: 1px;
+  }
+  
+  .cart-detail-item-price {
+    font-size: 0.85rem;
+  }
+  
+  .cart-detail-item-points {
+    font-size: 0.75rem;
+  }
+  
+  .cart-detail-quantity-controls .qty-control-btn {
+    width: 22px;
+    height: 22px;
+    font-size: 0.75rem;
+  }
+  
+  .cart-detail-quantity-controls .quantity-display {
+    padding: 2px 6px;
+    font-size: 0.8rem;
+    min-width: 16px;
+  }
+  
+  .cart-detail-summary {
+    padding: 10px;
+    margin: 10px 0;
+  }
+  
+  .cart-detail-summary h3 {
+    font-size: 1rem;
+    margin-bottom: 10px;
+  }
+  
+  .cart-detail-summary-details .summary-row {
+    padding: 6px 0;
+    font-size: 0.9rem;
+  }
+  
+  .cart-detail-actions {
+    padding: 10px;
+    gap: 8px;
+  }
+  
+  .go-to-pay-btn, .add-more-products-btn {
+    padding: 10px 16px;
+    font-size: 0.85rem;
+  }
+  
+  .cart-detail-header {
+    padding: 15px 20px;
+  }
+  
+  .cart-detail-header h2 {
+    font-size: 1.3rem;
+    margin-bottom: 6px;
+  }
+  
+  .cart-detail-header p {
+    font-size: 0.8rem;
+  }
+  
   
   /* Ocultar el carrito grande en móviles - Solo usar el botón */
   .carrito-compras-container {
