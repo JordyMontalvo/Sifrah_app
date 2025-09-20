@@ -5375,7 +5375,7 @@ export default {
   }
   
   .productos-compras-section {
-    margin-top: -36px;
+    margin-top: -35px;
     padding: 15px 0;
   }
 }
@@ -5730,7 +5730,7 @@ export default {
   .products-catalog-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 15px;
-    margin-top: - 15px;
+    margin-top: - 17px;
   }
   
   .product-catalog-card {
