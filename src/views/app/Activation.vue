@@ -1093,7 +1093,17 @@ export default {
 
           openCartDetailModal() {
         this.showCartDetailModal = true;
-        document.body.style.overflow = 'hidden';
+        
+        // Mejor manejo del scroll para móviles
+        if (window.innerWidth <= 768) {
+          // En móviles, solo prevenir el scroll del body sin bloquear completamente
+          document.body.style.position = 'fixed';
+          document.body.style.width = '100%';
+          document.body.style.top = `-${window.scrollY}px`;
+        } else {
+          // En escritorio, usar el método tradicional
+          document.body.style.overflow = 'hidden';
+        }
 
         console.log('1')
 
@@ -1102,7 +1112,22 @@ export default {
       
       closeCartDetailModal() {
         this.showCartDetailModal = false;
-        document.body.style.overflow = 'auto';
+        
+        // Restaurar el scroll correctamente
+        if (window.innerWidth <= 768) {
+          // En móviles, restaurar la posición de scroll
+          const scrollY = document.body.style.top;
+          document.body.style.position = '';
+          document.body.style.width = '';
+          document.body.style.top = '';
+          if (scrollY) {
+            window.scrollTo(0, parseInt(scrollY || '0') * -1);
+          }
+        } else {
+          // En escritorio, restaurar overflow
+          document.body.style.overflow = 'auto';
+        }
+        
         // No need to reset transform here; removing the line as requested.
         document.getElementsByClassName('content')[0].style.removeProperty('transform');
       },
