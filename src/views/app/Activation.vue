@@ -4783,7 +4783,7 @@ export default {
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    margin: 20px 0;
+    margin: 15px 0;
     padding: 15px 20px;
     background: #fff;
     border-radius: 15px;
@@ -5374,7 +5374,7 @@ export default {
   }
   
   .productos-compras-section {
-    margin-top: 20px;
+    margin-top: -36px;
     padding: 15px 0;
   }
 }
@@ -5410,7 +5410,7 @@ export default {
   }
   
   .productos-compras-section {
-    margin-top: 15px;
+    margin-top: -36px;
     padding: 10px 0;
   }
   
@@ -5729,6 +5729,7 @@ export default {
   .products-catalog-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 15px;
+    margin-top: - 15px;
   }
   
   .product-catalog-card {
