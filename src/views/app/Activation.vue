@@ -82,6 +82,40 @@
           </div>
         </div>
 
+        <!-- Filtros de búsqueda para móviles - Solo visible en móviles -->
+        <div class="mobile-catalog-filters">
+          <div class="search-filter">
+            <i class="fas fa-search search-icon"></i>
+            <input 
+              v-model="searchTerm" 
+              type="text" 
+              placeholder="Búsqueda..." 
+              class="search-input"
+            />
+          </div>
+          
+          <div class="category-filters">
+            <div class="category-buttons">
+              <button 
+                @click="clearAllFilters"
+                class="clear-filters-btn"
+                v-if="searchTerm || (selectedCategories.length > 0 && !selectedCategories.includes('Todos'))"
+              >
+                <i class="fas fa-times"></i> Limpiar
+              </button>
+              <button 
+                v-for="category in categories" 
+                :key="category"
+                @click="toggleCategory(category)"
+                :class="{ active: selectedCategories.includes(category) }"
+                class="category-btn"
+              >
+                {{ formatCategoryName(category) }}
+              </button>
+            </div>
+          </div>
+        </div>
+
         <!-- Sección de catálogo de productos y carrito -->
         <div class="productos-compras-section">
           
@@ -134,8 +168,16 @@
 
 
                   <div class="cart-button-container-mobile">
-                    <p>Carrito de Compras</p>
-                    <button>Nuevo Boton Carrito</button>
+                    <div class="cart-info-left">
+                      <div class="cart-price-info">
+                        <span class="total-price">Monto: S/ {{ cartTotal.toFixed(2) }}</span>
+                        <span class="total-items">Puntos: {{ cartPoints }} pts</span>
+                      </div>
+                    </div>
+                    <button @click="openCartDetailModal" class="cart-square-btn">
+                      <i class="fas fa-shopping-cart"></i>
+                      <span>Ver carrito</span>
+                    </button>
                   </div>
 
                   <!-- Grid de productos -->
@@ -2552,6 +2594,11 @@ export default {
   padding-left: 15px;
 }
 
+/* Ocultar filtros móviles en escritorio */
+.mobile-catalog-filters {
+  display: none;
+}
+
 /* Sistema de banners con Grid - Izquierda separada, Derecha con centro integrado */
 .banners-grid-wrapper {
   display: grid;
@@ -4657,10 +4704,7 @@ export default {
 
 @media (max-width: 900px) {
   .carrito-compras-container {
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    padding: 0 20px;
+    display: none; /* Ocultar el carrito grande en móviles */
   }
   
   .sticky-cart-sidebar {
@@ -4732,6 +4776,83 @@ export default {
     height: 34px;
     font-size: 1.05rem;
   }
+  
+  /* Estilos para el botón del carrito móvil */
+  .cart-button-container-mobile {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin: 20px 0;
+    padding: 15px 20px;
+    background: #fff;
+    border-radius: 15px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
+  
+  .cart-info-left {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+  
+  .cart-title {
+    margin: 0 0 8px 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #333;
+  }
+  
+  .cart-price-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  
+  .total-price {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #000;
+  }
+  
+  .total-items {
+    font-size: 1rem;
+    color: #000;
+    font-weight: 700;
+  }
+  
+  .cart-square-btn {
+    background: linear-gradient(135deg, #ff6b35 0%, #ff8a50 100%);
+    color: #fff;
+    border: none;
+    padding: 16px 20px;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    white-space: nowrap;
+  }
+  
+  .cart-square-btn i {
+    font-size: 1.2rem;
+  }
+  
+  .cart-square-btn:hover {
+    background: linear-gradient(135deg, #e55a2b 0%, #ff7a40 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 107, 53, 0.4);
+  }
+  
+  .cart-square-btn:active {
+    transform: translateY(0);
+  }
 }
 
 @media (max-width: 768px) {
@@ -4744,12 +4865,81 @@ export default {
     flex-direction: column;
   }
   
-  /* Centrar el carrito en móviles - Optimizado para Samsung Galaxy S20 Ultra */
-  .carrito-compras-container {
-    align-items: center;
-    justify-content: center;
+  /* Ocultar el título "Catálogo de Productos" en móviles */
+  .products-title {
+    display: none;
+  }
+  
+  /* Ocultar los filtros originales en móviles */
+  .catalog-filters {
+    display: none;
+  }
+  
+  /* Mostrar los filtros móviles solo en móviles */
+  .mobile-catalog-filters {
+    display: block;
+    padding: 15px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    border: 1px solid #f0f0f0;
+    margin: 15px 0;
+  }
+  
+  /* Estilos para los elementos dentro de los filtros móviles */
+  .mobile-catalog-filters .search-filter {
+    margin-bottom: 15px;
+  }
+  
+  .mobile-catalog-filters .category-filters {
     width: 100%;
-    padding: 0 15px;
+  }
+  
+  .mobile-catalog-filters .category-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+  }
+  
+  .mobile-catalog-filters .category-btn {
+    padding: 8px 16px;
+    border: 2px solid #e0e0e0;
+    background: #fff;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #666;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .mobile-catalog-filters .category-btn.active {
+    background: #ff6b35;
+    border-color: #ff6b35;
+    color: #fff;
+  }
+  
+  .mobile-catalog-filters .clear-filters-btn {
+    padding: 8px 16px;
+    border: 2px solid #ff4444;
+    background: #fff;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #ff4444;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .mobile-catalog-filters .clear-filters-btn:hover {
+    background: #ff4444;
+    color: #fff;
+  }
+  
+  /* Ocultar el carrito grande en móviles - Solo usar el botón */
+  .carrito-compras-container {
+    display: none;
   }
   
   .sticky-cart-sidebar {
@@ -5180,12 +5370,9 @@ export default {
     padding: 10px 0;
   }
   
-  /* Centrar el carrito en móviles pequeños - Optimizado para todos los dispositivos */
+  /* Ocultar el carrito grande en móviles pequeños - Solo usar el botón */
   .carrito-compras-container {
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    padding: 0 10px;
+    display: none;
   }
   
   .sticky-cart-sidebar {
@@ -5272,10 +5459,7 @@ export default {
   }
   
   .carrito-compras-container {
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    padding: 0 6px;
+    display: none; /* Ocultar el carrito grande en móviles */
   }
   
   .sticky-cart-sidebar {
@@ -5367,12 +5551,9 @@ export default {
     margin: 0 0 0 6px;
   }
   
-  /* Ajustar el carrito para pantallas muy estrechas */
+  /* Ocultar el carrito grande en pantallas muy estrechas - Solo usar el botón */
   .carrito-compras-container {
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    padding: 0 5px;
+    display: none;
   }
   
   .sticky-cart-sidebar {
@@ -5516,12 +5697,9 @@ export default {
     height: 80px;
   }
   
-  /* Centrar el carrito en móviles muy pequeños - Consistente con Samsung Galaxy S20 Ultra */
+  /* Ocultar el carrito grande en móviles muy pequeños - Solo usar el botón */
   .carrito-compras-container {
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    padding: 0 8px;
+    display: none;
   }
   
   .sticky-cart-sidebar {
