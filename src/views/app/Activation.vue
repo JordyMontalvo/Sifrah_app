@@ -4878,7 +4878,7 @@ export default {
   /* Mostrar los filtros móviles solo en móviles */
   .mobile-catalog-filters {
     display: block;
-    padding: 15px;
+    padding: 12px 15px;
     background: #fff;
     border-radius: 12px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.05);
@@ -4888,7 +4888,35 @@ export default {
   
   /* Estilos para los elementos dentro de los filtros móviles */
   .mobile-catalog-filters .search-filter {
-    margin-bottom: 15px;
+    margin-bottom: 12px;
+    position: relative;
+  }
+  
+  .mobile-catalog-filters .search-input {
+    width: 100%;
+    padding: 12px 16px 12px 44px;
+    border: 2px solid #e0e0e0;
+    border-radius: 25px;
+    font-size: 0.9rem;
+    background: #f8f9fa;
+    transition: all 0.3s ease;
+  }
+  
+  .mobile-catalog-filters .search-input:focus {
+    outline: none;
+    border-color: #ff6b35;
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+  }
+  
+  .mobile-catalog-filters .search-icon {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #666;
+    font-size: 1rem;
+    z-index: 1;
   }
   
   .mobile-catalog-filters .category-filters {
@@ -4897,21 +4925,34 @@ export default {
   
   .mobile-catalog-filters .category-buttons {
     display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    justify-content: center;
+    flex-wrap: nowrap;
+    gap: 6px;
+    justify-content: flex-start;
+    overflow-x: auto;
+    padding-bottom: 0;
+    -webkit-overflow-scrolling: touch;
+    /* Ocultar scrollbar pero mantener funcionalidad */
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* Internet Explorer 10+ */
+  }
+  
+  .mobile-catalog-filters .category-buttons::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Edge */
   }
   
   .mobile-catalog-filters .category-btn {
-    padding: 8px 16px;
+    padding: 10px 18px;
     border: 2px solid #e0e0e0;
     background: #fff;
-    border-radius: 20px;
-    font-size: 0.9rem;
-    font-weight: 500;
+    border-radius: 25px;
+    font-size: 0.85rem;
+    font-weight: 600;
     color: #666;
     cursor: pointer;
     transition: all 0.3s ease;
+    white-space: nowrap;
+    flex-shrink: 0;
+    min-width: fit-content;
   }
   
   .mobile-catalog-filters .category-btn.active {
@@ -4921,15 +4962,18 @@ export default {
   }
   
   .mobile-catalog-filters .clear-filters-btn {
-    padding: 8px 16px;
+    padding: 10px 18px;
     border: 2px solid #ff4444;
     background: #fff;
-    border-radius: 20px;
-    font-size: 0.9rem;
-    font-weight: 500;
+    border-radius: 25px;
+    font-size: 0.85rem;
+    font-weight: 600;
     color: #ff4444;
     cursor: pointer;
     transition: all 0.3s ease;
+    white-space: nowrap;
+    flex-shrink: 0;
+    min-width: fit-content;
   }
   
   .mobile-catalog-filters .clear-filters-btn:hover {
