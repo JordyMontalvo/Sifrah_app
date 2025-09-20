@@ -5410,7 +5410,7 @@ export default {
   }
   
   .productos-compras-section {
-    margin-top: -36px;
+    margin-top: -34px;
     padding: 10px 0;
   }
   
