@@ -13,8 +13,8 @@
       <div class="checkout-container">
         
           <div class="checkout-content">
-            <!-- Columna izquierda - Resumen del carrito -->
-            <div class="cart-summary">
+            <!-- Columna izquierda - Resumen del carrito (oculto en escritorio, visible en móvil) -->
+            <div class="cart-summary desktop-only">
               <!-- Título del carrito -->
               <div class="cart-title">
                 <h2>Carrito de compras</h2>
@@ -298,12 +298,12 @@
                         <span class="office-value">{{ selectedOffice ? selectedOffice.phone : 'No disponible' }}</span>
                       </div>
 
-                      <div class="office-item" v-if="selectedOffice.horario">
+                      <div class="office-item" v-if="selectedOffice.horario && selectedOffice.id !== 'central'">
                         <span class="office-label">Horario:</span>
                         <span class="office-value">{{ selectedOffice.horario }}</span>
                       </div>
                       
-                      <div class="office-item" v-if="selectedOffice.dias">
+                      <div class="office-item" v-if="selectedOffice.dias && selectedOffice.id !== 'central'">
                         <span class="office-label">Días:</span>
                         <span class="office-value">{{ selectedOffice.dias }}</span>
                       </div>
@@ -448,11 +448,11 @@
                           <i class="fab fa-whatsapp whatsapp-icon" v-if="selectedOffice.phone && selectedOffice.phone !== 'No disponible'"></i>
                         </span>
                       </div>
-                      <div class="delivery-info-item" v-if="selectedOffice.horario">
+                      <div class="delivery-info-item" v-if="selectedOffice.horario && selectedOffice.id !== 'central'">
                         <span class="delivery-label">Horario:</span>
                         <span class="delivery-value">{{ selectedOffice.horario }}</span>
                       </div>
-                      <div class="delivery-info-item" v-if="selectedOffice.dias">
+                      <div class="delivery-info-item" v-if="selectedOffice.dias && selectedOffice.id !== 'central'">
                         <span class="delivery-label">Días:</span>
                         <span class="delivery-value">{{ selectedOffice.dias }}</span>
                       </div>
@@ -581,6 +581,7 @@
                       name="payment" 
                       value="credit-card"
                       v-model="pay_method"
+                      @click="togglePaymentMethod('credit-card')"
                     />
                     <label for="credit-card">
                       <i class="fas fa-credit-card"></i>
@@ -591,12 +592,13 @@
                   <div class="payment-method">
                     <input 
                       type="radio" 
-                      id="'bank'" 
+                      id="bank" 
                       name="payment" 
                       value="bank"
                       v-model="pay_method"
+                      @click="togglePaymentMethod('bank')"
                     />
-                    <label for="transfer">
+                    <label for="bank">
                       <i class="fas fa-university"></i>
                       <span>Transferencia Bancaria</span>
                     </label>
@@ -609,16 +611,80 @@
                       name="payment" 
                       value="cash"
                       v-model="pay_method"
+                      @click="togglePaymentMethod('cash')"
                     />
-                    <label for="'cash'">
+                    <label for="cash">
                       <i class="fas fa-money-bill-wave"></i>
                       <span>Efectivo</span>
                     </label>
                   </div>
+                  
+                  <div class="payment-method">
+                    <input 
+                      type="radio" 
+                      id="yape" 
+                      name="payment" 
+                      value="yape"
+                      v-model="pay_method"
+                      @click="togglePaymentMethod('yape')"
+                    />
+                    <label for="yape">
+                      <i class="fas fa-mobile-alt"></i>
+                      <span>Yape</span>
+                    </label>
+                  </div>
+                </div>
+                
+                <!-- Información de Yape -->
+                <div v-if="pay_method === 'yape'" class="yape-info">
+                  <div class="section-header">
+                    <h3>Datos de Yape</h3>
+                  </div>
+                  
+                  <div class="yape-details">
+                    <div class="yape-info-item">
+                      <span class="yape-label">Entidad:</span>
+                      <span class="yape-value">Yape</span>
+                    </div>
+                    <div class="yape-info-item">
+                      <span class="yape-label">Cuenta:</span>
+                      <span class="yape-value">973 808 360</span>
+                    </div>
+                    <div class="yape-info-item">
+                      <span class="yape-label">Titular:</span>
+                      <span class="yape-value">SIFRAH S.A.C.</span>
+                    </div>
+                    <div class="yape-info-item">
+                      <span class="yape-label">Tipo:</span>
+                      <span class="yape-value">Transferencia a celular</span>
+                    </div>
+                  </div>
+                  
+                  <div class="payment-form-simple">
+                    <div class="form-field-simple">
+                      <label>Fecha de Pago</label>
+                      <input v-model="yapePaymentDate" type="date" required />
+                    </div>
+                    <div class="form-field-simple">
+                      <label>Número de Operación/Voucher</label>
+                      <input v-model="yapeVoucherNumber" type="text" placeholder="Número de operación" @input="onlyNumbers($event, 'yapeVoucherNumber')" required />
+                    </div>
+                    <div class="form-field-simple">
+                      <label>Comprobante de Pago</label>
+                      <div class="file-upload-simple">
+                        <input type="file" @change="onYapeVoucherFileChange" id="yape-voucher-file" />
+                        <label for="yape-voucher-file" class="file-label-simple">
+                          <i class="fas fa-upload"></i>
+                          <span>{{ yapeVoucherPreview ? 'Cambiar archivo' : 'Seleccionar archivo' }}</span>
+                        </label>
+                      </div>
+                      <img v-if="yapeVoucherPreview" :src="yapeVoucherPreview" class="voucher-preview-img" />
+                    </div>
+                  </div>
                 </div>
                 
                 <!-- Información de transferencia -->
-                <div v-if= "pay_method === 'bank' "class="transfer-info">
+                <div v-if="pay_method === 'bank'" class="transfer-info">
                   <div class="section-header">
                     <h3>Datos Bancarios</h3>
                   </div>
@@ -692,6 +758,7 @@
                     </div>
                   </div>
                 </div>
+
               </div>
             </div>
           </div>
@@ -806,6 +873,11 @@ export default {
       bankName: '',
       paymentDate: '',
       voucherNumber: '',
+      // Variables para Yape
+      yapeVoucherFile: null,
+      yapeVoucherPreview: null,
+      yapePaymentDate: '',
+      yapeVoucherNumber: '',
       activationError: null,
       activationSuccess: false
     }
@@ -930,6 +1002,17 @@ export default {
   },
   
   methods: {
+    // Método para toggle de métodos de pago - permite desmarcar al hacer clic nuevamente
+    togglePaymentMethod(method) {
+      if (this.pay_method === method) {
+        // Si ya está seleccionado, deseleccionar
+        this.pay_method = '';
+      } else {
+        // Si no está seleccionado, seleccionar
+        this.pay_method = method;
+      }
+    },
+    
     getAgencyName() {
       // Buscar el nombre de la agencia seleccionada
       if (this.availableAgencies && this.deliveryData.agency) {
@@ -1502,6 +1585,21 @@ export default {
       }
     },
     
+    onYapeVoucherFileChange(event) {
+      const file = event.target.files[0];
+      if (file) {
+        this.yapeVoucherFile = file;
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          this.yapeVoucherPreview = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      } else {
+        this.yapeVoucherFile = null;
+        this.yapeVoucherPreview = null;
+      }
+    },
+    
     async submitActivation() {
       this.activationError = null;
       this.activationSuccess = false;
@@ -1878,6 +1976,16 @@ export default {
     font-weight 700
     text-align left
     letter-spacing -0.5px
+  
+  // Ajuste para móviles - evitar que choque con las cards
+  @media (max-width: 768px)
+    top 20px
+    left 20px
+    z-index 5
+    
+    h1
+      font-size 18px
+      margin 0 0 10px 0
 
 .checkout-header
   text-align center
@@ -1899,10 +2007,11 @@ export default {
   flex-direction column
   max-width 1400px
   margin 0 auto 0 0
-
-
-
   overflow visible
+  
+  // Ajuste para móviles - agregar margen superior para evitar choque con el título
+  @media (max-width: 768px)
+    margin-top 40px
 
 .checkout-main-header
 
@@ -3171,6 +3280,86 @@ export default {
   padding 20px
   margin-bottom 30px
 
+.yape-info
+  background #f8f9fa
+  border-radius 10px
+  padding 20px
+  margin-bottom 30px
+
+.yape-details
+  background #f8f9fa
+  border-radius 8px
+  padding 20px
+  margin-bottom 25px
+  border 1px solid #e0e0e0
+
+.yape-info-item
+  display flex
+  justify-content space-between
+  margin-bottom 10px
+  font-size 0.95rem
+  padding 8px 0
+  
+  &:last-child
+    margin-bottom 0
+  
+  .yape-label
+    font-weight 600
+    color #333
+    min-width 80px
+  
+  .yape-value
+    color #333
+    font-weight 500
+
+// Estilos para los métodos de pago
+.payment-methods
+  margin-top 15px
+
+.payment-method
+  margin-bottom 15px
+  
+  input[type="radio"]
+    display none
+    
+  label
+    display flex
+    align-items center
+    font-weight 500
+    color #333
+    cursor pointer
+    padding 12px 15px
+    border 2px solid #e0e0e0
+    border-radius 8px
+    background #f8f9fa
+    transition all 0.3s ease
+    
+    &:hover
+      border-color #ff8c00
+      background #fff8f0
+    
+    i
+      margin-right 12px
+      font-size 1.1rem
+      color #ff8c00
+      width 20px
+      text-align center
+      
+    span
+      font-size 0.9rem
+      color #555
+      
+  input[type="radio"]:checked + label
+    background #ff8c00
+    border-color #ff8c00
+    color white
+    
+    i
+      color white
+      
+    span
+      color white
+
 .bank-details-simple
   background #f8f9fa
   border-radius 8px
@@ -4420,7 +4609,8 @@ export default {
     margin 0
     border-radius 8px
     
-  // 3. Datos de Despacho (tercero)
+    
+  // 3. Datos de Despacho (tercero - ya no hay carrito redundante)
   .delivery-data-card
     order 3
     width 100%
