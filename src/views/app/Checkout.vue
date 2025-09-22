@@ -254,9 +254,9 @@
                   <h3>Ubicación en mapa</h3>
                 </div>
                 
-                <div class="map-location-grid">
-                  <!-- Columna izquierda: Mapa -->
-                  <div class="map-column">
+                <div class="map-location-vertical">
+                  <!-- Mapa en la parte superior -->
+                  <div class="map-section">
                     <div class="map-container">
                       <div id="map" style="height: 300px; border-radius: 12px;"></div>
                       <div class="map-info">
@@ -281,34 +281,31 @@
                     </div>
                   </div>
                   
-                  <!-- Columna derecha: Información de ubicación -->
-                  <div class="location-column">
-                    <div class="location-header">
+                  <!-- Información de la oficina matriz debajo del mapa -->
+                  <div class="office-info-section">
+                    <div class="office-header">
+                      <h4>{{ selectedOffice ? selectedOffice.name : 'Oficina' }}</h4>
                     </div>
                     
-                                          <div class="location-details">
-                        <div class="location-main">
-                          <strong>{{ selectedOffice ? selectedOffice.name : 'Oficina' }}</strong>
-                        </div>
-                        
-                        <div class="location-item">
-                          <span class="location-label">Dirección:</span>
-                          <span class="location-value">{{ selectedOffice ? selectedOffice.address : 'No disponible' }}</span>
-                        </div>
-                        
-                        <div class="location-item">
-                          <span class="location-label">Teléfono:</span>
-                          <span class="location-value">{{ selectedOffice ? selectedOffice.phone : 'No disponible' }}</span>
-                        </div>
-
-                      <div class="location-item" v-if="selectedOffice.horario">
-                        <span class="location-label">Horario:</span>
-                        <span class="location-value">{{ selectedOffice.horario }}</span>
+                    <div class="office-details">
+                      <div class="office-item">
+                        <span class="office-label">Dirección:</span>
+                        <span class="office-value">{{ selectedOffice ? selectedOffice.address : 'No disponible' }}</span>
                       </div>
                       
-                      <div class="location-item" v-if="selectedOffice.dias">
-                        <span class="location-label">Días:</span>
-                        <span class="location-value">{{ selectedOffice.dias }}</span>
+                      <div class="office-item">
+                        <span class="office-label">Teléfono:</span>
+                        <span class="office-value">{{ selectedOffice ? selectedOffice.phone : 'No disponible' }}</span>
+                      </div>
+
+                      <div class="office-item" v-if="selectedOffice.horario">
+                        <span class="office-label">Horario:</span>
+                        <span class="office-value">{{ selectedOffice.horario }}</span>
+                      </div>
+                      
+                      <div class="office-item" v-if="selectedOffice.dias">
+                        <span class="office-label">Días:</span>
+                        <span class="office-value">{{ selectedOffice.dias }}</span>
                       </div>
                     </div>
                   </div>
@@ -2465,33 +2462,88 @@ export default {
 .map-and-location-container
   margin-bottom 30px
 
-.map-location-grid
+.map-location-vertical
   display grid
   grid-template-columns 1fr 1fr
   gap 20px
   align-items start
+  
+  // Para móviles, cambiar a layout vertical
+  @media (max-width: 768px)
+    display flex !important
+    flex-direction column !important
+    gap 15px
+    grid-template-columns none !important
 
-.map-column
+.map-section
   .map-container
     margin-bottom 0
-
-.location-column
-  .location-header
-    margin-bottom -18px
     
-    h3
+  // Asegurar que el mapa se vea bien en móviles
+  @media (max-width: 768px)
+    order 1
+    width 100%
+    
+    #map
+      height 250px !important
+      border-radius 8px
+
+.office-info-section
+  background #f8f9fa
+  border-radius 12px
+  padding 20px
+  border 1px solid #e9ecef
+  
+  // En móviles, esta sección va debajo del mapa
+  @media (max-width: 768px)
+    order 2
+    width 100%
+    margin-top 10px
+  
+  .office-header
+    margin-bottom 15px
+    
+    h4
       color #333
-      font-size 1.1rem
+      font-size 1.2rem
       font-weight 600
       margin 0
+      color #ff8c00
   
-  .location-details
+  .office-details
     background white
     border-radius 10px
     padding 18px
     border 1px solid #e8e8e8
     box-shadow 0 2px 8px rgba(0,0,0,0.06)
     margin-top 15px
+  
+  .office-item
+    display flex
+    justify-content space-between
+    align-items flex-start
+    margin-bottom 12px
+    padding 10px
+    background #fafafa
+    border-radius 6px
+    border-left 3px solid #ff8c00
+    
+    &:last-child
+      margin-bottom 0
+    
+    .office-label
+      font-weight 600
+      color #ff8c00
+      font-size 0.9rem
+      min-width 70px
+      margin-right 12px
+    
+    .office-value
+      font-weight 500
+      color #333
+      font-size 0.9rem
+      flex 1
+      line-height 1.3
   
   .location-main
     text-align center
@@ -2540,24 +2592,17 @@ export default {
 
   // Responsive para móviles
   @media (max-width: 768px)
-    .map-location-grid
-      grid-template-columns 1fr
-      gap 15px
-    
-    .map-column
-      order 1
-    
-    .location-column
-      order 2
-    
-    .location-details
+    .office-info-section
       padding 15px
+      
+      .office-details
+        padding 15px
     
-    .location-item
+    .office-item
       flex-direction column
       align-items flex-start
       
-      .location-label
+      .office-label
         margin-bottom 6px
         margin-right 0
         min-width auto
@@ -2672,6 +2717,7 @@ export default {
   border-radius 8px
   padding 15px
   border 1px solid #e0e0e0
+
 
 .location-item
   margin-bottom 8px
