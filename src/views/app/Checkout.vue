@@ -3393,7 +3393,7 @@ export default {
   .top-progress-bar
     padding 25px 20px
     margin-right auto
-    margin-bottom 10px
+    margin-bottom 30px
     
     &::before, &::after
       left 25px
@@ -3439,7 +3439,7 @@ export default {
     gap 20px
     
   .cart-summary
-    order 1
+    order 2
     width 100%
     max-width 100%
     margin 0
@@ -3448,10 +3448,11 @@ export default {
     height auto
     
   .checkout-process
-    order 2
+    order 1
     width 100%
     max-width 100%
     margin 0
+    margin-top 20px
     
   // Mejoras específicas para opciones de despacho en móvil
   .delivery-options
@@ -3601,19 +3602,21 @@ export default {
     height auto
     z-index 10
     margin-top 0
-    order 1
+    order 2
     
   .checkout-process
-    order 2
+    order 1
     width 100%
     max-width 100%
     margin 0
+    margin-top 20px
   
   .top-progress-bar
     padding 20px 15px
     margin-right auto
     max-width 400px
-    margin-bottom 15px
+    margin-bottom 25px
+    margin-top 25px
     
     &::before, &::after
       left 20px
