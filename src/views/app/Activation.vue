@@ -4869,6 +4869,28 @@ export default {
 }
 
 @media (max-width: 768px) {
+  .product-modal {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    padding: 20px;
+    box-sizing: border-box;
+    z-index: 1000 !important;
+  }
+  
+  .product-modal-content {
+    width: 100%;
+    max-width: 400px;
+    max-height: 80vh;
+    margin: 0 !important;
+    position: relative;
+  }
+  
   .catalog-container {
     flex-direction: column;
     padding-top: 0;

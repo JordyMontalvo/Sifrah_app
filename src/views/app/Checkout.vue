@@ -30,7 +30,8 @@
                   <div class="cart-item-details">
                     <div class="cart-item-quantity">{{ item.total }} Unid.</div>
                     <div class="cart-item-name">{{ item.name }}</div>
-                    <div class="cart-item-price">S/ {{ getProductPrice(item) }} - {{ item.points }} pts</div>
+                    <div class="cart-item-price">S/ {{ getProductPrice(item) }}</div>
+                    <div class="cart-item-points">{{ item.points }} pts</div>
                   </div>
                 </div>
                 
@@ -2166,9 +2167,10 @@ export default {
   gap 4px
 
 .cart-item-quantity
-  font-size 1rem
+  font-size 1.1rem
   color #666
   margin-bottom 5px
+  font-weight 600
 
 .cart-item-name
   font-weight 700
@@ -2263,7 +2265,7 @@ export default {
     display flex
     justify-content space-between
     margin-bottom 5px
-    font-size 0.85rem
+    font-size 1rem
     align-items center
     
     span:first-child
@@ -3681,6 +3683,170 @@ export default {
     padding 25px
     min-height auto
     height auto
+    max-height 85vh
+    overflow-y auto
+    background white
+    border-radius 12px
+    box-shadow 0 4px 20px rgba(0,0,0,0.1)
+    
+    .cart-title
+      position sticky
+      top 0
+      background white
+      z-index 10
+      padding-bottom 15px
+      margin-bottom 15px
+      border-bottom 1px solid #e0e0e0
+      
+      h2
+        font-size 1.3rem
+        margin-bottom 8px
+        color #ff8c00
+        
+      p
+        font-size 0.9rem
+        color #666
+        margin 0
+    
+    .cart-items
+      max-height calc(85vh - 120px)
+      overflow-y auto
+      padding-right 5px
+      
+      // Scroll personalizado
+      &::-webkit-scrollbar
+        width 6px
+        
+      &::-webkit-scrollbar-track
+        background #f1f1f1
+        border-radius 3px
+        
+      &::-webkit-scrollbar-thumb
+        background #ff8c00
+        border-radius 3px
+        
+      &::-webkit-scrollbar-thumb:hover
+        background #e65100
+    
+    .cart-item
+      background white
+      border 1px solid #e8e8e8
+      border-radius 12px
+      padding 15px
+      margin-bottom 15px
+      display flex
+      align-items center
+      justify-content space-between
+      box-shadow 0 2px 8px rgba(0,0,0,0.05)
+      transition all 0.3s ease
+      
+      &:hover
+        box-shadow 0 4px 12px rgba(0,0,0,0.1)
+        transform translateY(-2px)
+      
+      .cart-item-image
+        width 60px
+        height 60px
+        margin-right 15px
+        flex-shrink 0
+        
+        img
+          width 100%
+          height 100%
+          object-fit cover
+          border-radius 8px
+      
+      .cart-item-details
+        flex 1
+        display flex
+        flex-direction column
+        gap 4px
+        
+        .cart-item-quantity
+          display none // Ocultar cantidad en móvil
+          
+        .cart-item-name
+          font-weight 700
+          color #333
+          font-size 1rem
+          margin-bottom 4px
+          
+        .cart-item-price
+          color #388e3c
+          font-weight 600
+          font-size 1.1rem
+          
+        .cart-item-points
+          color #ff8c00
+          font-weight 600
+          font-size 1rem
+      
+      .cart-item-controls
+        display flex
+        flex-direction column
+        align-items center
+        gap 8px
+        
+        .quantity-controls
+          display flex
+          align-items center
+          gap 5px
+          
+          .qty-btn
+            width 30px
+            height 30px
+            border none
+            border-radius 6px
+            background #ff8c00
+            color white
+            font-weight bold
+            cursor pointer
+            display flex
+            align-items center
+            justify-content center
+            transition all 0.3s ease
+            
+            &:hover
+              background #e65100
+              transform scale(1.1)
+          
+          .qty-display
+            width 30px
+            height 30px
+            background white
+            border 1px solid #e0e0e0
+            border-radius 6px
+            display flex
+            align-items center
+            justify-content center
+            font-weight 600
+            color #333
+            font-size 0.9rem
+        
+        .delete-btn
+          width 30px
+          height 30px
+          border none
+          border-radius 6px
+          background #f44336
+          color white
+          cursor pointer
+          display flex
+          align-items center
+          justify-content center
+          transition all 0.3s ease
+          
+          &:hover
+            background #d32f2f
+            transform scale(1.1)
+    
+    .order-summary
+      position sticky
+      bottom 0
+      background white
+      padding-top 15px
+      border-top 1px solid #e0e0e0
+      margin-top 15px
     
   .checkout-process
     order 1
@@ -3844,7 +4010,7 @@ export default {
     width 100%
     max-width 100%
     margin 0
-    margin-top 20px
+    margin-top -35px
   
   .top-progress-bar
     padding 20px 15px
@@ -3864,6 +4030,7 @@ export default {
     &::after
       left 20px
       width calc((100% - 40px) * (var(--current-step, 1) / 3))
+      max-width calc(100% - 40px)
     
     .progress-step
       .step-number
@@ -4310,6 +4477,7 @@ export default {
   .delivery-data-card
     grid-column 1 / 2
     grid-row 1 / 3
+    align-self start
     
   // Segunda fila: Datos del Comprobante arriba de Método de Pago
   .voucher-data-card
@@ -4330,8 +4498,8 @@ export default {
   overflow hidden
   border 1px solid #e8e8e8
   width 445px
-  height 770px
-  min-height 500px
+  height auto
+  min-height auto
   display flex
   flex-direction column
 
@@ -4384,7 +4552,7 @@ export default {
   flex 1
   display flex
   flex-direction column
-  overflow-y auto
+  overflow visible
 
 // Contenido más compacto para la card de pago
 .payment-card-content
