@@ -4045,6 +4045,13 @@ export default {
     
     button
       width 100%
+    
+    // Cambiar orden de botones en móvil: Confirmar y Pagar primero, Volver después
+    .process-btn
+      order 1
+    
+    .back-btn
+      order 2
 
 @media (max-width: 480px)
   .checkout-process
