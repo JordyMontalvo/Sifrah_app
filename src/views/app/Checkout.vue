@@ -3888,6 +3888,11 @@ export default {
   // Mejoras específicas para opciones de despacho en móvil
   .delivery-options
     margin-bottom 20px
+    margin-top -20px
+
+  // Mejoras específicas para facturación en móvil
+  .proof-section
+    margin-top -20px
     
   .delivery-header
     padding 15px 20px
@@ -4042,6 +4047,7 @@ export default {
   .step-actions
     flex-direction column
     gap 15px
+    margin-top -2px
     
     button
       width 100%
