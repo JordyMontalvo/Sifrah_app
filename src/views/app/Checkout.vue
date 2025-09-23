@@ -229,23 +229,21 @@
                       <p>💡 El costo de envío varía según la agencia y destino. Consulta directamente con la agencia seleccionada.</p>
                     </div>
                 </div>
-              </div>
-
-              <!-- Centro de Recojo -->
-              <div v-if="deliveryMethod === 'pickup'" class="pickup-center">
-              
                 
-                <div class="pickup-selector">
-                  <label>Seleccione el PDE</label>
-                  <select v-model="selectedPickupPoint" class="pickup-select" @change="onPickupPointChange">
-                    <option value="">Selecciona un punto de entrega</option>
-                    <option v-for="office in offices" :key="office.id" :value="office.id">
-                      {{ office.name }}
-                      <span v-if="office.googleMapsUrl" class="maps-indicator" title="Tiene Google Maps">
-                        <i class="fas fa-map-marker-alt"></i>
-                      </span>
-                    </option>
-                  </select>
+                <!-- Formulario de Pickup -->
+                <div v-if="deliveryMethod === 'pickup'" class="pickup-form">
+                  <div class="pickup-section">
+                    <h4>Seleccione el PDE</h4>
+                    <select v-model="selectedPickupPoint" class="pickup-select" @change="onPickupPointChange">
+                      <option value="">Selecciona un punto de entrega</option>
+                      <option v-for="office in offices" :key="office.id" :value="office.id">
+                        {{ office.name }}
+                        <span v-if="office.googleMapsUrl" class="maps-indicator" title="Tiene Google Maps">
+                          <i class="fas fa-map-marker-alt"></i>
+                        </span>
+                      </option>
+                    </select>
+                  </div>
                 </div>
               </div>
 
@@ -2523,15 +2521,50 @@ export default {
     color white
     box-shadow 0 4px 16px rgba(255, 140, 0, 0.25)
 
-.pickup-selector
-  margin-bottom 30px
-  margin-top -15px
+// Formulario de pickup - similar a delivery-form
+.pickup-form
+  margin-top 30px
+  padding 35px
+  position relative
+  overflow hidden
+  background white
+  border-radius 0 0 12px 12px
+  box-shadow 0 4px 20px rgba(0,0,0,0.08)
   
-  label
-    display block
-    margin-bottom 8px
-    font-weight 500
-    color #333
+  &::before
+    content ''
+    position absolute
+    top 0
+    left 0
+    right 0
+    height 4px
+    background linear-gradient(90deg, #ff8c00 0%, #ffa726 50%, #ff8c00 100%)
+  
+  &::after
+    content ''
+    position absolute
+    top 0
+    right 0
+    width 60px
+    height 60px
+    background radial-gradient(circle at 100% 0%, rgba(255, 140, 0, 0.1) 0%, transparent 70%)
+    border-radius 0 0 0 100%
+
+.pickup-section
+  margin-bottom 30px
+  
+  h4
+    color #ff8c00
+    font-size 1.3rem
+    font-weight 700
+    margin-bottom 25px
+    padding 15px 20px
+    background linear-gradient(135deg, rgba(255, 140, 0, 0.08) 0%, rgba(255, 140, 0, 0.03) 100%)
+    border-radius 12px
+    border-left 4px solid #ff8c00
+    position relative
+    margin-bottom 0
+    margin 0
 
 .pickup-select
   width 100%
@@ -2540,6 +2573,9 @@ export default {
   border-radius 8px
   font-size 1rem
   transition all 0.3s ease
+  background white
+  margin-top 20px
+  box-sizing border-box
   
   &:focus
     outline none
@@ -3932,6 +3968,30 @@ export default {
     .form-group
       margin-bottom 15px
       width 100%
+
+  // Arreglar formularios de pickup en móvil
+  .pickup-form
+    padding 30px 20px
+    margin-top 20px
+    
+    .pickup-section
+      margin-bottom 25px
+      
+      h4
+        font-size 1.1rem
+        margin-bottom 15px
+        color #ff8c00
+        font-weight 600
+    
+    .form-row
+      display flex
+      flex-direction column
+      gap 15px
+      margin-bottom 15px
+    
+    .form-group
+      margin-bottom 15px
+      width 100%
       
       label
         font-size 0.9rem
@@ -4978,6 +5038,29 @@ export default {
     margin-top 15px
     
     .form-section
+      margin-bottom 20px
+      
+      h4
+        font-size 1rem
+        margin-bottom 12px
+    
+    .form-row
+      gap 12px
+      margin-bottom 12px
+    
+    .form-group
+      margin-bottom 12px
+      
+      label
+        font-size 0.85rem
+        margin-bottom 5px
+
+  // Mejoras adicionales para formularios de pickup en pantallas muy pequeñas
+  .pickup-form
+    padding 15px
+    margin-top 15px
+    
+    .pickup-section
       margin-bottom 20px
       
       h4
