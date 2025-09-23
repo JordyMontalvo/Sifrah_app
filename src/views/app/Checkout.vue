@@ -4078,7 +4078,7 @@ export default {
     margin-right auto
     max-width 400px
     margin-bottom 25px
-    margin-top 25px
+    margin-top -15px
     
     &::before, &::after
       left 20px
