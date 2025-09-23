@@ -1978,15 +1978,9 @@ export default {
     text-align left
     letter-spacing -0.5px
   
-  // Ajuste para móviles - evitar que choque con las cards
+  // Ajuste para móviles - ocultar el título en dispositivos móviles
   @media (max-width: 768px)
-    top 20px
-    left 20px
-    z-index 5
-    
-    h1
-      font-size 18px
-      margin 0 0 10px 0
+    display none
 
 .checkout-header
   text-align center
