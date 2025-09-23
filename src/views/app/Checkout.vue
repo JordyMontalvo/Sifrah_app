@@ -4815,24 +4815,23 @@ export default {
     padding 0 10px
     
   // Orden específico para móvil:
-  // 1. Datos del Comprobante (primero)
-  .voucher-data-card
+  // 1. Método de Pago (primero)
+  .payment-card
     order 1
     width 100%
     max-width 100%
     margin 0
     border-radius 8px
     
-  // 2. Método de Pago (segundo)  
-  .payment-card
+  // 2. Datos del Comprobante (segundo)
+  .voucher-data-card
     order 2
     width 100%
     max-width 100%
     margin 0
     border-radius 8px
     
-    
-  // 3. Datos de Despacho (tercero - ya no hay carrito redundante)
+  // 3. Datos de Despacho (tercero)
   .delivery-data-card
     order 3
     width 100%
