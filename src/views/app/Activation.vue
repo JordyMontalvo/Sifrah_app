@@ -1228,8 +1228,8 @@ export default {
     align-items center
     font-size 1.18rem
     font-weight 600
-    color #ff9800
-    background #fff3e0
+    color #D209B6
+    background #f3e5f5
     border-radius 18px
     padding 10px 28px
     margin 0 6px
@@ -1241,7 +1241,7 @@ export default {
       margin-right 8px
       font-size 1.3em
     &:hover, &.router-link-exact-active
-      background #ff9800
+      background #D209B6
       color #fff
       box-shadow 0 4px 16px rgba(255,152,0,0.13)
       transform translateY(-2px) scale(1.04)
@@ -1252,7 +1252,7 @@ export default {
   justify-content flex-end
   font-size 1.1rem
   margin-bottom 10px
-  color #ff9800
+  color #D209B6
   .points-icon
     margin-right 6px
     font-size 1.3em
@@ -1281,7 +1281,7 @@ export default {
   margin-bottom 18px
   ._tab
     padding 10px 18px
-    background #fffde7
+    background #f3e5f5
     border-radius 16px 16px 0 0
     font-weight 400
     font-size 1.08rem
@@ -1295,7 +1295,7 @@ export default {
       font-size 1.2em
     &.selected
       font-weight 700
-      background #ff9800
+      background #D209B6
       color #fff
       box-shadow 0 2px 8px rgba(255,152,0,0.10)
 
@@ -1318,7 +1318,7 @@ export default {
   border 2px solid transparent
   &:hover
     box-shadow 0 4px 24px rgba(255,152,0,0.13)
-    border 2px solid #ff9800
+    border 2px solid #D209B6
     transform scale(1.03)
 
 .product-img
@@ -1334,7 +1334,7 @@ export default {
 .product-name
   font-size 1.08rem
   font-weight 700
-  color #ff9800
+  color #D209B6
   margin-bottom 6px
 
 .product-meta
@@ -1344,10 +1344,10 @@ export default {
   font-size 0.98rem
   margin-bottom 10px
   .product-price
-    color #388e3c
+    color #D209B6
     font-weight 600
   .product-points
-    color #b26a00
+    color #D209B6
     font-weight 600
 
 .product-controls
@@ -1358,7 +1358,7 @@ export default {
   margin-top 8px
 
 .qty-btn
-  background #ff9800
+  background #D209B6
   color #fff
   border none
   border-radius 8px
@@ -1371,20 +1371,20 @@ export default {
   cursor pointer
   transition background 0.18s, transform 0.18s
   &:hover
-    background #fb8c00
+    background #c2185b
     transform scale(1.08)
 
 .qty-input
   width 38px
   text-align center
   font-size 1.1rem
-  border 1.5px solid #ffe0b2
+  border 1.5px solid #f3e5f5
   border-radius 6px
   padding 4px
-  background #fffde7
+  background #f3e5f5
 
 .summary-box
-  background #fffde7
+  background #f3e5f5
   border-radius 14px
   box-shadow 0 2px 8px rgba(255,152,0,0.07)
   padding 16px 18px
@@ -1392,7 +1392,7 @@ export default {
   .summary-title
     font-size 1.1rem
     font-weight 700
-    color #ff9800
+    color #D209B6
     margin-bottom 8px
   .summary-chips
     display flex
@@ -1400,8 +1400,8 @@ export default {
     gap 8px
     margin-bottom 10px
   .summary-chip
-    background #ffe0b2
-    color #ff9800
+    background #f3e5f5
+    color #D209B6
     border-radius 12px
     padding 4px 12px
     font-size 0.98em
@@ -1411,7 +1411,7 @@ export default {
     flex-direction column
     gap 4px
     font-size 1.05em
-    color #b26a00
+    color #D209B6
     margin-top 6px
 
 .payment-section
@@ -1431,7 +1431,7 @@ export default {
     flex-direction column
     gap 2px
     font-size 0.98em
-    color #b26a00
+    color #D209B6
     margin-bottom 8px
   .pay-methods
     display flex
@@ -1453,7 +1453,7 @@ export default {
       max-width 90px
       max-height 90px
       border-radius 8px
-      border 1.5px solid #ffe0b2
+      border 1.5px solid #f3e5f5
       margin-top 4px
 
 
@@ -1463,12 +1463,12 @@ export default {
   font-size 1em
   margin-bottom 8px
 .success-msg
-  color #388e3c
+  color #D209B6
   font-size 1em
   margin-bottom 8px
 
 .main-action-btn
-  background linear-gradient(90deg, #ff9800 60%, #ffb74d 100%)
+  background linear-gradient(90deg, #D209B6 60%, #e91e63 100%)
   color white
   border none
   border-radius 10px
@@ -1483,16 +1483,16 @@ export default {
   align-items center
   gap 10px
   &:hover
-    background linear-gradient(90deg, #fb8c00 60%, #ffe0b2 100%)
+    background linear-gradient(90deg, #c2185b 60%, #f3e5f5 100%)
     box-shadow 0 4px 16px rgba(255,152,0,0.18)
     transform scale(1.04)
   &.sending
-    background #ffe0b2
-    color #ff9800
+    background #f3e5f5
+    color #D209B6
     cursor not-allowed
 
 .mp-btn {
-  background: linear-gradient(90deg, #009ee3 60%, #00d4ff 100%);
+  background: linear-gradient(90deg, #D209B6 60%, #e91e63 100%);
   color: #fff;
   font-weight: 700;
   border: none;
@@ -1504,7 +1504,7 @@ export default {
   transition: background 0.2s, box-shadow 0.2s;
 }
 .mp-btn:hover {
-  background: linear-gradient(90deg, #0077b6 60%, #00b4d8 100%);
+  background: linear-gradient(90deg, #c2185b 60%, #ad1457 100%);
   box-shadow: 0 4px 16px rgba(0,158,227,0.18);
 }
 
@@ -1890,7 +1890,7 @@ export default {
 .checkout-header h3 {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #ff9800;
+  color: #D209B6;
   margin: 0 0 8px 0;
 }
 
@@ -1942,7 +1942,7 @@ export default {
 }
 
 .product-item:hover {
-  border-color: #ff9800;
+  border-color: #D209B6;
   box-shadow: 0 2px 8px rgba(255, 152, 0, 0.1);
 }
 
@@ -1978,7 +1978,7 @@ export default {
 
 .product-price {
   font-size: 0.85rem;
-  color: #388e3c;
+  color: #D209B6;
   font-weight: 600;
 }
 
@@ -1990,7 +1990,7 @@ export default {
 }
 
 .qty-badge {
-  background: #ff9800;
+  background: #D209B6;
   color: #fff;
   padding: 4px 8px;
   border-radius: 12px;
@@ -2002,7 +2002,7 @@ export default {
 
 .product-points {
   font-size: 0.8rem;
-  color: #ff9800;
+  color: #D209B6;
   font-weight: 600;
   background: rgba(255, 152, 0, 0.1);
   padding: 2px 6px;
@@ -2028,7 +2028,7 @@ export default {
 }
 
 .summary-item.total {
-  border-top: 2px solid #ff9800;
+  border-top: 2px solid #D209B6;
   border-bottom: none;
   padding-top: 12px;
   margin-top: 8px;
@@ -2041,12 +2041,12 @@ export default {
 }
 
 .total-value {
-  color: #388e3c;
+  color: #D209B6;
   font-size: 1.1rem;
 }
 
 .points-value {
-  color: #ff9800;
+  color: #D209B6;
   font-weight: 700;
 }
 
@@ -2062,7 +2062,7 @@ export default {
 
 .section-header i {
   font-size: 1.2rem;
-  color: #ff9800;
+  color: #D209B6;
 }
 
 .section-header h4 {
@@ -2089,7 +2089,7 @@ export default {
 }
 
 .office-select:focus {
-  border-color: #ff9800;
+  border-color: #D209B6;
   outline: none;
 }
 
@@ -2097,7 +2097,7 @@ export default {
   background: #f8f9fa;
   border-radius: 8px;
   padding: 16px;
-  border-left: 4px solid #ff9800;
+  border-left: 4px solid #D209B6;
 }
 
 .office-address {
@@ -2110,7 +2110,7 @@ export default {
 }
 
 .office-address i {
-  color: #ff9800;
+  color: #D209B6;
   font-size: 1.1rem;
 }
 
@@ -2153,14 +2153,14 @@ export default {
 }
 
 .balance-checkbox:hover {
-  border-color: #ff9800;
-  background: #fff8e1;
+  border-color: #D209B6;
+  background: #f3e5f5;
 }
 
 .balance-checkbox input[type="checkbox"] {
   width: 20px;
   height: 20px;
-  accent-color: #ff9800;
+  accent-color: #D209B6;
 }
 
 .balance-text {
@@ -2174,7 +2174,7 @@ export default {
   padding: 16px;
   background: #f8f9fa;
   border-radius: 8px;
-  border-left: 4px solid #ff9800;
+  border-left: 4px solid #D209B6;
 }
 
 .balance-item {
@@ -2190,7 +2190,7 @@ export default {
   padding-top: 12px;
   margin-top: 8px;
   font-weight: 700;
-  color: #388e3c;
+  color: #D209B6;
 }
 
 .balance-amount {
@@ -2213,7 +2213,7 @@ export default {
 }
 
 .method-option:hover {
-  border-color: #ff9800;
+  border-color: #D209B6;
 }
 
 .method-radio {
@@ -2228,12 +2228,12 @@ export default {
 .method-radio input[type="radio"] {
   width: 18px;
   height: 18px;
-  accent-color: #ff9800;
+  accent-color: #D209B6;
 }
 
 .method-radio i {
   font-size: 1.2rem;
-  color: #ff9800;
+  color: #D209B6;
   width: 20px;
 }
 
@@ -2274,7 +2274,7 @@ export default {
 }
 
 .form-input:focus {
-  border-color: #ff9800;
+  border-color: #D209B6;
   outline: none;
 }
 
@@ -2304,12 +2304,12 @@ export default {
 }
 
 .file-label:hover {
-  border-color: #ff9800;
-  background: #fff8e1;
+  border-color: #D209B6;
+  background: #f3e5f5;
 }
 
 .file-label i {
-  color: #ff9800;
+  color: #D209B6;
   font-size: 1.1rem;
 }
 
@@ -2327,7 +2327,7 @@ export default {
   border-radius: 8px;
   padding: 16px;
   margin-top: 16px;
-  border-left: 4px solid #388e3c;
+  border-left: 4px solid #D209B6;
 }
 
 .cash-amount {
@@ -2339,7 +2339,7 @@ export default {
 }
 
 .cash-amount i {
-  color: #388e3c;
+  color: #D209B6;
   font-size: 1.2rem;
 }
 
@@ -2362,14 +2362,14 @@ export default {
 
 .success-message {
   background: #e8f5e8;
-  color: #388e3c;
-  border-left: 4px solid #388e3c;
+  color: #D209B6;
+  border-left: 4px solid #D209B6;
 }
 
 .info-message {
   background: #e3f2fd;
-  color: #1976d2;
-  border-left: 4px solid #1976d2;
+  color: #D209B6;
+  border-left: 4px solid #D209B6;
 }
 
 /* Botones de acción */
@@ -2379,7 +2379,7 @@ export default {
 }
 
 .order-btn {
-  background: linear-gradient(90deg, #ff9800 60%, #ffb74d 100%);
+  background: linear-gradient(90deg, #D209B6 60%, #e91e63 100%);
   color: #fff;
   border: none;
   border-radius: 12px;
@@ -2397,7 +2397,7 @@ export default {
 }
 
 .order-btn:hover:not(:disabled) {
-  background: linear-gradient(90deg, #fb8c00 60%, #ffe0b2 100%);
+  background: linear-gradient(90deg, #c2185b 60%, #f3e5f5 100%);
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(255,152,0,0.3);
 }
@@ -2411,7 +2411,7 @@ export default {
 }
 
 .order-btn.loading {
-  background: #ff9800;
+  background: #D209B6;
   cursor: not-allowed;
 }
 
@@ -2481,7 +2481,7 @@ export default {
 
 .reload-content i {
   font-size: 2.5rem;
-  color: #ff9800;
+  color: #D209B6;
 }
 
 .reload-content span {
@@ -2518,7 +2518,7 @@ export default {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #D209B6 0%, #e91e63 100%);
   color: white;
   padding: 12px 20px;
   border-radius: 20px;
@@ -2589,7 +2589,7 @@ export default {
 .store-title {
   font-size: 2.5rem;
   font-weight: 700;
-  color: #000;
+  color: #D209B6;
   margin: 0 0 20px 0;
   text-align: left;
   letter-spacing: -0.5px;
@@ -2603,7 +2603,7 @@ export default {
   margin: 0 0 20px 0;
   text-align: left;
   letter-spacing: -0.5px;
-  border-left: 4px solid #ff6b35;
+  border-left: 4px solid #D209B6;
   padding-left: 15px;
 }
 
@@ -2937,7 +2937,7 @@ export default {
 }
 
 .search-input:focus {
-  border-color: #ff9800;
+  border-color: #D209B6;
   outline: none;
   box-shadow: 0 2px 8px rgba(255,152,0,0.15);
 }
@@ -2968,7 +2968,7 @@ export default {
 }
 
 .country-select:focus, .category-btn:focus {
-  border-color: #ff9800;
+  border-color: #D209B6;
   outline: none;
 }
 
@@ -2992,8 +2992,8 @@ export default {
 
 .category-btn.active {
   background: transparent;
-  color: #ff9800;
-  border-color: #ff9800;
+  color: #D209B6;
+  border-color: #D209B6;
   font-weight: 600;
 }
 
@@ -3019,7 +3019,7 @@ export default {
 
 .clear-filters-btn:hover {
   background: rgba(0,0,0,0.05);
-  color: #ff9800;
+  color: #D209B6;
 }
 
 .clear-filters-btn i {
@@ -3079,7 +3079,7 @@ export default {
 
 .product-catalog-card:hover {
   box-shadow: 0 8px 25px rgba(0,0,0,0.18), 0 4px 12px rgba(0,0,0,0.12);
-  border: 2px solid #ff9800;
+  border: 2px solid #D209B6;
   transform: translateY(-2px);
   background: linear-gradient(145deg, #ffffff 0%, #fafafa 100%);
 }
@@ -3092,7 +3092,7 @@ export default {
   height: 0;
   border-style: solid;
   border-width: 25px 25px 0 0;
-  border-color: #ff9800 transparent transparent transparent;
+  border-color: #D209B6 transparent transparent transparent;
   z-index: 2;
   opacity: 0.9;
 }
@@ -3101,7 +3101,7 @@ export default {
   position: absolute;
   top: 12px;
   right: 12px;
-  background: #ff9800;
+  background: #D209B6;
   color: #fff;
   border-radius: 4px;
   padding: 6px 12px;
@@ -3131,7 +3131,7 @@ export default {
 }
 
 .product-image-container:hover {
-  border-color: #ff6b35;
+  border-color: #D209B6;
   box-shadow: 0 4px 16px rgba(255,107,53,0.2);
 }
 
@@ -3155,7 +3155,7 @@ export default {
 .product-catalog-name {
   font-size: 1.2rem;
   font-weight: 700;
-  color: #ff6b35;
+  color: #D209B6;
   margin-bottom: 8px;
   line-height: 1.2;
   text-align: center;
@@ -3185,7 +3185,7 @@ export default {
 
 .product-catalog-prrce {
   font-size: 0.9rem;
-  color: #388e3c;
+  color: #D209B6;
   font-weight: 500;
   margin-bottom: 8px;
   padding: 0;
@@ -3200,7 +3200,7 @@ export default {
   display: block;
   font-size: 1.3rem;
   font-weight: 700;
-  color: #388e3c;
+  color: #211f20;
   margin-top: 6px;
   margin-bottom: 8px;
 }
@@ -3211,7 +3211,7 @@ export default {
   justify-content: center;
   margin-top: auto; /* Empujar al final */
   width: 100%;
-  background: #ffb74d;
+  background: #D209B6;
   border-radius: 25px;
   padding: 4px;
   box-shadow: 0 2px 8px rgba(255,152,0,0.2);
@@ -3268,7 +3268,7 @@ export default {
   height: 28px;
   font-size: 1rem;
   font-weight: 700;
-  background: #ff9800;
+  background: #D209B6;
   color: #fff;
   border: none;
   border-radius: 4px;
@@ -3281,7 +3281,7 @@ export default {
 }
 
 .cart-item .qty-control-btn:hover {
-  background: #fb8c00;
+  background: #c2185b;
   transform: scale(1.05);
   box-shadow: 0 2px 6px rgba(255,152,0,0.3);
 }
@@ -3310,7 +3310,7 @@ export default {
 }
 
 .add-to-cart-btn {
-  background: linear-gradient(90deg, #ff9800 60%, #ffb74d 100%);
+  background: #D209B6;
   color: #fff;
   border: none;
   border-radius: 10px;
@@ -3328,14 +3328,14 @@ export default {
 }
 
 .add-to-cart-btn:hover {
-  background: linear-gradient(90deg, #fb8c00 60%, #ffa726 100%);
+  background: linear-gradient(90deg, #c2185b 60%, #ad1457 100%);
   box-shadow: 0 5px 18px rgba(255,152,0,0.35);
   transform: translateY(-2px);
 }
 
 .add-to-cart-btn:disabled {
-  background: #ffe0b2;
-  color: #ff9800;
+  background: #f3e5f5;
+  color: #D209B6;
   cursor: not-allowed;
   box-shadow: none;
 }
@@ -3372,7 +3372,7 @@ export default {
 .cart-header h3 {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #ff9800;
+  color: #D209B6;
   margin: 0 0 8px 0;
   text-align: center;
 }
@@ -3401,7 +3401,7 @@ export default {
   justify-content: center;
   padding: 40px 20px;
   text-align: center;
-  color: #999;
+  color: #9F00AD;
   min-height: 200px;
 }
 
@@ -3415,7 +3415,7 @@ export default {
   font-size: 1.1rem;
   font-weight: 600;
   margin-bottom: 8px;
-  color: #666;
+  color: #9F00AD;
 }
 
 .empty-cart span {
@@ -3437,7 +3437,7 @@ export default {
 }
 
 .close-cart-btn:hover {
-  color: #ff9800;
+  color: #D209B6;
 }
 
 .cart-toggle-btn {
@@ -3446,7 +3446,7 @@ export default {
   right: 30px;
   width: 60px;
   height: 60px;
-  background: linear-gradient(90deg, #ff9800 60%, #ffb74d 100%);
+  background: linear-gradient(90deg, #D209B6 60%, #e91e63 100%);
   color: #fff;
   border: none;
   border-radius: 50%;
@@ -3535,7 +3535,7 @@ export default {
 
 .cart-item:hover {
   box-shadow: 0 4px 16px rgba(255,152,0,0.12);
-  border-color: #ff9800;
+  border-color: #D209B6;
 }
 
 .cart-item-img {
@@ -3574,13 +3574,13 @@ export default {
 .cart-item-price {
   font-size: 1.1rem;
   font-weight: 600;
-  color: #388e3c;
+  color: #D209B6;
 }
 
 .cart-item-points {
   font-size: 1rem;
   font-weight: 600;
-  color: #ff9800;
+  color: #D209B6;
   background: rgba(255, 152, 0, 0.1);
   padding: 4px 8px;
   border-radius: 6px;
@@ -3645,7 +3645,7 @@ export default {
   flex-direction: column;
   gap: 12px;
   font-size: 1.1rem;
-  color: #b26a00;
+  color: #D209B6;
 }
 
 .summary-row {
@@ -3661,7 +3661,7 @@ export default {
 
 .total-row {
   font-weight: 700;
-  color: #388e3c;
+  color: #D209B6;
   font-size: 1.05rem;
   padding-top: 4px;
   border-top: 1px solid #eee;
@@ -3694,43 +3694,43 @@ export default {
 }
 
 .pay-btn {
-  background: linear-gradient(90deg, #ff9800 60%, #ffb74d 100%);
+  background: linear-gradient(90deg, #D209B6 60%, #e91e63 100%);
   color: #fff;
   box-shadow: 0 2px 8px rgba(255,152,0,0.13);
 }
 
 .pay-btn:hover:not(:disabled) {
-  background: linear-gradient(90deg, #fb8c00 60%, #ffe0b2 100%);
+  background: linear-gradient(90deg, #c2185b 60%, #f3e5f5 100%);
   box-shadow: 0 4px 16px rgba(255,152,0,0.18);
   transform: scale(1.04);
 }
 
 .pay-btn:disabled {
-  background: #ffe0b2;
-  color: #ff9800;
+  background: #f3e5f5;
+  color: #D209B6;
   cursor: not-allowed;
   box-shadow: none;
 }
 
 .add-more-btn {
-  background: #ffe0b2;
-  color: #ff9800;
+  background: #f3e5f5;
+  color: #D209B6;
   box-shadow: none;
 }
 
 .add-more-btn:hover {
-  background: #ffd5b2;
+  background: #f3e5f5;
   box-shadow: none;
 }
 
 .view-detail-btn {
-  background: linear-gradient(90deg, #ffb74d 60%, #ffcc02 100%);
+  background: #9F00AD;
   color: #fff;
   box-shadow: 0 2px 8px rgba(255, 183, 77, 0.2);
 }
 
 .view-detail-btn:hover {
-  background: linear-gradient(90deg, #ffa726 60%, #ffb74d 100%);
+  background: linear-gradient(90deg, #ad1457 60%, #e91e63 100%);
   box-shadow: 0 4px 12px rgba(255, 183, 77, 0.3);
   transform: scale(1.02);
 }
@@ -3748,7 +3748,7 @@ export default {
 .product-modal-header h2 {
   font-size: 1.4rem; /* Más pequeño */
   font-weight: 700;
-  color: #ff9800;
+  color: #D209B6;
   margin: 0;
 }
 
@@ -3763,7 +3763,7 @@ export default {
 }
 
 .close-product-btn:hover {
-  color: #ff9800;
+  color: #D209B6;
 }
 
 .product-modal-body {
@@ -3816,7 +3816,7 @@ export default {
 .product-quantity {
   font-size: 1.1rem;
   font-weight: 600;
-  color: #ff9800;
+  color: #D209B6;
   margin-bottom: 8px;
 }
 
@@ -3830,14 +3830,14 @@ export default {
 .modal-product-price {
   font-size: 1.4rem; /* Más pequeño */
   font-weight: 700;
-  color: #388e3c;
+  color: #D209B6;
   margin-bottom: 5px;
 }
 
 .modal-product-points {
   font-size: 1rem; /* Más pequeño */
   font-weight: 600;
-  color: #ff9800;
+  color: #D209B6;
   margin-bottom: 10px;
 }
 
@@ -3851,7 +3851,7 @@ export default {
 .product-description h4 {
   font-size: 1.1rem; /* Más pequeño */
   font-weight: 600;
-  color: #ff9800;
+  color: #D209B6;
   margin-bottom: 10px;
 }
 
@@ -3893,7 +3893,7 @@ export default {
 }
 
 .qty-control-btn:hover {
-  color: #ff9800;
+  color: #D209B6;
 }
 
 .quantity-display {
@@ -3905,7 +3905,7 @@ export default {
 }
 
 .add-to-cart-modal-btn {
-  background: linear-gradient(90deg, #ff9800 60%, #ffb74d 100%);
+  background: linear-gradient(90deg, #D209B6 60%, #e91e63 100%);
   color: #fff;
   border: none;
   border-radius: 10px;
@@ -3921,14 +3921,14 @@ export default {
 }
 
 .add-to-cart-modal-btn:hover {
-  background: linear-gradient(90deg, #fb8c00 60%, #ffe0b2 100%);
+  background: linear-gradient(90deg, #c2185b 60%, #f3e5f5 100%);
   box-shadow: 0 4px 16px rgba(255,152,0,0.18);
   transform: scale(1.04);
 }
 
 .add-to-cart-modal-btn:disabled {
-  background: #ffe0b2;
-  color: #ff9800;
+  background: #f3e5f5;
+  color: #D209B6;
   cursor: not-allowed;
   box-shadow: none;
 }
@@ -3980,7 +3980,7 @@ export default {
 .cart-detail-header h2 {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #ff9800;
+  color: #D209B6;
   margin: 0 0 8px 0;
 }
 
@@ -4005,7 +4005,7 @@ export default {
 }
 
 .close-cart-detail-btn:hover {
-  color: #ff9800;
+  color: #D209B6;
   background: rgba(255, 152, 0, 0.1);
 }
 
@@ -4022,7 +4022,7 @@ export default {
   color: #333;
   margin-bottom: 15px;
   text-align: center;
-  color: #ff9800;
+  color: #D209B6;
 }
 
 .cart-detail-item {
@@ -4074,12 +4074,12 @@ export default {
 .cart-detail-item-price {
   font-size: 1rem;
   font-weight: 700;
-  color: #388e3c;
+  color: #D209B6;
 }
 
 .cart-detail-item-points {
   font-size: 0.85rem;
-  color: #ff9800;
+  color: #D209B6;
   font-weight: 600;
 }
 
@@ -4098,7 +4098,7 @@ export default {
 }
 
 .cart-detail-quantity-controls .qty-control-btn {
-  background: #ff9800;
+  background: #D209B6;
   color: #fff;
   border: none;
   border-radius: 4px;
@@ -4115,7 +4115,7 @@ export default {
 }
 
 .cart-detail-quantity-controls .qty-control-btn:hover {
-  background: #fb8c00;
+  background: #c2185b;
   transform: scale(1.05);
 }
 
@@ -4193,7 +4193,7 @@ export default {
   color: #333;
   margin-bottom: 15px;
   text-align: center;
-  color: #ff9800;
+  color: #D209B6;
 }
 
 .cart-detail-summary-details .summary-row {
@@ -4211,7 +4211,7 @@ export default {
 
 .cart-detail-summary-details .total-row {
   font-weight: 700;
-  color: #388e3c;
+  color: #D209B6;
   font-size: 1.1rem;
   border-top: 1px solid #e0e0e0;
   padding-top: 12px;
@@ -4226,7 +4226,7 @@ export default {
 }
 
 .add-more-products-btn {
-  background: linear-gradient(90deg, #ffb74d 60%, #ffcc02 100%);
+  background: linear-gradient(90deg, #e91e63 60%, #e91e63 100%);
   color: #fff;
   border: none;
   border-radius: 8px;
@@ -4248,7 +4248,7 @@ export default {
 }
 
 .go-to-pay-btn {
-  background: linear-gradient(90deg, #ff9800 60%, #ffb74d 100%);
+  background: linear-gradient(90deg, #D209B6 60%, #e91e63 100%);
   color: #fff;
   border: none;
   border-radius: 8px;
@@ -4294,7 +4294,7 @@ export default {
 }
 
 .close-product-btn-inside:hover {
-  color: #ff9800;
+  color: #D209B6;
   background: rgba(255, 255, 255, 1);
   transform: scale(1.1);
 }
@@ -4313,7 +4313,7 @@ export default {
   width: 30px;
   height: 30px;
   border: 3px solid #f3f3f3;
-  border-top: 3px solid #ff9800;
+  border-top: 3px solid #D209B6;
   border-radius: 50%;
   animation: spin 1s linear infinite;
   margin-bottom: 10px;
@@ -4526,7 +4526,7 @@ export default {
 .sifrah-logo-loading
   width 120px
   height 120px
-  background linear-gradient(135deg, #ff8c00 0%, #ffa726 100%)
+  background linear-gradient(135deg, #D209B6 0%, #ad1457 100%)
   border-radius 50%
   display flex
   align-items center
@@ -4561,7 +4561,7 @@ export default {
     width 80px
     height 80px
     border 6px solid #f3f3f3
-    border-top 6px solid #ff8c00
+    border-top 6px solid #D209B6
     border-radius 50%
     animation spin 1.5s linear infinite
     margin-bottom 30px
@@ -4623,7 +4623,7 @@ export default {
     width 40px
     height 40px
     border 3px solid #f3f3f3
-    border-top 3px solid #ff9800
+    border-top 3px solid #D209B6
     border-radius 50%
     animation spin 1s linear infinite
     margin-bottom 15px
@@ -4663,7 +4663,7 @@ export default {
 }
 
 .products-count-indicator .filter-active {
-  color: #ff9800;
+  color: #D209B6;
   font-weight: 600;
   margin-left: 8px;
 }
@@ -4835,7 +4835,7 @@ export default {
   }
   
   .cart-square-btn {
-    background: linear-gradient(135deg, #ff6b35 0%, #ff8a50 100%);
+    background: linear-gradient(135deg, #D209B6 0%, #e91e63 100%);
     color: #fff;
     border: none;
     padding: 16px 20px;
@@ -4858,7 +4858,7 @@ export default {
   }
   
   .cart-square-btn:hover {
-    background: linear-gradient(135deg, #e55a2b 0%, #ff7a40 100%);
+    background: linear-gradient(135deg, #c2185b 0%, #ad1457 100%);
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(255, 107, 53, 0.4);
   }
@@ -4939,7 +4939,7 @@ export default {
   
   .mobile-catalog-filters .search-input:focus {
     outline: none;
-    border-color: #ff6b35;
+    border-color: #D209B6;
     background: #fff;
     box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
   }
@@ -4991,8 +4991,8 @@ export default {
   }
   
   .mobile-catalog-filters .category-btn.active {
-    background: #ff6b35;
-    border-color: #ff6b35;
+    background: #D209B6;
+    border-color: #D209B6;
     color: #fff;
   }
   
