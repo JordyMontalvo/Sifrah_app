@@ -521,6 +521,7 @@ export default {
   font-weight: 600;
   font-size: 26px;
   letter-spacing: 0.5px;
+  margin-top: 17px;
 }
 
 .buttons-container {

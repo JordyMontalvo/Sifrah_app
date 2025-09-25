@@ -3,33 +3,33 @@
       <!-- Selector de modo - aparece primero -->
       <div v-if="!selectedMode" class="mode-selector">
         <h2 class="mode-title" :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }">SELECCIONAR MODO</h2>
-        <div class="cards-container">
+        <div class="cards-container" :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }">
           <div class="card" :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }" @click="selectMode('red')">
             <p class="card-text" :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }">Red</p>
             <div class="card-icon">
               <!-- Nueva imagen de red jerárquica -->
-              <img src="@/assets/img/red-hierarchy.svg" alt="Red" :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }" style="width: 140px; height: 140px; object-fit: contain;">
+              <img src="@/assets/img/red-hierarchy.svg" alt="Red" :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }" style="width: 160px; height: 160px; object-fit: contain;">
             </div>
           </div>
           <div class="card" :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }" @click="selectMode('frontales')">
             <p class="card-text" :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }">Frontales</p>
             <div class="card-icon">
               <!-- Nueva imagen de frontales -->
-              <img src="@/assets/img/frontales-hierarchy.svg" alt="Frontales" :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }" style="width: 140px; height: 140px; object-fit: contain;">
+              <img src="@/assets/img/frontales-hierarchy.svg" alt="Frontales" :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }" style="width: 160px; height: 160px; object-fit: contain;">
             </div>
           </div>
           <div class="card" :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }" @click="selectMode('niveles')">
             <p class="card-text" :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }">Niveles</p>
             <div class="card-icon">
               <!-- Nueva imagen de niveles -->
-              <img src="@/assets/img/niveles-hierarchy.svg" alt="Niveles" :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }" style="width: 140px; height: 140px; object-fit: contain;">
+              <img src="@/assets/img/niveles-hierarchy.svg" alt="Niveles" :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }" style="width: 160px; height: 160px; object-fit: contain;">
             </div>
           </div>
           <div class="card" :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }" @click="selectMode('actividad')">
             <p class="card-text" :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }">Actividad</p>
             <div class="card-icon">
               <!-- Nueva imagen de actividad -->
-              <img src="@/assets/img/actividad-hierarchy.svg" alt="Actividad" :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }" style="width: 140px; height: 140px; object-fit: contain;">
+              <img src="@/assets/img/actividad-hierarchy.svg" alt="Actividad" :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }" style="width: 160px; height: 160px; object-fit: contain;">
             </div>
           </div>
         </div>
@@ -532,10 +532,18 @@
   /* Clases para texto en móvil */
   .card-text.mobile {
     font-size: 20px !important;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    padding: 0 !important;
   }
   
   .card-text.mobile-small {
     font-size: 15px !important;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    padding: 0 !important;
   }
   
   /* Clases para título en móvil */
@@ -549,6 +557,15 @@
     margin-bottom: 20px !important;
   }
   
+  /* Espaciado adicional para elementos debajo del título en móvil */
+  .cards-container.mobile {
+    margin-top: 30px !important;
+  }
+  
+  .cards-container.mobile-small {
+    margin-top: 25px !important;
+  }
+  
   /* Clases para iconos en móvil */
   .card-icon svg.mobile {
     width: 50px !important;
@@ -558,6 +575,17 @@
   .card-icon svg.mobile-small {
     width: 40px !important;
     height: 40px !important;
+  }
+  
+  /* Clases para imágenes en móvil */
+  .card-icon img.mobile {
+    width: 80px !important;
+    height: 80px !important;
+  }
+  
+  .card-icon img.mobile-small {
+    width: 70px !important;
+    height: 70px !important;
   }
   
   .mode-selector .card:hover {
@@ -585,6 +613,8 @@
     letter-spacing: 1px;
     margin-bottom: 15px;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    padding: 0 10px;
+    text-align: center;
   }
   
   .buttons-container {
