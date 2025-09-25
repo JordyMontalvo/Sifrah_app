@@ -5078,7 +5078,7 @@ export default {
   
   .cart-detail-summary {
     padding: 10px;
-    margin: 10px 0;
+    margin-bottom: 40px
   }
   
   .cart-detail-summary h3 {
@@ -5094,6 +5094,7 @@ export default {
   .cart-detail-actions {
     padding: 10px;
     gap: 8px;
+    margin-bottom: 30px
   }
   
   .go-to-pay-btn, .add-more-products-btn {
