@@ -72,7 +72,7 @@
         />
 
         <a @click="handleInicioClick" v-if="office_id == null">
-          <i class="fas fa-home"></i> INICIO
+          <img src="@/assets/img/home-desktop-icon.svg" alt="Inicio" style="width: 16px; height: 16px; margin-right: 8px;"> INICIO
         </a>
         <!-- <router-link to="/status" @click.native="close">
           <i class="fas fa-tachometer-alt"></i> ESTADO
@@ -87,7 +87,7 @@
             backgroundColor: activeProduct === 0 ? '#D209B6' : '',
           }"
         >
-          <span> <i class="fa fa-cart-plus"></i> PRODUCTOS </span>
+          <span> <img src="@/assets/img/products-desktop-icon.svg" alt="Productos" style="width: 16px; height: 16px; margin-right: 8px;"> PRODUCTOS </span>
           <i class="fa fa-angle-down" style="margin-left: 16px"></i>
         </a>
         <div class="sub-menu" :class="{ active: buys }">
@@ -95,10 +95,10 @@
             <i class="fas fa-shopping-bag"></i> COMPRAS
           </router-link>
           <router-link to="/affiliation" @click.native="close">
-            <i class="fas fa-receipt"></i> AFILIACIÓN
+            <img src="@/assets/img/affiliation-desktop-icon.svg" alt="Afiliación" style="width: 16px; height: 16px; margin-right: 8px;"> AFILIACIÓN
           </router-link>
           <router-link to="/activations" @click.native="close" v-if="affiliated">
-            <i class="fas fa-history"></i> HISTORIAL
+            <img src="@/assets/img/history-desktop-icon.svg" alt="Historial" style="width: 16px; height: 16px; margin-right: 8px;"> HISTORIAL
           </router-link>
         </div>
 
@@ -117,10 +117,10 @@
         </a>
         <div class="sub-menu" :class="{ active: network }">
           <router-link to="/tree" @click.native="close">
-            <i class="fas fa-project-diagram"></i> RED
+            <img src="@/assets/img/red-desktop-icon.svg" alt="Red" style="width: 16px; height: 16px; margin-right: 8px;"> RED
           </router-link>
           <router-link to="/directs" @click.native="close">
-            <i class="fas fa-users"></i> REGISTROS
+            <img src="@/assets/img/records-desktop-icon.svg" alt="Registros" style="width: 16px; height: 16px; margin-right: 8px;"> REGISTROS
           </router-link>
           <!-- <router-link to="/closeds" @click.native="close">
             <i class="fas fa-users"></i> CIERRES
@@ -137,7 +137,7 @@
             backgroundColor: activeProduct === 2 ? '#D209B6' : '',
           }"
         >
-          <span> <i class="fa fa-money"></i> COMISIONES </span>
+          <span> <img src="@/assets/img/commissions-desktop-icon.svg" alt="Comisiones" style="width: 16px; height: 16px; margin-right: 8px;"> COMISIONES </span>
           <i class="fa fa-angle-down" style="margin-left: 16px"></i>
         </a>
         <div class="sub-menu" :class="{ active: commissions }">
@@ -148,10 +148,10 @@
             <i class="fas fa-wallet"></i> MONEDERO
           </router-link>
           <router-link to="/transactions" @click.native="close">
-            <i class="fas fa-dollar-sign"></i> MOVIMIENTOS
+            <img src="@/assets/img/movements-desktop-icon.svg" alt="Movimientos" style="width: 16px; height: 16px; margin-right: 8px;"> MOVIMIENTOS
           </router-link>
           <router-link to="/collect" @click.native="close">
-            <i class="fas fa-hand-holding-usd"></i> RETIROS
+            <img src="@/assets/img/withdrawals-desktop-icon.svg" alt="Retiros" style="width: 16px; height: 16px; margin-right: 8px;"> RETIROS
           </router-link>
         </div>
 
@@ -165,18 +165,18 @@
             backgroundColor: activeProduct === 3 ? '#D209B6' : '',
           }"
         >
-          <span> <i class="fa fa-file-text"></i> RESUMEN </span>
+          <span> <img src="@/assets/img/summary-desktop-icon.svg" alt="Resumen" style="width: 16px; height: 16px; margin-right: 8px;"> RESUMEN </span>
           <i class="fa fa-angle-down" style="margin-left: 16px"></i>
         </a>
         <div class="sub-menu" :class="{ active: resume }">
           <router-link to="/bonuses" @click.native="close" v-if="affiliated">
-            <i class="fas fa-shopping-bag"></i> BONIFICACIONES
+            <img src="@/assets/img/bonuses-desktop-icon.svg" alt="Bonificaciones" style="width: 16px; height: 16px; margin-right: 8px;"> BONIFICACIONES
           </router-link>
           <router-link to="/resume" @click.native="close">
-            <i class="fas fa-users"></i> PERSONAL
+            <img src="@/assets/img/personal-desktop-icon.svg" alt="Personal" style="width: 16px; height: 16px; margin-right: 8px;"> PERSONAL
           </router-link>
           <router-link to="/closeds" @click.native="close">
-            <i class="fas fa-users"></i> CIERRES
+            <img src="@/assets/img/closures-desktop-icon.svg" alt="Cierres" style="width: 16px; height: 16px; margin-right: 8px;"> CIERRES
           </router-link>
         </div>
 
@@ -189,7 +189,7 @@
           @click.native="close"
           v-if="office_id == null && affiliated"
         >
-          <i class="fas fa-building"></i> EDUCACIÓN
+          <img src="@/assets/img/education-desktop-icon.svg" alt="Educación" style="width: 16px; height: 16px; margin-right: 8px;"> EDUCACIÓN
         </router-link>
 
         <router-link
