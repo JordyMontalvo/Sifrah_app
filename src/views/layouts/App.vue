@@ -290,7 +290,7 @@
 
     <footer class="footer-Dashboard">
       <a @click="handleInicioClick">
-        <i class="fa-solid fa-house"></i>
+        <img src="@/assets/img/home-icon.svg" alt="Inicio" style="width: 20px; height: 20px;">
         Inicio
       </a>
       <router-link to="/activation" v-if="affiliated">
