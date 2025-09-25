@@ -5094,7 +5094,7 @@ export default {
   .cart-detail-actions {
     padding: 10px;
     gap: 8px;
-    margin-bottom: 30px
+    margin-bottom: 35px
   }
   
   .go-to-pay-btn, .add-more-products-btn {
