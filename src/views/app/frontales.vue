@@ -356,7 +356,7 @@ export default {
 .mode-title {
   text-align: center;
   margin-bottom: 40px;
-  color: #4a4a4a;
+  color: #9F00AD;
   font-size: 32px;
   font-weight: bold;
   letter-spacing: 1px;
