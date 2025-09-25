@@ -8,28 +8,28 @@
             <p class="card-text" :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }">Red</p>
             <div class="card-icon">
               <!-- Nueva imagen de red jerárquica -->
-              <img src="@/assets/img/arbol.svg" alt="Red" :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }" style="width: 140px; height: 140px; object-fit: contain;">
+              <img src="@/assets/img/red-hierarchy.svg" alt="Red" :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }" style="width: 140px; height: 140px; object-fit: contain;">
             </div>
           </div>
           <div class="card" :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }" @click="selectMode('frontales')">
             <p class="card-text" :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }">Frontales</p>
             <div class="card-icon">
               <!-- Nueva imagen de frontales -->
-              <img src="@/assets/img/arbol2.svg" alt="Frontales" :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }" style="width: 140px; height: 140px; object-fit: contain;">
+              <img src="@/assets/img/frontales-hierarchy.svg" alt="Frontales" :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }" style="width: 140px; height: 140px; object-fit: contain;">
             </div>
           </div>
           <div class="card" :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }" @click="selectMode('niveles')">
             <p class="card-text" :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }">Niveles</p>
             <div class="card-icon">
               <!-- Nueva imagen de niveles -->
-              <img src="@/assets/img/actividad.svg" alt="Niveles" :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }" style="width: 140px; height: 140px; object-fit: contain;">
+              <img src="@/assets/img/niveles-hierarchy.svg" alt="Niveles" :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }" style="width: 140px; height: 140px; object-fit: contain;">
             </div>
           </div>
           <div class="card" :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }" @click="selectMode('actividad')">
             <p class="card-text" :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }">Actividad</p>
             <div class="card-icon">
               <!-- Nueva imagen de actividad -->
-              <img src="@/assets/img/activdad2.svg" alt="Actividad" :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }" style="width: 140px; height: 140px; object-fit: contain;">
+              <img src="@/assets/img/actividad-hierarchy.svg" alt="Actividad" :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }" style="width: 140px; height: 140px; object-fit: contain;">
             </div>
           </div>
         </div>

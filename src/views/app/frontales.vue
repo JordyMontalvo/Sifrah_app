@@ -438,7 +438,7 @@ export default {
 }
 
 .mode-selector .card {
-  background: white;
+  background: rgb(210 9 182 / 12%);
   border: none;
   border-radius: 10px;
   padding: 20px;
@@ -553,25 +553,25 @@ export default {
 }
 
 .btn-green {
-  background: #28a745;
+  background: #d209b6;
   color: white;
 }
 
 .btn-green:hover {
-  background: #218838;
+  background: #d209b6;
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
 }
 
 .btn-orange {
-  background: #e67e00;
+  background: #d209b6;
   color: white;
   font-size: 16px;
   padding: 14px 28px;
 }
 
 .btn-orange:hover {
-  background: #d35400;
+  background: #d209b6;
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(230, 126, 0, 0.3);
 }
