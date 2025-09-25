@@ -84,7 +84,7 @@
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
-            backgroundColor: activeProduct === 0 ? '#FE9900' : '',
+            backgroundColor: activeProduct === 0 ? '#D209B6' : '',
           }"
         >
           <span> <i class="fa fa-cart-plus"></i> PRODUCTOS </span>
@@ -109,7 +109,7 @@
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
-            backgroundColor: activeProduct === 1 ? '#FE9900' : '',
+            backgroundColor: activeProduct === 1 ? '#D209B6' : '',
           }"
         >
           <span> <i class="fa fa-users"></i> ORGANIZACIÓN </span>
@@ -134,7 +134,7 @@
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
-            backgroundColor: activeProduct === 2 ? '#FE9900' : '',
+            backgroundColor: activeProduct === 2 ? '#D209B6' : '',
           }"
         >
           <span> <i class="fa fa-money"></i> COMISIONES </span>
@@ -162,7 +162,7 @@
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
-            backgroundColor: activeProduct === 3 ? '#FE9900' : '',
+            backgroundColor: activeProduct === 3 ? '#D209B6' : '',
           }"
         >
           <span> <i class="fa fa-file-text"></i> RESUMEN </span>
@@ -201,7 +201,7 @@
         </router-link>
 
         <br />
-        <a @click="logout" style="background-color: #297814">
+        <a @click="logout" style="background-color: #D209B6">
           <i class="fas fa-sign-out-alt"></i> CERRAR SESIÓN
         </a>
       </div>

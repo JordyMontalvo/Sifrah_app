@@ -2037,7 +2037,7 @@ export default {
 
 .summary-value {
   font-weight: 600;
-  color: #333;
+  color: #d209b6;
 }
 
 .total-value {
@@ -2589,7 +2589,7 @@ export default {
 .store-title {
   font-size: 2.5rem;
   font-weight: 700;
-  color: #D209B6;
+  color: #9F00AD;
   margin: 0 0 20px 0;
   text-align: left;
   letter-spacing: -0.5px;
@@ -3155,7 +3155,7 @@ export default {
 .product-catalog-name {
   font-size: 1.2rem;
   font-weight: 700;
-  color: #D209B6;
+  color: #9F00AD;
   margin-bottom: 8px;
   line-height: 1.2;
   text-align: center;
@@ -3211,7 +3211,7 @@ export default {
   justify-content: center;
   margin-top: auto; /* Empujar al final */
   width: 100%;
-  background: #D209B6;
+  background: #d209b67d;
   border-radius: 25px;
   padding: 4px;
   box-shadow: 0 2px 8px rgba(255,152,0,0.2);
@@ -3322,14 +3322,14 @@ export default {
   display: flex;
   align-items: center;
   gap: 8px;
-  box-shadow: 0 3px 12px rgba(255,152,0,0.25);
+  box-shadow: 0 3px 12px #d209b657;
   width: 100%;
   justify-content: center;
 }
 
 .add-to-cart-btn:hover {
-  background: linear-gradient(90deg, #c2185b 60%, #ad1457 100%);
-  box-shadow: 0 5px 18px rgba(255,152,0,0.35);
+  background: #D209B6;
+  box-shadow: 0 5px 18px rgba(210,9,182,0.341);
   transform: translateY(-2px);
 }
 
@@ -3372,7 +3372,7 @@ export default {
 .cart-header h3 {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #D209B6;
+  color: #9F00AD;
   margin: 0 0 8px 0;
   text-align: center;
 }
@@ -3415,7 +3415,7 @@ export default {
   font-size: 1.1rem;
   font-weight: 600;
   margin-bottom: 8px;
-  color: #9F00AD;
+  color: #9f00ad85;
 }
 
 .empty-cart span {
@@ -3581,7 +3581,7 @@ export default {
   font-size: 1rem;
   font-weight: 600;
   color: #D209B6;
-  background: rgba(255, 152, 0, 0.1);
+  background: #d209b633;
   padding: 4px 8px;
   border-radius: 6px;
 }
@@ -3694,13 +3694,13 @@ export default {
 }
 
 .pay-btn {
-  background: linear-gradient(90deg, #D209B6 60%, #e91e63 100%);
+  background: #D209B6;
   color: #fff;
   box-shadow: 0 2px 8px rgba(255,152,0,0.13);
 }
 
 .pay-btn:hover:not(:disabled) {
-  background: linear-gradient(90deg, #c2185b 60%, #f3e5f5 100%);
+  background: #D209B6;
   box-shadow: 0 4px 16px rgba(255,152,0,0.18);
   transform: scale(1.04);
 }
@@ -3730,7 +3730,7 @@ export default {
 }
 
 .view-detail-btn:hover {
-  background: linear-gradient(90deg, #ad1457 60%, #e91e63 100%);
+  background: #D209B6;
   box-shadow: 0 4px 12px rgba(255, 183, 77, 0.3);
   transform: scale(1.02);
 }
@@ -3980,7 +3980,7 @@ export default {
 .cart-detail-header h2 {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #D209B6;
+  color: #9F00AD;
   margin: 0 0 8px 0;
 }
 
@@ -4022,7 +4022,7 @@ export default {
   color: #333;
   margin-bottom: 15px;
   text-align: center;
-  color: #D209B6;
+  color: #9F00AD;
 }
 
 .cart-detail-item {
@@ -4193,7 +4193,7 @@ export default {
   color: #333;
   margin-bottom: 15px;
   text-align: center;
-  color: #D209B6;
+  color: #9F00AD;
 }
 
 .cart-detail-summary-details .summary-row {
@@ -4226,7 +4226,7 @@ export default {
 }
 
 .add-more-products-btn {
-  background: linear-gradient(90deg, #e91e63 60%, #e91e63 100%);
+  background: #d209b6;
   color: #fff;
   border: none;
   border-radius: 8px;
@@ -4248,7 +4248,7 @@ export default {
 }
 
 .go-to-pay-btn {
-  background: linear-gradient(90deg, #D209B6 60%, #e91e63 100%);
+  background: #D209B6;
   color: #fff;
   border: none;
   border-radius: 8px;
@@ -4835,7 +4835,7 @@ export default {
   }
   
   .cart-square-btn {
-    background: linear-gradient(135deg, #D209B6 0%, #e91e63 100%);
+    background: #a62994 
     color: #fff;
     border: none;
     padding: 16px 20px;
@@ -4844,7 +4844,7 @@ export default {
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
+    box-shadow: 0 4px 15px rgba(210,9,182,0.341);
     display: flex;
     flex-direction: row;
     align-items: center;

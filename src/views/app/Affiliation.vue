@@ -2380,7 +2380,7 @@ export default {
 
 .product-catalog-price {
   font-size: 0.85rem; /* Más pequeño */
-  color: #388e3c;
+  color: #d209b6;
   font-weight: 600;
 }
 
