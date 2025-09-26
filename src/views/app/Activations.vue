@@ -276,7 +276,7 @@ export default {
   overflow hidden
 
   thead tr
-    background #ff9800
+    background #d209b6
     color #fff
     position sticky
     top 0
@@ -288,13 +288,13 @@ export default {
     padding 14px 12px
     text-align left
     font-size 15px
-    border-bottom 1.5px solid #ffe0b2
+    border-bottom 1.5px solid #d209b633
 
   tbody tr:nth-child(even)
-    background #fff8e1
+    background #d209b633
 
   tbody tr:hover
-    background #ffe0b2
+    background #d209b633
     transition background 0.2s
 
 .tabs
@@ -307,8 +307,8 @@ export default {
     align-items center
     font-size 1.18rem
     font-weight 600
-    color #ff9800
-    background #fff3e0
+    color #fff
+    background #d209b666
     border-radius 18px
     padding 10px 28px
     margin 0 6px
@@ -320,7 +320,7 @@ export default {
       margin-right 8px
       font-size 1.3em
     &:hover, &.router-link-exact-active
-      background #ff9800
+      background #9F00AD
       color #fff
       box-shadow 0 4px 16px rgba(255,152,0,0.13)
       transform translateY(-2px) scale(1.04)
@@ -330,8 +330,8 @@ export default {
   flex-wrap wrap
   gap 6px
 .product-chip
-  background #ffe0b2
-  color #ff9800
+  background #d209b633
+  color #d209b6
   border-radius 12px
   padding 4px 12px
   font-size 0.98em
@@ -340,7 +340,7 @@ export default {
   align-items center
   margin-bottom 2px
   .product-chip-total
-    color #b26a00
+    color #d209b6
     margin-left 4px
 
 .status-badge
@@ -356,8 +356,8 @@ export default {
   .status-icon
     font-size 1.1em
   &.pending
-    background #fff3e0
-    color #ff9800
+    background #d209b633
+    color #d209b6
   &.approved
     background #c8e6c9
     color #388e3c
@@ -369,7 +369,7 @@ export default {
   display inline-flex
   align-items center
   gap 6px
-  background #ff9800
+  background #d209b6
   color #fff
   border-radius 8px
   padding 6px 16px
@@ -381,7 +381,7 @@ export default {
   .invoice-icon
     font-size 1.1em
   &:hover
-    background #fb8c00
+    background #9F00AD
     color #fffde7
     box-shadow 0 4px 16px rgba(255,152,0,0.18)
     transform scale(1.05)

@@ -206,7 +206,7 @@ export default {
   box-shadow: 0 1px 4px rgba(255, 152, 0, 0.07);
 }
 .status-badge.pending {
-  background: #fff3e0;
+  background: #ffe0fa;
   color: #ff9800;
 }
 .status-badge.approved {
