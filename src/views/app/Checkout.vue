@@ -2876,7 +2876,7 @@ export default {
   border-top 1px solid #e0e0e0
 
 .back-btn
-  background #ff9800
+  background #d209b6
   color white
   border none
   padding 12px 25px
@@ -2886,7 +2886,7 @@ export default {
   transition all 0.3s ease
   
   &:hover
-    background #f57c00
+    background #9f00ad
 
 .continue-btn, .process-btn
   background #d209b6
@@ -3119,11 +3119,11 @@ export default {
 
 // Estilos para el paso 2 - Comprobante de Compra
 .proof-section
-  background #fdf6f0
+  background #d209b614
   padding 0
   border-radius 20px
-  border 2px solid #ffe4d6
-  box-shadow 0 8px 32px rgba(255, 140, 0, 0.15)
+  border 2px solid #d209b633
+  box-shadow 0 8px 32px #d209b633
   overflow hidden
   margin-top 20px
 
@@ -3151,7 +3151,7 @@ export default {
       color #333
       
       &:hover
-        border-color #ff8c00
+        border-color #d209b6
         background #f8f9fa
       
       span
@@ -3159,13 +3159,13 @@ export default {
         font-weight 600
     
     input[type="radio"]:checked + .proof-label
-      background #ff8c00
+      background #d209b6
       color white
-      border-color #ff8c00
+      border-color #d209b6
 
 // Header naranja del comprobante
 .proof-header
-  background #ff8c00
+  background #d209b6
   padding 20px 30px
   margin 0
   
@@ -3220,7 +3220,7 @@ export default {
       input
         width 100%
         padding 20px 18px
-        border 2px solid #ff8c00
+        border 2px solid #d209b6
         border-radius 12px
         font-size 1rem
         transition all 0.3s ease
@@ -3229,7 +3229,7 @@ export default {
         
         &:focus
           outline none
-          border-color #ff8c00
+          border-color #d209b6
           box-shadow 0 6px 24px rgba(255,140,0,0.2)
           transform translateY(-2px)
           background-color #fff
@@ -3280,7 +3280,7 @@ export default {
         
         &:focus
           outline none
-          border-color #ff8c00
+          border-color #d209b6
           box-shadow 0 4px 16px rgba(255,140,0,0.15)
       
       i
@@ -3630,12 +3630,12 @@ export default {
       
       &.active
         .step-number
-          border-color #ff8c00
-          box-shadow 0 4px 18px rgba(255,140,0,0.3)
+          border-color #d209b6
+          box-shadow #d209b633
           transform scale(1.05)
         
         .step-label
-          color #ff8c00
+          color #333
           font-weight 700
 
 @media (max-width: 768px)
@@ -3683,12 +3683,12 @@ export default {
       
       &.active
         .step-number
-          border-color #ff8c00
+          border-color #d209b633
           box-shadow 0 4px 16px rgba(255,140,0,0.3)
           transform scale(1.05)
         
         .step-label
-          color #ff8c00
+          color #d209b633
           font-weight 700
   
   // Intercambiar posición del carrito con método de pago en móvil
@@ -4109,7 +4109,7 @@ export default {
       &.active
         .step-number
           border-color #d209b6
-          box-shadow 0 3px 14px rgba(255,140,0,0.25)
+          box-shadow 0 3px 14px #d209b633
           transform scale(1.03)
         
         .step-label
