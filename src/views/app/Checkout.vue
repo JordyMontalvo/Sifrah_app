@@ -302,10 +302,6 @@
                         <span class="office-value">{{ selectedOffice.horario }}</span>
                       </div>
                       
-                      <div class="office-item" v-if="selectedOffice.dias && selectedOffice.id !== 'central'">
-                        <span class="office-label">Días:</span>
-                        <span class="office-value">{{ selectedOffice.dias }}</span>
-                      </div>
                     </div>
                   </div>
                 </div>
@@ -450,10 +446,6 @@
                       <div class="delivery-info-item" v-if="selectedOffice.horario && selectedOffice.id !== 'central'">
                         <span class="delivery-label">Horario:</span>
                         <span class="delivery-value">{{ selectedOffice.horario }}</span>
-                      </div>
-                      <div class="delivery-info-item" v-if="selectedOffice.dias && selectedOffice.id !== 'central'">
-                        <span class="delivery-label">Días:</span>
-                        <span class="delivery-value">{{ selectedOffice.dias }}</span>
                       </div>
                       <!-- Mapa pequeño para la oficina seleccionada -->
                       <div class="delivery-info-item map-section" v-if="selectedOffice">
