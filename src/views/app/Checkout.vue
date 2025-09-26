@@ -1449,7 +1449,7 @@ export default {
         // Agregar marcador personalizado
         const customIcon = L.divIcon({
           className: 'custom-marker',
-          html: '<div style="background-color: #ff8c00; width: 30px; height: 30px; border-radius: 50%; border: 3px solid white; box-shadow: 0 2px 10px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center;"><i class="fas fa-map-marker-alt" style="color: white; font-size: 14px;"></i></div>',
+          html: '<div style="background-color: #d209b6; width: 30px; height: 30px; border-radius: 50%; border: 3px solid white; box-shadow: 0 2px 10px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center;"><i class="fas fa-map-marker-alt" style="color: white; font-size: 14px;"></i></div>',
           iconSize: [30, 30],
           iconAnchor: [15, 15]
         });
@@ -1458,7 +1458,7 @@ export default {
           .addTo(this.map)
           .bindPopup(`
             <div style="text-align: center; padding: 10px;">
-              <h4 style="margin: 0 0 8px 0; color: #ff8c00; font-weight: 700;">${office.name}</h4>
+              <h4 style="margin: 0 0 8px 0; color: #9f00ad; font-weight: 700;">${office.name}</h4>
               <p style="margin: 0; color: #666; font-size: 14px;">${office.address}</p>
               ${office.phone && office.phone !== 'No disponible' ? `<p style="margin: 5px 0 0 0; color: #333; font-size: 13px;"><i class="fas fa-phone"></i> ${office.phone}</p>` : ''}
             </div>
@@ -1894,7 +1894,7 @@ export default {
     top 50%
     left 65px
     height 6px
-    background linear-gradient(90deg, #ff8c00 0%, #ffa726 100%)
+    background #d209b6
     transform translateY(-50%)
     z-index 1
     border-radius 4px
@@ -1937,14 +1937,14 @@ export default {
   
   &.active
     .step-number
-      background #ff8c00
+      background #d209b6
       color white
-      border-color #ff8c00
-      box-shadow 0 6px 20px rgba(255,140,0,0.35)
+      border-color #d209b633
+      box-shadow #d209b633
       transform scale(1.05)
     
     .step-label
-      color #ff8c00
+      color #333
       font-weight 600
       transform translateY(-1px)
 
@@ -1961,7 +1961,7 @@ export default {
   z-index 10
   
   h1
-    color #ff6b35
+    color #9f00ad
     font-size 20px
     margin 0 0 20px 0
     font-weight 700
@@ -2041,15 +2041,15 @@ export default {
   text-align center
   margin-bottom 13px
   padding 25px
-  background #fdf6f0
+  background #c285c75e
   border-radius 12px
-  border 2px solid #ffe4d6
+  border 2px solid #c285c75e
   
   h2
     margin 0 0 12px 0
     font-size 1.3rem
     font-weight 700
-    color #ff8c00
+    color #9f00ad
     text-shadow 0 1px 2px rgba(255, 140, 0, 0.1)
   
   p
@@ -2123,8 +2123,8 @@ export default {
   box-shadow 0 4px 16px rgba(0,0,0,0.08)
   
   &:hover
-    border-color #ff8c00
-    box-shadow 0 6px 20px rgba(255, 140, 0,0.15)
+    border-color #d209b6
+    box-shadow #d209b633
     transform translateY(-2px)
 
 .cart-item-image
@@ -2165,15 +2165,15 @@ export default {
 
 .cart-item-price
   font-size 1.1rem
-  color #388e3c
+  color #d209b6
   font-weight 600
   margin-bottom 8px
 
 .cart-item-points
   font-size 0.8rem
-  color #ff9800
+  color #d209b6
   font-weight 600
-  background rgba(255, 152, 0, 0.1)
+  background #d209b633
   padding 2px 6px
   border-radius 4px
   display inline-block
@@ -2258,7 +2258,7 @@ export default {
     
     span:last-child
       font-weight 500
-      color #666
+      color #d209b6
     
     // Colores específicos para cada tipo de información
     &:nth-child(1) // Total productos
@@ -2267,7 +2267,7 @@ export default {
         color #333
         font-weight 700
       span:last-child
-        color #333
+        color #d209b6
         font-weight 700
     
     &:nth-child(2) // Puntos
@@ -2276,7 +2276,7 @@ export default {
         color #333
         font-weight 700
       span:last-child
-        color #ff8c00
+        color #d209b6
         font-weight 700
     
     &.total
@@ -2293,7 +2293,7 @@ export default {
       
       span:last-child
         font-weight 700
-        color #388e3c
+        color #d209b6
 
   .delivery-row
     background linear-gradient(135deg, rgba(255, 140, 0, 0.1) 0%, rgba(255, 140, 0, 0.05) 100%)
@@ -2328,7 +2328,7 @@ export default {
   text-align center
   margin-top auto
   padding 20px
-  background rgba(255, 140, 0, 0.03)
+  background #c285c75e
   border-radius 12px
   border 1px solid rgba(255, 140, 0, 0.1)
   flex-shrink 0
@@ -2340,7 +2340,7 @@ export default {
     font-weight 500
 
 .return-btn
-  background linear-gradient(135deg, #ff8c00 0%, #ff9800 100%)
+  background #d209b6
   color white
   border none
   padding 16px 32px
@@ -2349,13 +2349,13 @@ export default {
   cursor pointer
   transition all 0.3s ease
   width 100%
-  box-shadow 0 4px 16px rgba(255, 140, 0, 0.25)
+  box-shadow #d209b633
   font-size 1.05rem
   
   &:hover
-    background linear-gradient(135deg, #ff7f00 0%, #ff8c00 100%)
+    background #9f00ad
     transform translateY(-3px)
-    box-shadow 0 6px 24px rgba(255, 140, 0, 0.35)
+    box-shadow #d209b633
 
 // Columna derecha - Proceso de checkout
 .checkout-process
@@ -2422,7 +2422,7 @@ export default {
   margin-bottom 30px
 
 .delivery-header
-  background #ff8c00
+  background #d209b6
   color white
   padding 20px 30px
   border-radius 12px 12px 0 0
@@ -2504,14 +2504,14 @@ export default {
   color #333
   
   &:hover
-    border-color #ff8c00
+    border-color #d209b6
     background #f8f9fa
   
   &.active
-    border-color #ff8c00
-    background #ff8c00
+    border-color #d209b6
+    background #d209b6
     color white
-    box-shadow 0 4px 16px rgba(255, 140, 0, 0.25)
+    box-shadow #d209b633
 
 // Formulario de pickup - similar a delivery-form
 .pickup-form
@@ -2530,7 +2530,7 @@ export default {
     left 0
     right 0
     height 4px
-    background linear-gradient(90deg, #ff8c00 0%, #ffa726 50%, #ff8c00 100%)
+    background #d209b6
   
   &::after
     content ''
@@ -2546,14 +2546,14 @@ export default {
   margin-bottom 30px
   
   h4
-    color #ff8c00
+    color #9f00ad
     font-size 1.3rem
     font-weight 700
     margin-bottom 25px
     padding 15px 20px
-    background linear-gradient(135deg, rgba(255, 140, 0, 0.08) 0%, rgba(255, 140, 0, 0.03) 100%)
+    background #d209b633
     border-radius 12px
-    border-left 4px solid #ff8c00
+    border-left 4px solid #d209b6
     position relative
     margin-bottom 0
     margin 0
@@ -2641,7 +2641,7 @@ export default {
       font-size 1.2rem
       font-weight 600
       margin 0
-      color #ff8c00
+      color #9f00ad
   
   .office-details
     background white
@@ -2659,14 +2659,14 @@ export default {
     padding 10px
     background #fafafa
     border-radius 6px
-    border-left 3px solid #ff8c00
+    border-left 3px solid #d209b6
     
     &:last-child
       margin-bottom 0
     
     .office-label
       font-weight 600
-      color #ff8c00
+      color #d209b6
       font-size 0.9rem
       min-width 70px
       margin-right 12px
@@ -2889,7 +2889,7 @@ export default {
     background #f57c00
 
 .continue-btn, .process-btn
-  background #ff8c00
+  background #d209b6
   color white
   border none
   padding 14px 32px
@@ -2900,7 +2900,7 @@ export default {
   font-size 1.05rem
   
   &:hover:not(:disabled)
-    background #f57c00
+    background #9f00ad
     transform translateY(-2px)
   
   &:disabled
@@ -2933,7 +2933,7 @@ export default {
     left 0
     right 0
     height 4px
-    background linear-gradient(90deg, #ff8c00 0%, #ffa726 50%, #ff8c00 100%)
+    background #d209b6
   
   &::after
     content ''
@@ -2949,14 +2949,14 @@ export default {
     margin-bottom 30px
     
     h4
-      color #ff8c00
+      color #9f00ad
       font-size 1.3rem
       font-weight 700
       margin-bottom 25px
       padding 15px 20px
-      background linear-gradient(135deg, rgba(255, 140, 0, 0.08) 0%, rgba(255, 140, 0, 0.03) 100%)
+      background #d209b633
       border-radius 12px
-      border-left 4px solid #ff8c00
+      border-left 4px solid #d209b6
       position relative
       
 
@@ -2993,13 +2993,13 @@ export default {
         box-shadow 0 2px 8px rgba(0,0,0,0.08)
         
         &:hover
-          border-color #ffb74d
+          border-color #d209b6
           box-shadow 0 4px 16px rgba(255, 140, 0, 0.15)
           transform translateY(-1px)
         
         &:focus
           outline none
-          border-color #ff8c00
+          border-color #d209b6
           box-shadow 0 6px 24px rgba(255,140,0,0.2)
           transform translateY(-2px)
           background-color #fff
@@ -3032,13 +3032,13 @@ export default {
     background-size 16px
     
     &:hover
-      border-color #ffb74d
+      border-color #d209b6
       box-shadow 0 4px 16px rgba(255, 140, 0, 0.15)
       transform translateY(-1px)
     
     &:focus
       outline none
-      border-color #ff8c00
+      border-color #d209b6
       box-shadow 0 6px 24px rgba(255,140,0,0.2)
       transform translateY(-2px)
       background-color #fff
@@ -4108,7 +4108,7 @@ export default {
       
       &.active
         .step-number
-          border-color #ff8c00
+          border-color #d209b6
           box-shadow 0 3px 14px rgba(255,140,0,0.25)
           transform scale(1.03)
         
@@ -4198,7 +4198,7 @@ export default {
     font-size 1rem
   
   .map-link
-    color #ff8c00
+    color #d209b6
     text-decoration none
     font-weight 500
     font-size 0.85rem
@@ -4769,7 +4769,7 @@ export default {
   display inline-block
   
   &:hover
-    color #e65100
+    color #9f00ad
     text-decoration underline
 
 // Responsive para el layout de tres cards
@@ -5137,7 +5137,7 @@ export default {
 // Estilos para la sección del mapa en datos de despacho
 .map-section
   .map-location-label
-    color #ff8c00
+    color #d209b6
     font-size 0.9rem
     font-weight 600
     margin-bottom 8px

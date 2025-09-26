@@ -3101,7 +3101,7 @@ export default {
   position: absolute;
   top: 12px;
   right: 12px;
-  background: #D209B6;
+  background: #9f00ad;
   color: #fff;
   border-radius: 4px;
   padding: 6px 12px;
