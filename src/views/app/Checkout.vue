@@ -3723,7 +3723,7 @@ export default {
       h2
         font-size 1.3rem
         margin-bottom 8px
-        color #ff8c00
+        color #9f00ad
         
       p
         font-size 0.9rem
@@ -3794,12 +3794,12 @@ export default {
           margin-bottom 4px
           
         .cart-item-price
-          color #388e3c
+          color #d209b6
           font-weight 600
           font-size 1.1rem
           
         .cart-item-points
-          color #ff8c00
+          color #d209b6
           font-weight 600
           font-size 1rem
       
@@ -3953,7 +3953,7 @@ export default {
       h4
         font-size 1.1rem
         margin-bottom 15px
-        color #ff8c00
+        color #9f00ad
         font-weight 600
     
     .form-row
@@ -3977,7 +3977,7 @@ export default {
       h4
         font-size 1.1rem
         margin-bottom 15px
-        color #ff8c00
+        color #9f00ad
         font-weight 600
     
     .form-row
@@ -4113,7 +4113,7 @@ export default {
           transform scale(1.03)
         
         .step-label
-          color #ff8c00
+          color #333
           font-weight 700
   
   // Mejoras adicionales para pantallas muy pequeñas
