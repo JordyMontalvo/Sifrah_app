@@ -334,7 +334,7 @@ export default {
   width: 22px;
   height: 22px;
   border-radius: 50%;
-  border: 2px solid #ff9800;
+  border: 2px solid #d209b6;
   background: #fff;
   box-shadow: 0 1px 4px rgba(255, 152, 0, 0.08);
   position: relative;
@@ -349,7 +349,7 @@ export default {
   width: 12px;
   height: 12px;
   border-radius: 50%;
-  background: linear-gradient(90deg, #ff9800 0%, #ffb74d 100%);
+  background: #9F00AD;
   box-shadow: 0 2px 8px rgba(255, 152, 0, 0.13);
   margin: auto;
   animation: radio-pop 0.25s;
@@ -413,7 +413,7 @@ export default {
 }
 .soft-btn {
   width: 100%;
-  background: linear-gradient(90deg, #ff9800 0%, #ffb74d 100%);
+  background: #d209b6;
   color: #fff;
   border: none;
   border-radius: 22px;
@@ -431,10 +431,10 @@ export default {
   gap: 8px;
 }
 .soft-btn:active {
-  background: #fb8c00;
+  background: #9F00AD;
 }
 .soft-btn:hover:not(:disabled) {
-  background: #ff9800;
+  background: #9F00AD;
   box-shadow: 0 6px 24px rgba(255, 152, 0, 0.18);
   transform: translateY(-2px) scale(1.03);
 }

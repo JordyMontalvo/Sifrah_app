@@ -154,13 +154,13 @@ export default {
   padding: 14px 12px;
   text-align: left;
   font-size: 15px;
-  border-bottom: 1.5px solid #ffe0b2;
+  border-bottom: 1.5px solid #d209b666;
 }
 .collects-table tbody tr:nth-child(even) {
-  background: #fff8e1;
+  background: #d209b666;
 }
 .collects-table tbody tr:hover {
-  background: #ffe0b2;
+  background: #d209b666;
   transition: background 0.2s;
 }
 .in {

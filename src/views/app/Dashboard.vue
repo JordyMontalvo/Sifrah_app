@@ -444,7 +444,7 @@ export default {
 <style scoped>
 /* Nuevo Dashboard Styles */
 .dashboard-container {
-  background: #f5f2e9;
+  background: #fff;
   min-height: 100vh;
   padding: 20px;
 }
@@ -486,7 +486,7 @@ export default {
   align-items: center;
   margin-bottom: 20px;
   padding: 20px;
-  background: linear-gradient(135deg, #f7971e 0%, #ffd200 100%);
+  background: linear-gradient(135deg, #d209b6 0%, #ff00b373 100%);
   border-radius: 12px;
   color: white;
 }
@@ -519,7 +519,7 @@ export default {
   font-size: 10px;
   font-weight: bold;
   background: white;
-  color: #f7971e;
+  color: #d209b6;
   padding: 2px 6px;
   border-radius: 4px;
 }
@@ -732,7 +732,7 @@ export default {
 }
 
 .commission-icon.gold {
-  background: linear-gradient(135deg, #f7971e 0%, #ffd200 100%);
+  background: linear-gradient(135deg, #d209b6 0%, #ff00b373 100%);
 }
 
 .commission-icon.blue {

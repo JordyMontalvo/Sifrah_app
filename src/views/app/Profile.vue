@@ -375,7 +375,7 @@ export default {
 }
 .profile-glass-icon {
   font-size: 2.5rem;
-  color: #ff9800;
+  color: #9f00ad;
   filter: drop-shadow(0 2px 8px rgba(255, 152, 0, 0.1));
 }
 .profile-glass-header span {
@@ -385,7 +385,7 @@ export default {
   letter-spacing: 0.01em;
 }
 .profile-glass-save {
-  background: rgba(255, 152, 0, 0.12);
+  background: #d209b666;
   color: #ff9800;
   border: none;
   border-radius: 22px;
@@ -462,7 +462,7 @@ export default {
   margin-bottom: 18px;
 }
 .profile-glass-link {
-  color: #ff9800;
+  color: #9f00ad;
   text-decoration: none;
   font-size: 1rem;
   display: flex;
