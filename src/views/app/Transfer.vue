@@ -273,8 +273,8 @@ export default {
   align-items: center;
   font-size: 1.18rem;
   font-weight: 600;
-  color: #ff9800;
-  background: #fff3e0;
+  color: #fff;
+  background: #9F00AD;
   border-radius: 18px;
   padding: 10px 28px;
   margin: 0 6px;
@@ -285,16 +285,16 @@ export default {
 }
 .tab:hover,
 .tab.router-link-exact-active {
-  background: #ff9800;
+  background: #d209b6;
   color: #fff;
-  box-shadow: 0 4px 16px rgba(255, 152, 0, 0.13);
+  box-shadow: 0 4px 16px rgba(255, 0, 221, 0.13);
   transform: translateY(-2px) scale(1.04);
 }
 .transfer-title {
   text-align: center;
   font-size: 1.3rem;
   font-weight: 700;
-  color: #ff9800;
+  color: #9F00AD;
   margin-bottom: 18px;
   letter-spacing: 1px;
 }
@@ -344,7 +344,7 @@ export default {
 }
 .soft-btn {
   width: 100%;
-  background: linear-gradient(90deg, #ff9800 0%, #ffb74d 100%);
+  background: #d209b6;
   color: #fff;
   border: none;
   border-radius: 22px;
@@ -365,7 +365,7 @@ export default {
   background: #fb8c00;
 }
 .soft-btn:hover:not(:disabled) {
-  background: #ff9800;
+  background: #9F00AD;
   box-shadow: 0 6px 24px rgba(255, 152, 0, 0.18);
   transform: translateY(-2px) scale(1.03);
 }

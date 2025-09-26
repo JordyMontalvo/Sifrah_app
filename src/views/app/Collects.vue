@@ -162,7 +162,7 @@ export default {
   overflow: hidden;
 }
 .collects-table thead tr {
-  background: #ff9800;
+  background: #ff0077;
   color: #fff;
   position: sticky;
   top: 0;

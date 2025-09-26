@@ -208,7 +208,7 @@ export default {
 .master-trophy-title
   font-size 2.5rem
   font-weight 800
-  color #ff9800
+  color #9F00AD
   margin-bottom 10px
   letter-spacing 1px
   text-shadow 0 2px 8px #ffe0b2
@@ -228,7 +228,7 @@ export default {
   font-size 1.1rem
   padding 12px 32px
   margin-top 10px
-  background linear-gradient(90deg, #ff9800 60%, #ffb74d 100%)
+  background #D209B6;
   color white
   border none
   border-radius 10px
@@ -237,7 +237,7 @@ export default {
   cursor pointer
   transition background 0.2s, box-shadow 0.2s
   &:hover
-    background linear-gradient(90deg, #fb8c00 60%, #ffe0b2 100%)
+    background #9F00AD;
     box-shadow 0 4px 16px rgba(255,152,0,0.18)
 
 @keyframes fadeInBounce
