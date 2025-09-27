@@ -1533,7 +1533,7 @@ export default {
         // Agregar marcador personalizado más pequeño
         const smallCustomIcon = L.divIcon({
           className: 'custom-marker-small',
-          html: '<div style="background-color: #ff8c00; width: 24px; height: 24px; border-radius: 50%; border: 2px solid white; box-shadow: 0 2px 8px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center;"><i class="fas fa-map-marker-alt" style="color: white; font-size: 12px;"></i></div>',
+          html: '<div style="background-color: #d209b6; width: 24px; height: 24px; border-radius: 50%; border: 2px solid white; box-shadow: 0 2px 8px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center;"><i class="fas fa-map-marker-alt" style="color: white; font-size: 12px;"></i></div>',
           iconSize: [24, 24],
           iconAnchor: [12, 12]
         });
@@ -3359,13 +3359,13 @@ export default {
     transition all 0.3s ease
     
     &:hover
-      border-color #ff8c00
+      border-color #d209b6
       background #fff8f0
     
     i
       margin-right 12px
       font-size 1.1rem
-      color #ff8c00
+      color #d209b6
       width 20px
       text-align center
       
@@ -3374,8 +3374,8 @@ export default {
       color #555
       
   input[type="radio"]:checked + label
-    background #ff8c00
-    border-color #ff8c00
+    background #9f00ad
+    border-color #d209b633
     color white
     
     i
@@ -4474,7 +4474,7 @@ export default {
 .checkmark
   width 20px
   height 20px
-  border 2px solid #ff8c00
+  border 2px solid #d209b6
   border-radius 4px
   margin-right 10px
   transition all 0.3s ease
@@ -4496,8 +4496,8 @@ export default {
   display none
 
 .balance-checkbox input[type="checkbox"]:checked + .checkmark
-  background-color #ff8c00
-  border-color #ff8c00
+  background-color #d209b6
+  border-color #d209b633
   
   &::after
     transform translate(-50%, -50%) scale(1) // Mostrar el icono cuando esté marcado
@@ -4589,7 +4589,7 @@ export default {
 
 // Headers de las cards - todos con la misma altura compacta
 .delivery-data-header, .voucher-data-header, .payment-card-header
-  background #ff8c00
+  background #d209b6
   padding 15px 20px
   margin 0
   
@@ -4654,7 +4654,7 @@ export default {
     margin-bottom 0
   
   .delivery-label
-    color #ff8c00
+    color #d209b6
     font-size 0.9rem
     font-weight 600
     margin-bottom 8px
@@ -4739,7 +4739,7 @@ export default {
     text-align center
 
 .voucher-label
-  color #ff8c00
+  color #d209b6
   font-size 0.85rem
   font-weight 600
   text-transform none
@@ -4874,7 +4874,7 @@ export default {
       .voucher-label
         font-size 0.85rem
         font-weight 600
-        color #666
+        color #d209b6
         margin-bottom 4px
         
       .voucher-value
@@ -5116,7 +5116,7 @@ export default {
     text-align center
     
     .map-link
-      color #ff8c00
+      color #d209b6
       text-decoration none
       font-weight 500
       font-size 0.85rem
@@ -5126,7 +5126,7 @@ export default {
       display inline-block
       
       &:hover
-        background rgba(255, 140, 0, 0.1)
+        background #d209b633
         text-decoration underline
 
 // Estilos para el marcador pequeño
