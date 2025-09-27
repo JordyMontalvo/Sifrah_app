@@ -908,7 +908,18 @@ export default {
       }
       if (this.currentStep === 2) {
         console.log('Proof Data:', this.proofData);
-        return this.proofData.type && this.proofData.document && this.proofData.document.length === 8;
+        // Para boleta solo requiere documento con exactamente 8 números
+        if (this.proofData.type === 'boleta') {
+          return this.proofData.document && this.proofData.document.length === 8;
+        }
+        // Para factura requiere RUC con exactamente 11 números, Razón Social y Dirección Fiscal
+        if (this.proofData.type === 'factura') {
+          return this.proofData.ruc && 
+                 this.proofData.ruc.length === 11 &&
+                 this.proofData.razonSocial && 
+                 this.proofData.direccionFiscal;
+        }
+        return false;
       }
       return true;
     },
@@ -3145,14 +3156,14 @@ export default {
     border none
     
     h4
-      color #ff8c00
+      color #9f00ad
       font-size 1.3rem
       font-weight 700
       margin-bottom 25px
       padding 15px 20px
-      background linear-gradient(135deg, rgba(255, 140, 0, 0.08) 0%, rgba(255, 140, 0, 0.03) 100%)
+      background #d209b633
       border-radius 12px
-      border-left 4px solid #ff8c00
+      border-left 4px solid #d209b6
       position relative
 
   .form-group
