@@ -1669,8 +1669,7 @@ export default {
 
           // Datos del voucher (si aplica)
           voucher: voucherUrl,
-          bank: this.bankName,
-          date: this.paymentDate,
+          bank: this.selectedBank,
           voucher_number: this.voucherNumber,
         };
 
@@ -1766,8 +1765,8 @@ export default {
           }
         }
 
-        if (payload.pay_method === 'bank' && (!payload.bank || !payload.date || !payload.voucher_number || !payload.voucher)) {
-          this.activationError = 'Para transferencia, completa todos los datos del banco y sube el voucher.';
+        if (payload.pay_method === 'bank' && (!payload.bank || !payload.voucher_number || !payload.voucher)) {
+          this.activationError = 'Para transferencia, selecciona un banco, ingresa el número de operación y sube el voucher.';
           this.sending = false;
           return;
         }
