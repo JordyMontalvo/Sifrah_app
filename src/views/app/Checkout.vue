@@ -545,7 +545,7 @@
                     <div class="voucher-row-three">
                       <div class="voucher-info-item third-width">
                         <span class="voucher-label">Tipo Documento:</span>
-                        <span class="voucher-value">Boleta</span>
+                        <span class="voucher-value">{{ proofData.type === 'factura' ? 'Factura' : 'Boleta' }}</span>
                       </div>
                       <div class="voucher-info-item third-width">
                         <span class="voucher-label">Serie:</span>
@@ -557,8 +557,8 @@
                       </div>
                     </div>
                     <div class="voucher-info-item">
-                      <span class="voucher-label">Nro. Documento:</span>
-                      <span class="voucher-value">{{ userDocument || '---' }}</span>
+                      <span class="voucher-label">{{ proofData.type === 'factura' ? 'Nro. RUC:' : 'Nro. Documento:' }}</span>
+                      <span class="voucher-value">{{ proofData.type === 'factura' ? (proofData.ruc || '---') : (proofData.document || '---') }}</span>
                     </div>
                   </div>
                 </div>
