@@ -61,31 +61,64 @@
 
               <!-- Resumen de la orden -->
               <div class="order-summary">
-                <div class="summary-row">
-                  <span>Total productos:</span>
-                  <span>{{ cartItemsTotal }} items</span>
+                <!-- En el paso 3 (pago), mostrar el diseño de transacción -->
+                <div v-if="currentStep === 3" class="transaction-summary">
+                  <div class="transaction-row">
+                    <div class="transaction-item">
+                      <span class="label">Concepto:</span>
+                      <span class="value">Recompra</span>
+                    </div>
+                    <div class="transaction-item">
+                      <span class="label">Fecha Compra:</span>
+                      <span class="value">{{ currentDate }}</span>
+                    </div>
+                  </div>
+                  <div class="transaction-row">
+                    <div class="transaction-item">
+                      <span class="label">Estado:</span>
+                      <span class="value">Pendiente de Pago</span>
+                    </div>
+                    <div class="transaction-item">
+                      <span class="label">Puntos:</span>
+                      <span class="value">{{ cartPoints.toFixed(2) }}</span>
+                    </div>
+                  </div>
+                  <div class="transaction-row total">
+                    <div class="transaction-item">
+                      <span class="label">Total:</span>
+                      <span class="value">S/ {{ finalTotal.toFixed(2) }}</span>
+                    </div>
+                  </div>
                 </div>
-                <div class="summary-row">
-                  <span>Puntos:</span>
-                  <span>{{ cartPoints.toFixed(2) }}</span>
-                </div>
-                <div class="summary-row">
-                  <span>Subtotal:</span>
-                  <span>S/ {{ cartTotal.toFixed(2) }}</span>
-                </div>
-                <!-- Línea de delivery cuando hay zona seleccionada -->
-                <div v-if="deliveryZoneInfo && deliveryData.department === 'lima'" class="summary-row delivery-row">
-                  <span>🚚 Delivery:</span>
-                  <span>S/ {{ deliveryZoneInfo.price.toFixed(2) }}</span>
-                </div>
-                <div class="summary-row total">
-                  <span>Total:</span>
-                  <span>S/ {{ finalTotal.toFixed(2) }}</span>
+                
+                <!-- En otros pasos, mantener el diseño original -->
+                <div v-else>
+                  <div class="summary-row">
+                    <span>Total productos:</span>
+                    <span>{{ cartItemsTotal }} items</span>
+                  </div>
+                  <div class="summary-row">
+                    <span>Puntos:</span>
+                    <span>{{ cartPoints.toFixed(2) }}</span>
+                  </div>
+                  <div class="summary-row">
+                    <span>Subtotal:</span>
+                    <span>S/ {{ cartTotal.toFixed(2) }}</span>
+                  </div>
+                  <!-- Línea de delivery cuando hay zona seleccionada -->
+                  <div v-if="deliveryZoneInfo && deliveryData.department === 'lima'" class="summary-row delivery-row">
+                    <span>🚚 Delivery:</span>
+                    <span>S/ {{ deliveryZoneInfo.price.toFixed(2) }}</span>
+                  </div>
+                  <div class="summary-row total">
+                    <span>Total:</span>
+                    <span>S/ {{ finalTotal.toFixed(2) }}</span>
+                  </div>
                 </div>
               </div>
 
-              <!-- Botón para volver a la tienda -->
-              <div class="return-to-store">
+              <!-- Botón para volver a la tienda (solo en pasos 1 y 2) -->
+              <div v-if="currentStep !== 3" class="return-to-store">
                 <p>¿Olvidaste algún producto?</p>
                 <button @click="returnToStore" class="return-btn">
                   Volver a la tienda
@@ -568,6 +601,35 @@
                   <div class="payment-method">
                     <input 
                       type="radio" 
+                      id="bank" 
+                      name="payment" 
+                      value="bank"
+                      v-model="pay_method"
+                      @click="togglePaymentMethod('bank')"
+                    />
+                    <label for="bank">
+                      <i class="fas fa-university"></i>
+                      <span>{{ selectedBank ? getBankDisplayName(selectedBank) : 'Pago con Comprobante' }}</span>
+                      <i class="fas fa-chevron-down dropdown-arrow" :class="{ 'rotated': showBankOptions }"></i>
+                    </label>
+                  </div>
+                  
+                  <!-- Opciones desplegables para Pago con Comprobante -->
+                  <div v-if="pay_method === 'bank' && showBankOptions" class="bank-options">
+                    <div class="bank-option-card" @click="selectBankOption('bcp')" :class="{ 'selected': selectedBank === 'bcp' }">
+                      <span>BCP</span>
+                    </div>
+                    <div class="bank-option-card" @click="selectBankOption('interbank')" :class="{ 'selected': selectedBank === 'interbank' }">
+                      <span>Interbank</span>
+                    </div>
+                    <div class="bank-option-card" @click="selectBankOption('yape')" :class="{ 'selected': selectedBank === 'yape' }">
+                      <span>Yape</span>
+                    </div>
+                  </div>
+                  
+                  <div class="payment-method">
+                    <input 
+                      type="radio" 
                       id="credit-card" 
                       name="payment" 
                       value="credit-card"
@@ -580,148 +642,53 @@
                     </label>
                   </div>
                   
-                  <div class="payment-method">
-                    <input 
-                      type="radio" 
-                      id="bank" 
-                      name="payment" 
-                      value="bank"
-                      v-model="pay_method"
-                      @click="togglePaymentMethod('bank')"
-                    />
-                    <label for="bank">
-                      <i class="fas fa-university"></i>
-                      <span>Transferencia Bancaria</span>
-                    </label>
+                  <!-- Información del banco seleccionado -->
+                  <div v-if="pay_method === 'bank' && selectedBank" class="bank-info-card">
+                    <div class="bank-info-item">
+                      <strong>Banco:</strong> {{ getBankInfo(selectedBank).name }}
+                    </div>
+                    <div class="bank-info-item">
+                      <strong>Cuenta:</strong> {{ getBankInfo(selectedBank).account }}
+                    </div>
+                    <div class="bank-info-item">
+                      <strong>Titular:</strong> {{ getBankInfo(selectedBank).holder }}
+                    </div>
+                    <div class="bank-info-item">
+                      <strong>Tipo:</strong> {{ getBankInfo(selectedBank).type }}
+                    </div>
                   </div>
                   
-                  <div class="payment-method">
-                    <input 
-                      type="radio" 
-                      id="cash" 
-                      name="payment" 
-                      value="cash"
-                      v-model="pay_method"
-                      @click="togglePaymentMethod('cash')"
-                    />
-                    <label for="cash">
-                      <i class="fas fa-money-bill-wave"></i>
-                      <span>Efectivo</span>
-                    </label>
-                  </div>
-                  
-                  <div class="payment-method">
-                    <input 
-                      type="radio" 
-                      id="yape" 
-                      name="payment" 
-                      value="yape"
-                      v-model="pay_method"
-                      @click="togglePaymentMethod('yape')"
-                    />
-                    <label for="yape">
-                      <i class="fas fa-mobile-alt"></i>
-                      <span>Yape</span>
-                    </label>
-                  </div>
                 </div>
                 
-                <!-- Información de Yape -->
-                <div v-if="pay_method === 'yape'" class="yape-info">
-                  <div class="section-header">
-                    <h3>Datos de Yape</h3>
+                
+                <!-- Campos de Pago con Comprobante - Fuera del contenedor de métodos -->
+                <div v-if="pay_method === 'bank'" class="voucher-payment-fields">
+                  <div class="form-field-simple">
+                    <label>Número de Operación/Voucher</label>
+                    <input v-model="voucherNumber" type="text" placeholder="Número de Operación/Voucher" @input="onlyNumbers($event, 'voucherNumber')" required />
                   </div>
                   
-                  <div class="yape-details">
-                    <div class="yape-info-item">
-                      <span class="yape-label">Entidad:</span>
-                      <span class="yape-value">Yape</span>
+                  <div class="form-field-simple">
+                    <label>Comprobante de Pago</label>
+                    <div class="file-upload-simple">
+                      <input type="file" @change="onVoucherFileChange" id="voucher-file" />
+                      <label for="voucher-file" class="file-label-simple">
+                        <i class="fas fa-upload"></i>
+                        <span>{{ voucherPreview ? 'Cambiar archivo' : 'Seleccionar archivo' }}</span>
+                      </label>
                     </div>
-                    <div class="yape-info-item">
-                      <span class="yape-label">Cuenta:</span>
-                      <span class="yape-value">973 808 360</span>
+                    <img v-if="voucherPreview" :src="voucherPreview" class="voucher-preview-img" />
+                    
+                    <div class="file-upload-simple" style="margin-top: 15px;">
+                      <input type="file" @change="onVoucherFileChange2" id="voucher-file-2" />
+                      <label for="voucher-file-2" class="file-label-simple">
+                        <i class="fas fa-upload"></i>
+                        <span>{{ voucherPreview2 ? 'Cambiar archivo' : 'Seleccionar archivo' }}</span>
+                      </label>
                     </div>
-                    <div class="yape-info-item">
-                      <span class="yape-label">Titular:</span>
-                      <span class="yape-value">SIFRAH S.A.C.</span>
-                    </div>
-                    <div class="yape-info-item">
-                      <span class="yape-label">Tipo:</span>
-                      <span class="yape-value">Transferencia a celular</span>
-                    </div>
-                  </div>
-                  
-                  <div class="payment-form-simple">
-                    <div class="form-field-simple">
-                      <label>Fecha de Pago</label>
-                      <input v-model="yapePaymentDate" type="date" required />
-                    </div>
-                    <div class="form-field-simple">
-                      <label>Número de Operación/Voucher</label>
-                      <input v-model="yapeVoucherNumber" type="text" placeholder="Número de operación" @input="onlyNumbers($event, 'yapeVoucherNumber')" required />
-                    </div>
-                    <div class="form-field-simple">
-                      <label>Comprobante de Pago</label>
-                      <div class="file-upload-simple">
-                        <input type="file" @change="onYapeVoucherFileChange" id="yape-voucher-file" />
-                        <label for="yape-voucher-file" class="file-label-simple">
-                          <i class="fas fa-upload"></i>
-                          <span>{{ yapeVoucherPreview ? 'Cambiar archivo' : 'Seleccionar archivo' }}</span>
-                        </label>
-                      </div>
-                      <img v-if="yapeVoucherPreview" :src="yapeVoucherPreview" class="voucher-preview-img" />
-                    </div>
+                    <img v-if="voucherPreview2" :src="voucherPreview2" class="voucher-preview-img" />
                   </div>
                 </div>
-                
-                <!-- Información de transferencia -->
-                <div v-if="pay_method === 'bank'" class="transfer-info">
-                  <div class="section-header">
-                    <h3>Datos Bancarios</h3>
-                  </div>
-                  
-                  <div class="bank-details-simple">
-                    <div class="bank-info-item">
-                      <strong>Banco:</strong> Banco de Crédito del Perú
-                    </div>
-                    <div class="bank-info-item">
-                      <strong>Cuenta:</strong> 193-12345678-0-12
-                    </div>
-                    <div class="bank-info-item">
-                      <strong>Titular:</strong> SIFRAH SAC
-                    </div>
-                    <div class="bank-info-item">
-                      <strong>Tipo:</strong> Cuenta Corriente
-                    </div>
-                  </div>
-                  
-                  <div class="payment-form-simple">
-                    <div class="form-field-simple">
-                      <label>Nombre del Banco</label>
-                      <input v-model="bankName" type="text" placeholder="Ej: BCP, BBVA, Interbank..." required />
-                    </div>
-                    <div class="form-field-simple">
-                      <label>Fecha de Pago</label>
-                      <input v-model="paymentDate" type="date" required />
-                    </div>
-                    <div class="form-field-simple">
-                      <label>Número de Operación/Voucher</label>
-                      <input v-model="voucherNumber" type="text" placeholder="Número de operación" @input="onlyNumbers($event, 'voucherNumber')" required />
-                    </div>
-                    <div class="form-field-simple">
-                      <label>Comprobante de Pago</label>
-                      <div class="file-upload-simple">
-                        <input type="file" @change="onVoucherFileChange" id="voucher-file" />
-                        <label for="voucher-file" class="file-label-simple">
-                          <i class="fas fa-upload"></i>
-                          <span>{{ voucherPreview ? 'Cambiar archivo' : 'Seleccionar archivo' }}</span>
-                        </label>
-                      </div>
-                      <img v-if="voucherPreview" :src="voucherPreview" class="voucher-preview-img" />
-                    </div>
-                  </div>
-                </div>
-                
                 
                 <!-- Mensajes de estado de activación -->
                 <div v-if="activationError" class="error-message">
@@ -861,14 +828,14 @@ export default {
       sending: false,
       voucherFile: null,
       voucherPreview: null,
+      voucherFile2: null,
+      voucherPreview2: null,
       bankName: '',
       paymentDate: '',
       voucherNumber: '',
-      // Variables para Yape
-      yapeVoucherFile: null,
-      yapeVoucherPreview: null,
-      yapePaymentDate: '',
-      yapeVoucherNumber: '',
+      // Variables para el desplegable de bancos
+      showBankOptions: false,
+      selectedBank: '',
       activationError: null,
       activationSuccess: false
     }
@@ -989,6 +956,17 @@ export default {
       return this.deliveryMethod === 'delivery' && 
              ((this.deliveryZoneInfo && this.deliveryData.department === 'lima') ||
               (this.deliveryData.agency && this.deliveryData.department !== 'lima'));
+    },
+    
+    currentDate() {
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = String(now.getMonth() + 1).padStart(2, '0');
+      const day = String(now.getDate()).padStart(2, '0');
+      const hours = String(now.getHours()).padStart(2, '0');
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      const seconds = String(now.getSeconds()).padStart(2, '0');
+      return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
     }
   },
   
@@ -998,10 +976,57 @@ export default {
       if (this.pay_method === method) {
         // Si ya está seleccionado, deseleccionar
         this.pay_method = '';
+        this.showBankOptions = false;
+        this.selectedBank = '';
       } else {
         // Si no está seleccionado, seleccionar
         this.pay_method = method;
+        if (method === 'bank') {
+          this.showBankOptions = true;
+        } else {
+          this.showBankOptions = false;
+          this.selectedBank = '';
+        }
       }
+    },
+    
+    selectBankOption(bank) {
+      this.selectedBank = bank;
+      this.showBankOptions = false; // Cerrar el desplegable al seleccionar
+      console.log('Banco seleccionado:', bank);
+    },
+    
+    getBankDisplayName(bank) {
+      const bankNames = {
+        'bcp': 'BCP',
+        'interbank': 'Interbank',
+        'yape': 'Yape'
+      };
+      return bankNames[bank] || 'Pago con Comprobante';
+    },
+    
+    getBankInfo(bank) {
+      const bankData = {
+        'bcp': {
+          name: 'Banco de Crédito del Perú',
+          account: '193-12345678-0-12',
+          holder: 'SIFRAH S.A.C.',
+          type: 'Cuenta Corriente'
+        },
+        'interbank': {
+          name: 'Interbank',
+          account: '838 3244339443',
+          holder: 'SIFRAH S.A.C.',
+          type: 'Cuenta Corriente'
+        },
+        'yape': {
+          name: 'Yape',
+          account: '973 808 360',
+          holder: 'SIFRAH S.A.C.',
+          type: 'Transferencia a celular'
+        }
+      };
+      return bankData[bank] || {};
     },
     
     getAgencyName() {
@@ -1576,20 +1601,21 @@ export default {
       }
     },
     
-    onYapeVoucherFileChange(event) {
+    onVoucherFileChange2(event) {
       const file = event.target.files[0];
       if (file) {
-        this.yapeVoucherFile = file;
+        this.voucherFile2 = file;
         const reader = new FileReader();
         reader.onload = (e) => {
-          this.yapeVoucherPreview = e.target.result;
+          this.voucherPreview2 = e.target.result;
         };
         reader.readAsDataURL(file);
       } else {
-        this.yapeVoucherFile = null;
-        this.yapeVoucherPreview = null;
+        this.voucherFile2 = null;
+        this.voucherPreview2 = null;
       }
     },
+    
     
     async submitActivation() {
       this.activationError = null;
@@ -2311,6 +2337,39 @@ export default {
       color #ff8c00
       font-weight 700
       font-size 1.1rem
+
+// Estilos para el resumen de transacción (paso 3)
+.transaction-summary
+  .transaction-row
+    display flex
+    justify-content space-between
+    margin-bottom 12px
+    font-size 1rem
+    
+    .transaction-item
+      flex 1
+      
+      .label
+        color #333
+        font-weight 500
+        display block
+        margin-bottom 4px
+      
+      .value
+        color #D209B6
+        font-weight 600
+        display block
+    
+    &.total
+      font-weight bold
+      font-size 1.2rem
+      border-top 2px solid #ffe4d6
+      padding-top 8px
+      margin-top 8px
+      
+      .value
+        color #D209B6
+        font-size 1.3rem
 
 .summary-details .concept-value
   font-weight 600
@@ -3343,6 +3402,9 @@ export default {
 .payment-method
   margin-bottom 15px
   
+  &:last-child
+    margin-bottom 0
+  
   input[type="radio"]
     display none
     
@@ -3455,7 +3517,7 @@ export default {
     align-items center
     justify-content center
     padding 12px 15px
-    border 2px dashed #e0e0e0
+    border 2px dashed #d209b633
     border-radius 6px
     background white
     cursor pointer
@@ -3464,12 +3526,12 @@ export default {
     color #666
     
     &:hover
-      border-color #ff8c00
+      border-color #d209b6
       background #fafafa
     
     i
       margin-right 8px
-      color #ff8c00
+      color #d209b6
       font-size 1rem
 
 .final-summary
@@ -3744,11 +3806,11 @@ export default {
         border-radius 3px
         
       &::-webkit-scrollbar-thumb
-        background #ff8c00
+        background #d209b6
         border-radius 3px
         
       &::-webkit-scrollbar-thumb:hover
-        background #e65100
+        background #b8079a
     
     .cart-item
       background white
@@ -4442,6 +4504,109 @@ export default {
   margin-top 15px
   border 1px solid #e0e0e0
   box-shadow 0 2px 8px rgba(0,0,0,0.1)
+
+.voucher-payment-fields
+  background #f8f9fa
+  border-radius 10px
+  padding 20px
+  margin 20px 0
+  border 1px solid #e0e0e0
+
+// Estilos para el desplegable de bancos
+.dropdown-arrow
+  margin-left auto
+  transition transform 0.3s ease
+  font-size 0.8rem
+  color #D209B6
+  
+  &.rotated
+    transform rotate(180deg)
+
+.bank-options
+  margin -10px 0 15px 0
+  padding-left 0
+  
+  .bank-option-card
+    background #f8f9fa
+    border-radius 8px
+    margin-bottom 3px
+    padding 12px 15px
+    border 1px solid #e0e0e0
+    cursor pointer
+    transition all 0.3s ease
+    width 100%
+    
+    &:last-child
+      margin-bottom 0
+    
+    &:hover
+      background #e9ecef
+      border-color #D209B6
+    
+    &.selected
+      background #D209B6
+      border-color #D209B6
+      color white
+      
+    span
+      font-size 0.95rem
+      font-weight 500
+      color inherit
+
+// Estilos para la tarjeta de información del banco
+.bank-info-card
+  background #f8f9fa
+  border-radius 8px
+  padding 15px
+  margin 10px 0
+  border 1px solid #e0e0e0
+  
+  .bank-info-item
+    display flex
+    justify-content space-between
+    margin-bottom 8px
+    font-size 0.95rem
+    padding 4px 0
+    
+    &:last-child
+      margin-bottom 0
+    
+    strong
+      font-weight 600
+      color #333
+      min-width 60px
+  
+  .form-field-simple
+    margin-bottom 20px
+    
+    &:last-child
+      margin-bottom 0
+    
+    label
+      display block
+      margin-bottom 8px
+      font-weight 600
+      color #333
+      font-size 0.95rem
+    
+    input[type="text"]
+      width 100%
+      padding 12px 15px
+      border 1px solid #e0e0e0
+      border-radius 6px
+      font-size 0.95rem
+      color #333
+      background white
+      transition all 0.3s ease
+      
+      &:focus
+        outline none
+        border-color #D209B6
+        box-shadow 0 0 0 2px rgba(210, 9, 182, 0.1)
+      
+      &::placeholder
+        color #999
+        font-size 0.9rem
 
 .payment-section
   .error-message, .success-message
