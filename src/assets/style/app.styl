@@ -183,13 +183,19 @@ body, .app
     border: 1px solid transparent // Borde transparente por defecto
     margin-bottom: 20px
     border-radius: 10px
+    transition: background-color 0.3s ease
     i
       width 20px
       text-align center
       margin-right 10px
 
+    &:hover
+      background: #9f00ad
+      border-radius: 12px;
+      align-items: center;
+
     &.router-link-active
-      background: #d209b6
+      background: #9f00ad
       border-radius: 12px;
       align-items: center;
       
@@ -207,6 +213,10 @@ body, .app
     padding 12px
     padding-left 32px
     background: #d209b6
+    transition: background-color 0.3s ease
+
+    &:hover
+      background: #9f00ad
 
     i
       width 12.5px

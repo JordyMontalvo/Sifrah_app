@@ -84,7 +84,7 @@
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
-            backgroundColor: activeProduct === 0 ? '#D209B6' : '',
+            backgroundColor: activeProduct === 0 ? '#9f00ad' : '',
           }"
         >
           <span> <img src="@/assets/img/products-desktop-icon.svg" alt="Productos" style="width: 16px; height: 16px; margin-right: 8px;"> PRODUCTOS </span>
@@ -109,7 +109,7 @@
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
-            backgroundColor: activeProduct === 1 ? '#D209B6' : '',
+            backgroundColor: activeProduct === 1 ? '#9f00ad' : '',
           }"
         >
           <span> <i class="fa fa-users"></i> ORGANIZACIÓN </span>
@@ -134,7 +134,7 @@
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
-            backgroundColor: activeProduct === 2 ? '#D209B6' : '',
+            backgroundColor: activeProduct === 2 ? '#9f00ad' : '',
           }"
         >
           <span> <img src="@/assets/img/commissions-desktop-icon.svg" alt="Comisiones" style="width: 16px; height: 16px; margin-right: 8px;"> COMISIONES </span>
@@ -162,7 +162,7 @@
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
-            backgroundColor: activeProduct === 3 ? '#D209B6' : '',
+            backgroundColor: activeProduct === 3 ? '#9f00ad' : '',
           }"
         >
           <span> <img src="@/assets/img/summary-desktop-icon.svg" alt="Resumen" style="width: 16px; height: 16px; margin-right: 8px;"> RESUMEN </span>
@@ -201,7 +201,7 @@
         </router-link>
 
         <br />
-        <a @click="logout" style="background-color: #D209B6">
+        <a @click="logout" style="background-color: #9f00ad">
           <i class="fas fa-sign-out-alt"></i> CERRAR SESIÓN
         </a>
       </div>
