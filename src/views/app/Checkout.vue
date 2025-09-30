@@ -1844,6 +1844,11 @@ export default {
   },
   
   async mounted() {
+    // Asegurar que la página comience desde arriba
+    window.scrollTo(0, 0);
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+    
     // Verificar si hay productos en el carrito
     if (this.cartItems.length === 0) {
       this.$router.push('/activation');
@@ -1872,6 +1877,13 @@ export default {
     this.officesUpdateInterval = setInterval(async () => {
       await this.loadOffices();
     }, 30000); // 30 segundos
+    
+    // Asegurar que la página esté en la parte superior después de cargar todo
+    this.$nextTick(() => {
+      window.scrollTo(0, 0);
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+    });
   },
   
   beforeDestroy() {
@@ -1900,6 +1912,11 @@ export default {
   min-height 100vh
   padding 20px
   margin-top 20px
+  scroll-behavior smooth
+
+// Asegurar que la página comience desde arriba
+body
+  scroll-behavior smooth
 
 .top-progress-bar
   display flex
