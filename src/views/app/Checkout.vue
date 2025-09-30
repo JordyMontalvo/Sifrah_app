@@ -1212,15 +1212,30 @@ export default {
       }
     },
     
+    // Método helper para scroll hacia arriba
+    scrollToTop() {
+      window.scrollTo(0, 0);
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+    },
+    
     nextStep() {
       if (this.canProceedToNextStep && this.currentStep < 3) {
         this.currentStep++;
+        // Scroll hacia arriba cuando cambia de paso
+        this.$nextTick(() => {
+          this.scrollToTop();
+        });
       }
     },
     
     previousStep() {
       if (this.currentStep > 1) {
         this.currentStep--;
+        // Scroll hacia arriba cuando cambia de paso
+        this.$nextTick(() => {
+          this.scrollToTop();
+        });
       }
     },
     
@@ -1824,6 +1839,11 @@ export default {
     // Watcher para cuando cambie el paso actual
     currentStep: {
       handler(newStep) {
+        // Scroll hacia arriba cuando cambia de paso
+        this.$nextTick(() => {
+          this.scrollToTop();
+        });
+        
         // Si llegamos al paso 3 y hay una oficina seleccionada, inicializar el mapa pequeño
         if (newStep === 3 && this.selectedOffice) {
           this.$nextTick(() => {
