@@ -232,6 +232,10 @@ const router = new Router({
   mode: 'history',
   base: process.env.BASE_URL,
   routes,
+  scrollBehavior(to, from, savedPosition) {
+    // Siempre hacer scroll hacia arriba en cada navegación
+    return { x: 0, y: 0 }
+  }
 })
 
 router.beforeEach(async (to, from, next) => {

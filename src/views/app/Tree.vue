@@ -1710,12 +1710,12 @@ https://codepen.io/team/amcharts/pen/poPxojR */
 }
 
 .frontal-card {
-  background: #f5f2e9;
+  background: #fff;
   border-radius: 16px;
   padding: 20px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
-  border: 1px solid #e0d8c0;
+  border: 1px solid #d209b67d;
 }
 
 .frontal-card:hover {

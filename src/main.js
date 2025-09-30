@@ -15,9 +15,58 @@ const gauthOption = {
 };
 Vue.use(GAuth, gauthOption);
 
-// Global Logout Mixin
+// Global Mixin para logout y scroll
 Vue.mixin({
+  mounted() {
+    // Scroll hacia arriba cuando se monta cualquier componente
+    this.scrollToTop();
+    
+    // Scroll adicional después de que el DOM esté completamente cargado
+    this.$nextTick(() => {
+      setTimeout(() => {
+        this.scrollToTop();
+      }, 200);
+    });
+  },
+  
   methods: {
+    // Método helper para scroll hacia arriba
+    scrollToTop() {
+      // Método más agresivo para móviles
+      try {
+        // Método 1: Scroll inmediato
+        window.scrollTo(0, 0);
+        document.documentElement.scrollTop = 0;
+        document.body.scrollTop = 0;
+        
+        // Método 2: Para contenedores con scroll
+        const scrollableElements = document.querySelectorAll('[style*="overflow"], .scrollable, .content');
+        scrollableElements.forEach(el => {
+          if (el.scrollTop > 0) {
+            el.scrollTop = 0;
+          }
+        });
+        
+        // Método 3: Scroll suave para móviles
+        if (window.scrollTo) {
+          window.scrollTo({
+            top: 0,
+            left: 0,
+            behavior: 'auto' // Cambiado a 'auto' para ser más inmediato
+          });
+        }
+        
+        // Método 4: Forzar scroll en el viewport
+        if (window.pageYOffset > 0) {
+          window.scrollTo(0, 0);
+        }
+        
+        console.log('Scroll to top ejecutado');
+      } catch (error) {
+        console.warn('Error en scrollToTop:', error);
+      }
+    },
+    
     logout() {
       // Limpiar todos los mensajes de notificación del DOM
       const notifications = document.querySelectorAll('.affiliation-required-notification, .affiliation-notification');
@@ -69,6 +118,22 @@ Vue.mixin({
       this.$router.push("/login");
     },
   },
+  
+  // Watcher para cambios de ruta
+  watch: {
+    '$route': {
+      handler(to, from) {
+        // Scroll hacia arriba cuando cambia la ruta
+        this.$nextTick(() => {
+          setTimeout(() => {
+            this.scrollToTop();
+          }, 100);
+        });
+      },
+      immediate: false,
+      deep: true
+    }
+  }
 });
 
 // Modo oscuro/claro toggle

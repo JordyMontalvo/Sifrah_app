@@ -293,19 +293,19 @@
         <img src="@/assets/img/home-icon.svg" alt="Inicio" style="width: 20px; height: 20px;">
         Inicio
       </a>
-      <router-link to="/activation" v-if="affiliated">
+      <router-link to="/activation" v-if="affiliated" @click.native="handleNavigationClick">
         <i class="fas fa-shopping-bag"></i>
         Compras
       </router-link>
-      <router-link to="/affiliation" v-if="!affiliated">
+      <router-link to="/affiliation" v-if="!affiliated" @click.native="handleNavigationClick">
         <i class="fas fa-shopping-bag"></i>
         Plan
       </router-link>
-      <router-link to="/tree/red" v-if="tree">
+      <router-link to="/tree/red" v-if="tree" @click.native="handleNavigationClick">
         <i class="fas fa-project-diagram"></i>
         Red
       </router-link>
-      <router-link to="/collect" v-if="tree">
+      <router-link to="/collect" v-if="tree" @click.native="handleNavigationClick">
         <i class="fas fa-hand-holding-usd"></i>
         Retiros
       </router-link>
@@ -507,6 +507,22 @@ export default {
       
       // Si está afiliado, ir al dashboard
       this.$router.push('/dashboard');
+      
+      // Scroll hacia arriba después de navegar
+      this.$nextTick(() => {
+        setTimeout(() => {
+          this.scrollToTop();
+        }, 100);
+      });
+    },
+    
+    handleNavigationClick() {
+      // Scroll hacia arriba cuando se hace clic en cualquier enlace del bottom navigation
+      this.$nextTick(() => {
+        setTimeout(() => {
+          this.scrollToTop();
+        }, 100);
+      });
     },
     actived(i) {
       // Verificar afiliación antes de permitir acceso a opciones restringidas
