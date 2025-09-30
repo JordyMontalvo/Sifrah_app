@@ -988,12 +988,16 @@ export default {
       this.imageLoaded = false; // Resetear la carga de imagen al abrir el modal
       // Prevenir scroll del body cuando el modal está abierto
       document.body.classList.add('modal-open');
+      // Quitar el transform del contenido
+      document.getElementsByClassName('content')[0].style.transform = 'none';
     },
     closeProductModal() {
       this.selectedProduct = null;
       this.imageLoaded = false; // Resetear la carga de imagen al cerrar el modal
       // Restaurar scroll del body
       document.body.classList.remove('modal-open');
+      // Restaurar el transform del contenido
+      document.getElementsByClassName('content')[0].style.removeProperty('transform');
     },
     addToCart(product) {
       const existingItem = this.cartItems.find(item => item.id === product.id);
