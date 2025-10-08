@@ -37,8 +37,8 @@
         <div class="banners-grid-wrapper">
           <!-- Banner izquierda - Columna izquierda -->
           <div class="banner-left">
-            <div v-if="activationBanners.left" class="banner-image-container">
-              <img :src="activationBanners.left" alt="Banner Izquierda" class="banner-image" />
+            <div v-if="getBannerImg('left')" class="banner-image-container" @click="onBannerClick('left')" style="cursor: pointer;">
+              <img :src="getBannerImg('left')" alt="Banner Izquierda" class="banner-image" />
             </div>
             <div v-else class="banner-placeholder">
               <span class="banner-text">Banner Izquierda</span>
@@ -51,8 +51,8 @@
             <div class="banner-center-column">
               <!-- Banner centro superior -->
               <div class="banner-center-top">
-                <div v-if="activationBanners.centerTop" class="banner-image-container">
-                  <img :src="activationBanners.centerTop" alt="Banner Centro Arriba" class="banner-image" />
+                <div v-if="getBannerImg('centerTop')" class="banner-image-container" @click="onBannerClick('centerTop')" style="cursor: pointer;">
+                  <img :src="getBannerImg('centerTop')" alt="Banner Centro Arriba" class="banner-image" />
                 </div>
                 <div v-else class="banner-placeholder">
                   <span class="banner-text">Banner Centro Arriba</span>
@@ -61,8 +61,8 @@
               
               <!-- Banner centro inferior -->
               <div class="banner-center-bottom">
-                <div v-if="activationBanners.centerBottom" class="banner-image-container">
-                  <img :src="activationBanners.centerBottom" alt="Banner Centro Abajo" class="banner-image" />
+                <div v-if="getBannerImg('centerBottom')" class="banner-image-container" @click="onBannerClick('centerBottom')" style="cursor: pointer;">
+                  <img :src="getBannerImg('centerBottom')" alt="Banner Centro Abajo" class="banner-image" />
                 </div>
                 <div v-else class="banner-placeholder">
                   <span class="banner-text">Banner Centro Abajo</span>
@@ -72,8 +72,8 @@
             
             <!-- Banner derecha principal -->
             <div class="banner-right-main">
-              <div v-if="activationBanners.right" class="banner-image-container">
-                <img :src="activationBanners.right" alt="Banner Derecha" class="banner-image" />
+              <div v-if="getBannerImg('right')" class="banner-image-container" @click="onBannerClick('right')" style="cursor: pointer;">
+                <img :src="getBannerImg('right')" alt="Banner Derecha" class="banner-image" />
               </div>
               <div v-else class="banner-placeholder">
                 <span class="banner-text">Banner Derecha</span>
@@ -803,6 +803,35 @@ export default {
       this.products.forEach((product) => {
         product.total = 0;
       });
+    },
+    getBannerImg(position) {
+      const b = this.activationBanners || {};
+      const val = b[position];
+      if (!val) return null;
+      if (typeof val === 'string') return val;
+      if (typeof val === 'object') return val.img || val.url || val.src || null;
+      return null;
+    },
+    getBannerUrl(position) {
+      const b = this.activationBanners || {};
+      const direct = b[`${position}Url`] || b[`${position}Link`];
+      const nested = b[position] && (b[position].url || b[position].link || b[position].href);
+      return direct || nested || null;
+    },
+    onBannerClick(position) {
+      const url = this.getBannerUrl(position);
+      if (!url || typeof url !== 'string') return;
+      try {
+        if (url.startsWith('http://') || url.startsWith('https://')) {
+          window.open(url, '_blank');
+        } else if (url.startsWith('/')) {
+          this.$router.push(url);
+        } else {
+          window.open(`https://${url}`, '_blank');
+        }
+      } catch (e) {
+        console.error('Error abriendo la URL del banner:', e);
+      }
     },
     async POST() {
       let {
