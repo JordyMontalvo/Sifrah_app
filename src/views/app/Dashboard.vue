@@ -387,6 +387,22 @@ export default {
     goToBanner(idx) {
       this.currentBanner = idx;
     },
+    setupBannerAutoplay() {
+      // Reiniciar cualquier intervalo previo
+      if (this.bannerInterval) {
+        clearInterval(this.bannerInterval);
+        this.bannerInterval = null;
+      }
+      // Iniciar autoplay solo si hay más de una imagen
+      if (this.bannerImages.length > 1) {
+        this.bannerInterval = setInterval(() => {
+          // Proteger contra longitud 0
+          if (this.bannerImages.length > 0) {
+            this.nextBanner();
+          }
+        }, 5000);
+      }
+    },
   },
   async created() {
     // GET data
@@ -434,8 +450,11 @@ export default {
     this.directs = data.directs || [];
     this.frontals = data.frontals || [];
     this.total_points = data.total_points;
+
+    // Iniciar autoplay del banner si corresponde
+    this.setupBannerAutoplay();
   },
-  beforeUnmount() {
+  beforeDestroy() {
     if (this.bannerInterval) clearInterval(this.bannerInterval);
   },
 };
