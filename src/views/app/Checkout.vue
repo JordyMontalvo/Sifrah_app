@@ -627,7 +627,7 @@
                     </div>
                   </div>
                   
-                  <div class="payment-method">
+                  <div class="payment-method disabled-payment-method">
                     <input 
                       type="radio" 
                       id="credit-card" 
@@ -635,8 +635,9 @@
                       value="credit-card"
                       v-model="pay_method"
                       @click="togglePaymentMethod('credit-card')"
+                      disabled
                     />
-                    <label for="credit-card">
+                    <label for="credit-card" class="disabled-label">
                       <i class="fas fa-credit-card"></i>
                       <span>Tarjeta de Crédito/Débito</span>
                     </label>
@@ -984,6 +985,11 @@ export default {
   methods: {
     // Método para toggle de métodos de pago - permite desmarcar al hacer clic nuevamente
     togglePaymentMethod(method) {
+      // Bloquear la selección de tarjeta de crédito/débito
+      if (method === 'credit-card') {
+        return; // No permitir seleccionar esta opción
+      }
+      
       if (this.pay_method === method) {
         // Si ya está seleccionado, deseleccionar
         this.pay_method = '';
@@ -3492,6 +3498,29 @@ body
       
     span
       color white
+
+// Estilos para método de pago deshabilitado
+.disabled-payment-method
+  opacity 0.6
+  
+  input[type="radio"]:disabled
+    display none
+    
+  .disabled-label
+    cursor not-allowed !important
+    background #f5f5f5 !important
+    border-color #d0d0d0 !important
+    color #999 !important
+    
+    &:hover
+      border-color #d0d0d0 !important
+      background #f5f5f5 !important
+      
+    i
+      color #999 !important
+      
+    span
+      color #999 !important
 
 .bank-details-simple
   background #f8f9fa
