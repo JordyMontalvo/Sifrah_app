@@ -2194,7 +2194,7 @@ body
   display flex
   align-items center
   padding 22px
-  border 1px solid #e8e8e8
+  border 1px solid #9f00ad
   border-radius 14px
   margin-bottom 22px
   transition all 0.3s ease
