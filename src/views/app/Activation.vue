@@ -3523,7 +3523,7 @@ export default {
   left: 0;
   width: 100%;
   height: 100%;
-  background: #d2096b;
+  background: #000000cc;
   display: flex;
   justify-content: center;
   align-items: center;
