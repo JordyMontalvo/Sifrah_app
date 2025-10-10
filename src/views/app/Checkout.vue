@@ -616,14 +616,21 @@
                   
                   <!-- Opciones desplegables para Pago con Comprobante -->
                   <div v-if="pay_method === 'bank' && showBankOptions" class="bank-options">
-                    <div class="bank-option-card" @click="selectBankOption('bcp')" :class="{ 'selected': selectedBank === 'bcp' }">
-                      <span>BCP</span>
+                    <div v-if="loadingPaymentMethods" class="loading-methods">
+                      <span>Cargando métodos de pago...</span>
                     </div>
-                    <div class="bank-option-card" @click="selectBankOption('interbank')" :class="{ 'selected': selectedBank === 'interbank' }">
-                      <span>Interbank</span>
+                    <div v-else-if="paymentMethods.length === 0" class="no-methods">
+                      <span>No hay métodos de pago disponibles</span>
                     </div>
-                    <div class="bank-option-card" @click="selectBankOption('yape')" :class="{ 'selected': selectedBank === 'yape' }">
-                      <span>Yape</span>
+                    <div 
+                      v-else
+                      v-for="method in paymentMethods" 
+                      :key="method.id"
+                      class="bank-option-card" 
+                      @click="selectBankOption(method.id)" 
+                      :class="{ 'selected': selectedBank === method.id }"
+                    >
+                      <span>{{ method.name }}</span>
                     </div>
                   </div>
                   
@@ -838,7 +845,10 @@ export default {
       showBankOptions: false,
       selectedBank: '',
       activationError: null,
-      activationSuccess: false
+      activationSuccess: false,
+      // Métodos de pago dinámicos
+      paymentMethods: [],
+      loadingPaymentMethods: false
     }
   },
   
@@ -1013,37 +1023,22 @@ export default {
       console.log('Banco seleccionado:', bank);
     },
     
-    getBankDisplayName(bank) {
-      const bankNames = {
-        'bcp': 'BCP',
-        'interbank': 'Interbank',
-        'yape': 'Yape'
-      };
-      return bankNames[bank] || 'Pago con Comprobante';
+    getBankDisplayName(bankId) {
+      const method = this.paymentMethods.find(m => m.id === bankId);
+      return method ? method.name : 'Pago con Comprobante';
     },
     
-    getBankInfo(bank) {
-      const bankData = {
-        'bcp': {
-          name: 'Banco de Crédito del Perú',
-          account: '193-12345678-0-12',
-          holder: 'SIFRAH S.A.C.',
-          type: 'Cuenta Corriente'
-        },
-        'interbank': {
-          name: 'Interbank',
-          account: '838 3244339443',
-          holder: 'SIFRAH S.A.C.',
-          type: 'Cuenta Corriente'
-        },
-        'yape': {
-          name: 'Yape',
-          account: '973 808 360',
-          holder: 'SIFRAH S.A.C.',
-          type: 'Transferencia a celular'
-        }
-      };
-      return bankData[bank] || {};
+    getBankInfo(bankId) {
+      const method = this.paymentMethods.find(m => m.id === bankId);
+      if (method) {
+        return {
+          name: method.name,
+          account: method.account,
+          holder: method.holder,
+          type: method.type
+        };
+      }
+      return {};
     },
     
     getAgencyName() {
@@ -1319,6 +1314,25 @@ export default {
           }
         ];
         console.log('Usando oficinas por defecto:', this.offices);
+      }
+    },
+    
+    async loadPaymentMethods() {
+      try {
+        this.loadingPaymentMethods = true;
+        const { data } = await api.PaymentMethods.GET(this.$store.state.session);
+        if (data && data.paymentMethods) {
+          this.paymentMethods = data.paymentMethods;
+          console.log('✅ Métodos de pago cargados:', this.paymentMethods);
+        } else {
+          console.warn('⚠️ No se encontraron métodos de pago en la respuesta');
+          this.paymentMethods = [];
+        }
+      } catch (error) {
+        console.error('❌ Error al cargar métodos de pago:', error);
+        this.paymentMethods = [];
+      } finally {
+        this.loadingPaymentMethods = false;
       }
     },
     
@@ -1882,6 +1896,9 @@ export default {
     
     // Cargar las oficinas disponibles
     await this.loadOffices();
+    
+    // Cargar métodos de pago
+    await this.loadPaymentMethods();
     
     // Cargar el saldo del usuario
     try {
