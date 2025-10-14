@@ -1704,7 +1704,8 @@ export default {
 
           // Datos del voucher (si aplica)
           voucher: voucherUrl,
-          bank: this.selectedBank,
+          bank: this.selectedBank ? this.getBankInfo(this.selectedBank).name : null,
+          bank_info: this.selectedBank ? this.getBankInfo(this.selectedBank) : null,
           voucher_number: this.voucherNumber,
         };
 

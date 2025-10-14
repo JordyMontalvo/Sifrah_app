@@ -3172,3 +3172,39 @@ expected "indent", got "eos"
   - Local:   http://localhost:8080/ 
   - Network: http://192.168.2.40:8080/
 
+ WAIT  Compiling...1:07:15 PM
+
+ DONE  Compiled successfully in 696ms1:07:16 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...1:07:39 PM
+
+ DONE  Compiled successfully in 625ms1:07:40 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...1:07:42 PM
+
+ DONE  Compiled successfully in 512ms1:07:43 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...1:08:57 PM
+
+ DONE  Compiled successfully in 745ms1:08:58 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
