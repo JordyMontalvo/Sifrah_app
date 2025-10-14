@@ -159,6 +159,624 @@
   .highlighted
     border 2px solid #ff5722 !important
 
+  // Estilos para la vista de Frontales
+  .frontales-header
+    display flex
+    justify-content space-between
+    align-items center
+    margin-bottom 30px
+    padding 0 20px
+
+  .frontales-title
+    font-size 28px
+    font-weight bold
+    color #333
+    margin 0
+
+  .btn-volver
+    display flex
+    align-items center
+    gap 8px
+    padding 10px 20px
+    background #00bcd4
+    border none
+    border-radius 8px
+    color white
+    font-weight 600
+    cursor pointer
+    transition all 0.3s ease
+    &:hover
+      background #0097a7
+      transform translateY(-2px)
+
+  .loading-container
+    display flex
+    flex-direction column
+    align-items center
+    justify-content center
+    padding 60px 20px
+    color #666
+    p
+      margin-top 16px
+      font-size 16px
+
+  .frontales-grid
+    display grid
+    grid-template-columns repeat(auto-fit, minmax(280px, 1fr))
+    gap 20px
+    padding 0 20px
+    max-width 1200px
+    margin 0 auto
+
+  .frontal-card
+    background #fff
+    border-radius 16px
+    padding 20px
+    box-shadow 0 4px 20px rgba(0, 0, 0, 0.1)
+    transition all 0.3s ease
+    border 1px solid #d209b67d
+    &:hover
+      transform translateY(-4px)
+      box-shadow 0 8px 30px rgba(0, 0, 0, 0.15)
+
+  .card-header
+    display flex
+    align-items center
+    gap 15px
+    margin-bottom 20px
+
+  .user-avatar
+    flex-shrink 0
+    i
+      font-size 48px
+      color #00bcd4
+
+  .user-info
+    flex 1
+
+  .user-name
+    font-size 18px
+    font-weight bold
+    color #333
+    margin 0 0 12px 0
+    line-height 1.2
+
+  .points-container
+    display flex
+    gap 16px
+
+  .point-item
+    display flex
+    align-items center
+    gap 6px
+    i
+      font-size 16px
+      color #666
+    .point-label
+      font-size 12px
+      font-weight bold
+      color #666
+      text-transform uppercase
+    .point-value
+      font-size 14px
+      font-weight bold
+      color #333
+
+  .card-body
+    display flex
+    flex-direction column
+    gap 15px
+
+  .membership-badge
+    display inline-block
+    padding 6px 16px
+    border-radius 20px
+    font-size 12px
+    font-weight bold
+    text-transform uppercase
+    letter-spacing 0.5px
+    align-self flex-start
+    &.bronze
+      background #cd7f32
+      color white
+    &.silver
+      background #c0c0c0
+      color white
+    &.gold
+      background #d4af37
+      color white
+    &.ruby
+      background #e0115f
+      color white
+
+  .card-actions
+    display flex
+    align-items center
+    gap 12px
+    flex-wrap wrap
+
+  .btn-ver-detalle
+    padding 8px 16px
+    background #28a745
+    border none
+    border-radius 6px
+    color white
+    font-size 12px
+    font-weight bold
+    cursor pointer
+    transition all 0.3s ease
+    flex 1
+    min-width 100px
+    &:hover
+      background #218838
+      transform translateY(-1px)
+
+  .status-badge
+    padding 6px 12px
+    border-radius 6px
+    font-size 11px
+    font-weight bold
+    text-transform uppercase
+    letter-spacing 0.5px
+    &.status-active
+      background #d4edda
+      color #155724
+    &.status-inactive
+      background #f8d7da
+      color #721c24
+
+  .btn-whatsapp
+    width 36px
+    height 36px
+    background #25d366
+    border none
+    border-radius 50%
+    color white
+    font-size 16px
+    cursor pointer
+    transition all 0.3s ease
+    display flex
+    align-items center
+    justify-content center
+    &:hover
+      background #128c7e
+      transform scale(1.1)
+
+  .no-data
+    display flex
+    flex-direction column
+    align-items center
+    justify-content center
+    padding 80px 20px
+    color #999
+    text-align center
+    p
+      font-size 16px
+      margin 0
+
+  // Estilos para la vista de Niveles
+  .niveles-header
+    display flex
+    justify-content space-between
+    align-items center
+    margin-bottom 30px
+    padding 0 20px
+
+  .niveles-title
+    font-size 28px
+    font-weight bold
+    color #333
+    margin 0
+
+  .hierarchy-summary
+    padding 20px
+    background #f8f9fa
+    border-radius 16px
+    box-shadow 0 4px 20px rgba(0, 0, 0, 0.1)
+    margin-top 20px
+
+  .info-message
+    display flex
+    align-items center
+    gap 10px
+    padding 12px 16px
+    background #e3f2fd
+    border 1px solid #2196f3
+    border-radius 8px
+    margin-bottom 20px
+    color #1976d2
+    font-size 14px
+    i
+      color #2196f3
+      font-size 16px
+      flex-shrink 0
+
+  .success-message
+    display flex
+    align-items center
+    gap 10px
+    padding 12px 16px
+    background #e8f5e8
+    border 1px solid #4caf50
+    border-radius 8px
+    margin-bottom 20px
+    color #2e7d32
+    font-size 14px
+    i
+      color #4caf50
+      font-size 16px
+      flex-shrink 0
+
+  .summary-cards
+    display grid
+    grid-template-columns repeat(auto-fit, minmax(200px, 1fr))
+    gap 20px
+    margin-bottom 30px
+
+  .summary-card
+    background #f3e5f5
+    border-radius 12px
+    padding 20px
+    display flex
+    flex-direction column
+    align-items center
+    text-align center
+    box-shadow 0 4px 15px rgba(0, 0, 0, 0.08)
+    border 1px solid #e0e0e0
+    .card-icon
+      width 60px
+      height 60px
+      background #fff3e0
+      border-radius 50%
+      display flex
+      align-items center
+      justify-content center
+      color #ff9800
+      font-size 28px
+      margin-bottom 15px
+    .card-content
+      flex 1
+    .card-value
+      font-size 28px
+      font-weight bold
+      color #333
+      margin-bottom 8px
+    .card-label
+      font-size 14px
+      color #666
+      text-transform uppercase
+      letter-spacing 0.5px
+
+  .levels-distribution
+    margin-top 30px
+
+  .distribution-title
+    font-size 20px
+    font-weight bold
+    color #333
+    margin-bottom 15px
+    padding-bottom 8px
+    border-bottom 2px solid #d209b6
+
+  .levels-chart
+    display flex
+    flex-direction column
+    gap 8px
+    padding 20px
+    background white
+    border-radius 12px
+    box-shadow 0 2px 10px rgba(0, 0, 0, 0.05)
+
+  .level-row
+    display flex
+    align-items center
+    gap 15px
+    padding 8px 0
+    border-bottom 1px solid #f0f0f0
+    &:last-child
+      border-bottom none
+
+  .level-label
+    font-size 14px
+    color #666
+    font-weight 600
+    min-width 80px
+    text-align left
+
+  .level-bar-container
+    flex 1
+    height 20px
+    background #f5f5f5
+    border-radius 10px
+    overflow hidden
+    position relative
+    border 1px solid #e0e0e0
+
+  .level-bar
+    height 100%
+    background linear-gradient(90deg, #d209b6, #d209b694)
+    border-radius 10px
+    transition width 0.8s ease-in-out
+    position relative
+    overflow hidden
+    &::after
+      content ''
+      position absolute
+      top 0
+      left 0
+      right 0
+      bottom 0
+      background linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent)
+      animation shimmer 2s infinite
+
+  @keyframes shimmer
+    0%
+      transform translateX(-100%)
+    100%
+      transform translateX(100%)
+
+  .level-count
+    font-size 16px
+    font-weight bold
+    color #333
+    min-width 50px
+    text-align right
+    background #f8f9fa
+    padding 4px 8px
+    border-radius 6px
+    border 1px solid #e9ecef
+
+  .distribution-header
+    display flex
+    justify-content space-between
+    align-items center
+    margin-bottom 20px
+
+  // Estilos para el Modal de Detalles
+  .modal-header
+    display flex
+    justify-content space-between
+    align-items center
+    padding 24px 30px
+    border-bottom 1px solid #e0e0e0
+    background linear-gradient(135deg, #00bcd4, #0097a7)
+    color white
+
+  .modal-title
+    font-size 24px
+    font-weight bold
+    margin 0
+
+  .modal-close
+    background rgba(255, 255, 255, 0.2)
+    border none
+    border-radius 50%
+    width 40px
+    height 40px
+    color white
+    font-size 18px
+    cursor pointer
+    transition all 0.3s ease
+    display flex
+    align-items center
+    justify-content center
+    &:hover
+      background rgba(255, 255, 255, 0.3)
+      transform scale(1.1)
+
+  .modal-body
+    padding 30px
+    max-height 60vh
+    overflow-y auto
+
+  .user-profile
+    display flex
+    align-items center
+    gap 20px
+    margin-bottom 30px
+    padding 20px
+    background #f8f9fa
+    border-radius 12px
+
+  .profile-avatar
+    flex-shrink 0
+    .user-photo
+      width 80px
+      height 80px
+      border-radius 50%
+      object-fit cover
+      border 3px solid #00bcd4
+    i
+      font-size 80px
+      color #00bcd4
+
+  .profile-info
+    flex 1
+
+  .profile-name
+    font-size 24px
+    font-weight bold
+    color #333
+    margin 0 0 12px 0
+
+  .profile-badges
+    display flex
+    gap 10px
+    flex-wrap wrap
+
+  .info-grid
+    display grid
+    grid-template-columns repeat(auto-fit, minmax(300px, 1fr))
+    gap 24px
+    margin-bottom 30px
+
+  .info-section
+    background #f8f9fa
+    border-radius 12px
+    padding 20px
+
+  .section-title
+    display flex
+    align-items center
+    gap 8px
+    font-size 18px
+    font-weight bold
+    color #333
+    margin 0 0 16px 0
+    padding-bottom 8px
+    border-bottom 2px solid #00bcd4
+    i
+      color #00bcd4
+
+  .info-item
+    display flex
+    justify-content space-between
+    align-items center
+    padding 8px 0
+    border-bottom 1px solid #e0e0e0
+    &:last-child
+      border-bottom none
+
+  .info-label
+    font-weight 600
+    color #666
+    font-size 14px
+
+  .info-value
+    font-weight bold
+    color #333
+    font-size 14px
+
+  .points-display
+    display flex
+    flex-direction column
+    gap 12px
+
+  .point-card
+    display flex
+    align-items center
+    gap 12px
+    padding 12px
+    background white
+    border-radius 8px
+    border-left 4px solid #00bcd4
+
+  .point-icon
+    width 40px
+    height 40px
+    background #e0f7fa
+    border-radius 50%
+    display flex
+    align-items center
+    justify-content center
+    color #00bcd4
+    font-size 18px
+
+  .point-details
+    flex 1
+    .point-label
+      display block
+      font-size 12px
+      color #666
+      font-weight 600
+      text-transform uppercase
+      margin-bottom 2px
+    .point-value
+      display block
+      font-size 18px
+      font-weight bold
+      color #333
+
+  .children-section
+    margin-top 30px
+
+  .children-grid
+    display grid
+    grid-template-columns repeat(auto-fill, minmax(200px, 1fr))
+    gap 16px
+    margin-top 16px
+
+  .child-card
+    display flex
+    align-items center
+    gap 12px
+    padding 16px
+    background white
+    border-radius 8px
+    border 1px solid #e0e0e0
+    transition all 0.3s ease
+    &:hover
+      transform translateY(-2px)
+      box-shadow 0 4px 12px rgba(0, 0, 0, 0.1)
+      border-color #00bcd4
+
+  .child-avatar
+    i
+      font-size 32px
+      color #00bcd4
+
+  .child-info
+    flex 1
+
+  .child-name
+    font-size 14px
+    font-weight bold
+    color #333
+    margin 0 0 4px 0
+
+  .child-points
+    display flex
+    align-items center
+    gap 4px
+
+  .child-point-label
+    font-size 11px
+    color #666
+    font-weight 600
+    text-transform uppercase
+
+  .child-point-value
+    font-size 14px
+    font-weight bold
+    color #00bcd4
+
+  .modal-footer
+    display flex
+    gap 16px
+    padding 24px 30px
+    border-top 1px solid #e0e0e0
+    background #f8f9fa
+
+  .btn-whatsapp-large
+    display flex
+    align-items center
+    gap 8px
+    padding 12px 24px
+    background #25d366
+    border none
+    border-radius 8px
+    color white
+    font-weight 600
+    cursor pointer
+    transition all 0.3s ease
+    flex 1
+    &:hover
+      background #128c7e
+      transform translateY(-2px)
+
+  .btn-close
+    padding 12px 24px
+    background #6c757d
+    border none
+    border-radius 8px
+    color white
+    font-weight 600
+    cursor pointer
+    transition all 0.3s ease
+    &:hover
+      background #5a6268
+      transform translateY(-2px)
+
   // Estilos específicos para el árbol de red
   .selected-node > span
     box-shadow 0 0 8px #00bcd4 !important
@@ -227,5 +845,90 @@
     .mode-title
       font-size 18px
       margin-bottom 15px
+
+    // Responsive para frontales y niveles
+    .frontales-header
+    .niveles-header
+      flex-direction column
+      gap 20px
+      text-align center
+    
+    .frontales-title
+    .niveles-title
+      font-size 24px
+    
+    .frontales-grid
+      grid-template-columns 1fr
+      gap 16px
+      padding 0 16px
+    
+    .frontal-card
+      padding 16px
+    
+    .user-name
+      font-size 16px
+    
+    .points-container
+      gap 12px
+    
+    .card-actions
+      gap 8px
+    
+    .btn-ver-detalle
+      font-size 11px
+      padding 6px 12px
+    
+    .summary-cards
+      grid-template-columns repeat(2, 1fr)
+      gap 15px
+    
+    .summary-card
+      padding 15px
+      .card-icon
+        width 50px
+        height 50px
+        font-size 24px
+        margin-bottom 10px
+      .card-value
+        font-size 24px
+      .card-label
+        font-size 12px
+    
+    .levels-chart
+      padding 15px
+    
+    .level-row
+      gap 10px
+    
+    .level-label
+      font-size 12px
+      min-width 60px
+    
+    .level-count
+      font-size 14px
+      min-width 40px
+      padding 3px 6px
+    
+    // Responsive para el modal
+    .modal-body
+      padding 20px
+    
+    .user-profile
+      flex-direction column
+      text-align center
+    
+    .info-grid
+      grid-template-columns 1fr
+      gap 16px
+    
+    .children-grid
+      grid-template-columns 1fr
+    
+    .modal-footer
+      flex-direction column
+    
+    .btn-whatsapp-large
+    .btn-close
+      width 100%
 
 
