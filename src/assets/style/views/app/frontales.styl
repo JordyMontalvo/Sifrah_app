@@ -1,0 +1,312 @@
+  .modal
+    background rgba(#000, 0.72)
+    position absolute
+    top 0
+    bottom 0
+    left 0
+    right 0
+    padding 80px 20px
+    display none
+    z-index 2
+    overflow auto
+    &.open
+      display block
+    .inner
+      background #eaebec
+      border-radius 20px
+      padding 20px 20px 32px 20px
+      max-width 480px
+      margin auto
+
+  .cards-container
+    gap 45px
+    justify-content center
+    flex-wrap wrap
+    margin-bottom 50px
+
+  .mode-selector .card
+    background white
+    border none
+    border-radius 10px
+    padding 20px
+    text-align center
+    cursor pointer
+    transition all 0.3s ease
+    width 180px
+    height 180px
+    box-shadow 0 4px 20px rgba(0,0,0,0.08)
+    display flex
+    flex-direction column
+    align-items center
+    justify-content center
+    &:hover
+      transform translateY(-4px)
+      box-shadow 0 8px 30px rgba(0,0,0,0.15)
+
+  .card-text
+    margin 0
+    color #333
+    font-weight 600
+    font-size 26px
+    letter-spacing 0.5px
+    margin-top 17px
+    &.mobile
+      font-size 20px !important
+    &.mobile-small
+      font-size 15px !important
+
+  .mode-title
+    &.mobile
+      font-size 20px !important
+      margin-bottom 20px !important
+    &.mobile-small
+      font-size 20px !important
+      margin-bottom 20px !important
+
+  .card-icon
+    display flex
+    align-items center
+    justify-content center
+    margin-top 10px
+    svg
+      width 60px
+      height 60px
+
+  .buttons-container
+    display flex
+    flex-direction column
+    align-items center
+    gap 20px
+
+  .top-buttons
+    display grid
+    grid-template-columns repeat(2, 1fr)
+    gap 20px
+    max-width 400px
+    margin 0 auto
+
+  .bottom-button
+    display flex
+    justify-content center
+
+  .btn
+    cursor pointer
+    transition all 0.3s ease
+    border none
+    border-radius 8px
+    font-weight 600
+    letter-spacing 0.5px
+    padding 12px 24px
+    font-size 14px
+
+  .btn-green
+    background #d209b6
+    color white
+    &:hover
+      background #d209b6
+      transform translateY(-2px)
+      box-shadow 0 4px 12px rgba(40, 167, 69, 0.3)
+
+  .btn-orange
+    background #d209b6
+    color white
+    font-size 16px
+    padding 14px 28px
+    &:hover
+      background #d209b6
+      transform translateY(-2px)
+      box-shadow 0 4px 12px rgba(230, 126, 0, 0.3)
+
+  #body
+    margin 0
+    padding 0
+    letter-spacing 0.2px
+    position relative
+
+  :root
+    --col-1 #c8ddef
+    --col-2 #c8ddef
+    --bg-1 #0e182d
+    --highlighted #ff5722
+
+  .tree-container
+    overflow auto
+    width 100%
+    > h1
+      color var(--col-1)
+      font-weight 400
+
+  .tree
+  .tree ul
+  .tree li
+    list-style none
+    margin 0
+    padding 0
+    position relative
+
+  .tree
+    text-align center
+    ul
+      display table
+      margin auto
+      width 100%
+    li
+      display table-cell
+      padding .5em 0
+      vertical-align top
+      &:before
+        outline solid 1px var(--col-2)
+        content ""
+        left 0
+        position absolute
+        right 0
+        top 0
+        direction rtl
+      &:first-child:before
+        left 50%
+      &:last-child:before
+        right 50%
+      > span:before
+      > span:after
+      > code:before
+      &:before
+      &:after
+        outline none
+        display none
+
+  .tree
+  .tree ul
+    display table
+    margin auto
+    width 100%
+
+  .tree code
+  .tree span
+    border-radius .2em
+    display inline-block
+    margin 0 .2em .5em
+    padding .2em .5em
+    position relative
+    transition all 0.2s ease
+    font-size 12px
+    i
+      font-size 32px
+      color #fff
+      &.aff
+        color #ffe400
+      &.act
+        color #14ec42
+      &.fa-gem
+        font-size 18px
+        position absolute
+        transform translateY(10px)
+        display none
+        &.star
+          display inline
+          color #ffe400
+        &.master
+          display inline
+          color #14ec42
+        &.silver
+          display inline
+          color #D3D3D3
+        &.gold
+          display inline
+          color #D4AF37
+
+  .tree ul:before
+  .tree code:before
+  .tree span:before
+    outline solid 1px var(--col-2)
+    content ""
+    height .5em
+    left 50%
+    position absolute
+
+  .tree span::after
+    outline solid 1px var(--col-1)
+    content ""
+    top -8px
+    left calc(50% - 5px)
+    width 8px
+    height 8px
+    background-color #888
+    border 1px solid var(--col-1)
+    position absolute
+    opacity 1
+    border-radius 100%
+    transition all 0.2s ease
+
+  .tree ul:before
+    top -.5em
+
+  .tree code:before
+  .tree span:before
+    top -.55em
+
+  .highlighted
+    border 2px solid var(--highlighted) !important
+
+  // Responsive para móviles
+  @media (max-width: 768px)
+    .cards-container
+      display grid
+      grid-template-columns repeat(2, 1fr)
+      gap 15px
+      max-width 350px
+      margin 0 auto 40px auto
+    
+    .mode-selector .card
+      width 140px
+      height 140px
+      padding 12px
+    
+    .card-text
+      font-size 16px
+      margin-top 8px
+    
+    .card-icon svg
+      width 40px
+      height 40px
+    
+    .mode-title
+      font-size 20px
+      margin-bottom 20px
+    
+    .top-buttons
+      grid-template-columns repeat(2, 1fr)
+      gap 15px
+      max-width 350px
+    
+    .btn
+      padding 10px 20px
+      font-size 13px
+    
+    .btn-orange
+      font-size 14px
+      padding 12px 24px
+
+  // Para móviles muy pequeños
+  @media (max-width: 480px)
+    .cards-container
+      gap 12px
+      max-width 300px
+      margin 0 auto 30px auto
+    
+    .mode-selector .card
+      width 120px
+      height 120px
+      padding 10px
+    
+    .card-text
+      font-size 14px
+      margin-top 6px
+    
+    .card-icon svg
+      width 35px
+      height 35px
+    
+    .mode-title
+      font-size 18px
+      margin-bottom 15px
+

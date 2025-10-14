@@ -1,0 +1,3120 @@
+
+> lehaim@0.1.0 serve
+> vue-cli-service serve
+
+ INFO  Starting development server...
+ DONE  Compiled successfully in 1913ms3:21:06 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+  Note that the development build is not optimized.
+  To create a production build, run npm run build.
+
+ WAIT  Compiling...3:26:41 PM
+
+ DONE  Compiled successfully in 105ms3:26:42 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...3:27:31 PM
+
+ DONE  Compiled successfully in 109ms3:27:31 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...3:28:11 PM
+
+ DONE  Compiled successfully in 79ms3:28:11 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...3:28:14 PM
+
+ DONE  Compiled successfully in 100ms3:28:14 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...3:29:31 PM
+
+ DONE  Compiled successfully in 109ms3:29:31 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...3:30:45 PM
+
+ DONE  Compiled successfully in 104ms3:30:46 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...3:32:18 PM
+
+ DONE  Compiled successfully in 101ms3:32:18 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...3:32:38 PM
+
+ DONE  Compiled successfully in 93ms3:32:38 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...3:34:07 PM
+
+ DONE  Compiled successfully in 75ms3:34:07 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...3:34:53 PM
+
+ DONE  Compiled successfully in 92ms3:34:53 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...3:35:03 PM
+
+ DONE  Compiled successfully in 86ms3:35:03 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...3:36:52 PM
+
+ DONE  Compiled successfully in 101ms3:36:52 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...3:37:20 PM
+
+ DONE  Compiled successfully in 169ms3:37:21 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...3:38:26 PM
+
+ DONE  Compiled successfully in 95ms3:38:26 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...3:39:33 PM
+
+ DONE  Compiled successfully in 88ms3:39:33 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...3:39:50 PM
+
+ DONE  Compiled successfully in 72ms3:39:50 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...3:40:09 PM
+
+ DONE  Compiled successfully in 99ms3:40:10 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...3:41:40 PM
+
+ DONE  Compiled successfully in 101ms3:41:40 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...3:41:56 PM
+
+ DONE  Compiled successfully in 103ms3:41:56 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...3:42:26 PM
+
+ DONE  Compiled successfully in 95ms3:42:27 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...3:44:04 PM
+
+ DONE  Compiled successfully in 95ms3:44:04 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...3:44:16 PM
+
+ DONE  Compiled successfully in 89ms3:44:16 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...3:46:32 PM
+
+ DONE  Compiled successfully in 73ms3:46:33 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...3:48:35 PM
+
+ DONE  Compiled successfully in 109ms3:48:36 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...3:49:28 PM
+
+ DONE  Compiled successfully in 1004ms3:49:29 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...3:50:13 PM
+
+ DONE  Compiled successfully in 117ms3:50:13 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...3:53:24 PM
+
+ DONE  Compiled successfully in 109ms3:53:25 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...3:54:03 PM
+
+ DONE  Compiled successfully in 96ms3:54:03 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...3:54:19 PM
+
+ DONE  Compiled successfully in 93ms3:54:19 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...3:55:38 PM
+
+ DONE  Compiled successfully in 94ms3:55:38 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...3:56:30 PM
+
+ DONE  Compiled successfully in 93ms3:56:30 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...3:58:37 PM
+
+ DONE  Compiled successfully in 103ms3:58:38 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...4:00:27 PM
+
+ DONE  Compiled successfully in 99ms4:00:28 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...4:00:29 PM
+
+ DONE  Compiled successfully in 93ms4:00:29 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...4:01:00 PM
+
+ DONE  Compiled successfully in 96ms4:01:00 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...4:01:05 PM
+
+ DONE  Compiled successfully in 94ms4:01:05 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...4:01:58 PM
+
+ DONE  Compiled successfully in 91ms4:01:58 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...4:02:14 PM
+
+ DONE  Compiled successfully in 75ms4:02:14 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...4:04:01 PM
+
+ DONE  Compiled successfully in 105ms4:04:01 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...4:07:24 PM
+
+ DONE  Compiled successfully in 91ms4:07:24 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...4:09:14 PM
+
+ DONE  Compiled successfully in 69ms4:09:14 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...4:10:20 PM
+
+ DONE  Compiled successfully in 156ms4:10:20 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...4:10:42 PM
+
+ DONE  Compiled successfully in 84ms4:10:42 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...4:11:26 PM
+
+ DONE  Compiled successfully in 126ms4:11:27 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...4:13:27 PM
+
+ DONE  Compiled successfully in 122ms4:13:27 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...4:14:00 PM
+
+ DONE  Compiled successfully in 115ms4:14:01 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...4:15:00 PM
+
+ DONE  Compiled successfully in 104ms4:15:00 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...4:15:09 PM
+
+ DONE  Compiled successfully in 76ms4:15:09 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...4:15:15 PM
+
+ DONE  Compiled successfully in 126ms4:15:15 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+
+> lehaim@0.1.0 serve
+> vue-cli-service serve
+
+ INFO  Starting development server...
+ ERROR  Failed to compile with 8 errors12:17:54 PM
+
+ error  in ./src/views/app/Activation.vue?vue&type=style&index=0&id=2fd56f04&lang=stylus
+
+Syntax Error: Error: /Users/jordymontalvo/Documents/sifrah/app/src/views/app/Activation.vue:2:9
+   1| <template>
+   2|   <App :session="session" :office_id="office_id" :title="title">
+--------------^
+   3|     <div v-cloak>
+   4|       <!-- Loading overlay que muestra la vista opaca -->
+   5|       <div v-if="loading || !products || products.length === 0" class="loading-overlay">
+
+failed to locate @import file ../../../assets/style/views/app/Activation.styl
+
+
+ @ ./node_modules/vue-style-loader??ref--11-oneOf-1-0!./node_modules/css-loader??ref--11-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--11-oneOf-1-2!./node_modules/stylus-loader??ref--11-oneOf-1-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/views/app/Activation.vue?vue&type=style&index=0&id=2fd56f04&lang=stylus 4:14-471 15:3-20:5 16:22-479
+ @ ./src/views/app/Activation.vue?vue&type=style&index=0&id=2fd56f04&lang=stylus
+ @ ./src/views/app/Activation.vue
+ @ ./src/router.js
+ @ ./src/main.js
+ @ multi (webpack)-dev-server/client?http://192.168.2.40:8080/sockjs-node (webpack)/hot/dev-server.js ./src/main.js
+
+ error  in ./src/views/app/Activations.vue?vue&type=style&index=0&id=1e3f6865&lang=stylus
+
+Syntax Error: Error: /Users/jordymontalvo/Documents/sifrah/app/src/views/app/Activations.vue:2:9
+   1| <template>
+   2|   <App :session="session" :title="title">
+--------------^
+   3|     <div v-cloak>
+   4|       <div v-if="loading" class="loading-container">
+   5|         <div class="loading-spinner-large"></div>
+
+failed to locate @import file ../../../assets/style/views/app/Activations.styl
+
+
+ @ ./node_modules/vue-style-loader??ref--11-oneOf-1-0!./node_modules/css-loader??ref--11-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--11-oneOf-1-2!./node_modules/stylus-loader??ref--11-oneOf-1-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/views/app/Activations.vue?vue&type=style&index=0&id=1e3f6865&lang=stylus 4:14-472 15:3-20:5 16:22-480
+ @ ./src/views/app/Activations.vue?vue&type=style&index=0&id=1e3f6865&lang=stylus
+ @ ./src/views/app/Activations.vue
+ @ ./src/router.js
+ @ ./src/main.js
+ @ multi (webpack)-dev-server/client?http://192.168.2.40:8080/sockjs-node (webpack)/hot/dev-server.js ./src/main.js
+
+ error  in ./src/views/app/Affiliation.vue?vue&type=style&index=0&id=78a6b090&lang=stylus
+
+Syntax Error: Error: /Users/jordymontalvo/Documents/sifrah/app/src/views/app/Affiliation.vue:2:9
+   1| <template>
+   2|   <App :session="session" :office_id="office_id" :title="title">
+--------------^
+   3|     <div v-cloak>
+   4|       <div v-if="loading" class="loading-container">
+   5|         <div class="loading-spinner-large"></div>
+
+failed to locate @import file ../../../assets/style/views/app/Affiliation.styl
+
+
+ @ ./node_modules/vue-style-loader??ref--11-oneOf-1-0!./node_modules/css-loader??ref--11-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--11-oneOf-1-2!./node_modules/stylus-loader??ref--11-oneOf-1-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/views/app/Affiliation.vue?vue&type=style&index=0&id=78a6b090&lang=stylus 4:14-472 15:3-20:5 16:22-480
+ @ ./src/views/app/Affiliation.vue?vue&type=style&index=0&id=78a6b090&lang=stylus
+ @ ./src/views/app/Affiliation.vue
+ @ ./src/router.js
+ @ ./src/main.js
+ @ multi (webpack)-dev-server/client?http://192.168.2.40:8080/sockjs-node (webpack)/hot/dev-server.js ./src/main.js
+
+ error  in ./src/views/app/Checkout.vue?vue&type=style&index=0&id=7f339ea4&lang=stylus&scoped=true
+
+Syntax Error: Error: /Users/jordymontalvo/Documents/sifrah/app/src/views/app/Checkout.vue:2:9
+   1|                                                                                                                                                                                                                                                                                                                                                                                   <template>
+   2|   <App>
+--------------^
+   3|     <!-- Título principal del checkout -->
+   4|     <div class="checkout-main-title">
+   5|       <h1>Checkout</h1>
+
+failed to locate @import file ../../../assets/style/views/app/Checkout.styl
+
+
+ @ ./node_modules/vue-style-loader??ref--11-oneOf-1-0!./node_modules/css-loader??ref--11-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--11-oneOf-1-2!./node_modules/stylus-loader??ref--11-oneOf-1-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/views/app/Checkout.vue?vue&type=style&index=0&id=7f339ea4&lang=stylus&scoped=true 4:14-481 15:3-20:5 16:22-489
+ @ ./src/views/app/Checkout.vue?vue&type=style&index=0&id=7f339ea4&lang=stylus&scoped=true
+ @ ./src/views/app/Checkout.vue
+ @ ./src/router.js
+ @ ./src/main.js
+ @ multi (webpack)-dev-server/client?http://192.168.2.40:8080/sockjs-node (webpack)/hot/dev-server.js ./src/main.js
+
+ error  in ./src/views/app/Resume.vue?vue&type=style&index=0&id=75e19415&lang=stylus
+
+Syntax Error: Error: /Users/jordymontalvo/Documents/sifrah/app/src/views/app/Resume.vue:2:9
+   1| <template>
+   2|   <App :session="session" :office_id="office_id" :title="title">
+--------------^
+   3|     <Spinner v-if="loading" :size="40" :color="'#086eb6'" />
+   4|     <SkeletonLoader
+   5|       v-if="loading"
+
+failed to locate @import file ../../../assets/style/views/app/Resume.styl
+
+
+ @ ./node_modules/vue-style-loader??ref--11-oneOf-1-0!./node_modules/css-loader??ref--11-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--11-oneOf-1-2!./node_modules/stylus-loader??ref--11-oneOf-1-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/views/app/Resume.vue?vue&type=style&index=0&id=75e19415&lang=stylus 4:14-467 15:3-20:5 16:22-475
+ @ ./src/views/app/Resume.vue?vue&type=style&index=0&id=75e19415&lang=stylus
+ @ ./src/views/app/Resume.vue
+ @ ./src/router.js
+ @ ./src/main.js
+ @ multi (webpack)-dev-server/client?http://192.168.2.40:8080/sockjs-node (webpack)/hot/dev-server.js ./src/main.js
+
+ error  in ./src/views/app/Tools.vue?vue&type=style&index=0&id=3761e523&lang=stylus
+
+Syntax Error: Error: /Users/jordymontalvo/Documents/sifrah/app/src/views/app/Tools.vue:2:9
+   1| <template>
+   2|   <App :session="session" :title="title">
+--------------^
+   3|     <!-- <h4>HERRAMIENTAS</h4> -->
+   4| 
+   5|     <Spinner v-if="loading" :size="40" :color="'#086eb6'" />
+
+failed to locate @import file ../../../assets/style/views/app/Tools.styl
+
+
+ @ ./node_modules/vue-style-loader??ref--11-oneOf-1-0!./node_modules/css-loader??ref--11-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--11-oneOf-1-2!./node_modules/stylus-loader??ref--11-oneOf-1-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/views/app/Tools.vue?vue&type=style&index=0&id=3761e523&lang=stylus 4:14-466 15:3-20:5 16:22-474
+ @ ./src/views/app/Tools.vue?vue&type=style&index=0&id=3761e523&lang=stylus
+ @ ./src/views/app/Tools.vue
+ @ ./src/router.js
+ @ ./src/main.js
+ @ multi (webpack)-dev-server/client?http://192.168.2.40:8080/sockjs-node (webpack)/hot/dev-server.js ./src/main.js
+
+ error  in ./src/views/app/Tree.vue?vue&type=style&index=0&id=b09e59f4&lang=stylus
+
+Syntax Error: Error: /Users/jordymontalvo/Documents/sifrah/app/src/views/app/Tree.vue:2:9
+   1| <template>
+   2|   <App :session="session" :office_id="office_id">
+--------------^
+   3|     <!-- Selector de modo - aparece primero -->
+   4|     <div v-if="!selectedMode" class="mode-selector">
+   5|         <h2 class="mode-title" :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }">SELECCIONAR MODO</h2>
+
+failed to locate @import file ../../../assets/style/views/app/Tree.styl
+
+
+ @ ./node_modules/vue-style-loader??ref--11-oneOf-1-0!./node_modules/css-loader??ref--11-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--11-oneOf-1-2!./node_modules/stylus-loader??ref--11-oneOf-1-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/views/app/Tree.vue?vue&type=style&index=0&id=b09e59f4&lang=stylus 4:14-465 15:3-20:5 16:22-473
+ @ ./src/views/app/Tree.vue?vue&type=style&index=0&id=b09e59f4&lang=stylus
+ @ ./src/views/app/Tree.vue
+ @ ./src/router.js
+ @ ./src/main.js
+ @ multi (webpack)-dev-server/client?http://192.168.2.40:8080/sockjs-node (webpack)/hot/dev-server.js ./src/main.js
+
+ error  in ./src/views/app/frontales.vue?vue&type=style&index=0&id=1b6363aa&lang=stylus
+
+Syntax Error: Error: /Users/jordymontalvo/Documents/sifrah/app/src/views/app/frontales.vue:2:9
+   1| <template>
+   2|       <App :session="session" :office_id="office_id">
+--------------^
+   3| 
+   4|         <i class="load" v-if="loading"></i>
+   5| 
+
+failed to locate @import file ../../../assets/style/views/app/frontales.styl
+
+
+ @ ./node_modules/vue-style-loader??ref--11-oneOf-1-0!./node_modules/css-loader??ref--11-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--11-oneOf-1-2!./node_modules/stylus-loader??ref--11-oneOf-1-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/views/app/frontales.vue?vue&type=style&index=0&id=1b6363aa&lang=stylus 4:14-470 15:3-20:5 16:22-478
+ @ ./src/views/app/frontales.vue?vue&type=style&index=0&id=1b6363aa&lang=stylus
+ @ ./src/views/app/frontales.vue
+ @ ./src/router.js
+ @ ./src/main.js
+ @ multi (webpack)-dev-server/client?http://192.168.2.40:8080/sockjs-node (webpack)/hot/dev-server.js ./src/main.js
+
+ WAIT  Compiling...12:21:21 PM
+
+ ERROR  Failed to compile with 7 errors12:21:22 PM
+
+ error  in ./src/views/app/Activations.vue?vue&type=style&index=0&id=1e3f6865&lang=stylus
+
+Syntax Error: Error: /Users/jordymontalvo/Documents/sifrah/app/src/views/app/Activations.vue:2:9
+   1| <template>
+   2|   <App :session="session" :title="title">
+--------------^
+   3|     <div v-cloak>
+   4|       <div v-if="loading" class="loading-container">
+   5|         <div class="loading-spinner-large"></div>
+
+failed to locate @import file ../../../assets/style/views/app/Activations.styl
+
+
+ @ ./node_modules/vue-style-loader??ref--11-oneOf-1-0!./node_modules/css-loader??ref--11-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--11-oneOf-1-2!./node_modules/stylus-loader??ref--11-oneOf-1-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/views/app/Activations.vue?vue&type=style&index=0&id=1e3f6865&lang=stylus 4:14-472 15:3-20:5 16:22-480
+ @ ./src/views/app/Activations.vue?vue&type=style&index=0&id=1e3f6865&lang=stylus
+ @ ./src/views/app/Activations.vue
+ @ ./src/router.js
+ @ ./src/main.js
+ @ multi (webpack)-dev-server/client?http://192.168.2.40:8080/sockjs-node (webpack)/hot/dev-server.js ./src/main.js
+
+ error  in ./src/views/app/Affiliation.vue?vue&type=style&index=0&id=78a6b090&lang=stylus
+
+Syntax Error: Error: /Users/jordymontalvo/Documents/sifrah/app/src/views/app/Affiliation.vue:2:9
+   1| <template>
+   2|   <App :session="session" :office_id="office_id" :title="title">
+--------------^
+   3|     <div v-cloak>
+   4|       <div v-if="loading" class="loading-container">
+   5|         <div class="loading-spinner-large"></div>
+
+failed to locate @import file ../../../assets/style/views/app/Affiliation.styl
+
+
+ @ ./node_modules/vue-style-loader??ref--11-oneOf-1-0!./node_modules/css-loader??ref--11-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--11-oneOf-1-2!./node_modules/stylus-loader??ref--11-oneOf-1-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/views/app/Affiliation.vue?vue&type=style&index=0&id=78a6b090&lang=stylus 4:14-472 15:3-20:5 16:22-480
+ @ ./src/views/app/Affiliation.vue?vue&type=style&index=0&id=78a6b090&lang=stylus
+ @ ./src/views/app/Affiliation.vue
+ @ ./src/router.js
+ @ ./src/main.js
+ @ multi (webpack)-dev-server/client?http://192.168.2.40:8080/sockjs-node (webpack)/hot/dev-server.js ./src/main.js
+
+ error  in ./src/views/app/Checkout.vue?vue&type=style&index=0&id=7f339ea4&lang=stylus&scoped=true
+
+Syntax Error: Error: /Users/jordymontalvo/Documents/sifrah/app/src/views/app/Checkout.vue:2:9
+   1|                                                                                                                                                                                                                                                                                                                                                                                   <template>
+   2|   <App>
+--------------^
+   3|     <!-- Título principal del checkout -->
+   4|     <div class="checkout-main-title">
+   5|       <h1>Checkout</h1>
+
+failed to locate @import file ../../../assets/style/views/app/Checkout.styl
+
+
+ @ ./node_modules/vue-style-loader??ref--11-oneOf-1-0!./node_modules/css-loader??ref--11-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--11-oneOf-1-2!./node_modules/stylus-loader??ref--11-oneOf-1-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/views/app/Checkout.vue?vue&type=style&index=0&id=7f339ea4&lang=stylus&scoped=true 4:14-481 15:3-20:5 16:22-489
+ @ ./src/views/app/Checkout.vue?vue&type=style&index=0&id=7f339ea4&lang=stylus&scoped=true
+ @ ./src/views/app/Checkout.vue
+ @ ./src/router.js
+ @ ./src/main.js
+ @ multi (webpack)-dev-server/client?http://192.168.2.40:8080/sockjs-node (webpack)/hot/dev-server.js ./src/main.js
+
+ error  in ./src/views/app/Resume.vue?vue&type=style&index=0&id=75e19415&lang=stylus
+
+Syntax Error: Error: /Users/jordymontalvo/Documents/sifrah/app/src/views/app/Resume.vue:2:9
+   1| <template>
+   2|   <App :session="session" :office_id="office_id" :title="title">
+--------------^
+   3|     <Spinner v-if="loading" :size="40" :color="'#086eb6'" />
+   4|     <SkeletonLoader
+   5|       v-if="loading"
+
+failed to locate @import file ../../../assets/style/views/app/Resume.styl
+
+
+ @ ./node_modules/vue-style-loader??ref--11-oneOf-1-0!./node_modules/css-loader??ref--11-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--11-oneOf-1-2!./node_modules/stylus-loader??ref--11-oneOf-1-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/views/app/Resume.vue?vue&type=style&index=0&id=75e19415&lang=stylus 4:14-467 15:3-20:5 16:22-475
+ @ ./src/views/app/Resume.vue?vue&type=style&index=0&id=75e19415&lang=stylus
+ @ ./src/views/app/Resume.vue
+ @ ./src/router.js
+ @ ./src/main.js
+ @ multi (webpack)-dev-server/client?http://192.168.2.40:8080/sockjs-node (webpack)/hot/dev-server.js ./src/main.js
+
+ error  in ./src/views/app/Tools.vue?vue&type=style&index=0&id=3761e523&lang=stylus
+
+Syntax Error: Error: /Users/jordymontalvo/Documents/sifrah/app/src/views/app/Tools.vue:2:9
+   1| <template>
+   2|   <App :session="session" :title="title">
+--------------^
+   3|     <!-- <h4>HERRAMIENTAS</h4> -->
+   4| 
+   5|     <Spinner v-if="loading" :size="40" :color="'#086eb6'" />
+
+failed to locate @import file ../../../assets/style/views/app/Tools.styl
+
+
+ @ ./node_modules/vue-style-loader??ref--11-oneOf-1-0!./node_modules/css-loader??ref--11-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--11-oneOf-1-2!./node_modules/stylus-loader??ref--11-oneOf-1-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/views/app/Tools.vue?vue&type=style&index=0&id=3761e523&lang=stylus 4:14-466 15:3-20:5 16:22-474
+ @ ./src/views/app/Tools.vue?vue&type=style&index=0&id=3761e523&lang=stylus
+ @ ./src/views/app/Tools.vue
+ @ ./src/router.js
+ @ ./src/main.js
+ @ multi (webpack)-dev-server/client?http://192.168.2.40:8080/sockjs-node (webpack)/hot/dev-server.js ./src/main.js
+
+ error  in ./src/views/app/Tree.vue?vue&type=style&index=0&id=b09e59f4&lang=stylus
+
+Syntax Error: Error: /Users/jordymontalvo/Documents/sifrah/app/src/views/app/Tree.vue:2:9
+   1| <template>
+   2|   <App :session="session" :office_id="office_id">
+--------------^
+   3|     <!-- Selector de modo - aparece primero -->
+   4|     <div v-if="!selectedMode" class="mode-selector">
+   5|         <h2 class="mode-title" :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }">SELECCIONAR MODO</h2>
+
+failed to locate @import file ../../../assets/style/views/app/Tree.styl
+
+
+ @ ./node_modules/vue-style-loader??ref--11-oneOf-1-0!./node_modules/css-loader??ref--11-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--11-oneOf-1-2!./node_modules/stylus-loader??ref--11-oneOf-1-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/views/app/Tree.vue?vue&type=style&index=0&id=b09e59f4&lang=stylus 4:14-465 15:3-20:5 16:22-473
+ @ ./src/views/app/Tree.vue?vue&type=style&index=0&id=b09e59f4&lang=stylus
+ @ ./src/views/app/Tree.vue
+ @ ./src/router.js
+ @ ./src/main.js
+ @ multi (webpack)-dev-server/client?http://192.168.2.40:8080/sockjs-node (webpack)/hot/dev-server.js ./src/main.js
+
+ error  in ./src/views/app/frontales.vue?vue&type=style&index=0&id=1b6363aa&lang=stylus
+
+Syntax Error: Error: /Users/jordymontalvo/Documents/sifrah/app/src/views/app/frontales.vue:2:9
+   1| <template>
+   2|       <App :session="session" :office_id="office_id">
+--------------^
+   3| 
+   4|         <i class="load" v-if="loading"></i>
+   5| 
+
+failed to locate @import file ../../../assets/style/views/app/frontales.styl
+
+
+ @ ./node_modules/vue-style-loader??ref--11-oneOf-1-0!./node_modules/css-loader??ref--11-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--11-oneOf-1-2!./node_modules/stylus-loader??ref--11-oneOf-1-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/views/app/frontales.vue?vue&type=style&index=0&id=1b6363aa&lang=stylus 4:14-470 15:3-20:5 16:22-478
+ @ ./src/views/app/frontales.vue?vue&type=style&index=0&id=1b6363aa&lang=stylus
+ @ ./src/views/app/frontales.vue
+ @ ./src/router.js
+ @ ./src/main.js
+ @ multi (webpack)-dev-server/client?http://192.168.2.40:8080/sockjs-node (webpack)/hot/dev-server.js ./src/main.js
+
+ WAIT  Compiling...12:21:22 PM
+
+ ERROR  Failed to compile with 6 errors12:21:23 PM
+
+ error  in ./src/views/app/Activations.vue?vue&type=style&index=0&id=1e3f6865&lang=stylus
+
+Syntax Error: Error: /Users/jordymontalvo/Documents/sifrah/app/src/views/app/Activations.vue:2:9
+   1| <template>
+   2|   <App :session="session" :title="title">
+--------------^
+   3|     <div v-cloak>
+   4|       <div v-if="loading" class="loading-container">
+   5|         <div class="loading-spinner-large"></div>
+
+failed to locate @import file ../../../assets/style/views/app/Activations.styl
+
+
+ @ ./node_modules/vue-style-loader??ref--11-oneOf-1-0!./node_modules/css-loader??ref--11-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--11-oneOf-1-2!./node_modules/stylus-loader??ref--11-oneOf-1-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/views/app/Activations.vue?vue&type=style&index=0&id=1e3f6865&lang=stylus 4:14-472 15:3-20:5 16:22-480
+ @ ./src/views/app/Activations.vue?vue&type=style&index=0&id=1e3f6865&lang=stylus
+ @ ./src/views/app/Activations.vue
+ @ ./src/router.js
+ @ ./src/main.js
+ @ multi (webpack)-dev-server/client?http://192.168.2.40:8080/sockjs-node (webpack)/hot/dev-server.js ./src/main.js
+
+ error  in ./src/views/app/Checkout.vue?vue&type=style&index=0&id=7f339ea4&lang=stylus&scoped=true
+
+Syntax Error: Error: /Users/jordymontalvo/Documents/sifrah/app/src/views/app/Checkout.vue:2:9
+   1|                                                                                                                                                                                                                                                                                                                                                                                   <template>
+   2|   <App>
+--------------^
+   3|     <!-- Título principal del checkout -->
+   4|     <div class="checkout-main-title">
+   5|       <h1>Checkout</h1>
+
+failed to locate @import file ../../../assets/style/views/app/Checkout.styl
+
+
+ @ ./node_modules/vue-style-loader??ref--11-oneOf-1-0!./node_modules/css-loader??ref--11-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--11-oneOf-1-2!./node_modules/stylus-loader??ref--11-oneOf-1-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/views/app/Checkout.vue?vue&type=style&index=0&id=7f339ea4&lang=stylus&scoped=true 4:14-481 15:3-20:5 16:22-489
+ @ ./src/views/app/Checkout.vue?vue&type=style&index=0&id=7f339ea4&lang=stylus&scoped=true
+ @ ./src/views/app/Checkout.vue
+ @ ./src/router.js
+ @ ./src/main.js
+ @ multi (webpack)-dev-server/client?http://192.168.2.40:8080/sockjs-node (webpack)/hot/dev-server.js ./src/main.js
+
+ error  in ./src/views/app/Resume.vue?vue&type=style&index=0&id=75e19415&lang=stylus
+
+Syntax Error: Error: /Users/jordymontalvo/Documents/sifrah/app/src/views/app/Resume.vue:2:9
+   1| <template>
+   2|   <App :session="session" :office_id="office_id" :title="title">
+--------------^
+   3|     <Spinner v-if="loading" :size="40" :color="'#086eb6'" />
+   4|     <SkeletonLoader
+   5|       v-if="loading"
+
+failed to locate @import file ../../../assets/style/views/app/Resume.styl
+
+
+ @ ./node_modules/vue-style-loader??ref--11-oneOf-1-0!./node_modules/css-loader??ref--11-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--11-oneOf-1-2!./node_modules/stylus-loader??ref--11-oneOf-1-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/views/app/Resume.vue?vue&type=style&index=0&id=75e19415&lang=stylus 4:14-467 15:3-20:5 16:22-475
+ @ ./src/views/app/Resume.vue?vue&type=style&index=0&id=75e19415&lang=stylus
+ @ ./src/views/app/Resume.vue
+ @ ./src/router.js
+ @ ./src/main.js
+ @ multi (webpack)-dev-server/client?http://192.168.2.40:8080/sockjs-node (webpack)/hot/dev-server.js ./src/main.js
+
+ error  in ./src/views/app/Tools.vue?vue&type=style&index=0&id=3761e523&lang=stylus
+
+Syntax Error: Error: /Users/jordymontalvo/Documents/sifrah/app/src/views/app/Tools.vue:2:9
+   1| <template>
+   2|   <App :session="session" :title="title">
+--------------^
+   3|     <!-- <h4>HERRAMIENTAS</h4> -->
+   4| 
+   5|     <Spinner v-if="loading" :size="40" :color="'#086eb6'" />
+
+failed to locate @import file ../../../assets/style/views/app/Tools.styl
+
+
+ @ ./node_modules/vue-style-loader??ref--11-oneOf-1-0!./node_modules/css-loader??ref--11-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--11-oneOf-1-2!./node_modules/stylus-loader??ref--11-oneOf-1-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/views/app/Tools.vue?vue&type=style&index=0&id=3761e523&lang=stylus 4:14-466 15:3-20:5 16:22-474
+ @ ./src/views/app/Tools.vue?vue&type=style&index=0&id=3761e523&lang=stylus
+ @ ./src/views/app/Tools.vue
+ @ ./src/router.js
+ @ ./src/main.js
+ @ multi (webpack)-dev-server/client?http://192.168.2.40:8080/sockjs-node (webpack)/hot/dev-server.js ./src/main.js
+
+ error  in ./src/views/app/Tree.vue?vue&type=style&index=0&id=b09e59f4&lang=stylus
+
+Syntax Error: Error: /Users/jordymontalvo/Documents/sifrah/app/src/views/app/Tree.vue:2:9
+   1| <template>
+   2|   <App :session="session" :office_id="office_id">
+--------------^
+   3|     <!-- Selector de modo - aparece primero -->
+   4|     <div v-if="!selectedMode" class="mode-selector">
+   5|         <h2 class="mode-title" :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }">SELECCIONAR MODO</h2>
+
+failed to locate @import file ../../../assets/style/views/app/Tree.styl
+
+
+ @ ./node_modules/vue-style-loader??ref--11-oneOf-1-0!./node_modules/css-loader??ref--11-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--11-oneOf-1-2!./node_modules/stylus-loader??ref--11-oneOf-1-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/views/app/Tree.vue?vue&type=style&index=0&id=b09e59f4&lang=stylus 4:14-465 15:3-20:5 16:22-473
+ @ ./src/views/app/Tree.vue?vue&type=style&index=0&id=b09e59f4&lang=stylus
+ @ ./src/views/app/Tree.vue
+ @ ./src/router.js
+ @ ./src/main.js
+ @ multi (webpack)-dev-server/client?http://192.168.2.40:8080/sockjs-node (webpack)/hot/dev-server.js ./src/main.js
+
+ error  in ./src/views/app/frontales.vue?vue&type=style&index=0&id=1b6363aa&lang=stylus
+
+Syntax Error: Error: /Users/jordymontalvo/Documents/sifrah/app/src/views/app/frontales.vue:2:9
+   1| <template>
+   2|       <App :session="session" :office_id="office_id">
+--------------^
+   3| 
+   4|         <i class="load" v-if="loading"></i>
+   5| 
+
+failed to locate @import file ../../../assets/style/views/app/frontales.styl
+
+
+ @ ./node_modules/vue-style-loader??ref--11-oneOf-1-0!./node_modules/css-loader??ref--11-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--11-oneOf-1-2!./node_modules/stylus-loader??ref--11-oneOf-1-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/views/app/frontales.vue?vue&type=style&index=0&id=1b6363aa&lang=stylus 4:14-470 15:3-20:5 16:22-478
+ @ ./src/views/app/frontales.vue?vue&type=style&index=0&id=1b6363aa&lang=stylus
+ @ ./src/views/app/frontales.vue
+ @ ./src/router.js
+ @ ./src/main.js
+ @ multi (webpack)-dev-server/client?http://192.168.2.40:8080/sockjs-node (webpack)/hot/dev-server.js ./src/main.js
+
+ WAIT  Compiling...12:21:23 PM
+
+ ERROR  Failed to compile with 5 errors12:21:24 PM
+
+ error  in ./src/views/app/Activations.vue?vue&type=style&index=0&id=1e3f6865&lang=stylus
+
+Syntax Error: Error: /Users/jordymontalvo/Documents/sifrah/app/src/views/app/Activations.vue:2:9
+   1| <template>
+   2|   <App :session="session" :title="title">
+--------------^
+   3|     <div v-cloak>
+   4|       <div v-if="loading" class="loading-container">
+   5|         <div class="loading-spinner-large"></div>
+
+failed to locate @import file ../../../assets/style/views/app/Activations.styl
+
+
+ @ ./node_modules/vue-style-loader??ref--11-oneOf-1-0!./node_modules/css-loader??ref--11-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--11-oneOf-1-2!./node_modules/stylus-loader??ref--11-oneOf-1-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/views/app/Activations.vue?vue&type=style&index=0&id=1e3f6865&lang=stylus 4:14-472 15:3-20:5 16:22-480
+ @ ./src/views/app/Activations.vue?vue&type=style&index=0&id=1e3f6865&lang=stylus
+ @ ./src/views/app/Activations.vue
+ @ ./src/router.js
+ @ ./src/main.js
+ @ multi (webpack)-dev-server/client?http://192.168.2.40:8080/sockjs-node (webpack)/hot/dev-server.js ./src/main.js
+
+ error  in ./src/views/app/Resume.vue?vue&type=style&index=0&id=75e19415&lang=stylus
+
+Syntax Error: Error: /Users/jordymontalvo/Documents/sifrah/app/src/views/app/Resume.vue:2:9
+   1| <template>
+   2|   <App :session="session" :office_id="office_id" :title="title">
+--------------^
+   3|     <Spinner v-if="loading" :size="40" :color="'#086eb6'" />
+   4|     <SkeletonLoader
+   5|       v-if="loading"
+
+failed to locate @import file ../../../assets/style/views/app/Resume.styl
+
+
+ @ ./node_modules/vue-style-loader??ref--11-oneOf-1-0!./node_modules/css-loader??ref--11-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--11-oneOf-1-2!./node_modules/stylus-loader??ref--11-oneOf-1-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/views/app/Resume.vue?vue&type=style&index=0&id=75e19415&lang=stylus 4:14-467 15:3-20:5 16:22-475
+ @ ./src/views/app/Resume.vue?vue&type=style&index=0&id=75e19415&lang=stylus
+ @ ./src/views/app/Resume.vue
+ @ ./src/router.js
+ @ ./src/main.js
+ @ multi (webpack)-dev-server/client?http://192.168.2.40:8080/sockjs-node (webpack)/hot/dev-server.js ./src/main.js
+
+ error  in ./src/views/app/Tools.vue?vue&type=style&index=0&id=3761e523&lang=stylus
+
+Syntax Error: Error: /Users/jordymontalvo/Documents/sifrah/app/src/views/app/Tools.vue:2:9
+   1| <template>
+   2|   <App :session="session" :title="title">
+--------------^
+   3|     <!-- <h4>HERRAMIENTAS</h4> -->
+   4| 
+   5|     <Spinner v-if="loading" :size="40" :color="'#086eb6'" />
+
+failed to locate @import file ../../../assets/style/views/app/Tools.styl
+
+
+ @ ./node_modules/vue-style-loader??ref--11-oneOf-1-0!./node_modules/css-loader??ref--11-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--11-oneOf-1-2!./node_modules/stylus-loader??ref--11-oneOf-1-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/views/app/Tools.vue?vue&type=style&index=0&id=3761e523&lang=stylus 4:14-466 15:3-20:5 16:22-474
+ @ ./src/views/app/Tools.vue?vue&type=style&index=0&id=3761e523&lang=stylus
+ @ ./src/views/app/Tools.vue
+ @ ./src/router.js
+ @ ./src/main.js
+ @ multi (webpack)-dev-server/client?http://192.168.2.40:8080/sockjs-node (webpack)/hot/dev-server.js ./src/main.js
+
+ error  in ./src/views/app/Tree.vue?vue&type=style&index=0&id=b09e59f4&lang=stylus
+
+Syntax Error: Error: /Users/jordymontalvo/Documents/sifrah/app/src/views/app/Tree.vue:2:9
+   1| <template>
+   2|   <App :session="session" :office_id="office_id">
+--------------^
+   3|     <!-- Selector de modo - aparece primero -->
+   4|     <div v-if="!selectedMode" class="mode-selector">
+   5|         <h2 class="mode-title" :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }">SELECCIONAR MODO</h2>
+
+failed to locate @import file ../../../assets/style/views/app/Tree.styl
+
+
+ @ ./node_modules/vue-style-loader??ref--11-oneOf-1-0!./node_modules/css-loader??ref--11-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--11-oneOf-1-2!./node_modules/stylus-loader??ref--11-oneOf-1-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/views/app/Tree.vue?vue&type=style&index=0&id=b09e59f4&lang=stylus 4:14-465 15:3-20:5 16:22-473
+ @ ./src/views/app/Tree.vue?vue&type=style&index=0&id=b09e59f4&lang=stylus
+ @ ./src/views/app/Tree.vue
+ @ ./src/router.js
+ @ ./src/main.js
+ @ multi (webpack)-dev-server/client?http://192.168.2.40:8080/sockjs-node (webpack)/hot/dev-server.js ./src/main.js
+
+ error  in ./src/views/app/frontales.vue?vue&type=style&index=0&id=1b6363aa&lang=stylus
+
+Syntax Error: Error: /Users/jordymontalvo/Documents/sifrah/app/src/views/app/frontales.vue:2:9
+   1| <template>
+   2|       <App :session="session" :office_id="office_id">
+--------------^
+   3| 
+   4|         <i class="load" v-if="loading"></i>
+   5| 
+
+failed to locate @import file ../../../assets/style/views/app/frontales.styl
+
+
+ @ ./node_modules/vue-style-loader??ref--11-oneOf-1-0!./node_modules/css-loader??ref--11-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--11-oneOf-1-2!./node_modules/stylus-loader??ref--11-oneOf-1-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/views/app/frontales.vue?vue&type=style&index=0&id=1b6363aa&lang=stylus 4:14-470 15:3-20:5 16:22-478
+ @ ./src/views/app/frontales.vue?vue&type=style&index=0&id=1b6363aa&lang=stylus
+ @ ./src/views/app/frontales.vue
+ @ ./src/router.js
+ @ ./src/main.js
+ @ multi (webpack)-dev-server/client?http://192.168.2.40:8080/sockjs-node (webpack)/hot/dev-server.js ./src/main.js
+
+ WAIT  Compiling...12:21:25 PM
+
+ ERROR  Failed to compile with 5 errors12:21:25 PM
+
+ error  in ./src/views/app/Activations.vue?vue&type=style&index=0&id=1e3f6865&lang=stylus
+
+Syntax Error: Error: /Users/jordymontalvo/Documents/sifrah/app/src/views/app/Activations.vue:2:9
+   1| <template>
+   2|   <App :session="session" :title="title">
+--------------^
+   3|     <div v-cloak>
+   4|       <div v-if="loading" class="loading-container">
+   5|         <div class="loading-spinner-large"></div>
+
+failed to locate @import file ../../../assets/style/views/app/Activations.styl
+
+
+ @ ./node_modules/vue-style-loader??ref--11-oneOf-1-0!./node_modules/css-loader??ref--11-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--11-oneOf-1-2!./node_modules/stylus-loader??ref--11-oneOf-1-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/views/app/Activations.vue?vue&type=style&index=0&id=1e3f6865&lang=stylus 4:14-472 15:3-20:5 16:22-480
+ @ ./src/views/app/Activations.vue?vue&type=style&index=0&id=1e3f6865&lang=stylus
+ @ ./src/views/app/Activations.vue
+ @ ./src/router.js
+ @ ./src/main.js
+ @ multi (webpack)-dev-server/client?http://192.168.2.40:8080/sockjs-node (webpack)/hot/dev-server.js ./src/main.js
+
+ error  in ./src/views/app/Resume.vue?vue&type=style&index=0&id=75e19415&lang=stylus
+
+Syntax Error: Error: /Users/jordymontalvo/Documents/sifrah/app/src/views/app/Resume.vue:2:9
+   1| <template>
+   2|   <App :session="session" :office_id="office_id" :title="title">
+--------------^
+   3|     <Spinner v-if="loading" :size="40" :color="'#086eb6'" />
+   4|     <SkeletonLoader
+   5|       v-if="loading"
+
+failed to locate @import file ../../../assets/style/views/app/Resume.styl
+
+
+ @ ./node_modules/vue-style-loader??ref--11-oneOf-1-0!./node_modules/css-loader??ref--11-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--11-oneOf-1-2!./node_modules/stylus-loader??ref--11-oneOf-1-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/views/app/Resume.vue?vue&type=style&index=0&id=75e19415&lang=stylus 4:14-467 15:3-20:5 16:22-475
+ @ ./src/views/app/Resume.vue?vue&type=style&index=0&id=75e19415&lang=stylus
+ @ ./src/views/app/Resume.vue
+ @ ./src/router.js
+ @ ./src/main.js
+ @ multi (webpack)-dev-server/client?http://192.168.2.40:8080/sockjs-node (webpack)/hot/dev-server.js ./src/main.js
+
+ error  in ./src/views/app/Tools.vue?vue&type=style&index=0&id=3761e523&lang=stylus
+
+Syntax Error: Error: /Users/jordymontalvo/Documents/sifrah/app/src/views/app/Tools.vue:2:9
+   1| <template>
+   2|   <App :session="session" :title="title">
+--------------^
+   3|     <!-- <h4>HERRAMIENTAS</h4> -->
+   4| 
+   5|     <Spinner v-if="loading" :size="40" :color="'#086eb6'" />
+
+failed to locate @import file ../../../assets/style/views/app/Tools.styl
+
+
+ @ ./node_modules/vue-style-loader??ref--11-oneOf-1-0!./node_modules/css-loader??ref--11-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--11-oneOf-1-2!./node_modules/stylus-loader??ref--11-oneOf-1-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/views/app/Tools.vue?vue&type=style&index=0&id=3761e523&lang=stylus 4:14-466 15:3-20:5 16:22-474
+ @ ./src/views/app/Tools.vue?vue&type=style&index=0&id=3761e523&lang=stylus
+ @ ./src/views/app/Tools.vue
+ @ ./src/router.js
+ @ ./src/main.js
+ @ multi (webpack)-dev-server/client?http://192.168.2.40:8080/sockjs-node (webpack)/hot/dev-server.js ./src/main.js
+
+ error  in ./src/views/app/Tree.vue?vue&type=style&index=0&id=b09e59f4&lang=stylus
+
+Syntax Error: Error: /Users/jordymontalvo/Documents/sifrah/app/src/views/app/Tree.vue:2:9
+   1| <template>
+   2|   <App :session="session" :office_id="office_id">
+--------------^
+   3|     <!-- Selector de modo - aparece primero -->
+   4|     <div v-if="!selectedMode" class="mode-selector">
+   5|         <h2 class="mode-title" :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }">SELECCIONAR MODO</h2>
+
+failed to locate @import file ../../../assets/style/views/app/Tree.styl
+
+
+ @ ./node_modules/vue-style-loader??ref--11-oneOf-1-0!./node_modules/css-loader??ref--11-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--11-oneOf-1-2!./node_modules/stylus-loader??ref--11-oneOf-1-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/views/app/Tree.vue?vue&type=style&index=0&id=b09e59f4&lang=stylus 4:14-465 15:3-20:5 16:22-473
+ @ ./src/views/app/Tree.vue?vue&type=style&index=0&id=b09e59f4&lang=stylus
+ @ ./src/views/app/Tree.vue
+ @ ./src/router.js
+ @ ./src/main.js
+ @ multi (webpack)-dev-server/client?http://192.168.2.40:8080/sockjs-node (webpack)/hot/dev-server.js ./src/main.js
+
+ error  in ./src/views/app/frontales.vue?vue&type=style&index=0&id=1b6363aa&lang=stylus
+
+Syntax Error: Error: /Users/jordymontalvo/Documents/sifrah/app/src/views/app/frontales.vue:2:9
+   1| <template>
+   2|       <App :session="session" :office_id="office_id">
+--------------^
+   3| 
+   4|         <i class="load" v-if="loading"></i>
+   5| 
+
+failed to locate @import file ../../../assets/style/views/app/frontales.styl
+
+
+ @ ./node_modules/vue-style-loader??ref--11-oneOf-1-0!./node_modules/css-loader??ref--11-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--11-oneOf-1-2!./node_modules/stylus-loader??ref--11-oneOf-1-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/views/app/frontales.vue?vue&type=style&index=0&id=1b6363aa&lang=stylus 4:14-470 15:3-20:5 16:22-478
+ @ ./src/views/app/frontales.vue?vue&type=style&index=0&id=1b6363aa&lang=stylus
+ @ ./src/views/app/frontales.vue
+ @ ./src/router.js
+ @ ./src/main.js
+ @ multi (webpack)-dev-server/client?http://192.168.2.40:8080/sockjs-node (webpack)/hot/dev-server.js ./src/main.js
+
+ WAIT  Compiling...12:21:29 PM
+
+ ERROR  Failed to compile with 5 errors12:21:29 PM
+
+ error  in ./src/views/app/Activations.vue?vue&type=style&index=0&id=1e3f6865&lang=stylus
+
+Syntax Error: Error: /Users/jordymontalvo/Documents/sifrah/app/src/views/app/Activations.vue:2:9
+   1| <template>
+   2|   <App :session="session" :title="title">
+--------------^
+   3|     <div v-cloak>
+   4|       <div v-if="loading" class="loading-container">
+   5|         <div class="loading-spinner-large"></div>
+
+failed to locate @import file ../../../assets/style/views/app/Activations.styl
+
+
+ @ ./node_modules/vue-style-loader??ref--11-oneOf-1-0!./node_modules/css-loader??ref--11-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--11-oneOf-1-2!./node_modules/stylus-loader??ref--11-oneOf-1-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/views/app/Activations.vue?vue&type=style&index=0&id=1e3f6865&lang=stylus 4:14-472 15:3-20:5 16:22-480
+ @ ./src/views/app/Activations.vue?vue&type=style&index=0&id=1e3f6865&lang=stylus
+ @ ./src/views/app/Activations.vue
+ @ ./src/router.js
+ @ ./src/main.js
+ @ multi (webpack)-dev-server/client?http://192.168.2.40:8080/sockjs-node (webpack)/hot/dev-server.js ./src/main.js
+
+ error  in ./src/views/app/Resume.vue?vue&type=style&index=0&id=75e19415&lang=stylus
+
+Syntax Error: Error: /Users/jordymontalvo/Documents/sifrah/app/src/views/app/Resume.vue:2:9
+   1| <template>
+   2|   <App :session="session" :office_id="office_id" :title="title">
+--------------^
+   3|     <Spinner v-if="loading" :size="40" :color="'#086eb6'" />
+   4|     <SkeletonLoader
+   5|       v-if="loading"
+
+failed to locate @import file ../../../assets/style/views/app/Resume.styl
+
+
+ @ ./node_modules/vue-style-loader??ref--11-oneOf-1-0!./node_modules/css-loader??ref--11-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--11-oneOf-1-2!./node_modules/stylus-loader??ref--11-oneOf-1-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/views/app/Resume.vue?vue&type=style&index=0&id=75e19415&lang=stylus 4:14-467 15:3-20:5 16:22-475
+ @ ./src/views/app/Resume.vue?vue&type=style&index=0&id=75e19415&lang=stylus
+ @ ./src/views/app/Resume.vue
+ @ ./src/router.js
+ @ ./src/main.js
+ @ multi (webpack)-dev-server/client?http://192.168.2.40:8080/sockjs-node (webpack)/hot/dev-server.js ./src/main.js
+
+ error  in ./src/views/app/Tools.vue?vue&type=style&index=0&id=3761e523&lang=stylus
+
+Syntax Error: Error: /Users/jordymontalvo/Documents/sifrah/app/src/views/app/Tools.vue:2:9
+   1| <template>
+   2|   <App :session="session" :title="title">
+--------------^
+   3|     <!-- <h4>HERRAMIENTAS</h4> -->
+   4| 
+   5|     <Spinner v-if="loading" :size="40" :color="'#086eb6'" />
+
+failed to locate @import file ../../../assets/style/views/app/Tools.styl
+
+
+ @ ./node_modules/vue-style-loader??ref--11-oneOf-1-0!./node_modules/css-loader??ref--11-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--11-oneOf-1-2!./node_modules/stylus-loader??ref--11-oneOf-1-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/views/app/Tools.vue?vue&type=style&index=0&id=3761e523&lang=stylus 4:14-466 15:3-20:5 16:22-474
+ @ ./src/views/app/Tools.vue?vue&type=style&index=0&id=3761e523&lang=stylus
+ @ ./src/views/app/Tools.vue
+ @ ./src/router.js
+ @ ./src/main.js
+ @ multi (webpack)-dev-server/client?http://192.168.2.40:8080/sockjs-node (webpack)/hot/dev-server.js ./src/main.js
+
+ error  in ./src/views/app/Tree.vue?vue&type=style&index=0&id=b09e59f4&lang=stylus
+
+Syntax Error: Error: /Users/jordymontalvo/Documents/sifrah/app/src/views/app/Tree.vue:2:9
+   1| <template>
+   2|   <App :session="session" :office_id="office_id">
+--------------^
+   3|     <!-- Selector de modo - aparece primero -->
+   4|     <div v-if="!selectedMode" class="mode-selector">
+   5|         <h2 class="mode-title" :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }">SELECCIONAR MODO</h2>
+
+failed to locate @import file ../../../assets/style/views/app/Tree.styl
+
+
+ @ ./node_modules/vue-style-loader??ref--11-oneOf-1-0!./node_modules/css-loader??ref--11-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--11-oneOf-1-2!./node_modules/stylus-loader??ref--11-oneOf-1-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/views/app/Tree.vue?vue&type=style&index=0&id=b09e59f4&lang=stylus 4:14-465 15:3-20:5 16:22-473
+ @ ./src/views/app/Tree.vue?vue&type=style&index=0&id=b09e59f4&lang=stylus
+ @ ./src/views/app/Tree.vue
+ @ ./src/router.js
+ @ ./src/main.js
+ @ multi (webpack)-dev-server/client?http://192.168.2.40:8080/sockjs-node (webpack)/hot/dev-server.js ./src/main.js
+
+ error  in ./src/views/app/frontales.vue?vue&type=style&index=0&id=1b6363aa&lang=stylus
+
+Syntax Error: Error: /Users/jordymontalvo/Documents/sifrah/app/src/views/app/frontales.vue:2:9
+   1| <template>
+   2|       <App :session="session" :office_id="office_id">
+--------------^
+   3| 
+   4|         <i class="load" v-if="loading"></i>
+   5| 
+
+failed to locate @import file ../../../assets/style/views/app/frontales.styl
+
+
+ @ ./node_modules/vue-style-loader??ref--11-oneOf-1-0!./node_modules/css-loader??ref--11-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--11-oneOf-1-2!./node_modules/stylus-loader??ref--11-oneOf-1-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/views/app/frontales.vue?vue&type=style&index=0&id=1b6363aa&lang=stylus 4:14-470 15:3-20:5 16:22-478
+ @ ./src/views/app/frontales.vue?vue&type=style&index=0&id=1b6363aa&lang=stylus
+ @ ./src/views/app/frontales.vue
+ @ ./src/router.js
+ @ ./src/main.js
+ @ multi (webpack)-dev-server/client?http://192.168.2.40:8080/sockjs-node (webpack)/hot/dev-server.js ./src/main.js
+
+ WAIT  Compiling...12:21:30 PM
+
+ ERROR  Failed to compile with 5 errors12:21:31 PM
+
+ error  in ./src/views/app/Activations.vue?vue&type=style&index=0&id=1e3f6865&lang=stylus
+
+Syntax Error: Error: /Users/jordymontalvo/Documents/sifrah/app/src/views/app/Activations.vue:2:9
+   1| <template>
+   2|   <App :session="session" :title="title">
+--------------^
+   3|     <div v-cloak>
+   4|       <div v-if="loading" class="loading-container">
+   5|         <div class="loading-spinner-large"></div>
+
+failed to locate @import file ../../../assets/style/views/app/Activations.styl
+
+
+ @ ./node_modules/vue-style-loader??ref--11-oneOf-1-0!./node_modules/css-loader??ref--11-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--11-oneOf-1-2!./node_modules/stylus-loader??ref--11-oneOf-1-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/views/app/Activations.vue?vue&type=style&index=0&id=1e3f6865&lang=stylus 4:14-472 15:3-20:5 16:22-480
+ @ ./src/views/app/Activations.vue?vue&type=style&index=0&id=1e3f6865&lang=stylus
+ @ ./src/views/app/Activations.vue
+ @ ./src/router.js
+ @ ./src/main.js
+ @ multi (webpack)-dev-server/client?http://192.168.2.40:8080/sockjs-node (webpack)/hot/dev-server.js ./src/main.js
+
+ error  in ./src/views/app/Resume.vue?vue&type=style&index=0&id=75e19415&lang=stylus
+
+Syntax Error: Error: /Users/jordymontalvo/Documents/sifrah/app/src/views/app/Resume.vue:2:9
+   1| <template>
+   2|   <App :session="session" :office_id="office_id" :title="title">
+--------------^
+   3|     <Spinner v-if="loading" :size="40" :color="'#086eb6'" />
+   4|     <SkeletonLoader
+   5|       v-if="loading"
+
+failed to locate @import file ../../../assets/style/views/app/Resume.styl
+
+
+ @ ./node_modules/vue-style-loader??ref--11-oneOf-1-0!./node_modules/css-loader??ref--11-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--11-oneOf-1-2!./node_modules/stylus-loader??ref--11-oneOf-1-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/views/app/Resume.vue?vue&type=style&index=0&id=75e19415&lang=stylus 4:14-467 15:3-20:5 16:22-475
+ @ ./src/views/app/Resume.vue?vue&type=style&index=0&id=75e19415&lang=stylus
+ @ ./src/views/app/Resume.vue
+ @ ./src/router.js
+ @ ./src/main.js
+ @ multi (webpack)-dev-server/client?http://192.168.2.40:8080/sockjs-node (webpack)/hot/dev-server.js ./src/main.js
+
+ error  in ./src/views/app/Tools.vue?vue&type=style&index=0&id=3761e523&lang=stylus
+
+Syntax Error: Error: /Users/jordymontalvo/Documents/sifrah/app/src/views/app/Tools.vue:2:9
+   1| <template>
+   2|   <App :session="session" :title="title">
+--------------^
+   3|     <!-- <h4>HERRAMIENTAS</h4> -->
+   4| 
+   5|     <Spinner v-if="loading" :size="40" :color="'#086eb6'" />
+
+failed to locate @import file ../../../assets/style/views/app/Tools.styl
+
+
+ @ ./node_modules/vue-style-loader??ref--11-oneOf-1-0!./node_modules/css-loader??ref--11-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--11-oneOf-1-2!./node_modules/stylus-loader??ref--11-oneOf-1-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/views/app/Tools.vue?vue&type=style&index=0&id=3761e523&lang=stylus 4:14-466 15:3-20:5 16:22-474
+ @ ./src/views/app/Tools.vue?vue&type=style&index=0&id=3761e523&lang=stylus
+ @ ./src/views/app/Tools.vue
+ @ ./src/router.js
+ @ ./src/main.js
+ @ multi (webpack)-dev-server/client?http://192.168.2.40:8080/sockjs-node (webpack)/hot/dev-server.js ./src/main.js
+
+ error  in ./src/views/app/Tree.vue?vue&type=style&index=0&id=b09e59f4&lang=stylus
+
+Syntax Error: Error: /Users/jordymontalvo/Documents/sifrah/app/src/views/app/Tree.vue:2:9
+   1| <template>
+   2|   <App :session="session" :office_id="office_id">
+--------------^
+   3|     <!-- Selector de modo - aparece primero -->
+   4|     <div v-if="!selectedMode" class="mode-selector">
+   5|         <h2 class="mode-title" :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }">SELECCIONAR MODO</h2>
+
+failed to locate @import file ../../../assets/style/views/app/Tree.styl
+
+
+ @ ./node_modules/vue-style-loader??ref--11-oneOf-1-0!./node_modules/css-loader??ref--11-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--11-oneOf-1-2!./node_modules/stylus-loader??ref--11-oneOf-1-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/views/app/Tree.vue?vue&type=style&index=0&id=b09e59f4&lang=stylus 4:14-465 15:3-20:5 16:22-473
+ @ ./src/views/app/Tree.vue?vue&type=style&index=0&id=b09e59f4&lang=stylus
+ @ ./src/views/app/Tree.vue
+ @ ./src/router.js
+ @ ./src/main.js
+ @ multi (webpack)-dev-server/client?http://192.168.2.40:8080/sockjs-node (webpack)/hot/dev-server.js ./src/main.js
+
+ error  in ./src/views/app/frontales.vue?vue&type=style&index=0&id=1b6363aa&lang=stylus
+
+Syntax Error: Error: /Users/jordymontalvo/Documents/sifrah/app/src/views/app/frontales.vue:2:9
+   1| <template>
+   2|       <App :session="session" :office_id="office_id">
+--------------^
+   3| 
+   4|         <i class="load" v-if="loading"></i>
+   5| 
+
+failed to locate @import file ../../../assets/style/views/app/frontales.styl
+
+
+ @ ./node_modules/vue-style-loader??ref--11-oneOf-1-0!./node_modules/css-loader??ref--11-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--11-oneOf-1-2!./node_modules/stylus-loader??ref--11-oneOf-1-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/views/app/frontales.vue?vue&type=style&index=0&id=1b6363aa&lang=stylus 4:14-470 15:3-20:5 16:22-478
+ @ ./src/views/app/frontales.vue?vue&type=style&index=0&id=1b6363aa&lang=stylus
+ @ ./src/views/app/frontales.vue
+ @ ./src/router.js
+ @ ./src/main.js
+ @ multi (webpack)-dev-server/client?http://192.168.2.40:8080/sockjs-node (webpack)/hot/dev-server.js ./src/main.js
+
+ WAIT  Compiling...12:21:31 PM
+
+ ERROR  Failed to compile with 5 errors12:21:31 PM
+
+ error  in ./src/views/app/Activations.vue?vue&type=style&index=0&id=1e3f6865&lang=stylus
+
+Syntax Error: Error: /Users/jordymontalvo/Documents/sifrah/app/src/views/app/Activations.vue:2:9
+   1| <template>
+   2|   <App :session="session" :title="title">
+--------------^
+   3|     <div v-cloak>
+   4|       <div v-if="loading" class="loading-container">
+   5|         <div class="loading-spinner-large"></div>
+
+failed to locate @import file ../../../assets/style/views/app/Activations.styl
+
+
+ @ ./node_modules/vue-style-loader??ref--11-oneOf-1-0!./node_modules/css-loader??ref--11-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--11-oneOf-1-2!./node_modules/stylus-loader??ref--11-oneOf-1-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/views/app/Activations.vue?vue&type=style&index=0&id=1e3f6865&lang=stylus 4:14-472 15:3-20:5 16:22-480
+ @ ./src/views/app/Activations.vue?vue&type=style&index=0&id=1e3f6865&lang=stylus
+ @ ./src/views/app/Activations.vue
+ @ ./src/router.js
+ @ ./src/main.js
+ @ multi (webpack)-dev-server/client?http://192.168.2.40:8080/sockjs-node (webpack)/hot/dev-server.js ./src/main.js
+
+ error  in ./src/views/app/Resume.vue?vue&type=style&index=0&id=75e19415&lang=stylus
+
+Syntax Error: Error: /Users/jordymontalvo/Documents/sifrah/app/src/views/app/Resume.vue:2:9
+   1| <template>
+   2|   <App :session="session" :office_id="office_id" :title="title">
+--------------^
+   3|     <Spinner v-if="loading" :size="40" :color="'#086eb6'" />
+   4|     <SkeletonLoader
+   5|       v-if="loading"
+
+failed to locate @import file ../../../assets/style/views/app/Resume.styl
+
+
+ @ ./node_modules/vue-style-loader??ref--11-oneOf-1-0!./node_modules/css-loader??ref--11-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--11-oneOf-1-2!./node_modules/stylus-loader??ref--11-oneOf-1-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/views/app/Resume.vue?vue&type=style&index=0&id=75e19415&lang=stylus 4:14-467 15:3-20:5 16:22-475
+ @ ./src/views/app/Resume.vue?vue&type=style&index=0&id=75e19415&lang=stylus
+ @ ./src/views/app/Resume.vue
+ @ ./src/router.js
+ @ ./src/main.js
+ @ multi (webpack)-dev-server/client?http://192.168.2.40:8080/sockjs-node (webpack)/hot/dev-server.js ./src/main.js
+
+ error  in ./src/views/app/Tools.vue?vue&type=style&index=0&id=3761e523&lang=stylus
+
+Syntax Error: Error: /Users/jordymontalvo/Documents/sifrah/app/src/views/app/Tools.vue:2:9
+   1| <template>
+   2|   <App :session="session" :title="title">
+--------------^
+   3|     <!-- <h4>HERRAMIENTAS</h4> -->
+   4| 
+   5|     <Spinner v-if="loading" :size="40" :color="'#086eb6'" />
+
+failed to locate @import file ../../../assets/style/views/app/Tools.styl
+
+
+ @ ./node_modules/vue-style-loader??ref--11-oneOf-1-0!./node_modules/css-loader??ref--11-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--11-oneOf-1-2!./node_modules/stylus-loader??ref--11-oneOf-1-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/views/app/Tools.vue?vue&type=style&index=0&id=3761e523&lang=stylus 4:14-466 15:3-20:5 16:22-474
+ @ ./src/views/app/Tools.vue?vue&type=style&index=0&id=3761e523&lang=stylus
+ @ ./src/views/app/Tools.vue
+ @ ./src/router.js
+ @ ./src/main.js
+ @ multi (webpack)-dev-server/client?http://192.168.2.40:8080/sockjs-node (webpack)/hot/dev-server.js ./src/main.js
+
+ error  in ./src/views/app/Tree.vue?vue&type=style&index=0&id=b09e59f4&lang=stylus
+
+Syntax Error: Error: /Users/jordymontalvo/Documents/sifrah/app/src/views/app/Tree.vue:2:9
+   1| <template>
+   2|   <App :session="session" :office_id="office_id">
+--------------^
+   3|     <!-- Selector de modo - aparece primero -->
+   4|     <div v-if="!selectedMode" class="mode-selector">
+   5|         <h2 class="mode-title" :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }">SELECCIONAR MODO</h2>
+
+failed to locate @import file ../../../assets/style/views/app/Tree.styl
+
+
+ @ ./node_modules/vue-style-loader??ref--11-oneOf-1-0!./node_modules/css-loader??ref--11-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--11-oneOf-1-2!./node_modules/stylus-loader??ref--11-oneOf-1-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/views/app/Tree.vue?vue&type=style&index=0&id=b09e59f4&lang=stylus 4:14-465 15:3-20:5 16:22-473
+ @ ./src/views/app/Tree.vue?vue&type=style&index=0&id=b09e59f4&lang=stylus
+ @ ./src/views/app/Tree.vue
+ @ ./src/router.js
+ @ ./src/main.js
+ @ multi (webpack)-dev-server/client?http://192.168.2.40:8080/sockjs-node (webpack)/hot/dev-server.js ./src/main.js
+
+ error  in ./src/views/app/frontales.vue?vue&type=style&index=0&id=1b6363aa&lang=stylus
+
+Syntax Error: ParseError: /Users/jordymontalvo/Documents/sifrah/app/src/assets/style/views/app/frontales.styl:22:1
+   18|       max-width 480px
+   19|       margin auto
+   20| 
+   21| </style>
+   22| 
+-------^
+   23| 
+
+expected "indent", got "eos"
+
+
+ @ ./node_modules/vue-style-loader??ref--11-oneOf-1-0!./node_modules/css-loader??ref--11-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--11-oneOf-1-2!./node_modules/stylus-loader??ref--11-oneOf-1-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/views/app/frontales.vue?vue&type=style&index=0&id=1b6363aa&lang=stylus 4:14-470 15:3-20:5 16:22-478
+ @ ./src/views/app/frontales.vue?vue&type=style&index=0&id=1b6363aa&lang=stylus
+ @ ./src/views/app/frontales.vue
+ @ ./src/router.js
+ @ ./src/main.js
+ @ multi (webpack)-dev-server/client?http://192.168.2.40:8080/sockjs-node (webpack)/hot/dev-server.js ./src/main.js
+
+ WAIT  Compiling...12:21:32 PM
+
+ ERROR  Failed to compile with 5 errors12:21:33 PM
+
+ error  in ./src/views/app/Activations.vue?vue&type=style&index=0&id=1e3f6865&lang=stylus
+
+Syntax Error: Error: /Users/jordymontalvo/Documents/sifrah/app/src/views/app/Activations.vue:2:9
+   1| <template>
+   2|   <App :session="session" :title="title">
+--------------^
+   3|     <div v-cloak>
+   4|       <div v-if="loading" class="loading-container">
+   5|         <div class="loading-spinner-large"></div>
+
+failed to locate @import file ../../../assets/style/views/app/Activations.styl
+
+
+ @ ./node_modules/vue-style-loader??ref--11-oneOf-1-0!./node_modules/css-loader??ref--11-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--11-oneOf-1-2!./node_modules/stylus-loader??ref--11-oneOf-1-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/views/app/Activations.vue?vue&type=style&index=0&id=1e3f6865&lang=stylus 4:14-472 15:3-20:5 16:22-480
+ @ ./src/views/app/Activations.vue?vue&type=style&index=0&id=1e3f6865&lang=stylus
+ @ ./src/views/app/Activations.vue
+ @ ./src/router.js
+ @ ./src/main.js
+ @ multi (webpack)-dev-server/client?http://192.168.2.40:8080/sockjs-node (webpack)/hot/dev-server.js ./src/main.js
+
+ error  in ./src/views/app/Resume.vue?vue&type=style&index=0&id=75e19415&lang=stylus
+
+Syntax Error: Error: /Users/jordymontalvo/Documents/sifrah/app/src/views/app/Resume.vue:2:9
+   1| <template>
+   2|   <App :session="session" :office_id="office_id" :title="title">
+--------------^
+   3|     <Spinner v-if="loading" :size="40" :color="'#086eb6'" />
+   4|     <SkeletonLoader
+   5|       v-if="loading"
+
+failed to locate @import file ../../../assets/style/views/app/Resume.styl
+
+
+ @ ./node_modules/vue-style-loader??ref--11-oneOf-1-0!./node_modules/css-loader??ref--11-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--11-oneOf-1-2!./node_modules/stylus-loader??ref--11-oneOf-1-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/views/app/Resume.vue?vue&type=style&index=0&id=75e19415&lang=stylus 4:14-467 15:3-20:5 16:22-475
+ @ ./src/views/app/Resume.vue?vue&type=style&index=0&id=75e19415&lang=stylus
+ @ ./src/views/app/Resume.vue
+ @ ./src/router.js
+ @ ./src/main.js
+ @ multi (webpack)-dev-server/client?http://192.168.2.40:8080/sockjs-node (webpack)/hot/dev-server.js ./src/main.js
+
+ error  in ./src/views/app/Tools.vue?vue&type=style&index=0&id=3761e523&lang=stylus
+
+Syntax Error: Error: /Users/jordymontalvo/Documents/sifrah/app/src/views/app/Tools.vue:2:9
+   1| <template>
+   2|   <App :session="session" :title="title">
+--------------^
+   3|     <!-- <h4>HERRAMIENTAS</h4> -->
+   4| 
+   5|     <Spinner v-if="loading" :size="40" :color="'#086eb6'" />
+
+failed to locate @import file ../../../assets/style/views/app/Tools.styl
+
+
+ @ ./node_modules/vue-style-loader??ref--11-oneOf-1-0!./node_modules/css-loader??ref--11-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--11-oneOf-1-2!./node_modules/stylus-loader??ref--11-oneOf-1-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/views/app/Tools.vue?vue&type=style&index=0&id=3761e523&lang=stylus 4:14-466 15:3-20:5 16:22-474
+ @ ./src/views/app/Tools.vue?vue&type=style&index=0&id=3761e523&lang=stylus
+ @ ./src/views/app/Tools.vue
+ @ ./src/router.js
+ @ ./src/main.js
+ @ multi (webpack)-dev-server/client?http://192.168.2.40:8080/sockjs-node (webpack)/hot/dev-server.js ./src/main.js
+
+ error  in ./src/views/app/Tree.vue?vue&type=style&index=0&id=b09e59f4&lang=stylus
+
+Syntax Error: ParseError: /Users/jordymontalvo/Documents/sifrah/app/src/assets/style/views/app/Tree.styl:36:1
+   32|       opacity 1
+   33|       transform translateY(0) scale(1)
+   34| 
+   35| </style>
+   36| 
+-------^
+   37| 
+
+expected "indent", got "eos"
+
+
+ @ ./node_modules/vue-style-loader??ref--11-oneOf-1-0!./node_modules/css-loader??ref--11-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--11-oneOf-1-2!./node_modules/stylus-loader??ref--11-oneOf-1-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/views/app/Tree.vue?vue&type=style&index=0&id=b09e59f4&lang=stylus 4:14-465 15:3-20:5 16:22-473
+ @ ./src/views/app/Tree.vue?vue&type=style&index=0&id=b09e59f4&lang=stylus
+ @ ./src/views/app/Tree.vue
+ @ ./src/router.js
+ @ ./src/main.js
+ @ multi (webpack)-dev-server/client?http://192.168.2.40:8080/sockjs-node (webpack)/hot/dev-server.js ./src/main.js
+
+ error  in ./src/views/app/frontales.vue?vue&type=style&index=0&id=1b6363aa&lang=stylus
+
+Syntax Error: ParseError: /Users/jordymontalvo/Documents/sifrah/app/src/assets/style/views/app/frontales.styl:22:1
+   18|       max-width 480px
+   19|       margin auto
+   20| 
+   21| </style>
+   22| 
+-------^
+   23| 
+
+expected "indent", got "eos"
+
+
+ @ ./node_modules/vue-style-loader??ref--11-oneOf-1-0!./node_modules/css-loader??ref--11-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--11-oneOf-1-2!./node_modules/stylus-loader??ref--11-oneOf-1-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/views/app/frontales.vue?vue&type=style&index=0&id=1b6363aa&lang=stylus 4:14-470 15:3-20:5 16:22-478
+ @ ./src/views/app/frontales.vue?vue&type=style&index=0&id=1b6363aa&lang=stylus
+ @ ./src/views/app/frontales.vue
+ @ ./src/router.js
+ @ ./src/main.js
+ @ multi (webpack)-dev-server/client?http://192.168.2.40:8080/sockjs-node (webpack)/hot/dev-server.js ./src/main.js
+
+ WAIT  Compiling...12:21:33 PM
+
+ ERROR  Failed to compile with 5 errors12:21:34 PM
+
+ error  in ./src/views/app/Activations.vue?vue&type=style&index=0&id=1e3f6865&lang=stylus
+
+Syntax Error: Error: /Users/jordymontalvo/Documents/sifrah/app/src/views/app/Activations.vue:2:9
+   1| <template>
+   2|   <App :session="session" :title="title">
+--------------^
+   3|     <div v-cloak>
+   4|       <div v-if="loading" class="loading-container">
+   5|         <div class="loading-spinner-large"></div>
+
+failed to locate @import file ../../../assets/style/views/app/Activations.styl
+
+
+ @ ./node_modules/vue-style-loader??ref--11-oneOf-1-0!./node_modules/css-loader??ref--11-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--11-oneOf-1-2!./node_modules/stylus-loader??ref--11-oneOf-1-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/views/app/Activations.vue?vue&type=style&index=0&id=1e3f6865&lang=stylus 4:14-472 15:3-20:5 16:22-480
+ @ ./src/views/app/Activations.vue?vue&type=style&index=0&id=1e3f6865&lang=stylus
+ @ ./src/views/app/Activations.vue
+ @ ./src/router.js
+ @ ./src/main.js
+ @ multi (webpack)-dev-server/client?http://192.168.2.40:8080/sockjs-node (webpack)/hot/dev-server.js ./src/main.js
+
+ error  in ./src/views/app/Resume.vue?vue&type=style&index=0&id=75e19415&lang=stylus
+
+Syntax Error: Error: /Users/jordymontalvo/Documents/sifrah/app/src/views/app/Resume.vue:2:9
+   1| <template>
+   2|   <App :session="session" :office_id="office_id" :title="title">
+--------------^
+   3|     <Spinner v-if="loading" :size="40" :color="'#086eb6'" />
+   4|     <SkeletonLoader
+   5|       v-if="loading"
+
+failed to locate @import file ../../../assets/style/views/app/Resume.styl
+
+
+ @ ./node_modules/vue-style-loader??ref--11-oneOf-1-0!./node_modules/css-loader??ref--11-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--11-oneOf-1-2!./node_modules/stylus-loader??ref--11-oneOf-1-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/views/app/Resume.vue?vue&type=style&index=0&id=75e19415&lang=stylus 4:14-467 15:3-20:5 16:22-475
+ @ ./src/views/app/Resume.vue?vue&type=style&index=0&id=75e19415&lang=stylus
+ @ ./src/views/app/Resume.vue
+ @ ./src/router.js
+ @ ./src/main.js
+ @ multi (webpack)-dev-server/client?http://192.168.2.40:8080/sockjs-node (webpack)/hot/dev-server.js ./src/main.js
+
+ error  in ./src/views/app/Tools.vue?vue&type=style&index=0&id=3761e523&lang=stylus
+
+Syntax Error: Error: /Users/jordymontalvo/Documents/sifrah/app/src/views/app/Tools.vue:2:9
+   1| <template>
+   2|   <App :session="session" :title="title">
+--------------^
+   3|     <!-- <h4>HERRAMIENTAS</h4> -->
+   4| 
+   5|     <Spinner v-if="loading" :size="40" :color="'#086eb6'" />
+
+failed to locate @import file ../../../assets/style/views/app/Tools.styl
+
+
+ @ ./node_modules/vue-style-loader??ref--11-oneOf-1-0!./node_modules/css-loader??ref--11-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--11-oneOf-1-2!./node_modules/stylus-loader??ref--11-oneOf-1-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/views/app/Tools.vue?vue&type=style&index=0&id=3761e523&lang=stylus 4:14-466 15:3-20:5 16:22-474
+ @ ./src/views/app/Tools.vue?vue&type=style&index=0&id=3761e523&lang=stylus
+ @ ./src/views/app/Tools.vue
+ @ ./src/router.js
+ @ ./src/main.js
+ @ multi (webpack)-dev-server/client?http://192.168.2.40:8080/sockjs-node (webpack)/hot/dev-server.js ./src/main.js
+
+ error  in ./src/views/app/Tree.vue?vue&type=style&index=0&id=b09e59f4&lang=stylus
+
+Syntax Error: ParseError: /Users/jordymontalvo/Documents/sifrah/app/src/assets/style/views/app/Tree.styl:36:1
+   32|       opacity 1
+   33|       transform translateY(0) scale(1)
+   34| 
+   35| </style>
+   36| 
+-------^
+   37| 
+
+expected "indent", got "eos"
+
+
+ @ ./node_modules/vue-style-loader??ref--11-oneOf-1-0!./node_modules/css-loader??ref--11-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--11-oneOf-1-2!./node_modules/stylus-loader??ref--11-oneOf-1-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/views/app/Tree.vue?vue&type=style&index=0&id=b09e59f4&lang=stylus 4:14-465 15:3-20:5 16:22-473
+ @ ./src/views/app/Tree.vue?vue&type=style&index=0&id=b09e59f4&lang=stylus
+ @ ./src/views/app/Tree.vue
+ @ ./src/router.js
+ @ ./src/main.js
+ @ multi (webpack)-dev-server/client?http://192.168.2.40:8080/sockjs-node (webpack)/hot/dev-server.js ./src/main.js
+
+ error  in ./src/views/app/frontales.vue?vue&type=style&index=0&id=1b6363aa&lang=stylus
+
+Syntax Error: ParseError: /Users/jordymontalvo/Documents/sifrah/app/src/assets/style/views/app/frontales.styl:22:1
+   18|       max-width 480px
+   19|       margin auto
+   20| 
+   21| </style>
+   22| 
+-------^
+   23| 
+
+expected "indent", got "eos"
+
+
+ @ ./node_modules/vue-style-loader??ref--11-oneOf-1-0!./node_modules/css-loader??ref--11-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--11-oneOf-1-2!./node_modules/stylus-loader??ref--11-oneOf-1-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/views/app/frontales.vue?vue&type=style&index=0&id=1b6363aa&lang=stylus 4:14-470 15:3-20:5 16:22-478
+ @ ./src/views/app/frontales.vue?vue&type=style&index=0&id=1b6363aa&lang=stylus
+ @ ./src/views/app/frontales.vue
+ @ ./src/router.js
+ @ ./src/main.js
+ @ multi (webpack)-dev-server/client?http://192.168.2.40:8080/sockjs-node (webpack)/hot/dev-server.js ./src/main.js
+
+ WAIT  Compiling...12:21:34 PM
+
+ ERROR  Failed to compile with 6 errors12:21:35 PM
+
+ error  in ./src/assets/style/views/app/Profile.css?vue&type=style&index=0&id=583e41f1&scoped=true&lang=css&external
+
+Syntax Error: SyntaxError
+
+(262:1) Unknown word
+
+  260 |   }
+  261 | }
+> 262 | </style>
+      | ^
+  263 | 
+
+
+
+ @ ./node_modules/vue-style-loader??ref--6-oneOf-1-0!./node_modules/css-loader??ref--6-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-oneOf-1-2!./src/assets/style/views/app/Profile.css?vue&type=style&index=0&id=583e41f1&scoped=true&lang=css&external 4:14-315 15:3-20:5 16:22-323
+ @ ./src/assets/style/views/app/Profile.css?vue&type=style&index=0&id=583e41f1&scoped=true&lang=css&external
+ @ ./src/views/app/Profile.vue
+ @ ./src/router.js
+ @ ./src/main.js
+ @ multi (webpack)-dev-server/client?http://192.168.2.40:8080/sockjs-node (webpack)/hot/dev-server.js ./src/main.js
+
+ error  in ./src/views/app/Activations.vue?vue&type=style&index=0&id=1e3f6865&lang=stylus
+
+Syntax Error: Error: /Users/jordymontalvo/Documents/sifrah/app/src/views/app/Activations.vue:2:9
+   1| <template>
+   2|   <App :session="session" :title="title">
+--------------^
+   3|     <div v-cloak>
+   4|       <div v-if="loading" class="loading-container">
+   5|         <div class="loading-spinner-large"></div>
+
+failed to locate @import file ../../../assets/style/views/app/Activations.styl
+
+
+ @ ./node_modules/vue-style-loader??ref--11-oneOf-1-0!./node_modules/css-loader??ref--11-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--11-oneOf-1-2!./node_modules/stylus-loader??ref--11-oneOf-1-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/views/app/Activations.vue?vue&type=style&index=0&id=1e3f6865&lang=stylus 4:14-472 15:3-20:5 16:22-480
+ @ ./src/views/app/Activations.vue?vue&type=style&index=0&id=1e3f6865&lang=stylus
+ @ ./src/views/app/Activations.vue
+ @ ./src/router.js
+ @ ./src/main.js
+ @ multi (webpack)-dev-server/client?http://192.168.2.40:8080/sockjs-node (webpack)/hot/dev-server.js ./src/main.js
+
+ error  in ./src/views/app/Resume.vue?vue&type=style&index=0&id=75e19415&lang=stylus
+
+Syntax Error: Error: /Users/jordymontalvo/Documents/sifrah/app/src/views/app/Resume.vue:2:9
+   1| <template>
+   2|   <App :session="session" :office_id="office_id" :title="title">
+--------------^
+   3|     <Spinner v-if="loading" :size="40" :color="'#086eb6'" />
+   4|     <SkeletonLoader
+   5|       v-if="loading"
+
+failed to locate @import file ../../../assets/style/views/app/Resume.styl
+
+
+ @ ./node_modules/vue-style-loader??ref--11-oneOf-1-0!./node_modules/css-loader??ref--11-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--11-oneOf-1-2!./node_modules/stylus-loader??ref--11-oneOf-1-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/views/app/Resume.vue?vue&type=style&index=0&id=75e19415&lang=stylus 4:14-467 15:3-20:5 16:22-475
+ @ ./src/views/app/Resume.vue?vue&type=style&index=0&id=75e19415&lang=stylus
+ @ ./src/views/app/Resume.vue
+ @ ./src/router.js
+ @ ./src/main.js
+ @ multi (webpack)-dev-server/client?http://192.168.2.40:8080/sockjs-node (webpack)/hot/dev-server.js ./src/main.js
+
+ error  in ./src/views/app/Tools.vue?vue&type=style&index=0&id=3761e523&lang=stylus
+
+Syntax Error: Error: /Users/jordymontalvo/Documents/sifrah/app/src/views/app/Tools.vue:2:9
+   1| <template>
+   2|   <App :session="session" :title="title">
+--------------^
+   3|     <!-- <h4>HERRAMIENTAS</h4> -->
+   4| 
+   5|     <Spinner v-if="loading" :size="40" :color="'#086eb6'" />
+
+failed to locate @import file ../../../assets/style/views/app/Tools.styl
+
+
+ @ ./node_modules/vue-style-loader??ref--11-oneOf-1-0!./node_modules/css-loader??ref--11-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--11-oneOf-1-2!./node_modules/stylus-loader??ref--11-oneOf-1-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/views/app/Tools.vue?vue&type=style&index=0&id=3761e523&lang=stylus 4:14-466 15:3-20:5 16:22-474
+ @ ./src/views/app/Tools.vue?vue&type=style&index=0&id=3761e523&lang=stylus
+ @ ./src/views/app/Tools.vue
+ @ ./src/router.js
+ @ ./src/main.js
+ @ multi (webpack)-dev-server/client?http://192.168.2.40:8080/sockjs-node (webpack)/hot/dev-server.js ./src/main.js
+
+ error  in ./src/views/app/Tree.vue?vue&type=style&index=0&id=b09e59f4&lang=stylus
+
+Syntax Error: ParseError: /Users/jordymontalvo/Documents/sifrah/app/src/assets/style/views/app/Tree.styl:36:1
+   32|       opacity 1
+   33|       transform translateY(0) scale(1)
+   34| 
+   35| </style>
+   36| 
+-------^
+   37| 
+
+expected "indent", got "eos"
+
+
+ @ ./node_modules/vue-style-loader??ref--11-oneOf-1-0!./node_modules/css-loader??ref--11-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--11-oneOf-1-2!./node_modules/stylus-loader??ref--11-oneOf-1-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/views/app/Tree.vue?vue&type=style&index=0&id=b09e59f4&lang=stylus 4:14-465 15:3-20:5 16:22-473
+ @ ./src/views/app/Tree.vue?vue&type=style&index=0&id=b09e59f4&lang=stylus
+ @ ./src/views/app/Tree.vue
+ @ ./src/router.js
+ @ ./src/main.js
+ @ multi (webpack)-dev-server/client?http://192.168.2.40:8080/sockjs-node (webpack)/hot/dev-server.js ./src/main.js
+
+ error  in ./src/views/app/frontales.vue?vue&type=style&index=0&id=1b6363aa&lang=stylus
+
+Syntax Error: ParseError: /Users/jordymontalvo/Documents/sifrah/app/src/assets/style/views/app/frontales.styl:22:1
+   18|       max-width 480px
+   19|       margin auto
+   20| 
+   21| </style>
+   22| 
+-------^
+   23| 
+
+expected "indent", got "eos"
+
+
+ @ ./node_modules/vue-style-loader??ref--11-oneOf-1-0!./node_modules/css-loader??ref--11-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--11-oneOf-1-2!./node_modules/stylus-loader??ref--11-oneOf-1-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/views/app/frontales.vue?vue&type=style&index=0&id=1b6363aa&lang=stylus 4:14-470 15:3-20:5 16:22-478
+ @ ./src/views/app/frontales.vue?vue&type=style&index=0&id=1b6363aa&lang=stylus
+ @ ./src/views/app/frontales.vue
+ @ ./src/router.js
+ @ ./src/main.js
+ @ multi (webpack)-dev-server/client?http://192.168.2.40:8080/sockjs-node (webpack)/hot/dev-server.js ./src/main.js
+
+ WAIT  Compiling...12:21:35 PM
+
+ ERROR  Failed to compile with 6 errors12:21:36 PM
+
+ error  in ./src/assets/style/views/app/Profile.css?vue&type=style&index=0&id=583e41f1&scoped=true&lang=css&external
+
+Syntax Error: SyntaxError
+
+(262:1) Unknown word
+
+  260 |   }
+  261 | }
+> 262 | </style>
+      | ^
+  263 | 
+
+
+
+ @ ./node_modules/vue-style-loader??ref--6-oneOf-1-0!./node_modules/css-loader??ref--6-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-oneOf-1-2!./src/assets/style/views/app/Profile.css?vue&type=style&index=0&id=583e41f1&scoped=true&lang=css&external 4:14-315 15:3-20:5 16:22-323
+ @ ./src/assets/style/views/app/Profile.css?vue&type=style&index=0&id=583e41f1&scoped=true&lang=css&external
+ @ ./src/views/app/Profile.vue
+ @ ./src/router.js
+ @ ./src/main.js
+ @ multi (webpack)-dev-server/client?http://192.168.2.40:8080/sockjs-node (webpack)/hot/dev-server.js ./src/main.js
+
+ error  in ./src/views/app/Activations.vue?vue&type=style&index=0&id=1e3f6865&lang=stylus
+
+Syntax Error: Error: /Users/jordymontalvo/Documents/sifrah/app/src/views/app/Activations.vue:2:9
+   1| <template>
+   2|   <App :session="session" :title="title">
+--------------^
+   3|     <div v-cloak>
+   4|       <div v-if="loading" class="loading-container">
+   5|         <div class="loading-spinner-large"></div>
+
+failed to locate @import file ../../../assets/style/views/app/Activations.styl
+
+
+ @ ./node_modules/vue-style-loader??ref--11-oneOf-1-0!./node_modules/css-loader??ref--11-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--11-oneOf-1-2!./node_modules/stylus-loader??ref--11-oneOf-1-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/views/app/Activations.vue?vue&type=style&index=0&id=1e3f6865&lang=stylus 4:14-472 15:3-20:5 16:22-480
+ @ ./src/views/app/Activations.vue?vue&type=style&index=0&id=1e3f6865&lang=stylus
+ @ ./src/views/app/Activations.vue
+ @ ./src/router.js
+ @ ./src/main.js
+ @ multi (webpack)-dev-server/client?http://192.168.2.40:8080/sockjs-node (webpack)/hot/dev-server.js ./src/main.js
+
+ error  in ./src/views/app/Resume.vue?vue&type=style&index=0&id=75e19415&lang=stylus
+
+Syntax Error: Error: /Users/jordymontalvo/Documents/sifrah/app/src/views/app/Resume.vue:2:9
+   1| <template>
+   2|   <App :session="session" :office_id="office_id" :title="title">
+--------------^
+   3|     <Spinner v-if="loading" :size="40" :color="'#086eb6'" />
+   4|     <SkeletonLoader
+   5|       v-if="loading"
+
+failed to locate @import file ../../../assets/style/views/app/Resume.styl
+
+
+ @ ./node_modules/vue-style-loader??ref--11-oneOf-1-0!./node_modules/css-loader??ref--11-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--11-oneOf-1-2!./node_modules/stylus-loader??ref--11-oneOf-1-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/views/app/Resume.vue?vue&type=style&index=0&id=75e19415&lang=stylus 4:14-467 15:3-20:5 16:22-475
+ @ ./src/views/app/Resume.vue?vue&type=style&index=0&id=75e19415&lang=stylus
+ @ ./src/views/app/Resume.vue
+ @ ./src/router.js
+ @ ./src/main.js
+ @ multi (webpack)-dev-server/client?http://192.168.2.40:8080/sockjs-node (webpack)/hot/dev-server.js ./src/main.js
+
+ error  in ./src/views/app/Tools.vue?vue&type=style&index=0&id=3761e523&lang=stylus
+
+Syntax Error: Error: /Users/jordymontalvo/Documents/sifrah/app/src/views/app/Tools.vue:2:9
+   1| <template>
+   2|   <App :session="session" :title="title">
+--------------^
+   3|     <!-- <h4>HERRAMIENTAS</h4> -->
+   4| 
+   5|     <Spinner v-if="loading" :size="40" :color="'#086eb6'" />
+
+failed to locate @import file ../../../assets/style/views/app/Tools.styl
+
+
+ @ ./node_modules/vue-style-loader??ref--11-oneOf-1-0!./node_modules/css-loader??ref--11-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--11-oneOf-1-2!./node_modules/stylus-loader??ref--11-oneOf-1-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/views/app/Tools.vue?vue&type=style&index=0&id=3761e523&lang=stylus 4:14-466 15:3-20:5 16:22-474
+ @ ./src/views/app/Tools.vue?vue&type=style&index=0&id=3761e523&lang=stylus
+ @ ./src/views/app/Tools.vue
+ @ ./src/router.js
+ @ ./src/main.js
+ @ multi (webpack)-dev-server/client?http://192.168.2.40:8080/sockjs-node (webpack)/hot/dev-server.js ./src/main.js
+
+ error  in ./src/views/app/Tree.vue?vue&type=style&index=0&id=b09e59f4&lang=stylus
+
+Syntax Error: ParseError: /Users/jordymontalvo/Documents/sifrah/app/src/assets/style/views/app/Tree.styl:36:1
+   32|       opacity 1
+   33|       transform translateY(0) scale(1)
+   34| 
+   35| </style>
+   36| 
+-------^
+   37| 
+
+expected "indent", got "eos"
+
+
+ @ ./node_modules/vue-style-loader??ref--11-oneOf-1-0!./node_modules/css-loader??ref--11-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--11-oneOf-1-2!./node_modules/stylus-loader??ref--11-oneOf-1-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/views/app/Tree.vue?vue&type=style&index=0&id=b09e59f4&lang=stylus 4:14-465 15:3-20:5 16:22-473
+ @ ./src/views/app/Tree.vue?vue&type=style&index=0&id=b09e59f4&lang=stylus
+ @ ./src/views/app/Tree.vue
+ @ ./src/router.js
+ @ ./src/main.js
+ @ multi (webpack)-dev-server/client?http://192.168.2.40:8080/sockjs-node (webpack)/hot/dev-server.js ./src/main.js
+
+ error  in ./src/views/app/frontales.vue?vue&type=style&index=0&id=1b6363aa&lang=stylus
+
+Syntax Error: ParseError: /Users/jordymontalvo/Documents/sifrah/app/src/assets/style/views/app/frontales.styl:22:1
+   18|       max-width 480px
+   19|       margin auto
+   20| 
+   21| </style>
+   22| 
+-------^
+   23| 
+
+expected "indent", got "eos"
+
+
+ @ ./node_modules/vue-style-loader??ref--11-oneOf-1-0!./node_modules/css-loader??ref--11-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--11-oneOf-1-2!./node_modules/stylus-loader??ref--11-oneOf-1-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/views/app/frontales.vue?vue&type=style&index=0&id=1b6363aa&lang=stylus 4:14-470 15:3-20:5 16:22-478
+ @ ./src/views/app/frontales.vue?vue&type=style&index=0&id=1b6363aa&lang=stylus
+ @ ./src/views/app/frontales.vue
+ @ ./src/router.js
+ @ ./src/main.js
+ @ multi (webpack)-dev-server/client?http://192.168.2.40:8080/sockjs-node (webpack)/hot/dev-server.js ./src/main.js
+
+ WAIT  Compiling...12:21:40 PM
+
+ ERROR  Failed to compile with 6 errors12:21:41 PM
+
+ error  in ./src/assets/style/views/app/Profile.css?vue&type=style&index=0&id=583e41f1&scoped=true&lang=css&external
+
+Syntax Error: SyntaxError
+
+(262:1) Unknown word
+
+  260 |   }
+  261 | }
+> 262 | </style>
+      | ^
+  263 | 
+
+
+
+ @ ./node_modules/vue-style-loader??ref--6-oneOf-1-0!./node_modules/css-loader??ref--6-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-oneOf-1-2!./src/assets/style/views/app/Profile.css?vue&type=style&index=0&id=583e41f1&scoped=true&lang=css&external 4:14-315 15:3-20:5 16:22-323
+ @ ./src/assets/style/views/app/Profile.css?vue&type=style&index=0&id=583e41f1&scoped=true&lang=css&external
+ @ ./src/views/app/Profile.vue
+ @ ./src/router.js
+ @ ./src/main.js
+ @ multi (webpack)-dev-server/client?http://192.168.2.40:8080/sockjs-node (webpack)/hot/dev-server.js ./src/main.js
+
+ error  in ./src/views/app/Activations.vue?vue&type=style&index=0&id=1e3f6865&lang=stylus
+
+Syntax Error: Error: /Users/jordymontalvo/Documents/sifrah/app/src/views/app/Activations.vue:2:9
+   1| <template>
+   2|   <App :session="session" :title="title">
+--------------^
+   3|     <div v-cloak>
+   4|       <div v-if="loading" class="loading-container">
+   5|         <div class="loading-spinner-large"></div>
+
+failed to locate @import file ../../../assets/style/views/app/Activations.styl
+
+
+ @ ./node_modules/vue-style-loader??ref--11-oneOf-1-0!./node_modules/css-loader??ref--11-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--11-oneOf-1-2!./node_modules/stylus-loader??ref--11-oneOf-1-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/views/app/Activations.vue?vue&type=style&index=0&id=1e3f6865&lang=stylus 4:14-472 15:3-20:5 16:22-480
+ @ ./src/views/app/Activations.vue?vue&type=style&index=0&id=1e3f6865&lang=stylus
+ @ ./src/views/app/Activations.vue
+ @ ./src/router.js
+ @ ./src/main.js
+ @ multi (webpack)-dev-server/client?http://192.168.2.40:8080/sockjs-node (webpack)/hot/dev-server.js ./src/main.js
+
+ error  in ./src/views/app/Resume.vue?vue&type=style&index=0&id=75e19415&lang=stylus
+
+Syntax Error: Error: /Users/jordymontalvo/Documents/sifrah/app/src/views/app/Resume.vue:2:9
+   1| <template>
+   2|   <App :session="session" :office_id="office_id" :title="title">
+--------------^
+   3|     <Spinner v-if="loading" :size="40" :color="'#086eb6'" />
+   4|     <SkeletonLoader
+   5|       v-if="loading"
+
+failed to locate @import file ../../../assets/style/views/app/Resume.styl
+
+
+ @ ./node_modules/vue-style-loader??ref--11-oneOf-1-0!./node_modules/css-loader??ref--11-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--11-oneOf-1-2!./node_modules/stylus-loader??ref--11-oneOf-1-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/views/app/Resume.vue?vue&type=style&index=0&id=75e19415&lang=stylus 4:14-467 15:3-20:5 16:22-475
+ @ ./src/views/app/Resume.vue?vue&type=style&index=0&id=75e19415&lang=stylus
+ @ ./src/views/app/Resume.vue
+ @ ./src/router.js
+ @ ./src/main.js
+ @ multi (webpack)-dev-server/client?http://192.168.2.40:8080/sockjs-node (webpack)/hot/dev-server.js ./src/main.js
+
+ error  in ./src/views/app/Tools.vue?vue&type=style&index=0&id=3761e523&lang=stylus
+
+Syntax Error: Error: /Users/jordymontalvo/Documents/sifrah/app/src/views/app/Tools.vue:2:9
+   1| <template>
+   2|   <App :session="session" :title="title">
+--------------^
+   3|     <!-- <h4>HERRAMIENTAS</h4> -->
+   4| 
+   5|     <Spinner v-if="loading" :size="40" :color="'#086eb6'" />
+
+failed to locate @import file ../../../assets/style/views/app/Tools.styl
+
+
+ @ ./node_modules/vue-style-loader??ref--11-oneOf-1-0!./node_modules/css-loader??ref--11-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--11-oneOf-1-2!./node_modules/stylus-loader??ref--11-oneOf-1-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/views/app/Tools.vue?vue&type=style&index=0&id=3761e523&lang=stylus 4:14-466 15:3-20:5 16:22-474
+ @ ./src/views/app/Tools.vue?vue&type=style&index=0&id=3761e523&lang=stylus
+ @ ./src/views/app/Tools.vue
+ @ ./src/router.js
+ @ ./src/main.js
+ @ multi (webpack)-dev-server/client?http://192.168.2.40:8080/sockjs-node (webpack)/hot/dev-server.js ./src/main.js
+
+ error  in ./src/views/app/Tree.vue?vue&type=style&index=0&id=b09e59f4&lang=stylus
+
+Syntax Error: ParseError: /Users/jordymontalvo/Documents/sifrah/app/src/assets/style/views/app/Tree.styl:36:1
+   32|       opacity 1
+   33|       transform translateY(0) scale(1)
+   34| 
+   35| </style>
+   36| 
+-------^
+   37| 
+
+expected "indent", got "eos"
+
+
+ @ ./node_modules/vue-style-loader??ref--11-oneOf-1-0!./node_modules/css-loader??ref--11-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--11-oneOf-1-2!./node_modules/stylus-loader??ref--11-oneOf-1-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/views/app/Tree.vue?vue&type=style&index=0&id=b09e59f4&lang=stylus 4:14-465 15:3-20:5 16:22-473
+ @ ./src/views/app/Tree.vue?vue&type=style&index=0&id=b09e59f4&lang=stylus
+ @ ./src/views/app/Tree.vue
+ @ ./src/router.js
+ @ ./src/main.js
+ @ multi (webpack)-dev-server/client?http://192.168.2.40:8080/sockjs-node (webpack)/hot/dev-server.js ./src/main.js
+
+ error  in ./src/views/app/frontales.vue?vue&type=style&index=0&id=1b6363aa&lang=stylus
+
+Syntax Error: ParseError: /Users/jordymontalvo/Documents/sifrah/app/src/assets/style/views/app/frontales.styl:22:1
+   18|       max-width 480px
+   19|       margin auto
+   20| 
+   21| </style>
+   22| 
+-------^
+   23| 
+
+expected "indent", got "eos"
+
+
+ @ ./node_modules/vue-style-loader??ref--11-oneOf-1-0!./node_modules/css-loader??ref--11-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--11-oneOf-1-2!./node_modules/stylus-loader??ref--11-oneOf-1-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/views/app/frontales.vue?vue&type=style&index=0&id=1b6363aa&lang=stylus 4:14-470 15:3-20:5 16:22-478
+ @ ./src/views/app/frontales.vue?vue&type=style&index=0&id=1b6363aa&lang=stylus
+ @ ./src/views/app/frontales.vue
+ @ ./src/router.js
+ @ ./src/main.js
+ @ multi (webpack)-dev-server/client?http://192.168.2.40:8080/sockjs-node (webpack)/hot/dev-server.js ./src/main.js
+
+ WAIT  Compiling...12:21:42 PM
+
+ ERROR  Failed to compile with 5 errors12:21:43 PM
+
+ error  in ./src/assets/style/views/app/Profile.css?vue&type=style&index=0&id=583e41f1&scoped=true&lang=css&external
+
+Syntax Error: SyntaxError
+
+(262:1) Unknown word
+
+  260 |   }
+  261 | }
+> 262 | </style>
+      | ^
+  263 | 
+
+
+
+ @ ./node_modules/vue-style-loader??ref--6-oneOf-1-0!./node_modules/css-loader??ref--6-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-oneOf-1-2!./src/assets/style/views/app/Profile.css?vue&type=style&index=0&id=583e41f1&scoped=true&lang=css&external 4:14-315 15:3-20:5 16:22-323
+ @ ./src/assets/style/views/app/Profile.css?vue&type=style&index=0&id=583e41f1&scoped=true&lang=css&external
+ @ ./src/views/app/Profile.vue
+ @ ./src/router.js
+ @ ./src/main.js
+ @ multi (webpack)-dev-server/client?http://192.168.2.40:8080/sockjs-node (webpack)/hot/dev-server.js ./src/main.js
+
+ error  in ./src/views/app/Resume.vue?vue&type=style&index=0&id=75e19415&lang=stylus
+
+Syntax Error: Error: /Users/jordymontalvo/Documents/sifrah/app/src/views/app/Resume.vue:2:9
+   1| <template>
+   2|   <App :session="session" :office_id="office_id" :title="title">
+--------------^
+   3|     <Spinner v-if="loading" :size="40" :color="'#086eb6'" />
+   4|     <SkeletonLoader
+   5|       v-if="loading"
+
+failed to locate @import file ../../../assets/style/views/app/Resume.styl
+
+
+ @ ./node_modules/vue-style-loader??ref--11-oneOf-1-0!./node_modules/css-loader??ref--11-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--11-oneOf-1-2!./node_modules/stylus-loader??ref--11-oneOf-1-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/views/app/Resume.vue?vue&type=style&index=0&id=75e19415&lang=stylus 4:14-467 15:3-20:5 16:22-475
+ @ ./src/views/app/Resume.vue?vue&type=style&index=0&id=75e19415&lang=stylus
+ @ ./src/views/app/Resume.vue
+ @ ./src/router.js
+ @ ./src/main.js
+ @ multi (webpack)-dev-server/client?http://192.168.2.40:8080/sockjs-node (webpack)/hot/dev-server.js ./src/main.js
+
+ error  in ./src/views/app/Tools.vue?vue&type=style&index=0&id=3761e523&lang=stylus
+
+Syntax Error: Error: /Users/jordymontalvo/Documents/sifrah/app/src/views/app/Tools.vue:2:9
+   1| <template>
+   2|   <App :session="session" :title="title">
+--------------^
+   3|     <!-- <h4>HERRAMIENTAS</h4> -->
+   4| 
+   5|     <Spinner v-if="loading" :size="40" :color="'#086eb6'" />
+
+failed to locate @import file ../../../assets/style/views/app/Tools.styl
+
+
+ @ ./node_modules/vue-style-loader??ref--11-oneOf-1-0!./node_modules/css-loader??ref--11-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--11-oneOf-1-2!./node_modules/stylus-loader??ref--11-oneOf-1-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/views/app/Tools.vue?vue&type=style&index=0&id=3761e523&lang=stylus 4:14-466 15:3-20:5 16:22-474
+ @ ./src/views/app/Tools.vue?vue&type=style&index=0&id=3761e523&lang=stylus
+ @ ./src/views/app/Tools.vue
+ @ ./src/router.js
+ @ ./src/main.js
+ @ multi (webpack)-dev-server/client?http://192.168.2.40:8080/sockjs-node (webpack)/hot/dev-server.js ./src/main.js
+
+ error  in ./src/views/app/Tree.vue?vue&type=style&index=0&id=b09e59f4&lang=stylus
+
+Syntax Error: ParseError: /Users/jordymontalvo/Documents/sifrah/app/src/assets/style/views/app/Tree.styl:36:1
+   32|       opacity 1
+   33|       transform translateY(0) scale(1)
+   34| 
+   35| </style>
+   36| 
+-------^
+   37| 
+
+expected "indent", got "eos"
+
+
+ @ ./node_modules/vue-style-loader??ref--11-oneOf-1-0!./node_modules/css-loader??ref--11-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--11-oneOf-1-2!./node_modules/stylus-loader??ref--11-oneOf-1-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/views/app/Tree.vue?vue&type=style&index=0&id=b09e59f4&lang=stylus 4:14-465 15:3-20:5 16:22-473
+ @ ./src/views/app/Tree.vue?vue&type=style&index=0&id=b09e59f4&lang=stylus
+ @ ./src/views/app/Tree.vue
+ @ ./src/router.js
+ @ ./src/main.js
+ @ multi (webpack)-dev-server/client?http://192.168.2.40:8080/sockjs-node (webpack)/hot/dev-server.js ./src/main.js
+
+ error  in ./src/views/app/frontales.vue?vue&type=style&index=0&id=1b6363aa&lang=stylus
+
+Syntax Error: ParseError: /Users/jordymontalvo/Documents/sifrah/app/src/assets/style/views/app/frontales.styl:22:1
+   18|       max-width 480px
+   19|       margin auto
+   20| 
+   21| </style>
+   22| 
+-------^
+   23| 
+
+expected "indent", got "eos"
+
+
+ @ ./node_modules/vue-style-loader??ref--11-oneOf-1-0!./node_modules/css-loader??ref--11-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--11-oneOf-1-2!./node_modules/stylus-loader??ref--11-oneOf-1-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/views/app/frontales.vue?vue&type=style&index=0&id=1b6363aa&lang=stylus 4:14-470 15:3-20:5 16:22-478
+ @ ./src/views/app/frontales.vue?vue&type=style&index=0&id=1b6363aa&lang=stylus
+ @ ./src/views/app/frontales.vue
+ @ ./src/router.js
+ @ ./src/main.js
+ @ multi (webpack)-dev-server/client?http://192.168.2.40:8080/sockjs-node (webpack)/hot/dev-server.js ./src/main.js
+
+ WAIT  Compiling...12:21:45 PM
+
+ ERROR  Failed to compile with 4 errors12:21:45 PM
+
+ error  in ./src/assets/style/views/app/Profile.css?vue&type=style&index=0&id=583e41f1&scoped=true&lang=css&external
+
+Syntax Error: SyntaxError
+
+(262:1) Unknown word
+
+  260 |   }
+  261 | }
+> 262 | </style>
+      | ^
+  263 | 
+
+
+
+ @ ./node_modules/vue-style-loader??ref--6-oneOf-1-0!./node_modules/css-loader??ref--6-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-oneOf-1-2!./src/assets/style/views/app/Profile.css?vue&type=style&index=0&id=583e41f1&scoped=true&lang=css&external 4:14-315 15:3-20:5 16:22-323
+ @ ./src/assets/style/views/app/Profile.css?vue&type=style&index=0&id=583e41f1&scoped=true&lang=css&external
+ @ ./src/views/app/Profile.vue
+ @ ./src/router.js
+ @ ./src/main.js
+ @ multi (webpack)-dev-server/client?http://192.168.2.40:8080/sockjs-node (webpack)/hot/dev-server.js ./src/main.js
+
+ error  in ./src/views/app/Resume.vue?vue&type=style&index=0&id=75e19415&lang=stylus
+
+Syntax Error: Error: /Users/jordymontalvo/Documents/sifrah/app/src/views/app/Resume.vue:2:9
+   1| <template>
+   2|   <App :session="session" :office_id="office_id" :title="title">
+--------------^
+   3|     <Spinner v-if="loading" :size="40" :color="'#086eb6'" />
+   4|     <SkeletonLoader
+   5|       v-if="loading"
+
+failed to locate @import file ../../../assets/style/views/app/Resume.styl
+
+
+ @ ./node_modules/vue-style-loader??ref--11-oneOf-1-0!./node_modules/css-loader??ref--11-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--11-oneOf-1-2!./node_modules/stylus-loader??ref--11-oneOf-1-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/views/app/Resume.vue?vue&type=style&index=0&id=75e19415&lang=stylus 4:14-467 15:3-20:5 16:22-475
+ @ ./src/views/app/Resume.vue?vue&type=style&index=0&id=75e19415&lang=stylus
+ @ ./src/views/app/Resume.vue
+ @ ./src/router.js
+ @ ./src/main.js
+ @ multi (webpack)-dev-server/client?http://192.168.2.40:8080/sockjs-node (webpack)/hot/dev-server.js ./src/main.js
+
+ error  in ./src/views/app/Tree.vue?vue&type=style&index=0&id=b09e59f4&lang=stylus
+
+Syntax Error: ParseError: /Users/jordymontalvo/Documents/sifrah/app/src/assets/style/views/app/Tree.styl:36:1
+   32|       opacity 1
+   33|       transform translateY(0) scale(1)
+   34| 
+   35| </style>
+   36| 
+-------^
+   37| 
+
+expected "indent", got "eos"
+
+
+ @ ./node_modules/vue-style-loader??ref--11-oneOf-1-0!./node_modules/css-loader??ref--11-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--11-oneOf-1-2!./node_modules/stylus-loader??ref--11-oneOf-1-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/views/app/Tree.vue?vue&type=style&index=0&id=b09e59f4&lang=stylus 4:14-465 15:3-20:5 16:22-473
+ @ ./src/views/app/Tree.vue?vue&type=style&index=0&id=b09e59f4&lang=stylus
+ @ ./src/views/app/Tree.vue
+ @ ./src/router.js
+ @ ./src/main.js
+ @ multi (webpack)-dev-server/client?http://192.168.2.40:8080/sockjs-node (webpack)/hot/dev-server.js ./src/main.js
+
+ error  in ./src/views/app/frontales.vue?vue&type=style&index=0&id=1b6363aa&lang=stylus
+
+Syntax Error: ParseError: /Users/jordymontalvo/Documents/sifrah/app/src/assets/style/views/app/frontales.styl:22:1
+   18|       max-width 480px
+   19|       margin auto
+   20| 
+   21| </style>
+   22| 
+-------^
+   23| 
+
+expected "indent", got "eos"
+
+
+ @ ./node_modules/vue-style-loader??ref--11-oneOf-1-0!./node_modules/css-loader??ref--11-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--11-oneOf-1-2!./node_modules/stylus-loader??ref--11-oneOf-1-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/views/app/frontales.vue?vue&type=style&index=0&id=1b6363aa&lang=stylus 4:14-470 15:3-20:5 16:22-478
+ @ ./src/views/app/frontales.vue?vue&type=style&index=0&id=1b6363aa&lang=stylus
+ @ ./src/views/app/frontales.vue
+ @ ./src/router.js
+ @ ./src/main.js
+ @ multi (webpack)-dev-server/client?http://192.168.2.40:8080/sockjs-node (webpack)/hot/dev-server.js ./src/main.js
+
+ WAIT  Compiling...12:21:46 PM
+
+ ERROR  Failed to compile with 3 errors12:21:47 PM
+
+ error  in ./src/assets/style/views/app/Profile.css?vue&type=style&index=0&id=583e41f1&scoped=true&lang=css&external
+
+Syntax Error: SyntaxError
+
+(262:1) Unknown word
+
+  260 |   }
+  261 | }
+> 262 | </style>
+      | ^
+  263 | 
+
+
+
+ @ ./node_modules/vue-style-loader??ref--6-oneOf-1-0!./node_modules/css-loader??ref--6-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-oneOf-1-2!./src/assets/style/views/app/Profile.css?vue&type=style&index=0&id=583e41f1&scoped=true&lang=css&external 4:14-315 15:3-20:5 16:22-323
+ @ ./src/assets/style/views/app/Profile.css?vue&type=style&index=0&id=583e41f1&scoped=true&lang=css&external
+ @ ./src/views/app/Profile.vue
+ @ ./src/router.js
+ @ ./src/main.js
+ @ multi (webpack)-dev-server/client?http://192.168.2.40:8080/sockjs-node (webpack)/hot/dev-server.js ./src/main.js
+
+ error  in ./src/views/app/Tree.vue?vue&type=style&index=0&id=b09e59f4&lang=stylus
+
+Syntax Error: ParseError: /Users/jordymontalvo/Documents/sifrah/app/src/assets/style/views/app/Tree.styl:36:1
+   32|       opacity 1
+   33|       transform translateY(0) scale(1)
+   34| 
+   35| </style>
+   36| 
+-------^
+   37| 
+
+expected "indent", got "eos"
+
+
+ @ ./node_modules/vue-style-loader??ref--11-oneOf-1-0!./node_modules/css-loader??ref--11-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--11-oneOf-1-2!./node_modules/stylus-loader??ref--11-oneOf-1-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/views/app/Tree.vue?vue&type=style&index=0&id=b09e59f4&lang=stylus 4:14-465 15:3-20:5 16:22-473
+ @ ./src/views/app/Tree.vue?vue&type=style&index=0&id=b09e59f4&lang=stylus
+ @ ./src/views/app/Tree.vue
+ @ ./src/router.js
+ @ ./src/main.js
+ @ multi (webpack)-dev-server/client?http://192.168.2.40:8080/sockjs-node (webpack)/hot/dev-server.js ./src/main.js
+
+ error  in ./src/views/app/frontales.vue?vue&type=style&index=0&id=1b6363aa&lang=stylus
+
+Syntax Error: ParseError: /Users/jordymontalvo/Documents/sifrah/app/src/assets/style/views/app/frontales.styl:22:1
+   18|       max-width 480px
+   19|       margin auto
+   20| 
+   21| </style>
+   22| 
+-------^
+   23| 
+
+expected "indent", got "eos"
+
+
+ @ ./node_modules/vue-style-loader??ref--11-oneOf-1-0!./node_modules/css-loader??ref--11-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--11-oneOf-1-2!./node_modules/stylus-loader??ref--11-oneOf-1-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/views/app/frontales.vue?vue&type=style&index=0&id=1b6363aa&lang=stylus 4:14-470 15:3-20:5 16:22-478
+ @ ./src/views/app/frontales.vue?vue&type=style&index=0&id=1b6363aa&lang=stylus
+ @ ./src/views/app/frontales.vue
+ @ ./src/router.js
+ @ ./src/main.js
+ @ multi (webpack)-dev-server/client?http://192.168.2.40:8080/sockjs-node (webpack)/hot/dev-server.js ./src/main.js
+
+ WAIT  Compiling...12:22:49 PM
+
+ ERROR  Failed to compile with 3 errors12:22:51 PM
+
+ error  in ./src/assets/style/views/app/Profile.css?vue&type=style&index=0&id=583e41f1&scoped=true&lang=css&external
+
+Syntax Error: SyntaxError
+
+(262:1) Unknown word
+
+  260 |   }
+  261 | }
+> 262 | </style>
+      | ^
+  263 | 
+
+
+
+ @ ./node_modules/vue-style-loader??ref--6-oneOf-1-0!./node_modules/css-loader??ref--6-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-oneOf-1-2!./src/assets/style/views/app/Profile.css?vue&type=style&index=0&id=583e41f1&scoped=true&lang=css&external 4:14-315 15:3-20:5 16:22-323
+ @ ./src/assets/style/views/app/Profile.css?vue&type=style&index=0&id=583e41f1&scoped=true&lang=css&external
+ @ ./src/views/app/Profile.vue
+ @ ./src/router.js
+ @ ./src/main.js
+ @ multi (webpack)-dev-server/client?http://192.168.2.40:8080/sockjs-node (webpack)/hot/dev-server.js ./src/main.js
+
+ error  in ./src/views/app/Tree.vue?vue&type=style&index=0&id=b09e59f4&lang=stylus
+
+Syntax Error: ParseError: /Users/jordymontalvo/Documents/sifrah/app/src/assets/style/views/app/Tree.styl:36:1
+   32|       opacity 1
+   33|       transform translateY(0) scale(1)
+   34| 
+   35| </style>
+   36| 
+-------^
+   37| 
+
+expected "indent", got "eos"
+
+
+ @ ./node_modules/vue-style-loader??ref--11-oneOf-1-0!./node_modules/css-loader??ref--11-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--11-oneOf-1-2!./node_modules/stylus-loader??ref--11-oneOf-1-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/views/app/Tree.vue?vue&type=style&index=0&id=b09e59f4&lang=stylus 4:14-465 15:3-20:5 16:22-473
+ @ ./src/views/app/Tree.vue?vue&type=style&index=0&id=b09e59f4&lang=stylus
+ @ ./src/views/app/Tree.vue
+ @ ./src/router.js
+ @ ./src/main.js
+ @ multi (webpack)-dev-server/client?http://192.168.2.40:8080/sockjs-node (webpack)/hot/dev-server.js ./src/main.js
+
+ error  in ./src/views/app/frontales.vue?vue&type=style&index=0&id=1b6363aa&lang=stylus
+
+Syntax Error: ParseError: /Users/jordymontalvo/Documents/sifrah/app/src/assets/style/views/app/frontales.styl:22:1
+   18|       max-width 480px
+   19|       margin auto
+   20| 
+   21| </style>
+   22| 
+-------^
+   23| 
+
+expected "indent", got "eos"
+
+
+ @ ./node_modules/vue-style-loader??ref--11-oneOf-1-0!./node_modules/css-loader??ref--11-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--11-oneOf-1-2!./node_modules/stylus-loader??ref--11-oneOf-1-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/views/app/frontales.vue?vue&type=style&index=0&id=1b6363aa&lang=stylus 4:14-470 15:3-20:5 16:22-478
+ @ ./src/views/app/frontales.vue?vue&type=style&index=0&id=1b6363aa&lang=stylus
+ @ ./src/views/app/frontales.vue
+ @ ./src/router.js
+ @ ./src/main.js
+ @ multi (webpack)-dev-server/client?http://192.168.2.40:8080/sockjs-node (webpack)/hot/dev-server.js ./src/main.js
+
+ WAIT  Compiling...12:22:57 PM
+
+ ERROR  Failed to compile with 3 errors12:22:58 PM
+
+ error  in ./src/assets/style/views/app/Profile.css?vue&type=style&index=0&id=583e41f1&scoped=true&lang=css&external
+
+Syntax Error: SyntaxError
+
+(262:1) Unknown word
+
+  260 |   }
+  261 | }
+> 262 | </style>
+      | ^
+  263 | 
+
+
+
+ @ ./node_modules/vue-style-loader??ref--6-oneOf-1-0!./node_modules/css-loader??ref--6-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-oneOf-1-2!./src/assets/style/views/app/Profile.css?vue&type=style&index=0&id=583e41f1&scoped=true&lang=css&external 4:14-315 15:3-20:5 16:22-323
+ @ ./src/assets/style/views/app/Profile.css?vue&type=style&index=0&id=583e41f1&scoped=true&lang=css&external
+ @ ./src/views/app/Profile.vue
+ @ ./src/router.js
+ @ ./src/main.js
+ @ multi (webpack)-dev-server/client?http://192.168.2.40:8080/sockjs-node (webpack)/hot/dev-server.js ./src/main.js
+
+ error  in ./src/views/app/Tree.vue?vue&type=style&index=0&id=b09e59f4&lang=stylus
+
+Syntax Error: ParseError: /Users/jordymontalvo/Documents/sifrah/app/src/assets/style/views/app/Tree.styl:36:1
+   32|       opacity 1
+   33|       transform translateY(0) scale(1)
+   34| 
+   35| </style>
+   36| 
+-------^
+   37| 
+
+expected "indent", got "eos"
+
+
+ @ ./node_modules/vue-style-loader??ref--11-oneOf-1-0!./node_modules/css-loader??ref--11-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--11-oneOf-1-2!./node_modules/stylus-loader??ref--11-oneOf-1-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/views/app/Tree.vue?vue&type=style&index=0&id=b09e59f4&lang=stylus 4:14-465 15:3-20:5 16:22-473
+ @ ./src/views/app/Tree.vue?vue&type=style&index=0&id=b09e59f4&lang=stylus
+ @ ./src/views/app/Tree.vue
+ @ ./src/router.js
+ @ ./src/main.js
+ @ multi (webpack)-dev-server/client?http://192.168.2.40:8080/sockjs-node (webpack)/hot/dev-server.js ./src/main.js
+
+ error  in ./src/views/app/frontales.vue?vue&type=style&index=0&id=1b6363aa&lang=stylus
+
+Syntax Error: ParseError: /Users/jordymontalvo/Documents/sifrah/app/src/assets/style/views/app/frontales.styl:22:1
+   18|       max-width 480px
+   19|       margin auto
+   20| 
+   21| </style>
+   22| 
+-------^
+   23| 
+
+expected "indent", got "eos"
+
+
+ @ ./node_modules/vue-style-loader??ref--11-oneOf-1-0!./node_modules/css-loader??ref--11-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--11-oneOf-1-2!./node_modules/stylus-loader??ref--11-oneOf-1-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/views/app/frontales.vue?vue&type=style&index=0&id=1b6363aa&lang=stylus 4:14-470 15:3-20:5 16:22-478
+ @ ./src/views/app/frontales.vue?vue&type=style&index=0&id=1b6363aa&lang=stylus
+ @ ./src/views/app/frontales.vue
+ @ ./src/router.js
+ @ ./src/main.js
+ @ multi (webpack)-dev-server/client?http://192.168.2.40:8080/sockjs-node (webpack)/hot/dev-server.js ./src/main.js
+
+ WAIT  Compiling...12:24:25 PM
+
+ ERROR  Failed to compile with 2 errors12:24:25 PM
+
+ error  in ./src/views/app/Tree.vue?vue&type=style&index=0&id=b09e59f4&lang=stylus
+
+Syntax Error: ParseError: /Users/jordymontalvo/Documents/sifrah/app/src/assets/style/views/app/Tree.styl:36:1
+   32|       opacity 1
+   33|       transform translateY(0) scale(1)
+   34| 
+   35| </style>
+   36| 
+-------^
+   37| 
+
+expected "indent", got "eos"
+
+
+ @ ./node_modules/vue-style-loader??ref--11-oneOf-1-0!./node_modules/css-loader??ref--11-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--11-oneOf-1-2!./node_modules/stylus-loader??ref--11-oneOf-1-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/views/app/Tree.vue?vue&type=style&index=0&id=b09e59f4&lang=stylus 4:14-465 15:3-20:5 16:22-473
+ @ ./src/views/app/Tree.vue?vue&type=style&index=0&id=b09e59f4&lang=stylus
+ @ ./src/views/app/Tree.vue
+ @ ./src/router.js
+ @ ./src/main.js
+ @ multi (webpack)-dev-server/client?http://192.168.2.40:8080/sockjs-node (webpack)/hot/dev-server.js ./src/main.js
+
+ error  in ./src/views/app/frontales.vue?vue&type=style&index=0&id=1b6363aa&lang=stylus
+
+Syntax Error: ParseError: /Users/jordymontalvo/Documents/sifrah/app/src/assets/style/views/app/frontales.styl:22:1
+   18|       max-width 480px
+   19|       margin auto
+   20| 
+   21| </style>
+   22| 
+-------^
+   23| 
+
+expected "indent", got "eos"
+
+
+ @ ./node_modules/vue-style-loader??ref--11-oneOf-1-0!./node_modules/css-loader??ref--11-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--11-oneOf-1-2!./node_modules/stylus-loader??ref--11-oneOf-1-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/views/app/frontales.vue?vue&type=style&index=0&id=1b6363aa&lang=stylus 4:14-470 15:3-20:5 16:22-478
+ @ ./src/views/app/frontales.vue?vue&type=style&index=0&id=1b6363aa&lang=stylus
+ @ ./src/views/app/frontales.vue
+ @ ./src/router.js
+ @ ./src/main.js
+ @ multi (webpack)-dev-server/client?http://192.168.2.40:8080/sockjs-node (webpack)/hot/dev-server.js ./src/main.js
+
+ WAIT  Compiling...12:24:28 PM
+
+ ERROR  Failed to compile with 2 errors12:24:29 PM
+
+ error  in ./src/views/app/Tree.vue?vue&type=style&index=0&id=b09e59f4&lang=stylus
+
+Syntax Error: ParseError: /Users/jordymontalvo/Documents/sifrah/app/src/assets/style/views/app/Tree.styl:36:1
+   32|       opacity 1
+   33|       transform translateY(0) scale(1)
+   34| 
+   35| </style>
+   36| 
+-------^
+   37| 
+
+expected "indent", got "eos"
+
+
+ @ ./node_modules/vue-style-loader??ref--11-oneOf-1-0!./node_modules/css-loader??ref--11-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--11-oneOf-1-2!./node_modules/stylus-loader??ref--11-oneOf-1-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/views/app/Tree.vue?vue&type=style&index=0&id=b09e59f4&lang=stylus 4:14-465 15:3-20:5 16:22-473
+ @ ./src/views/app/Tree.vue?vue&type=style&index=0&id=b09e59f4&lang=stylus
+ @ ./src/views/app/Tree.vue
+ @ ./src/router.js
+ @ ./src/main.js
+ @ multi (webpack)-dev-server/client?http://192.168.2.40:8080/sockjs-node (webpack)/hot/dev-server.js ./src/main.js
+
+ error  in ./src/views/app/frontales.vue?vue&type=style&index=0&id=1b6363aa&lang=stylus
+
+Syntax Error: ParseError: /Users/jordymontalvo/Documents/sifrah/app/src/assets/style/views/app/frontales.styl:22:1
+   18|       max-width 480px
+   19|       margin auto
+   20| 
+   21| </style>
+   22| 
+-------^
+   23| 
+
+expected "indent", got "eos"
+
+
+ @ ./node_modules/vue-style-loader??ref--11-oneOf-1-0!./node_modules/css-loader??ref--11-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--11-oneOf-1-2!./node_modules/stylus-loader??ref--11-oneOf-1-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/views/app/frontales.vue?vue&type=style&index=0&id=1b6363aa&lang=stylus 4:14-470 15:3-20:5 16:22-478
+ @ ./src/views/app/frontales.vue?vue&type=style&index=0&id=1b6363aa&lang=stylus
+ @ ./src/views/app/frontales.vue
+ @ ./src/router.js
+ @ ./src/main.js
+ @ multi (webpack)-dev-server/client?http://192.168.2.40:8080/sockjs-node (webpack)/hot/dev-server.js ./src/main.js
+
+ WAIT  Compiling...12:24:29 PM
+
+ ERROR  Failed to compile with 2 errors12:24:29 PM
+
+ error  in ./src/views/app/Tree.vue?vue&type=style&index=0&id=b09e59f4&lang=stylus
+
+Syntax Error: ParseError: /Users/jordymontalvo/Documents/sifrah/app/src/assets/style/views/app/Tree.styl:36:1
+   32|       opacity 1
+   33|       transform translateY(0) scale(1)
+   34| 
+   35| </style>
+   36| 
+-------^
+   37| 
+
+expected "indent", got "eos"
+
+
+ @ ./node_modules/vue-style-loader??ref--11-oneOf-1-0!./node_modules/css-loader??ref--11-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--11-oneOf-1-2!./node_modules/stylus-loader??ref--11-oneOf-1-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/views/app/Tree.vue?vue&type=style&index=0&id=b09e59f4&lang=stylus 4:14-465 15:3-20:5 16:22-473
+ @ ./src/views/app/Tree.vue?vue&type=style&index=0&id=b09e59f4&lang=stylus
+ @ ./src/views/app/Tree.vue
+ @ ./src/router.js
+ @ ./src/main.js
+ @ multi (webpack)-dev-server/client?http://192.168.2.40:8080/sockjs-node (webpack)/hot/dev-server.js ./src/main.js
+
+ error  in ./src/views/app/frontales.vue?vue&type=style&index=0&id=1b6363aa&lang=stylus
+
+Syntax Error: ParseError: /Users/jordymontalvo/Documents/sifrah/app/src/assets/style/views/app/frontales.styl:22:1
+   18|       max-width 480px
+   19|       margin auto
+   20| 
+   21| </style>
+   22| 
+-------^
+   23| 
+
+expected "indent", got "eos"
+
+
+ @ ./node_modules/vue-style-loader??ref--11-oneOf-1-0!./node_modules/css-loader??ref--11-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--11-oneOf-1-2!./node_modules/stylus-loader??ref--11-oneOf-1-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/views/app/frontales.vue?vue&type=style&index=0&id=1b6363aa&lang=stylus 4:14-470 15:3-20:5 16:22-478
+ @ ./src/views/app/frontales.vue?vue&type=style&index=0&id=1b6363aa&lang=stylus
+ @ ./src/views/app/frontales.vue
+ @ ./src/router.js
+ @ ./src/main.js
+ @ multi (webpack)-dev-server/client?http://192.168.2.40:8080/sockjs-node (webpack)/hot/dev-server.js ./src/main.js
+
+ WAIT  Compiling...12:24:41 PM
+
+ DONE  Compiled successfully in 444ms12:24:41 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+  Note that the development build is not optimized.
+  To create a production build, run npm run build.
+
+
+> lehaim@0.1.0 serve
+> vue-cli-service serve
+
+ INFO  Starting development server...
+ DONE  Compiled successfully in 2503ms12:26:09 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+  Note that the development build is not optimized.
+  To create a production build, run npm run build.
+
+
+> lehaim@0.1.0 serve
+> vue-cli-service serve
+
+ INFO  Starting development server...
+ DONE  Compiled successfully in 2098ms12:29:02 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+  Note that the development build is not optimized.
+  To create a production build, run npm run build.
+
+ WAIT  Compiling...12:30:38 PM
+
+ DONE  Compiled successfully in 843ms12:30:39 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...12:31:59 PM
+
+ DONE  Compiled successfully in 258ms12:31:59 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...12:32:41 PM
+
+ DONE  Compiled successfully in 284ms12:32:42 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...12:32:44 PM
+
+ DONE  Compiled successfully in 184ms12:32:45 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...12:32:55 PM
+
+ DONE  Compiled successfully in 224ms12:32:55 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...12:33:00 PM
+
+ DONE  Compiled successfully in 163ms12:33:00 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...12:33:30 PM
+
+ DONE  Compiled successfully in 156ms12:33:30 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...12:36:46 PM
+
+ DONE  Compiled successfully in 632ms12:36:47 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...12:37:13 PM
+
+ DONE  Compiled successfully in 623ms12:37:14 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...12:38:28 PM
+
+ DONE  Compiled successfully in 479ms12:38:28 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...12:40:02 PM
+
+ DONE  Compiled successfully in 160ms12:40:03 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...12:40:55 PM
+
+ DONE  Compiled successfully in 277ms12:40:55 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...12:40:56 PM
+
+ DONE  Compiled successfully in 246ms12:40:56 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...12:41:01 PM
+
+ DONE  Compiled successfully in 246ms12:41:02 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...12:41:03 PM
+
+ DONE  Compiled successfully in 97ms12:41:04 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...12:41:09 PM
+
+ DONE  Compiled successfully in 112ms12:41:09 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...12:43:30 PM
+
+ DONE  Compiled successfully in 120ms12:43:30 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...12:43:35 PM
+
+ DONE  Compiled successfully in 113ms12:43:35 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...12:43:46 PM
+
+ DONE  Compiled successfully in 128ms12:43:46 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...12:43:55 PM
+
+ DONE  Compiled successfully in 138ms12:43:56 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...12:44:00 PM
+
+ DONE  Compiled successfully in 125ms12:44:00 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...12:44:53 PM
+
+ DONE  Compiled successfully in 157ms12:44:54 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...12:44:57 PM
+
+ DONE  Compiled successfully in 109ms12:44:58 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...12:45:50 PM
+
+ DONE  Compiled successfully in 139ms12:45:51 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...12:46:33 PM
+
+ DONE  Compiled successfully in 109ms12:46:33 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...12:46:36 PM
+
+ DONE  Compiled successfully in 110ms12:46:36 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...12:46:41 PM
+
+ DONE  Compiled successfully in 103ms12:46:42 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...12:46:43 PM
+
+ DONE  Compiled successfully in 123ms12:46:43 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...12:46:53 PM
+
+ DONE  Compiled successfully in 113ms12:46:54 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...12:46:57 PM
+
+ DONE  Compiled successfully in 111ms12:46:57 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...12:47:00 PM
+
+ DONE  Compiled successfully in 133ms12:47:00 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...12:47:06 PM
+
+ DONE  Compiled successfully in 128ms12:47:06 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...12:47:12 PM
+
+ DONE  Compiled successfully in 117ms12:47:12 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...12:47:14 PM
+
+ DONE  Compiled successfully in 129ms12:47:14 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...12:47:26 PM
+
+ DONE  Compiled successfully in 132ms12:47:27 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...12:47:59 PM
+
+ DONE  Compiled successfully in 178ms12:47:59 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...12:49:18 PM
+
+ DONE  Compiled successfully in 134ms12:49:18 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...12:49:19 PM
+
+ DONE  Compiled successfully in 109ms12:49:19 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...12:49:27 PM
+
+ DONE  Compiled successfully in 105ms12:49:28 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...12:49:28 PM
+
+ DONE  Compiled successfully in 248ms12:49:28 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...12:49:28 PM
+
+ DONE  Compiled successfully in 124ms12:49:29 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...12:49:39 PM
+
+ DONE  Compiled successfully in 108ms12:49:40 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...12:49:40 PM
+
+ DONE  Compiled successfully in 124ms12:49:41 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...12:50:36 PM
+
+ DONE  Compiled successfully in 266ms12:50:36 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...12:51:45 PM
+
+ DONE  Compiled successfully in 141ms12:51:45 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...12:51:49 PM
+
+ DONE  Compiled successfully in 130ms12:51:50 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...12:51:58 PM
+
+ DONE  Compiled successfully in 98ms12:51:58 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...12:52:03 PM
+
+ DONE  Compiled successfully in 109ms12:52:03 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...12:52:05 PM
+
+ DONE  Compiled successfully in 113ms12:52:05 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...12:52:15 PM
+
+ DONE  Compiled successfully in 121ms12:52:15 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...12:52:19 PM
+
+ DONE  Compiled successfully in 124ms12:52:19 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...12:52:22 PM
+
+ DONE  Compiled successfully in 103ms12:52:22 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...12:52:25 PM
+
+ DONE  Compiled successfully in 136ms12:52:26 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...12:52:29 PM
+
+ DONE  Compiled successfully in 115ms12:52:29 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...12:52:32 PM
+
+ DONE  Compiled successfully in 111ms12:52:32 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...12:52:34 PM
+
+ DONE  Compiled successfully in 117ms12:52:34 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...12:52:44 PM
+
+ DONE  Compiled successfully in 112ms12:52:45 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...12:53:12 PM
+
+ DONE  Compiled successfully in 140ms12:53:13 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...12:54:01 PM
+
+ DONE  Compiled successfully in 142ms12:54:02 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...12:54:05 PM
+
+ DONE  Compiled successfully in 113ms12:54:05 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+

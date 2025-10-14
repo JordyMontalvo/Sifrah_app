@@ -1,0 +1,231 @@
+  .modal
+    background rgba(#000, 0.72)
+    position fixed
+    top 0
+    bottom 0
+    left 0
+    right 0
+    padding 20px
+    display none
+    z-index 1000
+    overflow auto
+    backdrop-filter blur(5px)
+    &.open
+      display flex
+      align-items center
+      justify-content center
+    .modal-content
+      background #ffffff
+      border-radius 20px
+      max-width 800px
+      width 100%
+      max-height 90vh
+      overflow hidden
+      box-shadow 0 20px 60px rgba(0, 0, 0, 0.3)
+      animation modalSlideIn 0.3s ease-out
+      
+  @keyframes modalSlideIn
+    from
+      opacity 0
+      transform translateY(-50px) scale(0.9)
+    to
+      opacity 1
+      transform translateY(0) scale(1)
+
+  // Estilos adicionales para Tree.vue
+  .cards-container
+    display flex
+    gap 45px
+    justify-content center
+    flex-wrap wrap
+    margin-bottom 50px
+
+  .mode-selector .card
+    background white
+    border none
+    border-radius 10px
+    padding 20px
+    text-align center
+    cursor pointer
+    transition all 0.3s ease
+    width 180px
+    height 180px
+    box-shadow 0 4px 20px rgba(0,0,0,0.08)
+    display flex
+    flex-direction column
+    align-items center
+    justify-content center
+    &:hover
+      transform translateY(-4px)
+      box-shadow 0 8px 30px rgba(0,0,0,0.15)
+
+  .card-text
+    margin 0
+    color #333
+    font-weight 600
+    font-size 26px
+    letter-spacing 0.5px
+    margin-top 17px
+
+  .card-icon
+    display flex
+    align-items center
+    justify-content center
+    margin-top 10px
+    svg
+      width 60px
+      height 60px
+
+  .buttons-container
+    display flex
+    flex-direction column
+    align-items center
+    gap 20px
+
+  .top-buttons
+    display grid
+    grid-template-columns repeat(2, 1fr)
+    gap 20px
+    max-width 400px
+    margin 0 auto
+
+  .btn
+    cursor pointer
+    transition all 0.3s ease
+    border none
+    border-radius 8px
+    font-weight 600
+    letter-spacing 0.5px
+    padding 12px 24px
+    font-size 14px
+
+  .btn-green
+    background #d209b6
+    color white
+    &:hover
+      background #d209b6
+      transform translateY(-2px)
+      box-shadow 0 4px 12px rgba(40, 167, 69, 0.3)
+
+  .btn-orange
+    background #d209b6
+    color white
+    font-size 16px
+    padding 14px 28px
+    &:hover
+      background #d209b6
+      transform translateY(-2px)
+      box-shadow 0 4px 12px rgba(230, 126, 0, 0.3)
+
+  // Estilos del árbol
+  #body
+    margin 0
+    padding 0
+    position relative
+
+  .tree-container
+    overflow auto
+    width 100%
+
+  .tree
+  .tree ul
+  .tree li
+    list-style none
+    margin 0
+    padding 0
+    position relative
+
+  .tree
+    text-align center
+    ul
+      display table
+      margin auto
+      width 100%
+    li
+      display table-cell
+      padding .5em 0
+      vertical-align top
+
+  .tree code
+  .tree span
+    border-radius .2em
+    display inline-block
+    margin 0 .2em .5em
+    padding .2em .5em
+    position relative
+    transition all 0.2s ease
+    font-size 12px
+
+  .highlighted
+    border 2px solid #ff5722 !important
+
+  // Estilos específicos para el árbol de red
+  .selected-node > span
+    box-shadow 0 0 8px #00bcd4 !important
+    border 2px solid #00bcd4 !important
+    background #e0f7fa !important
+
+  // Responsive para móviles
+  @media (max-width: 768px)
+    .cards-container
+      display grid
+      grid-template-columns repeat(2, 1fr)
+      gap 15px
+      max-width 350px
+      margin 0 auto 40px auto
+    
+    .mode-selector .card
+      width 140px
+      height 140px
+      padding 12px
+    
+    .card-text
+      font-size 16px
+      margin-top 8px
+    
+    .card-icon svg
+      width 40px
+      height 40px
+    
+    .mode-title
+      font-size 20px
+      margin-bottom 20px
+    
+    .top-buttons
+      grid-template-columns repeat(2, 1fr)
+      gap 15px
+      max-width 350px
+    
+    .btn
+      padding 10px 20px
+      font-size 13px
+    
+    .btn-orange
+      font-size 14px
+      padding 12px 24px
+
+  // Para móviles muy pequeños
+  @media (max-width: 480px)
+    .cards-container
+      gap 12px
+      max-width 300px
+      margin 0 auto 30px auto
+    
+    .mode-selector .card
+      width 120px
+      height 120px
+      padding 10px
+    
+    .card-text
+      font-size 14px
+      margin-top 6px
+    
+    .card-icon svg
+      width 35px
+      height 35px
+    
+    .mode-title
+      font-size 18px
+      margin-bottom 15px
+
+

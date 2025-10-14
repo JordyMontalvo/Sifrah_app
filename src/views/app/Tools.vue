@@ -72,9 +72,7 @@ export default {
 };
 </script>
 
+
 <style lang="stylus">
-._iframe
-  border 0
-  width 100%
-  height 100vh
+@import '../../assets/style/views/app/Tools.styl'
 </style>

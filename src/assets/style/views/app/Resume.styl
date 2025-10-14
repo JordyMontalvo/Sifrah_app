@@ -1,0 +1,302 @@
+.modal
+  background rgba(#000, 0.72)
+  position absolute
+  top 0
+  bottom 0
+  left 0
+  right 0
+  padding 80px 20px
+  display none
+  z-index 2
+  overflow auto
+  &.open
+    display block
+  .inner
+    background #fff
+    border-radius 20px
+    padding 32px 32px 32px 32px
+    max-width 480px
+    margin auto
+    box-shadow 0 8px 32px rgba(0,0,0,0.18)
+    position relative
+    display flex
+    flex-direction column
+    align-items center
+    .close-btn
+      position absolute
+      top 16px
+      right 16px
+      background transparent
+      border none
+      font-size 2rem
+      color #888
+      cursor pointer
+      transition color 0.2s
+      &:hover
+        color #ff5722
+    .photo
+      width 120px
+      height 120px
+      object-fit cover
+      border-radius 50%
+      margin 0 auto 16px auto
+      display block
+      box-shadow 0 2px 8px rgba(0,0,0,0.10)
+    .user-info
+      width 100%
+      .country
+        text-align center
+        font-weight 600
+        color #086eb6
+        margin-bottom 12px
+      .info-grid
+        display grid
+        grid-template-columns 1fr 1fr
+        gap 8px 16px
+        margin-bottom 16px
+        font-size 0.98rem
+        color #333
+    .compras
+      width 100%
+      p
+        margin-bottom 8px
+        font-weight 600
+        color #333
+      table
+        width 100%
+        border-collapse collapse
+        th, td
+          padding 6px 8px
+          text-align left
+        th
+          background #f5f5f5
+          color #333
+        tr:nth-child(even)
+          background #fafafa
+        tr:hover
+          background #e3f2fd
+
+/* https://codepen.io/ea-ger/pen/rNJjxYr
+https://codepen.io/team/amcharts/pen/poPxojR */
+
+/*  @import url('https://fonts.googleapis.com/css2?family=Oxygen:wght@300&display=swap');*/
+
+#body {
+  margin: 0;
+  padding: 0;
+  /*    background: #fafafa;*/
+  /*    font-family: 'Oxygen', sans-serif;*/
+  letter-spacing: 0.2px;
+  /*    height: 100vh;*/
+  /*    width: 100vw;*/
+  /*    background-color: var(--bg-1);*/
+  position: relative;
+}
+
+:root {
+  --col-1: #c8ddef;
+  --col-2: #c8ddef;
+  --bg-1: #0e182d;
+  --highlighted: #ff5722;
+}
+
+.tree-container {
+  /*display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;*/
+
+  overflow: auto;
+
+  width: 100%;
+  /*padding-top: 5em;
+    padding-bottom: 5em;*/
+}
+
+.tree-container > h1 {
+  color: var(--col-1);
+  font-weight: 400;
+}
+
+.tree,
+.tree ul,
+.tree li {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  position: relative;
+}
+
+.tree {
+  /*    margin: 0 0 1em;*/
+  text-align: center;
+}
+
+.tree,
+.tree ul {
+  display: table;
+  margin: auto;
+  width: 100%;
+}
+
+.tree ul {
+  width: 100%;
+}
+
+.tree li {
+  display: table-cell;
+  padding: 0.5em 0;
+  vertical-align: top;
+}
+
+.tree li:before {
+  outline: solid 1px var(--col-2);
+  content: "";
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  direction: rtl;
+}
+
+/*.tree li:hover:before {
+    outline: solid 1px var(--col-1);
+  }*/
+
+.tree li:first-child:before {
+  left: 50%;
+}
+
+.tree li:last-child:before {
+  right: 50%;
+}
+
+.tree code,
+.tree span {
+  /*    border: solid .1em var(--col-1);*/
+  border-radius: 0.2em;
+  display: inline-block;
+  margin: 0 0.2em 0.5em;
+  padding: 0.2em 0.5em;
+  position: relative;
+  /*    background-color: var(--bg-1);*/
+  transition: all 0.2s ease;
+  /*    color: var(--col-1);*/
+  /*    font-size: 14px;*/
+  font-size: 12px;
+}
+
+.tree span i {
+  font-size: 32px;
+  color: #fff;
+}
+.tree span i.aff {
+  color: #ffe400;
+}
+.tree span i.act {
+  color: #14ec42;
+}
+
+.tree span i.fa-gem {
+  font-size: 18px;
+  position: absolute;
+  transform: translateY(10px);
+  display: none;
+}
+
+.tree span i.fa-gem.star {
+  display: inline;
+  color: #ffe400; /*yellow*/
+}
+
+.tree span i.fa-gem.master {
+  display: inline;
+  color: #14ec42; /*green*/
+}
+
+.tree span i.fa-gem.silver {
+  display: inline;
+  color: #d3d3d3; /*silver*/
+}
+
+.tree span i.fa-gem.gold {
+  display: inline;
+  color: #d4af37; /*gold*/
+}
+
+/*.tree span:hover {
+    background-color: var(--col-1);
+    color: var(--bg-1);
+  }
+
+  .tree li:hover>span {
+    background-color: var(--col-1);
+    color: var(--bg-1);
+  }
+
+  .tree span:hover::after,
+  .tree li:hover>span::after {
+    box-shadow: 0 0 5px 8px var(--col-1) inset;
+  }*/
+
+.tree ul:before,
+.tree code:before,
+.tree span:before {
+  outline: solid 1px var(--col-2);
+  content: "";
+  height: 0.5em;
+  left: 50%;
+  position: absolute;
+}
+
+/*  .tree ul:hover:before,
+  .tree code:hover:before,
+  .tree li:hover>span:before {
+    outline: solid 1px var(--col-1);
+  }*/
+
+.tree span::after {
+  outline: solid 1px var(--col-1);
+  content: "";
+  top: -8px;
+  left: calc(50% - 5px);
+  width: 8px;
+  height: 8px;
+  /*    background-color: var(--bg-1);*/
+  background-color: #888;
+  border: 1px solid var(--col-1);
+  position: absolute;
+  opacity: 1;
+  border-radius: 100%;
+  transition: all 0.2s ease;
+}
+
+.tree ul:before {
+  top: -0.5em;
+}
+
+.tree code:before,
+.tree span:before {
+  top: -0.55em;
+}
+
+.tree > li {
+  margin-top: 0;
+}
+
+.tree > li:before,
+.tree > li:after,
+.tree > li > code:before,
+.tree > li > span:before,
+.tree > li > span:after {
+  outline: none;
+  display: none;
+}
+
+.highlighted {
+  border: 2px solid var(--highlighted) !important;
+}
+
+/*.highlighted:hover {
+    background-color: var(--highlighted) !important;
+  }*/
