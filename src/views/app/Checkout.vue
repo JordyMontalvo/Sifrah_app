@@ -1015,6 +1015,8 @@ export default {
           this.selectedBank = '';
         }
       }
+      
+      console.log('Método de pago seleccionado:', this.pay_method);
     },
     
     selectBankOption(bank) {
