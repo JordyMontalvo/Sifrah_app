@@ -149,8 +149,13 @@ function setTheme(theme) {
   }
 }
 
-// Inicializar tema al cargar - siempre modo claro
-setTheme("light");
+// Inicializar tema al cargar
+const savedTheme =
+  localStorage.getItem("theme") ||
+  (window.matchMedia("(prefers-color-scheme: dark)").matches
+    ? "dark"
+    : "light");
+setTheme(savedTheme);
 
 // Método global para cambiar tema
 document.setTheme = setTheme;
