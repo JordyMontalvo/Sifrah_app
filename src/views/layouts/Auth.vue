@@ -158,8 +158,8 @@ export default {
   transition: all 0.1s ease;
 }
 .tab.active {
-  background-color: #ffd8a3;
-  color: #222;
+  background-color: #FFD900;
+  color: #9F00AD;
   transition: all 0.3s ease;
 }
 
@@ -276,7 +276,7 @@ export default {
   
   .welcome-slogan {
     font-size: 16px;
-    font-weight: 300;
+    font-weight: 600;
   }
 }
 
@@ -289,7 +289,7 @@ export default {
 
 .welcome-subtitle {
   font-size: 32px;
-  font-weight: 300;
+  font-weight: 600;
   margin: 0 0 5px 0;
   color: rgba(255, 255, 255, 0.9);
   letter-spacing: 1px;
@@ -307,7 +307,7 @@ export default {
 
 .welcome-slogan {
   font-size: 32px;
-  font-weight: 300;
+  font-weight: 600;
   margin: 0;
   color: rgba(255, 255, 255, 0.9);
   font-style: normal;
