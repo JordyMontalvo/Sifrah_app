@@ -1,5 +1,5 @@
 <template>
-  <div class="auth">
+  <div class="auth" :class="{ 'register-page': $route.path === '/register' }">
     <div class="auth-tabs" id="tabs">
       <router-link
         to="/login"
@@ -189,14 +189,14 @@ export default {
   .form {
     padding: 8px;
     height: 100%;
-    min-height: 70vh;
+    min-height: 60vh;
     justify-content: space-evenly;
     padding-top: 60px; /* Espacio para las pestañas */
     padding-bottom: 8px;
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    border-radius: 20px 20px 0 0 !important; /* Bordes redondos solo arriba */
+    border-radius: 50px 50px 0 0 !important; /* Bordes más redondos en círculos */
   }
 }
 
@@ -250,7 +250,7 @@ export default {
     top: 0;
     left: 0;
     width: 100%;
-    height: 30vh;
+    height: 40vh;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -260,23 +260,19 @@ export default {
   }
   
   .welcome-content {
-    text-align: center;
+    display: none; /* Ocultar todo el contenido de texto en móvil */
   }
   
   .welcome-subtitle {
-    font-size: 20px;
-    margin-bottom: 5px;
+    display: none; /* Ocultar "Bienvenido a" en móvil */
   }
   
   .welcome-title {
-    font-size: 48px;
-    margin-bottom: 8px;
-    line-height: 0.9;
+    display: none; /* Ocultar "SIFRAH" en móvil */
   }
   
   .welcome-slogan {
-    font-size: 16px;
-    font-weight: 600;
+    display: none; /* Ocultar "Tu momento de brillar es ahora" en móvil */
   }
 }
 

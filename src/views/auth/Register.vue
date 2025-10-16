@@ -1,22 +1,6 @@
 <template>
   <Auth>
     <section>
-      <div style="display: flex; justify-content: center">
-        <router-link
-          to="/login"
-          class="tab-login"
-          :class="{ active: $route.path === '/login' }"
-        >
-          INICIO
-        </router-link>
-        <router-link
-          to="/register"
-          class="tab-login"
-          :class="{ active: $route.path === '/register' }"
-        >
-          REGISTRO
-        </router-link>
-      </div>
       <div class="register-title-form">
         <h1>REGÍSTRATE</h1>
       </div>
@@ -162,11 +146,6 @@
         />
       </div>
 
-      <!-- Botón de registro -->
-      <button class="register-button" @click="submit" :disabled="sending">
-        {{ sending ? 'Registrando...' : 'Registrarme' }}
-      </button>
-
       <!-- Términos y condiciones -->
       <div class="terms-field">
         <label class="checkbox-label">
@@ -174,6 +153,11 @@
           <span class="checkbox-text">Acepto los términos de uso</span>
         </label>
       </div>
+
+      <!-- Botón de registro -->
+      <button class="register-button" @click="submit" :disabled="sending">
+        {{ sending ? 'Registrando...' : 'Registrarme' }}
+      </button>
 
       <!-- Enlace de login -->
       <div class="login-link">
@@ -484,9 +468,22 @@ input[type="checkbox"]:checked {
 
 .tab-login.active {
   color: #4b2e12; /* marrón oscuro */
-  border-bottom: solid 2px #ffb57a; /* naranja claro */
+  border-bottom: solid 4px #ffb57a; /* barra amarilla más gruesa */
   font-weight: bold;
   transition: all 0.1s ease;
+  position: relative;
+}
+
+.tab-login.active::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%; /* Barra que cubre todo el ancho de la pestaña */
+  height: 4px;
+  background-color: #FFD900;
+  border-radius: 2px;
 }
 @media (min-width: 1260px) {
   .tab-login {

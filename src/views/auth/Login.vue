@@ -526,10 +526,23 @@ export default {
 }
 
 .tab-login.active {
-  color: #4b2e12; /* marrón oscuro */
-  border-bottom: solid 2px #ffb57a; /* naranja claro */
+  color: #9F00AD; /* marrón oscuro */
+  border-bottom: solid 4px #FFD900; /* barra amarilla más gruesa */
   font-weight: bold;
   transition: all 0.3s ease;
+  position: relative;
+}
+
+.tab-login.active::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%; /* Barra que cubre todo el ancho de la pestaña */
+  height: 4px;
+  background-color: #FFD900;
+  border-radius: 2px;
 }
 @media (max-width: 1260px) {
   .logos {
@@ -624,11 +637,13 @@ export default {
     transform: translateY(-50%) !important;
     margin-top: 0 !important;
     margin-left: 0 !important;
-    z-index: 10 !important;
-    pointer-events: none !important;
-    color: #d209b6 !important;
-    font-size: 16px !important;
-    opacity: 0.8 !important;
+  }
+}
+
+/* Ocultar BIENVENIDO solo en móvil */
+@media (max-width: 768px) {
+  .welcome-title-form {
+    display: none !important;
   }
   
   .show {
