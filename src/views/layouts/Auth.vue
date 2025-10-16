@@ -16,18 +16,7 @@
         REGISTRO
       </router-link>
     </div>
-    <div id="logo-auth">
-      <img
-        class="logo-auth"
-        src="@/assets/img/logo/logo sifrah BLANCO LOGIN.svg"
-        style="width: auto; height: auto; transition: all 0.3s ease"
-      />
-    </div>
-    <img
-      class="logo-blanco"
-      src="@/assets/img/logo/sifrah-blanco.png"
-      style="width: 380px; height: auto"
-    />
+   
     <!-- <header>
       <img class="logo" src="@/assets/img/logo-big.svg" style="width: 400px;">
       <p style="color: white; font-size: 14px; margin: 12px 0 8px 0;">Siguenos</p>
@@ -53,6 +42,15 @@
           <a :href="site" target="_blank" class="link"><small></small></a>
           <a :href="wsp"  target="_blank" class="link"><small>Whatsapp de Ayuda</small></a>
         </div> -->
+      </div>
+    </section>
+    
+    <!-- Sección de texto en la mitad derecha -->
+    <section class="welcome-section">
+      <div class="welcome-content">
+        <h2 class="welcome-subtitle">Bienvenido a</h2>
+        <h1 class="welcome-title">SIFRAH</h1>
+        <p class="welcome-slogan">"Tu momento de brillar es ahora."</p>
       </div>
     </section>
     <!-- <footer>
@@ -91,18 +89,49 @@ export default {
 </script>
 <style scoped>
 .auth-tabs {
-  position: absolute;
+  position: fixed;
   top: 0;
-  left: 25%;
-  transform: translateX(-50%);
+  left: 45%;
+  transform: translateX(100%);
   display: flex;
-  background-color: #d46b00; /* fondo base */
-  border-radius: 0 0 37px 37px;
+  background-color: #9f00ad; /* fondo base */
+  border-radius: 0;
   overflow: hidden;
   width: fit-content;
   z-index: 1000;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   transition: all 0.1s ease;
+}
+
+/* Responsive para las pestañas */
+@media (max-width: 1024px) {
+  .auth-tabs {
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
+
+@media (max-width: 768px) {
+  .auth-tabs {
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    top: calc(30vh + 10px) !important; /* Posicionadas en la nueva línea divisoria */
+    z-index: 1001 !important; /* Por encima del contenido */
+  }
+}
+
+@media (max-width: 480px) {
+  .auth-tabs {
+    left: 50%;
+    transform: translateX(-50%);
+    top: 5px;
+  }
+  
+  .tab {
+    width: 120px;
+    height: 50px;
+    font-size: 12px;
+  }
 }
 
 .tab {
@@ -121,11 +150,11 @@ export default {
   /* Centrar horizontalmente */
 }
 .tab:first-child.active {
-  border-bottom-left-radius: 30px;
+  border-bottom-left-radius: 0;
   transition: all 0.1s ease;
 }
 .tab.active {
-  border-bottom-right-radius: 30px;
+  border-bottom-right-radius: 0;
   transition: all 0.1s ease;
 }
 .tab.active {
@@ -136,10 +165,46 @@ export default {
 
 .form {
   background: white;
-  border-radius: 50px;
+  border-radius: 0;
   padding: 16px;
-  width: 469px;
-  height: 671px;
+  width: 100%;
+  height: 100vh;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow-y: auto;
+}
+
+/* Responsive para el formulario */
+@media (max-width: 1024px) {
+  .form {
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+  }
+}
+
+@media (max-width: 768px) {
+  .form {
+    padding: 8px;
+    height: 100%;
+    min-height: 70vh;
+    justify-content: space-evenly;
+    padding-top: 60px; /* Espacio para las pestañas */
+    padding-bottom: 8px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    border-radius: 20px 20px 0 0 !important; /* Bordes redondos solo arriba */
+  }
+}
+
+@media (max-width: 480px) {
+  .form {
+    padding: 10px;
+    padding-top: 15px; /* Menos espacio para pestañas más pequeñas */
+  }
 }
 @media (max-width: 1260px) {
   .logo-auth {
@@ -153,6 +218,104 @@ export default {
 }
 @media (min-width: 1260px) {
   .logo-blanco {
+    display: none;
+  }
+}
+
+.welcome-section {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 50%;
+  height: 100vh;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding-top: 25%;
+  padding-left: 5%;
+  z-index: 3;
+  pointer-events: none;
+}
+
+/* Responsive para la sección de bienvenida */
+@media (max-width: 1024px) and (min-width: 769px) {
+  .welcome-section {
+    display: none; /* Ocultar solo en pantallas medianas */
+  }
+}
+
+@media (max-width: 768px) {
+  .welcome-section {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 30vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 20px;
+    z-index: 3;
+    pointer-events: none;
+  }
+  
+  .welcome-content {
+    text-align: center;
+  }
+  
+  .welcome-subtitle {
+    font-size: 20px;
+    margin-bottom: 5px;
+  }
+  
+  .welcome-title {
+    font-size: 48px;
+    margin-bottom: 8px;
+    line-height: 0.9;
+  }
+  
+  .welcome-slogan {
+    font-size: 16px;
+    font-weight: 300;
+  }
+}
+
+.welcome-content {
+  text-align: left;
+  padding: 0;
+  color: white;
+  font-family: 'Open Sans', sans-serif;
+}
+
+.welcome-subtitle {
+  font-size: 32px;
+  font-weight: 300;
+  margin: 0 0 5px 0;
+  color: rgba(255, 255, 255, 0.9);
+  letter-spacing: 1px;
+}
+
+.welcome-title {
+  font-size: 120px;
+  font-weight: 900;
+  margin: 0 0 10px 0;
+  color: white;
+  text-shadow: 0 0 30px rgba(255, 255, 255, 0.4);
+  letter-spacing: 5px;
+  line-height: 0.9;
+}
+
+.welcome-slogan {
+  font-size: 32px;
+  font-weight: 300;
+  margin: 0;
+  color: rgba(255, 255, 255, 0.9);
+  font-style: normal;
+  letter-spacing: 1px;
+}
+
+@media (max-width: 1260px) {
+  .welcome-section {
     display: none;
   }
 }

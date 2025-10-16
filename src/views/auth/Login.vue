@@ -17,67 +17,55 @@
           REGISTRO
         </router-link>
       </div>
-      <div class="logos">
-        <h1
-          style="
-            font-size: 30px;
-            font-style: roboto;
-            color: rgba(137, 136, 141, 1);
-            margin-bottom: 0;
-          "
-        >
-          Bienvenido
-        </h1>
-        <img
-          src="@/assets/img/logo/logo 2 sifrah NARANJA LOGIN.svg"
-          style="
-            width: 369px;
-            height: auto;
-            margin-top: -65px;
-            transition: all 0.3s ease;
-          "
-        />
+
+      <div class="welcome-title-form">
+        <h1>BIENVENIDO</h1>
       </div>
-      <div>
+
         <label class="label-login-2" for="dni">DNI:</label>
-        <input
-          id="dni"
-          class="input"
-          style="border: solid 1px rgba(255, 107, 0, 1); margin-left: 5px"
-          placeholder="Dni"
-          oninput="this.value=this.value.replace(/(?![0-9])./gmi,'')"
-          v-model="dni"
-          :class="{ error: error.dni }"
-          @keydown="reset('dni')"
-        />
-        <i
-          class="icon fa-solid fa-user-tie"
-          style="
-            margin-top: 14px;
-            margin-left: -33px;
-            cursor: pointer;
-            padding: 4px;
-            font-size: 14px;
-            opacity: 0.75;
-            color: #fe7f0e;
-          "
-        ></i>
+        <div class="input-wrapper">
+          <input
+            id="dni"
+            class="input"
+            style="border: solid 2px #d209b6; margin-left: 5px"
+            placeholder="Dni"
+            oninput="this.value=this.value.replace(/(?![0-9])./gmi,'')"
+            v-model="dni"
+            :class="{ error: error.dni }"
+            @keydown="reset('dni')"
+          />
+          <i
+            class="icon fa-solid fa-user-tie"
+            style="
+              margin-top: 14px;
+              margin-left: -33px;
+              cursor: pointer;
+              padding: 4px;
+              font-size: 14px;
+              opacity: 0.75;
+              color: #d209b6;
+            "
+          ></i>
+        </div>
         <br />
-      </div>
+     
 
       <div v-if="!office_id">
         <label class="label-login" for="password">Contraseña:</label>
-        <input
-          id="password"
-          :type="show ? 'text' : 'password'"
-          class="input pass"
-          style="border: solid 1px rgba(255, 107, 0, 1)"
-          placeholder="*************"
-          v-model="password"
-          :class="{ error: error.password }"
-          @keydown="reset('password')"
-        />
-        <i class="show far fa-eye" @click="show = !show"></i> <br />
+        <div class="input-wrapper">
+          <input
+            id="password"
+            :type="show ? 'text' : 'password'"
+            class="input pass"
+            style="border: solid 2px #d209b6"
+            placeholder="*************"
+            v-model="password"
+            :class="{ error: error.password }"
+            @keydown="reset('password')"
+          />
+          <i class="show far fa-eye" @click="show = !show"></i>
+        </div>
+        <br />
       </div>
 
       <p class="alert">{{ alert | alert }}</p>
@@ -95,7 +83,7 @@
 
       <small style="color: rgba(137, 136, 141, 1)"
         >¿Olvidaste tu contraseña?
-        <router-link to="/remember" style="color: rgba(254, 127, 14, 1)"
+        <router-link to="/remember" style="color: #d209b6"
           >Ingresa Aquí</router-link
         ></small
       >
@@ -137,7 +125,7 @@
             ¿No tienes cuenta?
             <router-link
               to="/register"
-              style="color: rgba(254, 127, 14, 1); text-decoration: underline"
+              style="color: #d209b6; text-decoration: underline"
               >Regístrate</router-link
             >
           </small>
@@ -466,7 +454,7 @@ export default {
   border-radius: 29px;
   width: 345px;
   height: 50px;
-  background: rgba(178, 108, 46, 1);
+  background: #d209b6;
   color: white; /* Color del texto */
   border: none; /* Sin borde */
   cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
@@ -476,7 +464,7 @@ export default {
 }
 
 .login-button:hover {
-  background: rgb(255, 111, 0); /* Color de fondo al hacer hover */
+  background: #9f00ad; /* Color de fondo al hacer hover */
 }
 
 /* Google Login Button Styles */
@@ -527,14 +515,14 @@ export default {
   font-size: 12px;
   color: rgba(137, 136, 141, 1);
   display: block;
-  margin-right: 300px;
-  margin-top: -20px;
+  margin-right: 460px;
+  margin-top: 10px;
 }
 .label-login {
   font-size: 12px;
   color: rgba(137, 136, 141, 1);
   display: block;
-  margin-right: 260px;
+  margin-right: 430px;
 }
 
 .tab-login.active {
@@ -567,7 +555,157 @@ export default {
 @media (max-width: 1260px) {
   .label-login-2 {
     margin-right: 235px;
-    margin-top: 0px;
+    margin-top: 10px;
+  }
+}
+
+/* Espaciado uniforme en móvil */
+@media (max-width: 768px) {
+  .label-login {
+    margin-right: 0 !important;
+    margin-top: 0 !important;
+    margin-bottom: 8px !important;
+    text-align: left !important;
+    display: block !important;
+    margin-left: 45px !important;
+  }
+  
+  .label-login-2 {
+    margin-right: 0 !important;
+    margin-top: 0 !important;
+    margin-bottom: 8px !important;
+    text-align: left !important;
+    display: block !important;
+    margin-left: 45px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .label-login {
+    margin-bottom: 6px !important;
+    font-size: 11px !important;
+    margin-left: 45px !important;
+  }
+  
+  .label-login-2 {
+    margin-bottom: 6px !important;
+    font-size: 11px !important;
+    margin-left: 45px !important;
+  }
+}
+
+@media (max-width: 375px) {
+  .label-login {
+    margin-bottom: 5px !important;
+    font-size: 10px !important;
+    margin-left: 30px !important;
+  }
+  
+  .label-login-2 {
+    margin-bottom: 5px !important;
+    font-size: 10px !important;
+    margin-left: 30px !important;
+  }
+}
+
+/* Posicionamiento de iconos dentro de campos en móvil */
+@media (max-width: 768px) {
+  .input-wrapper {
+    position: relative !important;
+    display: inline-block !important;
+    width: 100% !important;
+    max-width: 350px !important;
+  }
+  
+  .icon {
+    position: absolute !important;
+    right: 12px !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    margin-top: 0 !important;
+    margin-left: 0 !important;
+    z-index: 10 !important;
+    pointer-events: none !important;
+    color: #d209b6 !important;
+    font-size: 16px !important;
+    opacity: 0.8 !important;
+  }
+  
+  .show {
+    position: absolute !important;
+    right: 12px !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    margin-top: 0 !important;
+    margin-left: 0 !important;
+    z-index: 10 !important;
+    cursor: pointer !important;
+    pointer-events: auto !important;
+    color: #d209b6 !important;
+    font-size: 16px !important;
+    opacity: 0.8 !important;
+  }
+  
+  .input {
+    padding-right: 40px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    margin-left: 0 !important;
+  }
+  
+  .input.pass {
+    padding-right: 40px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+}
+
+/* Ajustes adicionales para móviles más pequeños */
+@media (max-width: 480px) {
+  .input-wrapper {
+    max-width: 320px !important;
+  }
+  
+  .icon {
+    right: 10px !important;
+    font-size: 14px !important;
+  }
+  
+  .show {
+    right: 10px !important;
+    font-size: 14px !important;
+  }
+  
+  .input {
+    padding-right: 35px !important;
+  }
+  
+  .input.pass {
+    padding-right: 35px !important;
+  }
+}
+
+@media (max-width: 375px) {
+  .input-wrapper {
+    max-width: 300px !important;
+  }
+  
+  .icon {
+    right: 8px !important;
+    font-size: 13px !important;
+  }
+  
+  .show {
+    right: 8px !important;
+    font-size: 13px !important;
+  }
+  
+  .input {
+    padding-right: 30px !important;
+  }
+  
+  .input.pass {
+    padding-right: 30px !important;
   }
 }
 </style>

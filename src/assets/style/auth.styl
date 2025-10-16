@@ -1,11 +1,457 @@
 .auth
   // _grid()
-  min-height 100vh
-  background url('assets/img/logo/Group 1.png') no-repeat center center / cover
-  padding 16px
+  height 100vh
+  max-height 100vh
+  overflow hidden
+  padding 0
   display flex
-  align-items center
+  align-items stretch
   // justify-content center
+
+  &::before
+    content ''
+    position absolute
+    top 0
+    right 0
+    width 50%
+    height 100vh
+    background url('assets/img/logo/Group 1.svg') no-repeat center center / cover
+    z-index 1
+
+  >section
+    position relative
+    z-index 2
+    width 50%
+
+  // Responsive design
+  @media (max-width: 1024px)
+    &::before
+      width 100%
+      opacity 0.3
+      
+    >section
+      width 100%
+      background rgba(255, 255, 255, 0.95)
+      backdrop-filter blur(10px)
+      
+  @media (max-width: 768px)
+    flex-direction column !important
+    height 100vh !important
+    min-height 100vh !important
+    overflow hidden !important
+    
+    &::before
+      position absolute !important
+      top 0 !important
+      left 0 !important
+      width 100% !important
+      height 30vh !important
+      opacity 1 !important
+      background-size cover !important
+      background-position center center !important
+      z-index 1 !important
+      
+    >section
+      position absolute !important
+      bottom 0 !important
+      left 0 !important
+      width 100% !important
+      height 70vh !important
+      background white !important
+      backdrop-filter none !important
+      z-index 2 !important
+      overflow hidden !important
+
+  .welcome-title-form
+    text-align center
+    margin 25px 0 60px 0
+    
+    h1
+      font-size 32px
+      font-weight bold
+      color #333
+      margin 0
+      font-family 'Open Sans', sans-serif
+      
+    // Responsive
+    @media (max-width: 768px)
+      margin 10px 0 15px 0
+      
+      h1
+        font-size 20px
+        
+    @media (max-width: 480px)
+      margin 8px 0 12px 0
+      
+      h1
+        font-size 18px
+        
+    @media (max-width: 375px)
+      margin 6px 0 10px 0
+      
+      h1
+        font-size 16px
+
+  .register-title-form
+    text-align center
+    margin 25px 0 30px 0
+    
+    h1
+      font-size 32px
+      font-weight bold
+      color #333
+      margin 0
+      font-family 'Open Sans', sans-serif
+      
+    // Responsive
+    @media (max-width: 768px)
+      margin 20px 0 25px 0
+      
+      h1
+        font-size 28px
+        
+    @media (max-width: 480px)
+      margin 15px 0 20px 0
+      
+      h1
+        font-size 24px
+
+  // Estilos para el nuevo formulario de registro
+  .form-field
+    position relative
+    margin-bottom 15px
+    
+    // Responsive
+    @media (max-width: 768px)
+      margin-bottom 10px
+      
+    @media (max-width: 480px)
+      margin-bottom 8px
+      
+    @media (max-width: 375px)
+      margin-bottom 6px
+    
+  .form-row
+    display flex
+    gap 15px
+    justify-content center
+    width 80%
+    max-width 509px
+    margin 0 auto
+    
+    &:first-of-type
+      margin-top -10px
+    
+    .form-field
+      flex 1
+      max-width 250px
+      
+      
+    .input-register-new
+      width 100%
+      max-width 250px
+      
+    // Responsive
+    @media (max-width: 768px)
+      width 90%
+      max-width 400px
+      gap 10px
+      
+      .form-field
+        max-width 180px
+        
+      .input-register-new
+        max-width 180px
+        border-radius 0 !important
+        
+    @media (max-width: 480px)
+      flex-direction column
+      gap 15px
+      width 95%
+      max-width 350px
+      
+      .form-field
+        max-width 100%
+        
+      .input-register-new
+        max-width 100%
+        border-radius 0 !important
+      
+  .input-register-new
+    width 80%
+    max-width 509px
+    padding 12px 16px
+    border 2px solid #d209b6
+    border-radius 0
+    font-size 14px
+    font-family 'Open Sans', sans-serif
+    background white
+    color #333
+    transition all 0.3s ease
+    
+    &:focus
+      outline none
+      border-color #b3089d
+      box-shadow 0 0 0 3px rgba(210, 9, 182, 0.1)
+      
+    // Responsive
+    @media (max-width: 768px)
+      width 90%
+      max-width 400px
+      font-size 15px
+      padding 8px 10px
+      margin-bottom 12px
+      border-radius 0 !important
+      height 42px
+      
+    @media (max-width: 480px)
+      width 95%
+      max-width 350px
+      padding 6px 8px
+      margin-bottom 10px
+      font-size 14px
+      border-radius 0 !important
+      height 38px
+      
+    @media (max-width: 375px)
+      width 95%
+      max-width 320px
+      padding 5px 6px
+      margin-bottom 8px
+      font-size 13px
+      border-radius 0 !important
+      height 35px
+      
+    &::placeholder
+      color #999
+      
+    &.error
+      border-color #e74c3c
+
+      
+  .select-field
+    appearance none
+    background-image url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23d209b6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e")
+    background-repeat no-repeat
+    background-position right 12px center
+    background-size 16px
+    padding-right 40px
+    
+    
+  .checkbox-field
+    margin-top -16px
+    display flex
+    justify-content flex-start
+    width 80%
+    max-width 509px
+    margin-left auto
+    margin-right auto
+    
+    // Responsive
+    @media (max-width: 768px)
+      width 90%
+      max-width 400px
+      
+    @media (max-width: 480px)
+      width 95%
+      max-width 350px
+    
+  .terms-field
+    margin-top: -15px
+    display flex
+    justify-content flex-start
+    width 80%
+    max-width 509px
+    margin-left auto
+    margin-right auto
+    
+    // Responsive
+    @media (max-width: 768px)
+      width 90%
+      max-width 400px
+      
+    @media (max-width: 480px)
+      width 95%
+      max-width 350px
+    
+  .checkbox-label
+    display flex
+    align-items center
+    gap 8px
+    cursor pointer
+    
+  .checkbox-input
+    width 16px
+    height 16px
+    border 2px solid #d209b6
+    border-radius 0
+    background white
+    cursor pointer
+    
+  .checkbox-text
+    color #666
+    font-size 14px
+    font-family 'Open Sans', sans-serif
+    
+  .register-button
+    width 80%
+    max-width 509px
+    height 50px
+    padding 15px
+    background #d209b6
+    color white
+    border none
+    border-radius 0
+    font-size 16px
+    font-weight bold
+    font-family 'Open Sans', sans-serif
+    cursor pointer
+    transition all 0.3s ease
+    margin-bottom 20px
+    margin-left auto
+    margin-right auto
+    
+    // Responsive
+    @media (max-width: 768px)
+      width 90%
+      max-width 400px
+      height 42px
+      padding 10px
+      margin-bottom 12px
+      border-radius 25px !important
+      font-size 15px
+      
+    @media (max-width: 480px)
+      width 95%
+      max-width 350px
+      height 38px
+      font-size 14px
+      padding 8px
+      margin-bottom 10px
+      border-radius 20px !important
+      
+    @media (max-width: 375px)
+      width 95%
+      max-width 320px
+      height 35px
+      font-size 13px
+      padding 6px
+      margin-bottom 8px
+      border-radius 18px !important
+    
+    &:hover
+      background #b3089d
+      
+    &:disabled
+      background #ccc
+      cursor not-allowed
+      
+  .login-link
+    text-align center
+    margin-bottom 15px
+    
+    // Responsive
+    @media (max-width: 768px)
+      margin-bottom 12px
+      
+    @media (max-width: 480px)
+      margin-bottom 10px
+      
+    @media (max-width: 375px)
+      margin-bottom 8px
+    
+    small
+      color #666
+      font-size 14px
+      
+      // Responsive
+      @media (max-width: 768px)
+        font-size 13px
+        
+      @media (max-width: 480px)
+        font-size 12px
+        
+      @media (max-width: 375px)
+        font-size 11px
+      
+      a
+        color #d209b6
+        text-decoration none
+        
+        &:hover
+          text-decoration underline
+          
+  .social-icons
+    display flex
+    justify-content center
+    gap 10px
+    margin-top 15px
+    
+    // Responsive
+    @media (max-width: 768px)
+      margin-top 12px
+      gap 8px
+      
+    @media (max-width: 480px)
+      margin-top 10px
+      gap 6px
+      
+    @media (max-width: 375px)
+      margin-top 8px
+      gap 5px
+    
+  .social-icon
+    width 40px
+    height 40px
+    border-radius 50%
+    display flex
+    align-items center
+    justify-content center
+    text-decoration none
+    transition all 0.3s ease
+    
+    // Responsive
+    @media (max-width: 768px)
+      width 35px
+      height 35px
+      
+    @media (max-width: 480px)
+      width 32px
+      height 32px
+      
+    @media (max-width: 375px)
+      width 30px
+      height 30px
+    
+    i
+      font-size 18px
+      color white
+      
+      // Responsive
+      @media (max-width: 768px)
+        font-size 16px
+        
+      @media (max-width: 480px)
+        font-size 14px
+        
+      @media (max-width: 375px)
+        font-size 12px
+      
+    &.facebook
+      background #1877f2
+      
+    &.tiktok
+      background #000
+      
+    &.whatsapp
+      background #25d366
+      
+    &.instagram
+      background linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%)
+      
+    &:hover
+      transform translateY(-2px)
+      box-shadow 0 4px 12px rgba(0,0,0,0.2)
 
 
   .social
@@ -17,7 +463,7 @@
       // color c-main-light-green
       // color c-main-purple
       
-      color  rgba(255, 107, 0, 1);
+      color  #fff;
 
   .social-icon-register {
   
@@ -57,24 +503,24 @@
 }
 
 .facebook {
-  background: rgba(249, 199, 156, 0.52);
+  background: #d209b633;
    /* Fondo específico para Facebook */
 }
 
 .instagram {
-  background: rgba(249, 199, 156, 0.52); /* Fondo específico para Instagram */
+  background: #d209b633; /* Fondo específico para Instagram */
 }
 
 .youtube {
-  background: rgba(249, 199, 156, 0.52); /* Fondo específico para YouTube */
+  background: #d209b633; /* Fondo específico para YouTube */
 }
 
 .tiktok {
-  background: rgba(249, 199, 156, 0.52); /* Fondo específico para TikTok */
+  background:#d209b633; /* Fondo específico para TikTok */
 }
 
 .whatsapp {
-  background: rgba(249, 199, 156, 0.52); /* Fondo específico para WhatsApp */
+  background: #d209b633; /* Fondo específico para WhatsApp */
 }
   // >header
   //   flex 1
@@ -94,25 +540,35 @@
   >section
     // width 100%
     // align-self center
-    flex 1
+    width 50%
+    height 100vh
+    display flex
+    justify-content center
+    align-items center
+    padding 0
 
 
     .content
-      max-width 350px
-      margin auto
+      max-width 100%
+      width 100%
+      margin 0
 
 
       .form
         // background c-ligh-gray
         background white
-        border-radius 50px
+        border-radius 0
         // border solid 1.5px c-main-blue
         // border solid 2px c-main-golden
         // border solid 2px c-main-light-green
         // border solid 2px c-main-purple
         padding 16px
-        Width  (469px)
-        Height  (671px)
+        Width 100%
+        Height 100vh
+        display flex
+        flex-direction column
+        justify-content center
+        overflow-y auto
         header
         section
           text-align center
@@ -130,6 +586,7 @@
 @media (min-width: d-break)
   .text-header
     display none
+
 @media (max-width: 1260px)
   .auth
     >section

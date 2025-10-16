@@ -17,185 +17,169 @@
           REGISTRO
         </router-link>
       </div>
-      <div class="logos">
-        <img
-          src="@/assets/img/logo/logo 2 sifrah NARANJA LOGIN.svg"
-          style="
-            width: 340px;
-            height: auto;
-            margin-top: -45px;
-            margin-bottom: -60px;
-          "
-        />
-        <h2
-          style="
-            font-size: 16px;
-            font-style: roboto;
-            color: rgba(137, 136, 141, 1);
-            margin-bottom: -35px;
-          "
-        >
-          ¿No tienes cuenta?
-        </h2>
-        <h1
-          style="
-            font-size: 35px;
-            font-style: roboto;
-            color: rgba(40, 167, 69, 1);
-            text-decoration: underline;
-            margin-bottom: 0px;
-          "
-        >
-          ¡REGÍSTRATE AQUÍ!
-        </h1>
+      <div class="register-title-form">
+        <h1>REGÍSTRATE</h1>
       </div>
-      <br />
+      
+      <!-- Documento de Identidad -->
+      <div class="form-field">
+        <input
+          class="input-register-new"
+          placeholder="Documento de identidad"
+          oninput="this.value=this.value.replace(/(?![0-9])./gmi,'')"
+          v-model="dni"
+          :class="{ error: error.dni }"
+          @keydown="reset('dni')"
+        />
+      </div>
 
-      <!-- <i class="icon fa fa-flag"></i>
-      <select class="input" v-model="country"
-        :class="{'error': error.country}"
-        @change="reset('country')">
-        <option value="null" disabled>País</option>
-        <option value="Perú"      >🇵🇪 Perú</option>
-         <option value="Ecuador"   >🇪🇨 Ecuador</option>
-        <option value="Argentina" >🇦🇷 Argentina</option>
-        <option value="Bolivia"   >🇧🇴 Bolivia</option>
-        <option value="Colombia"  >🇨🇴 Colombia</option>
-        <option value="Costa Rica">🇨🇷 Costa Rica</option>
-        <option value="Chile"     >🇨🇱 Chile</option> 
-      </select> <br> -->
-
-      <input
-        class="input-register"
-        style="margin-bottom: 12px"
-        placeholder="Documento de identidad"
-        oninput="this.value=this.value.replace(/(?![0-9])./gmi,'')"
-        v-model="dni"
-        :class="{ error: error.dni }"
-        @keydown="reset('dni')"
-      />
-      <i class="icon-register fa fa-id-card"></i>
-      <br />
-      <div style="margin-right: 140px">
-        <label class="label-register" style="margin-top: 5px">
-          <small style="color: rgba(102, 108, 104, 1)">
-            <input type="checkbox" v-model="younger" />menor de edad /
-            extranjero
-          </small>
+      <!-- Checkbox menor de edad -->
+      <div class="checkbox-field">
+        <label class="checkbox-label">
+          <input type="checkbox" v-model="younger" class="checkbox-input" />
+          <span class="checkbox-text">Menor de edad / extranjero</span>
         </label>
       </div>
 
-      <!-- <input class="input" placeholder="Nombre"
-      v-model="name"
-      :class="{'error': error.name}"
-      @keydown="reset('name')"
-      :disabled="country == 'Perú' && !younger"> <br> -->
-
-      <input
-        class="input-register"
-        placeholder="Nombre"
-        v-model="name"
-        :class="{ error: error.name }"
-        @keydown="reset('name')"
-      />
-      <i class="icon-register fa-solid fa-user-tie"></i>
-      <br />
-      <input
-        class="input-register"
-        placeholder="Apellidos"
-        v-model="lastName"
-        :class="{ error: error.lastName }"
-        @keydown="reset('lastName')"
-      />
-      <i class="icon-register fa-solid fa-user-tie"></i>
-      <br />
-
-      <!-- <i class="icon fa-solid fa-user-tie"></i>
-      <input class="input" placeholder="Apellidos"
-      v-model="lastName"
-      :class="{'error': error.lastName}"
-      @keydown="reset('lastName')"
-      :disabled="country == 'Perú' && !younger"> <br> -->
-
-      <!--<i class="icon fa fa-calendar"></i>
-      <input type="date" class="input" placeholder="Fecha de Nacimiento"
-      v-model="date"> <br>-->
-
-      <small
-        v-if="country"
-        style="min-width: 25px; margin-right: 8px; display: inline-block"
-        >{{ prefix }}</small
-      >
-      <div>
-        <input
-          class="input-register"
-          placeholder="Celular"
-          maxlength="12"
-          v-model="phone"
-        />
-        <i class="icon-register fa-solid fa-mobile-retro" v-if="!country"></i>
-        <br />
+      <!-- Nombre y Apellido en fila -->
+      <div class="form-row">
+        <div class="form-field">
+          <input
+            class="input-register-new"
+            placeholder="Nombre"
+            v-model="name"
+            :class="{ error: error.name }"
+            @keydown="reset('name')"
+          />
+        </div>
+        <div class="form-field">
+          <input
+            class="input-register-new"
+            placeholder="Apellido"
+            v-model="lastName"
+            :class="{ error: error.lastName }"
+            @keydown="reset('lastName')"
+          />
+        </div>
       </div>
 
-      <!--<i class="icon fa-solid fa-envelope-open"></i>
-      <input class="input" placeholder="Correo"
-      v-model.trim="email"> <br>-->
-
-      <!-- <i class="icon-register fa-solid fa-key"></i>-->
-      <div>
+      <!-- Celular -->
+      <div class="form-field">
         <input
-          :type="show ? 'text' : 'password'"
-          class="input-register"
-          style="margin-left: 8px"
+          class="input-register-new"
+          placeholder="Celular"
+          oninput="this.value=this.value.replace(/(?![0-9])./gmi,'')"
+          v-model="phone"
+          :class="{ error: error.phone }"
+          @keydown="reset('phone')"
+        />
+      </div>
+
+      <!-- Correo -->
+      <div class="form-field">
+        <input
+          class="input-register-new"
+          type="email"
+          placeholder="Correo"
+          v-model="email"
+          :class="{ error: error.email }"
+          @keydown="reset('email')"
+        />
+      </div>
+
+      <!-- Fecha de Nacimiento -->
+      <div class="form-field">
+        <input
+          class="input-register-new"
+          type="date"
+          placeholder="dd/mm/aaaa"
+          v-model="birthDate"
+          :class="{ error: error.birthDate }"
+          @keydown="reset('birthDate')"
+        />
+      </div>
+
+      <!-- Depto, Provincia, Distrito en fila -->
+      <div class="form-row">
+        <div class="form-field">
+          <select
+            class="input-register-new select-field"
+            v-model="department"
+            :class="{ error: error.department }"
+            @change="reset('department')"
+          >
+            <option value="" disabled>Depto.</option>
+            <option value="Lima">Lima</option>
+            <option value="Arequipa">Arequipa</option>
+            <option value="Cusco">Cusco</option>
+            <!-- Agregar más departamentos según necesidad -->
+          </select>
+        </div>
+        <div class="form-field">
+          <select
+            class="input-register-new select-field"
+            v-model="province"
+            :class="{ error: error.province }"
+            @change="reset('province')"
+          >
+            <option value="" disabled>Provincia</option>
+            <!-- Opciones dinámicas según departamento -->
+          </select>
+        </div>
+        <div class="form-field">
+          <select
+            class="input-register-new select-field"
+            v-model="district"
+            :class="{ error: error.district }"
+            @change="reset('district')"
+          >
+            <option value="" disabled>Distrito</option>
+            <!-- Opciones dinámicas según provincia -->
+          </select>
+        </div>
+      </div>
+
+      <!-- Contraseña -->
+      <div class="form-field">
+        <input
+          class="input-register-new"
+          :type="showPassword ? 'text' : 'password'"
           placeholder="Contraseña"
           v-model="password"
           :class="{ error: error.password }"
           @keydown="reset('password')"
         />
-        <i class="icon-register show far fa-eye" @click="show = !show"></i>
-        <br />
       </div>
-      <div>
+
+      <!-- Código de patrocinador -->
+      <div class="form-field">
         <input
-          class="input-register"
+          class="input-register-new"
           placeholder="Código de patrocinador"
-          style="margin-left: 8px"
-          :disabled="disabled"
-          v-model="code"
-          :class="{ error: error.code }"
-          @keydown="reset('code')"
+          v-model="sponsorCode"
+          :class="{ error: error.sponsorCode }"
+          @keydown="reset('sponsorCode')"
         />
-        <i class="icon-register fa-solid fa-paper-plane"></i>
       </div>
-      <br />
 
-      <p class="alert">{{ alert | alert }}</p>
-
-      <small style="color: rgba(255, 107, 0, 1)"
-        ><input type="checkbox" v-model="check" style="color: green" />Acepto
-        los
-        <a
-          href=""
-          target="_blank"
-          style="color: rgba(137, 136, 141, 1); font-weight: 600"
-          >términos de uso</a
-        ></small
-      >
-      <br />
-
-      <button class="register-button" v-show="!sending" @click="submit">
-        Registrarme
+      <!-- Botón de registro -->
+      <button class="register-button" @click="submit" :disabled="sending">
+        {{ sending ? 'Registrando...' : 'Registrarme' }}
       </button>
-      <button class="button" v-show="sending" disabled>
-        Creando cuenta ...</button
-      ><br />
-      <small style="color: rgba(137, 136, 141, 1)"
-        >¿Ya tienes una cuenta?
-        <router-link to="/login" style="color: rgba(255, 107, 0, 1)"
-          >Haz click aquí</router-link
-        ></small
-      >
-      <br />
+
+      <!-- Términos y condiciones -->
+      <div class="terms-field">
+        <label class="checkbox-label">
+          <input type="checkbox" v-model="acceptTerms" class="checkbox-input" />
+          <span class="checkbox-text">Acepto los términos de uso</span>
+        </label>
+      </div>
+
+      <!-- Enlace de login -->
+      <div class="login-link">
+        <small>¿Ya tienes una cuenta? <router-link to="/login">Haz click aquí</router-link></small>
+      </div>
+
     </section>
     <footer>
       <br />
@@ -206,27 +190,22 @@
           <a class="fab fa-tiktok"          :href="tk" target="_blank"></a>
           <a class="fab fa-youtube"         :href="yt" target="_blank"></a> -->
           <a
-            style="padding: 5px"
-            class="fab fa-facebook-square social-icon-register facebook"
+            class="fab fa-facebook-square social-icon facebook"
             :href="fb"
             target="_blank"
           ></a>
           <a
-            style="padding: 5px"
-            class="fab fa-tiktok social-icon-register tiktok"
-            :href="tk"
-            target="_blank"
-          ></a>
-          <!-- <a class="fab fa-tiktok"          target="_blank"></a> -->
-          <a
-            style="padding: 5px"
-            class="fab fa-youtube social-icon-register youtube"
+            class="fab fa-youtube social-icon youtube"
             :href="yt"
             target="_blank"
           ></a>
           <a
-            style="padding: 5px"
-            class="fab fa-whatsapp social-icon-register whatsapp"
+            class="fab fa-tiktok social-icon tiktok"
+            :href="tk"
+            target="_blank"
+          ></a>
+          <a
+            class="fab fa-whatsapp social-icon whatsapp"
             :href="wsp_pe"
             target="_blank"
           ></a>
@@ -254,10 +233,16 @@ export default {
       name: null,
       lastName: null,
       // username: null,
-      date: null,
+      birthDate: null,
       email: null,
       phone: null,
-      password: "123456",
+      password: "",
+      sponsorCode: null,
+      acceptTerms: false,
+      showPassword: false,
+      department: "",
+      province: "",
+      district: "",
       code: null,
       check: false,
       error: {
@@ -265,10 +250,14 @@ export default {
         dni: false,
         name: false,
         lastName: false,
-        // username: false,
+        birthDate: false,
         email: false,
         phone: false,
+        department: false,
+        province: false,
+        district: false,
         password: false,
+        sponsorCode: false,
         code: false,
       },
       sending: false,
@@ -464,14 +453,14 @@ export default {
 </script>
 <style scoped>
 input[type="checkbox"]:checked {
-  accent-color: green; /* Cambia el color del checkbox a verde en navegadores compatibles */
+  accent-color: #d209b6; /* Cambia el color del checkbox a verde en navegadores compatibles */
 }
 
 .register-button {
   /* Color de fondo normal */
-  background: rgba(178, 108, 46, 1);
+  background: #d209b6;
   width: 280px; /* Ancho del botón */
-  height: 35px; /* Altura del botón */
+  height: 50px; /* Altura del botón */
   color: white; /* Color del texto */
   border: none; /* Sin borde */
   cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
@@ -482,7 +471,7 @@ input[type="checkbox"]:checked {
 }
 
 .register-button:hover {
-  background: rgb(255, 111, 0); /* Color de fondo al hacer hover */
+  background: #9f00ad; /* Color de fondo al hacer hover */
 }
 .tab-login {
   font-size: 15px;
