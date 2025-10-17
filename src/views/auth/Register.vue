@@ -159,6 +159,11 @@
         </label>
       </div>
 
+      <!-- Mensaje de alerta -->
+      <div v-if="alert" class="alert-message">
+        {{ alert | alert }}
+      </div>
+
       <!-- Botón de registro -->
       <button class="register-button" @click="submit" :disabled="sending">
         {{ sending ? 'Registrando...' : 'Registrarme' }}
@@ -769,7 +774,6 @@ export default {
         district: false,
         password: false,
         sponsorCode: false,
-        code: false,
       },
       sending: false,
       alert: null,
@@ -780,7 +784,9 @@ export default {
   filters: {
       alert(msg) {
         if (msg === "dni already use") return "El documento ya existe";
+        if (msg === "email already use") return "El correo electrónico ya está en uso";
         if (msg === "code not found") return "El código de invitación no existe";
+        if (msg === "code required") return "El código de patrocinador es requerido";
         return msg;
       },
     },
@@ -816,8 +822,12 @@ export default {
     console.log("Register");
 
     this.code = this.$route.params.code;
-
-    if (this.code) this.disabled = true;
+    
+    // Si viene código en la URL, pre-llenarlo en el campo de patrocinador
+    if (this.code) {
+      this.sponsorCode = this.code;
+      this.disabled = true;
+    }
 
     setTimeout(() => {
       const logoAuth = document.getElementById("logo-auth");
@@ -872,7 +882,7 @@ export default {
   },
   methods: {
     async submit() {
-      const { dni, name, lastName, password, phone, code, check, department, province, district } = this;
+      const { dni, name, lastName, password, phone, sponsorCode, email, birthDate, acceptTerms, department, province, district } = this;
 
       if (!dni) {
         this.error.dni = true;
@@ -889,14 +899,32 @@ export default {
         this.alert = "El apellido se requiere";
         return;
       }
-      if (!password) {
-        this.error.password = true;
-        this.alert = "password required";
+      if (!email) {
+        this.error.email = true;
+        this.alert = "El correo se requiere";
         return;
       }
-      if (!code) {
-        this.error.code = true;
-        this.alert = "code required";
+      
+      // Validar formato de email
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        this.error.email = true;
+        this.alert = "El correo no tiene un formato válido";
+        return;
+      }
+      if (!birthDate) {
+        this.error.birthDate = true;
+        this.alert = "La fecha de nacimiento se requiere";
+        return;
+      }
+      if (!password) {
+        this.error.password = true;
+        this.alert = "La contraseña es requerida";
+        return;
+      }
+      if (!sponsorCode) {
+        this.error.sponsorCode = true;
+        this.alert = "El código de patrocinador es requerido";
         return;
       }
       if(!phone) {
@@ -919,7 +947,7 @@ export default {
         this.alert = "Debe seleccionar un distrito";
         return;
       }
-      if (!check) {
+      if (!acceptTerms) {
         this.alert = "Debes aceptar los términos.";
         return;
       }
@@ -931,9 +959,11 @@ export default {
           dni,
           name,
           lastName,
+          email,
+          date: birthDate,
           password,
           phone,
-          code,
+          code: sponsorCode,
           department,
           province,
           district,
@@ -962,6 +992,7 @@ export default {
         }
       } catch (err) {
         this.sending = false;
+        this.alert = "Error al registrar. Por favor intenta nuevamente.";
       }
     },
 
@@ -971,11 +1002,11 @@ export default {
       if (name == "dni") this.error.dni = false;
       if (name == "name") this.error.name = false;
       if (name == "lastName") this.error.lastName = false;
-      if(name == "phone") this.error.phone = false;
-      // if(name == 'username') this.error.username = false
-      // if(name == 'email')    this.error.email    = false
+      if (name == "phone") this.error.phone = false;
+      if (name == "email") this.error.email = false;
+      if (name == "birthDate") this.error.birthDate = false;
       if (name == "password") this.error.password = false;
-      if (name == "code") this.error.code = false;
+      if (name == "sponsorCode") this.error.sponsorCode = false;
       if (name == "department") this.error.department = false;
       if (name == "province") this.error.province = false;
       if (name == "district") this.error.district = false;
@@ -1123,5 +1154,17 @@ input[type="checkbox"]:checked {
   .register-button {
     margin-left: 15px;
   }
+}
+
+.alert-message {
+  background-color: #fee;
+  color: #c00;
+  padding: 12px 16px;
+  border-radius: 8px;
+  border: 1px solid #fcc;
+  margin: 12px 0;
+  font-size: 14px;
+  text-align: center;
+  max-width: 280px;
 }
 </style>

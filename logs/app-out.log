@@ -3271,3 +3271,99 @@ expected "indent", got "eos"
   - Local:   http://localhost:8080/ 
   - Network: http://192.168.2.40:8080/
 
+ WAIT  Compiling...12:03:47 PM
+
+ DONE  Compiled successfully in 285297ms12:08:33 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...12:08:33 PM
+
+ DONE  Compiled successfully in 248468ms12:12:42 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+ WAIT  Compiling...12:12:42 PM
+
+ DONE  Compiled successfully in 414ms12:12:42 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+
+> lehaim@0.1.0 serve
+> vue-cli-service serve
+
+ INFO  Starting development server...
+ DONE  Compiled successfully in 3922ms4:24:30 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+  Note that the development build is not optimized.
+  To create a production build, run npm run build.
+
+
+> lehaim@0.1.0 serve
+> vue-cli-service serve
+
+ INFO  Starting development server...
+ DONE  Compiled successfully in 2890ms10:18:22 AM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+  Note that the development build is not optimized.
+  To create a production build, run npm run build.
+
+ WAIT  Compiling...10:20:24 AM
+
+ DONE  Compiled successfully in 209ms10:20:24 AM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+
+> lehaim@0.1.0 serve
+> vue-cli-service serve
+
+ INFO  Starting development server...
+ DONE  Compiled successfully in 2534ms10:27:31 AM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+  Note that the development build is not optimized.
+  To create a production build, run npm run build.
+
+
+> lehaim@0.1.0 serve
+> vue-cli-service serve
+
+ INFO  Starting development server...
+ DONE  Compiled successfully in 1775ms10:28:35 AM
+
+
+  App running at:
+  - Local:   http://localhost:8080/ 
+  - Network: http://192.168.2.40:8080/
+
+  Note that the development build is not optimized.
+  To create a production build, run npm run build.
+
