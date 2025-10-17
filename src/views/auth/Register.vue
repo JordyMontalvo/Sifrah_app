@@ -1090,7 +1090,7 @@ input[type="checkbox"]:checked {
 
 .register-button {
   /* Color de fondo normal */
-  background: #d209b6;
+  background: #9f00ad;
   width: 280px; /* Ancho del botón */
   height: 50px; /* Altura del botón */
   color: white; /* Color del texto */
@@ -1103,7 +1103,7 @@ input[type="checkbox"]:checked {
 }
 
 .register-button:hover {
-  background: #9f00ad; /* Color de fondo al hacer hover */
+  background: #d209b6; /* Color de fondo al hacer hover */
 }
 .tab-login {
   font-size: 15px;
@@ -1166,5 +1166,6 @@ input[type="checkbox"]:checked {
   font-size: 14px;
   text-align: center;
   max-width: 280px;
+  margin-left: auto;
 }
 </style>

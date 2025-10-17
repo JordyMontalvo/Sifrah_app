@@ -92,6 +92,7 @@ export default {
   position: fixed;
   top: 0;
   left: 45%;
+  margin-top: 25px;
   transform: translateX(100%);
   display: flex;
   background-color: #9f00ad; /* fondo base */
