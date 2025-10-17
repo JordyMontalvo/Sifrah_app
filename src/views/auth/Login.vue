@@ -23,11 +23,11 @@
       </div>
 
         <label class="label-login-2" for="dni">DNI:</label>
-        <div class="input-wrapper">
+        <div class="input-wrapper" style="position: relative; display: inline-block;">
           <input
             id="dni"
             class="input"
-            style="border: solid 2px #d209b6; margin-left: 5px"
+            style="border: solid 2px #d209b6; margin-left: 5px; padding-right: 40px;"
             placeholder="Dni"
             oninput="this.value=this.value.replace(/(?![0-9])./gmi,'')"
             v-model="dni"
@@ -35,18 +35,12 @@
             @keydown="reset('dni')"
           />
           <svg
+            class="dni-icon"
             width="16"
             height="16"
             viewBox="0 0 53 54"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
-            style="
-              margin-top: 14px;
-              margin-left: -33px;
-              cursor: pointer;
-              padding: 4px;
-              opacity: 0.75;
-            "
           >
             <path d="M16.5625 14.625C16.5625 20.2072 21.0211 24.75 26.5 24.75C31.9789 24.75 36.4375 20.2072 36.4375 14.625C36.4375 9.04275 31.9789 4.5 26.5 4.5C21.0211 4.5 16.5625 9.04275 16.5625 14.625ZM44.1667 47.25H46.375V45C46.375 36.3172 39.4386 29.25 30.9167 29.25H22.0833C13.5592 29.25 6.625 36.3172 6.625 45V47.25H44.1667Z" fill="#d209b6"/>
           </svg>
@@ -56,12 +50,12 @@
 
       <div v-if="!office_id">
         <label class="label-login" for="password">Contraseña:</label>
-        <div class="input-wrapper">
+        <div class="input-wrapper" style="position: relative; display: inline-block;">
           <input
             id="password"
             :type="show ? 'text' : 'password'"
             class="input pass"
-            style="border: solid 2px #d209b6"
+            style="border: solid 2px #d209b6; padding-right: 40px;"
             placeholder="*************"
             v-model="password"
             :class="{ error: error.password }"
@@ -75,7 +69,6 @@
             fill="none" 
             xmlns="http://www.w3.org/2000/svg"
             @click="show = !show"
-            style="cursor: pointer;"
           >
             <path d="M27 20.25C25.2098 20.25 23.4929 20.9612 22.227 22.227C20.9612 23.4929 20.25 25.2098 20.25 27C20.25 28.7902 20.9612 30.5071 22.227 31.773C23.4929 33.0388 25.2098 33.75 27 33.75C28.7902 33.75 30.5071 33.0388 31.773 31.773C33.0388 30.5071 33.75 28.7902 33.75 27C33.75 25.2098 33.0388 23.4929 31.773 22.227C30.5071 20.9612 28.7902 20.25 27 20.25ZM27 38.25C24.0163 38.25 21.1548 37.0647 19.045 34.955C16.9353 32.8452 15.75 29.9837 15.75 27C15.75 24.0163 16.9353 21.1548 19.045 19.045C21.1548 16.9353 24.0163 15.75 27 15.75C29.9837 15.75 32.8452 16.9353 34.955 19.045C37.0647 21.1548 38.25 24.0163 38.25 27C38.25 29.9837 37.0647 32.8452 34.955 34.955C32.8452 37.0647 29.9837 38.25 27 38.25ZM27 10.125C15.75 10.125 6.1425 17.1225 2.25 27C6.1425 36.8775 15.75 43.875 27 43.875C38.25 43.875 47.8575 36.8775 51.75 27C47.8575 17.1225 38.25 10.125 27 10.125Z" fill="#d209b6"/>
           </svg>
@@ -475,6 +468,7 @@ export default {
   cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
   transition: background 0.3s ease;
   margin-left: 13px;
+  margin-top: 10px;
   transition: all 0.3s ease; /* Transición suave para el hover */
 }
 
@@ -610,15 +604,15 @@ export default {
 
 @media (max-width: 480px) {
   .label-login {
-    margin-bottom: 6px !important;
+    margin-bottom: -6px !important;
     font-size: 11px !important;
-    margin-left: 45px !important;
+    margin-left: 23px !important;
   }
   
   .label-login-2 {
-    margin-bottom: 6px !important;
+    margin-bottom: -6px !important;
     font-size: 11px !important;
-    margin-left: 45px !important;
+    margin-left: 23px !important;
   }
 }
 
@@ -633,6 +627,17 @@ export default {
     margin-bottom: 5px !important;
     font-size: 10px !important;
     margin-left: 30px !important;
+  }
+}
+
+/* Ajuste de posición para desktop */
+@media (min-width: 769px) {
+  .dni-icon {
+    transform: translateY(-60%) !important;
+  }
+  
+  .show {
+    transform: translateY(-60%) !important;
   }
 }
 
@@ -652,6 +657,16 @@ export default {
     transform: translateY(-50%) !important;
     margin-top: 0 !important;
     margin-left: 0 !important;
+  }
+  
+  .dni-icon {
+    position: absolute !important;
+    right: 12px !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    margin-top: 0 !important;
+    margin-left: 0 !important;
+    z-index: 10 !important;
   }
 }
 
@@ -701,6 +716,12 @@ export default {
     font-size: 14px !important;
   }
   
+  .dni-icon {
+    right: 10px !important;
+    width: 14px !important;
+    height: 14px !important;
+  }
+  
   .show {
     right: 10px !important;
     font-size: 14px !important;
@@ -723,6 +744,12 @@ export default {
   .icon {
     right: 8px !important;
     font-size: 13px !important;
+  }
+  
+  .dni-icon {
+    right: 8px !important;
+    width: 13px !important;
+    height: 13px !important;
   }
   
   .show {
