@@ -128,7 +128,7 @@
           ></a>
         </div>
         <br />
-        <div>
+        <div class="login-link">
           <small style="color: rgba(137, 136, 141, 1)">
             ¿No tienes cuenta?
             <router-link
@@ -733,6 +733,17 @@ export default {
   
   .input.pass {
     padding-right: 35px !important;
+  }
+}
+
+/* Ajustes de margin-top para móvil */
+@media (max-width: 768px) {
+  .social {
+    margin-top: -30px !important;
+  }
+  
+  .login-link {
+    margin-top: -10px !important;
   }
 }
 
