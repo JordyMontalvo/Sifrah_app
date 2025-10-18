@@ -190,8 +190,9 @@ export default {
   .form {
     padding: 8px;
     height: 100%;
-    min-height: 60vh;
-    justify-content: space-evenly;
+    min-height: 65vh;
+    max-height: 65vh;
+    justify-content: flex-start;
     padding-top: 60px; /* Espacio para las pestañas */
     padding-bottom: 8px;
     overflow: hidden;
