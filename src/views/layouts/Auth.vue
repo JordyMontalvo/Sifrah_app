@@ -1,5 +1,11 @@
 <template>
   <div class="auth" :class="{ 'register-page': $route.path === '/register' }">
+    <!-- Frase para móvil en el fondo fucsia -->
+    <div class="mobile-welcome-text">
+      <h1 class="mobile-welcome-title">BIENVENIDO</h1>
+      <p>"Tu momento de brillar es ahora."</p>
+    </div>
+    
     <div class="auth-tabs" id="tabs">
       <router-link
         to="/login"
@@ -246,35 +252,56 @@ export default {
   }
 }
 
+/* Estilos para la frase en móvil */
+.mobile-welcome-text {
+  display: none; /* Oculto por defecto en escritorio */
+}
+
 @media (max-width: 768px) {
-  .welcome-section {
+  .mobile-welcome-text {
+    display: block !important;
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 40vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0 20px;
-    z-index: 3;
+    top: 150px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    text-align: center;
     pointer-events: none;
   }
   
-  .welcome-content {
-    display: none; /* Ocultar todo el contenido de texto en móvil */
+  .mobile-welcome-text h1 {
+    color: white;
+    font-size: 24px;
+    font-weight: 700;
+    margin: 0 0 8px 0;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+    font-family: 'Open Sans', sans-serif;
+    text-align: center;
+    letter-spacing: 1px;
   }
   
-  .welcome-subtitle {
-    display: none; /* Ocultar "Bienvenido a" en móvil */
+  .mobile-welcome-text p {
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+    font-family: 'Open Sans', sans-serif;
+    max-width: 350px;
+    line-height: 1.3;
+    white-space: nowrap;
   }
   
-  .welcome-title {
-    display: none; /* Ocultar "SIFRAH" en móvil */
+  .welcome-section {
+    display: none; /* Ocultar la sección welcome en móvil */
   }
   
-  .welcome-slogan {
-    display: none; /* Ocultar "Tu momento de brillar es ahora" en móvil */
+}
+
+/* Estilos específicos para la página de registro en móvil */
+@media (max-width: 768px) {
+  .auth.register-page .mobile-welcome-text {
+    top: 100px !important;
   }
 }
 
