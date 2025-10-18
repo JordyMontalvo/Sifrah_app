@@ -1,9 +1,6 @@
 <template>
   <Auth>
     <section>
-      <div class="register-title-form">
-        <h1>REGÍSTRATE</h1>
-      </div>
       
       <!-- Documento de Identidad -->
       <div class="form-field">
