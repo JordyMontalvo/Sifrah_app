@@ -26,7 +26,6 @@
         alt=""
         class="logo"
       />
-      <ThemeToggle style="float: right; margin-left: 16px" />
       <i
         class="burger fas fa-bars"
         @click.stop="toggleMenu"
@@ -262,7 +261,6 @@
                 {{ email }}
               </p>
             </div>
-            <ThemeToggle style="float: right;margin-left: 12px;margin-right: -25px;" />
             <router-link to="/profile" style="color: black; margin-left: 10px">
               <i class="fas fa-cog" style="font-size: 20px"></i>
             </router-link>
@@ -321,13 +319,12 @@
 <script>
 import api from "@/api";
 import lib from "@/lib";
-import ThemeToggle from "@/components/ThemeToggle.vue";
 
 const ROOT = process.env.VUE_APP_ROOT;
 console.log({ ROOT });
 
 export default {
-  components: { ThemeToggle },
+  components: { },
   props: {
     session: String,
     office_id: String,
