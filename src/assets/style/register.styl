@@ -1,0 +1,180 @@
+// Estilos específicos para Register.vue
+
+input[type="checkbox"]:checked
+  accent-color #d209b6 // Cambia el color del checkbox a verde en navegadores compatibles
+
+.register-button
+  // Color de fondo normal
+  background #9f00ad
+  width 280px // Ancho del botón
+  height 50px // Altura del botón
+  color white // Color del texto
+  border none // Sin borde
+  cursor pointer // Cambia el cursor al pasar sobre el botón
+  transition background 0.3s ease
+  border-radius 18px
+  margin 8px 0
+  transition all 0.3s ease // Transición suave para el hover
+
+  &:hover
+    background #d209b6 // Color de fondo al hacer hover
+
+.tab-login
+  font-size 15px
+  color rgba(137, 136, 141, 1)
+  text-decoration none
+  padding 10px 20px
+  border-bottom solid 2px rgba(137, 136, 141, 1)
+  transition all 0.3s ease
+
+  &.active
+    color #4b2e12 // marrón oscuro
+    border-bottom solid 4px #ffb57a // barra amarilla más gruesa
+    font-weight bold
+    transition all 0.1s ease
+    position relative
+
+    &::after
+      content ''
+      position absolute
+      bottom -4px
+      left 50%
+      transform translateX(-50%)
+      width 100% // Barra que cubre todo el ancho de la pestaña
+      height 4px
+      background-color #FFD900
+      border-radius 2px
+
+@media (min-width: 1260px)
+  .tab-login
+    display none
+
+@media (max-width: 1260px)
+  .logos
+    display none
+
+@media (max-width: 1260px)
+  .label-register
+    margin-left 20px
+    // margin-top: 5px;
+    white-space nowrap
+
+@media (max-width: 1024px)
+  .register-button
+    margin-left 15px
+
+.alert-message
+  background-color #fee
+  color #c00
+  padding 12px 16px
+  border-radius 8px
+  border 1px solid #fcc
+  margin 12px 0
+  font-size 14px
+  text-align center
+  max-width 280px
+  margin-left auto
+
+// Contenedor para input con icono
+.input-container
+  position relative
+  display block
+  width 100%
+  margin 0
+  padding 0
+
+// Iconos dentro de los campos
+.input-icon
+  position absolute
+  right 12px
+  top 50%
+  transform translateY(-50%)
+  pointer-events none
+  color #9f00ad
+  font-size 16px
+  z-index 10
+  margin 0
+  padding 0
+  width auto
+  height auto
+  line-height 1
+  display inline-block
+
+// Icono de contraseña con cursor pointer
+.password-icon
+  cursor pointer
+  pointer-events auto
+
+// Icono de contraseña con cursor pointer
+.show-icon
+  cursor pointer
+  pointer-events auto
+  transition color 0.3s ease
+
+  &:hover
+    color #d209b6
+
+// Iconos que se desbordan - posicionamiento específico
+.overflow-icon
+  position absolute
+  margin-left -23px
+  top 10px
+  pointer-events none
+  color #9f00ad
+  font-size 16px
+  z-index 10
+
+// Ajustar padding de inputs para dar espacio al icono
+.input-container .input-register-new
+  padding-right 40px
+  box-sizing border-box
+  width 100%
+
+// Responsive para iconos
+@media (min-width: 1110px) and (max-width: 1199px)
+  .input-icon
+    right 13px
+    font-size 17px
+  
+  .input-container .input-register-new
+    padding-right 43px
+
+@media (min-width: 1200px)
+  .input-icon
+    right 12px
+    font-size 16px
+  
+  .input-container .input-register-new
+    padding-right 40px
+
+@media (min-width: 769px) and (max-width: 1109px)
+  .input-icon
+    right 14px
+    font-size 16px
+  
+  .input-container .input-register-new
+    padding-right 42px
+
+@media (max-width: 768px)
+  .input-icon
+    right 10px
+    font-size 14px
+  
+  .input-container .input-register-new
+    padding-right 35px
+
+@media (max-width: 480px)
+  .input-icon
+    right 8px
+    font-size 13px
+  
+  .input-container .input-register-new
+    padding-right 30px
+
+@media (max-width: 375px)
+  .input-icon
+    right 6px
+    font-size 12px
+  
+  .input-container .input-register-new
+    padding-right 25px

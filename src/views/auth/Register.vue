@@ -7,7 +7,7 @@
       
       <!-- Documento de Identidad -->
       <div class="form-field">
-        <div class="input-wrapper">
+        <div class="input-container">
           <input
             id="dni"
             class="input-register-new"
@@ -17,16 +17,7 @@
             :class="{ error: error.dni }"
             @keydown="reset('dni')"
           />
-          <svg
-            class="field-icon"
-            width="16"
-            height="16"
-            viewBox="0 0 53 54"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path d="M16.5625 14.625C16.5625 20.2072 21.0211 24.75 26.5 24.75C31.9789 24.75 36.4375 20.2072 36.4375 14.625C36.4375 9.04275 31.9789 4.5 26.5 4.5C21.0211 4.5 16.5625 9.04275 16.5625 14.625ZM44.1667 47.25H46.375V45C46.375 36.3172 39.4386 29.25 30.9167 29.25H22.0833C13.5592 29.25 6.625 36.3172 6.625 45V47.25H44.1667Z" fill="#9f00ad82"/>
-          </svg>
+          <i class="fas fa-id-card overflow-icon"></i>
         </div>
       </div>
 
@@ -41,7 +32,7 @@
       <!-- Nombre y Apellido en fila -->
       <div class="form-row">
         <div class="form-field">
-          <div class="input-wrapper">
+          <div class="input-container">
             <input
               id="name"
               class="input-register-new"
@@ -50,20 +41,11 @@
               :class="{ error: error.name }"
               @keydown="reset('name')"
             />
-            <svg
-              class="field-icon"
-              width="16"
-              height="16"
-              viewBox="0 0 53 54"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path d="M16.5625 14.625C16.5625 20.2072 21.0211 24.75 26.5 24.75C31.9789 24.75 36.4375 20.2072 36.4375 14.625C36.4375 9.04275 31.9789 4.5 26.5 4.5C21.0211 4.5 16.5625 9.04275 16.5625 14.625ZM44.1667 47.25H46.375V45C46.375 36.3172 39.4386 29.25 30.9167 29.25H22.0833C13.5592 29.25 6.625 36.3172 6.625 45V47.25H44.1667Z" fill="#9f00ad82"/>
-            </svg>
+            <i class="fas fa-user input-icon"></i>
           </div>
         </div>
         <div class="form-field">
-          <div class="input-wrapper">
+          <div class="input-container">
             <input
               id="lastName"
               class="input-register-new"
@@ -72,23 +54,14 @@
               :class="{ error: error.lastName }"
               @keydown="reset('lastName')"
             />
-            <svg
-              class="field-icon"
-              width="16"
-              height="16"
-              viewBox="0 0 53 54"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path d="M16.5625 14.625C16.5625 20.2072 21.0211 24.75 26.5 24.75C31.9789 24.75 36.4375 20.2072 36.4375 14.625C36.4375 9.04275 31.9789 4.5 26.5 4.5C21.0211 4.5 16.5625 9.04275 16.5625 14.625ZM44.1667 47.25H46.375V45C46.375 36.3172 39.4386 29.25 30.9167 29.25H22.0833C13.5592 29.25 6.625 36.3172 6.625 45V47.25H44.1667Z" fill="#9f00ad82"/>
-            </svg>
+            <i class="fas fa-user input-icon"></i>
           </div>
         </div>
       </div>
 
       <!-- Celular -->
       <div class="form-field">
-        <div class="input-wrapper">
+        <div class="input-container">
           <input
             id="phone"
             class="input-register-new"
@@ -98,22 +71,13 @@
             :class="{ error: error.phone }"
             @keydown="reset('phone')"
           />
-          <svg
-            class="field-icon"
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path d="M6.62 10.79C8.06 13.62 10.38 15.93 13.21 17.38L15.41 15.18C15.68 14.91 16.08 14.82 16.43 14.94C17.55 15.31 18.76 15.51 20 15.51C20.55 15.51 21 15.96 21 16.51V20C21 20.55 20.55 21 20 21C10.61 21 3 13.39 3 4C3 3.45 3.45 3 4 3H7.5C8.05 3 8.5 3.45 8.5 4C8.5 5.25 8.7 6.45 9.07 7.57C9.18 7.92 9.1 8.31 8.82 8.59L6.62 10.79Z" fill="#9f00ad82"/>
-          </svg>
+          <i class="fas fa-mobile-alt overflow-icon"></i>
         </div>
       </div>
 
       <!-- Correo -->
       <div class="form-field">
-        <div class="input-wrapper">
+        <div class="input-container">
           <input
             id="email"
             class="input-register-new"
@@ -123,23 +87,13 @@
             :class="{ error: error.email }"
             @keydown="reset('email')"
           />
-          <svg
-            class="field-icon"
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path d="M20 4H4C2.9 4 2.01 4.9 2.01 6L2 18C2 19.1 2.9 20 4 20H20C21.1 20 22 19.1 22 18V6C22 4.9 21.1 4 20 4ZM20 8L12 13L4 8V6L12 11L20 6V8Z" fill="#9f00ad82"/>
-          </svg>
+          <i class="fas fa-envelope overflow-icon"></i>
         </div>
       </div>
 
       <!-- Fecha de Nacimiento -->
       <div class="form-field">
-
-        <div class="input-wrapper">
+        <div class="input-container">
           <input
             id="birthDate"
             class="input-register-new"
@@ -149,14 +103,14 @@
             :class="{ error: error.birthDate }"
             @keydown="reset('birthDate')"
           />
+          <i class="fas fa-calendar-alt overflow-icon"></i>
         </div>
       </div>
 
       <!-- Depto, Provincia, Distrito en fila -->
       <div class="form-row">
         <div class="form-field">
-
-          <div class="input-wrapper">
+          <div class="input-container">
             <select
               id="department"
               class="input-register-new select-field"
@@ -169,21 +123,11 @@
                 {{ dept.name }}
               </option>
             </select>
-            <svg
-              class="field-icon"
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path d="M12 2C8.13 2 5 5.13 5 9C5 14.25 12 22 12 22C12 22 19 14.25 19 9C19 5.13 15.87 2 12 2ZM12 11.5C10.62 11.5 9.5 10.38 9.5 9C9.5 7.62 10.62 6.5 12 6.5C13.38 6.5 14.5 7.62 14.5 9C14.5 10.38 13.38 11.5 12 11.5Z" fill="#9f00ad82"/>
-            </svg>
+            <i class="fas fa-map-marker-alt input-icon"></i>
           </div>
         </div>
         <div class="form-field">
-
-          <div class="input-wrapper">
+          <div class="input-container">
             <select
               id="province"
               class="input-register-new select-field"
@@ -197,21 +141,11 @@
                 {{ prov.name }}
               </option>
             </select>
-            <svg
-              class="field-icon"
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path d="M12 2C8.13 2 5 5.13 5 9C5 14.25 12 22 12 22C12 22 19 14.25 19 9C19 5.13 15.87 2 12 2ZM12 11.5C10.62 11.5 9.5 10.38 9.5 9C9.5 7.62 10.62 6.5 12 6.5C13.38 6.5 14.5 7.62 14.5 9C14.5 10.38 13.38 11.5 12 11.5Z" fill="#9f00ad82"/>
-            </svg>
+            <i class="fas fa-map-marker-alt input-icon"></i>
           </div>
         </div>
         <div class="form-field">
-
-          <div class="input-wrapper">
+          <div class="input-container">
             <select
               id="district"
               class="input-register-new select-field"
@@ -225,23 +159,14 @@
                 {{ dist.name }}
               </option>
             </select>
-            <svg
-              class="field-icon"
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path d="M12 2C8.13 2 5 5.13 5 9C5 14.25 12 22 12 22C12 22 19 14.25 19 9C19 5.13 15.87 2 12 2ZM12 11.5C10.62 11.5 9.5 10.38 9.5 9C9.5 7.62 10.62 6.5 12 6.5C13.38 6.5 14.5 7.62 14.5 9C14.5 10.38 13.38 11.5 12 11.5Z" fill="#9f00ad82"/>
-            </svg>
+            <i class="fas fa-map-marker-alt input-icon"></i>
           </div>
         </div>
       </div>
 
       <!-- Contraseña -->
       <div class="form-field">
-        <div class="input-wrapper">
+        <div class="input-container">
           <input
             id="password"
             class="input-register-new"
@@ -251,23 +176,17 @@
             :class="{ error: error.password }"
             @keydown="reset('password')"
           />
-          <svg 
-            class="field-icon show-password" 
-            width="16" 
-            height="16" 
-            viewBox="0 0 54 54" 
-            fill="none" 
-            xmlns="http://www.w3.org/2000/svg"
+          <i 
+            :class="showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"
+            class="overflow-icon password-icon"
             @click="showPassword = !showPassword"
-          >
-            <path d="M27 20.25C25.2098 20.25 23.4929 20.9612 22.227 22.227C20.9612 23.4929 20.25 25.2098 20.25 27C20.25 28.7902 20.9612 30.5071 22.227 31.773C23.4929 33.0388 25.2098 33.75 27 33.75C28.7902 33.75 30.5071 33.0388 31.773 31.773C33.0388 30.5071 33.75 28.7902 33.75 27C33.75 25.2098 33.0388 23.4929 31.773 22.227C30.5071 20.9612 28.7902 20.25 27 20.25ZM27 38.25C24.0163 38.25 21.1548 37.0647 19.045 34.955C16.9353 32.8452 15.75 29.9837 15.75 27C15.75 24.0163 16.9353 21.1548 19.045 19.045C21.1548 16.9353 24.0163 15.75 27 15.75C29.9837 15.75 32.8452 16.9353 34.955 19.045C37.0647 21.1548 38.25 24.0163 38.25 27C38.25 29.9837 37.0647 32.8452 34.955 34.955C32.8452 37.0647 29.9837 38.25 27 38.25ZM27 10.125C15.75 10.125 6.1425 17.1225 2.25 27C6.1425 36.8775 15.75 43.875 27 43.875C38.25 43.875 47.8575 36.8775 51.75 27C47.8575 17.1225 38.25 10.125 27 10.125Z" fill="#9f00ad82"/>
-          </svg>
+          ></i>
         </div>
       </div>
 
       <!-- Código de patrocinador -->
       <div class="form-field">
-        <div class="input-wrapper">
+        <div class="input-container">
           <input
             id="sponsorCode"
             class="input-register-new"
@@ -276,16 +195,7 @@
             :class="{ error: error.sponsorCode }"
             @keydown="reset('sponsorCode')"
           />
-          <svg
-            class="field-icon"
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path d="M21.41 11.58L12.41 2.58C12.05 2.22 11.55 2 11 2H4C2.9 2 2 2.9 2 4V11C2 11.55 2.22 12.05 2.59 12.42L11.59 21.42C11.95 21.78 12.45 22 13 22C13.55 22 14.05 21.78 14.41 21.41L21.41 14.41C21.78 14.05 22 13.55 22 13C22 12.45 21.77 11.94 21.41 11.58ZM5.5 7C4.67 7 4 6.33 4 5.5C4 4.67 4.67 4 5.5 4C6.33 4 7 4.67 7 5.5C7 6.33 6.33 7 5.5 7Z" fill="#9f00ad82"/>
-          </svg>
+          <i class="fas fa-tag overflow-icon"></i>
         </div>
       </div>
 
@@ -1221,161 +1131,7 @@ export default {
   },
 };
 </script>
-<style scoped>
-input[type="checkbox"]:checked {
-  accent-color: #d209b6; /* Cambia el color del checkbox a verde en navegadores compatibles */
-}
-
-.register-button {
-  /* Color de fondo normal */
-  background: #9f00ad;
-  width: 280px; /* Ancho del botón */
-  height: 50px; /* Altura del botón */
-  color: white; /* Color del texto */
-  border: none; /* Sin borde */
-  cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
-  transition: background 0.3s ease;
-  border-radius: 18px;
-  margin: 8px 0;
-  transition: all 0.3s ease; /* Transición suave para el hover */
-}
-
-.register-button:hover {
-  background: #d209b6; /* Color de fondo al hacer hover */
-}
-.tab-login {
-  font-size: 15px;
-  color: rgba(137, 136, 141, 1);
-  text-decoration: none;
-  padding: 10px 20px;
-  border-bottom: solid 2px rgba(137, 136, 141, 1);
-  transition: all 0.3s ease;
-}
-
-.tab-login.active {
-  color: #4b2e12; /* marrón oscuro */
-  border-bottom: solid 4px #ffb57a; /* barra amarilla más gruesa */
-  font-weight: bold;
-  transition: all 0.1s ease;
-  position: relative;
-}
-
-.tab-login.active::after {
-  content: '';
-  position: absolute;
-  bottom: -4px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 100%; /* Barra que cubre todo el ancho de la pestaña */
-  height: 4px;
-  background-color: #FFD900;
-  border-radius: 2px;
-}
-@media (min-width: 1260px) {
-  .tab-login {
-    display: none;
-  }
-}
-@media (max-width: 1260px) {
-  .logos {
-    display: none;
-  }
-}
-@media (max-width: 1260px) {
-  .label-register {
-    margin-left: 20px;
-    /* margin-top: 5px; */
-    white-space: nowrap;
-  }
-}
-@media (max-width: 1024px) {
-  .register-button {
-    margin-left: 15px;
-  }
-}
-
-.alert-message {
-  background-color: #fee;
-  color: #c00;
-  padding: 12px 16px;
-  border-radius: 8px;
-  border: 1px solid #fcc;
-  margin: 12px 0;
-  font-size: 14px;
-  text-align: center;
-  max-width: 280px;
-  margin-left: auto;
-}
-
-/* Estilos para labels */
-.label-register {
-  font-size: 12px;
-  color: rgba(137, 136, 141, 1);
-  display: block;
-  text-align: left;
-  margin-bottom: 5px;
-}
-
-/* Wrapper para input con icono */
-.input-wrapper {
-  position: relative;
-  display: inline-block;
-  width: 100%;
-}
-
-/* Iconos dentro de los campos */
-.field-icon {
-  position: absolute;
-  right: 12px;
-  top: 50%;
-  transform: translateY(-50%);
-  pointer-events: none;
-  z-index: 10;
-}
-
-/* Icono de contraseña con cursor pointer */
-.show-password {
-  cursor: pointer;
-  pointer-events: auto;
-}
-
-/* Ajustar padding de inputs para dar espacio al icono */
-.input-register-new {
-  padding-right: 40px !important;
-}
-
-/* Media queries para mobile */
-@media (max-width: 768px) {
-  .label-register {
-    margin-left: 10px;
-    font-size: 11px;
-  }
-  
-  .field-icon {
-    right: 10px;
-    width: 14px;
-    height: 14px;
-  }
-  
-  .input-register-new {
-    padding-right: 35px !important;
-  }
-}
-
-@media (max-width: 480px) {
-  .label-register {
-    margin-left: 5px;
-    font-size: 10px;
-  }
-  
-  .field-icon {
-    right: 8px;
-    width: 13px;
-    height: 13px;
-  }
-  
-  .input-register-new {
-    padding-right: 30px !important;
-  }
-}
+<style scoped lang="stylus">
+@import '~@/assets/style/register.styl';
 </style>
+

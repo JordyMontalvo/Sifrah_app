@@ -1,0 +1,221 @@
+// Estilos específicos para Login.vue
+
+.login-button
+  border-radius 29px
+  width 345px
+  height 50px
+  background #9f00ad
+  color white // Color del texto
+  border none // Sin borde
+  cursor pointer // Cambia el cursor al pasar sobre el botón
+  transition background 0.3s ease
+  margin-left 13px
+  margin-top 10px
+  transition all 0.3s ease // Transición suave para el hover
+
+  &:hover
+    background #d209b6 // Color de fondo al hacer hover
+
+// Google Login Button Styles
+.google-login-btn
+  display flex
+  align-items center
+  justify-content center
+  width 200px
+  height 40px
+  margin 0 auto 8px auto
+  background #fff
+  color #444
+  border 1px solid #ddd
+  border-radius 20px
+  font-size 14px
+  font-weight 500
+  box-shadow 0 1px 2px rgba(0, 0, 0, 0.04)
+  cursor pointer
+  transition box-shadow 0.2s, border 0.2s
+  padding 0 10px
+  margin-bottom -22px
+
+  &:hover
+    box-shadow 0 2px 6px rgba(66, 133, 244, 0.12)
+    border 1px solid #bcbcbc
+
+.google-logo-img
+  width 18px
+  height 18px
+  margin-right 8px
+  display block
+
+.tab-login
+  font-size 15px
+  color rgba(137, 136, 141, 1)
+  text-decoration none
+  padding 10px 20px
+  border-bottom solid 2px rgba(137, 136, 141, 1)
+  transition all 0.3s ease
+  margin-top 10%
+  margin-bottom 10%
+  transition all 0.3s ease
+
+  &.active
+    color #9F00AD // marrón oscuro
+    border-bottom solid 4px #FFD900 // barra amarilla más gruesa
+    font-weight bold
+    transition all 0.3s ease
+    position relative
+
+    &::after
+      content ''
+      position absolute
+      bottom -4px
+      left 50%
+      transform translateX(-50%)
+      width 100% // Barra que cubre todo el ancho de la pestaña
+      height 4px
+      background-color #FFD900
+      border-radius 2px
+
+.label-login-2
+  font-size 12px
+  color rgba(137, 136, 141, 1)
+  display block
+  margin-right 460px
+  margin-top 10px
+
+.label-login
+  font-size 12px
+  color rgba(137, 136, 141, 1)
+  display block
+  margin-right 430px
+
+@media (max-width: 1260px)
+  .logos
+    display none
+
+@media (min-width: 1260px)
+  .tab-login
+    display none
+
+@media (max-width: 1260px)
+  .login-button
+    width 280px
+
+@media (max-width: 1260px)
+  .label-login
+    margin-right 195px
+    margin-top -13px
+
+@media (max-width: 1260px)
+  .label-login-2
+    margin-right 195px
+    margin-top -13px
+
+@media (max-width: 1024px)
+  .input-wrapper
+    max-width 400px !important
+  
+  .icon
+    right 15px !important
+    font-size 16px !important
+  
+  .dni-icon
+    right 15px !important
+    width 16px !important
+    height 16px !important
+  
+  .show
+    right 15px !important
+    font-size 16px !important
+  
+  .input
+    padding-right 45px !important
+    width 100% !important
+    box-sizing border-box !important
+  
+  .input.pass
+    padding-right 45px !important
+    width 100% !important
+    box-sizing border-box !important
+
+// Ajustes para móviles más pequeños
+@media (max-width: 768px)
+  .input-wrapper
+    max-width 350px !important
+  
+  .icon
+    right 12px !important
+    font-size 15px !important
+  
+  .dni-icon
+    right 12px !important
+    width 15px !important
+    height 15px !important
+  
+  .show
+    right 12px !important
+    font-size 15px !important
+  
+  .input
+    padding-right 40px !important
+    width 100% !important
+    box-sizing border-box !important
+  
+  .input.pass
+    padding-right 40px !important
+    width 100% !important
+    box-sizing border-box !important
+
+// Ajustes adicionales para móviles más pequeños
+@media (max-width: 480px)
+  .input-wrapper
+    max-width 320px !important
+  
+  .icon
+    right 10px !important
+    font-size 14px !important
+  
+  .dni-icon
+    right 10px !important
+    width 14px !important
+    height 14px !important
+  
+  .show
+    right 10px !important
+    font-size 14px !important
+  
+  .input
+    padding-right 35px !important
+  
+  .input.pass
+    padding-right 35px !important
+
+// Ajustes de margin-top para móvil
+@media (max-width: 768px)
+  .social
+    margin-top -30px !important
+  
+  .login-link
+    margin-top -10px !important
+
+@media (max-width: 375px)
+  .input-wrapper
+    max-width 300px !important
+  
+  .icon
+    right 8px !important
+    font-size 13px !important
+  
+  .dni-icon
+    right 8px !important
+    width 13px !important
+    height 13px !important
+  
+  .show
+    right 8px !important
+    font-size 13px !important
+  
+  .input
+    padding-right 30px !important
+  
+  .input.pass
+    padding-right 30px !important
