@@ -107,7 +107,7 @@
         </div>
       </div>
 
-      <!-- Depto, Provincia, Distrito en fila -->
+      <!-- Depto y Provincia en fila -->
       <div class="form-row">
         <div class="form-field">
           <div class="input-container">
@@ -139,24 +139,6 @@
               <option value="" disabled>Provincia</option>
               <option v-for="prov in availableProvinces" :key="prov.value" :value="prov.value">
                 {{ prov.name }}
-              </option>
-            </select>
-            <i class="fas fa-map-marker-alt input-icon"></i>
-          </div>
-        </div>
-        <div class="form-field">
-          <div class="input-container">
-            <select
-              id="district"
-              class="input-register-new select-field"
-              v-model="district"
-              :class="{ error: error.district }"
-              @change="reset('district')"
-              :disabled="!province"
-            >
-              <option value="" disabled>Distrito</option>
-              <option v-for="dist in availableDistricts" :key="dist.value" :value="dist.value">
-                {{ dist.name }}
               </option>
             </select>
             <i class="fas fa-map-marker-alt input-icon"></i>
@@ -284,7 +266,6 @@ export default {
       showPassword: false,
       department: "",
       province: "",
-      district: "",
       code: null,
       check: false,
       
@@ -555,259 +536,12 @@ export default {
           { value: 'atalaya', name: 'Atalaya' },
           { value: 'padre-abad', name: 'Padre Abad' },
           { value: 'purus', name: 'Purus' }
-        ]
-      },
-      
-      // Datos estáticos de distritos por provincia
-      districtsData: {
-        'amazonas-chachapoyas': [
-          { value: 'chachapoyas', name: 'Chachapoyas' },
-          { value: 'asuncion', name: 'Asunción' },
-          { value: 'balsas', name: 'Balsas' },
-          { value: 'cheto', name: 'Cheto' },
-          { value: 'chiliquin', name: 'Chiliquín' },
-          { value: 'chuquibamba', name: 'Chuquibamba' },
-          { value: 'granada', name: 'Granada' },
-          { value: 'huancas', name: 'Huancas' },
-          { value: 'la-jalca', name: 'La Jalca' },
-          { value: 'leimebamba', name: 'Leimebamba' },
-          { value: 'levanto', name: 'Levanto' },
-          { value: 'magdalena', name: 'Magdalena' },
-          { value: 'mariscal-castilla', name: 'Mariscal Castilla' },
-          { value: 'molinopampa', name: 'Molinopampa' },
-          { value: 'montevideo', name: 'Montevideo' },
-          { value: 'olleros', name: 'Olleros' },
-          { value: 'quinjalca', name: 'Quinjalca' },
-          { value: 'san-francisco-de-daguas', name: 'San Francisco de Daguas' },
-          { value: 'san-isidro-de-maino', name: 'San Isidro de Maino' },
-          { value: 'soloco', name: 'Soloco' },
-          { value: 'sonche', name: 'Sonche' }
         ],
-        'amazonas-bagua': [
-          { value: 'bagua', name: 'Bagua' },
-          { value: 'aramango', name: 'Aramango' },
-          { value: 'copallin', name: 'Copallín' },
-          { value: 'el-parco', name: 'El Parco' },
-          { value: 'imaza', name: 'Imaza' },
-          { value: 'la-peca', name: 'La Peca' }
-        ],
-        'amazonas-bongara': [
-          { value: 'valera', name: 'Valera' },
-          { value: 'chisquilla', name: 'Chisquilla' },
-          { value: 'churuja', name: 'Churuja' },
-          { value: 'corosha', name: 'Corosha' },
-          { value: 'cuispes', name: 'Cuispes' },
-          { value: 'florida', name: 'Florida' },
-          { value: 'jazan', name: 'Jazan' },
-          { value: 'recta', name: 'Recta' },
-          { value: 'san-carlos', name: 'San Carlos' },
-          { value: 'shipasbamba', name: 'Shipasbamba' },
-          { value: 'silvia', name: 'Silvia' },
-          { value: 'yambrasbamba', name: 'Yambrasbamba' }
-        ],
-        'amazonas-condorcanqui': [
-          { value: 'nieva', name: 'Nieva' },
-          { value: 'el-cenepa', name: 'El Cenepa' },
-          { value: 'rio-santiago', name: 'Río Santiago' }
-        ],
-        'amazonas-luya': [
-          { value: 'lamud', name: 'Lamud' },
-          { value: 'camporredondo', name: 'Camporredondo' },
-          { value: 'cocabamba', name: 'Cocabamba' },
-          { value: 'colcamar', name: 'Colcamar' },
-          { value: 'conila', name: 'Conila' },
-          { value: 'inguilpata', name: 'Inguilpata' },
-          { value: 'longuita', name: 'Longuita' },
-          { value: 'lonchilla', name: 'Lonchilla' },
-          { value: 'ocumal', name: 'Ocumal' },
-          { value: 'pisuquia', name: 'Pisuquia' },
-          { value: 'providencia', name: 'Providencia' },
-          { value: 'san-cristobal-de-luya', name: 'San Cristóbal de Luya' },
-          { value: 'san-juan-de-lopecancha', name: 'San Juan de Lopecancha' },
-          { value: 'santa-catalina', name: 'Santa Catalina' },
-          { value: 'santo-tomas', name: 'Santo Tomás' },
-          { value: 'tingo', name: 'Tingo' },
-          { value: 'trita', name: 'Trita' }
-        ],
-        'amazonas-rodriguez-de-mendoza': [
-          { value: 'mendoza', name: 'Mendoza' },
-          { value: 'chirimoto', name: 'Chirimoto' },
-          { value: 'cochamal', name: 'Cochamal' },
-          { value: 'huambo', name: 'Huambo' },
-          { value: 'limabamba', name: 'Limabamba' },
-          { value: 'longar', name: 'Longar' },
-          { value: 'mariscal-benavides', name: 'Mariscal Benavides' },
-          { value: 'milpuc', name: 'Milpuc' },
-          { value: 'omia', name: 'Omia' },
-          { value: 'santa-rosa', name: 'Santa Rosa' },
-          { value: 'totora', name: 'Totora' },
-          { value: 'vista-alegre', name: 'Vista Alegre' }
-        ],
-        'amazonas-utcubamba': [
-          { value: 'bagua-grande', name: 'Bagua Grande' },
-          { value: 'cajaruro', name: 'Cajaruro' },
-          { value: 'cumba', name: 'Cumba' },
-          { value: 'el-milagro', name: 'El Milagro' },
-          { value: 'jamalca', name: 'Jamalca' },
-          { value: 'lonja-grande', name: 'Lonja Grande' },
-          { value: 'yamon', name: 'Yamon' }
-        ],
-        'lima-lima': [
-          { value: 'ate', name: 'Ate' },
-          { value: 'barranco', name: 'Barranco' },
-          { value: 'breña', name: 'Breña' },
-          { value: 'carabayllo', name: 'Carabayllo' },
-          { value: 'chaclacayo', name: 'Chaclacayo' },
-          { value: 'chorrillos', name: 'Chorrillos' },
-          { value: 'cieneguilla', name: 'Cieneguilla' },
-          { value: 'comas', name: 'Comas' },
-          { value: 'el-agustino', name: 'El Agustino' },
-          { value: 'independencia', name: 'Independencia' },
-          { value: 'jesus-maria', name: 'Jesús María' },
-          { value: 'la-molina', name: 'La Molina' },
-          { value: 'la-victoria', name: 'La Victoria' },
-          { value: 'lima', name: 'Lima' },
-          { value: 'lince', name: 'Lince' },
-          { value: 'los-olivos', name: 'Los Olivos' },
-          { value: 'lurigancho', name: 'Lurigancho' },
-          { value: 'lurin', name: 'Lurín' },
-          { value: 'magdalena-del-mar', name: 'Magdalena del Mar' },
-          { value: 'miraflores', name: 'Miraflores' },
-          { value: 'pachacamac', name: 'Pachacamac' },
-          { value: 'pucusana', name: 'Pucusana' },
-          { value: 'pueblo-libre', name: 'Pueblo Libre' },
-          { value: 'puente-piedra', name: 'Puente Piedra' },
-          { value: 'punta-hermosa', name: 'Punta Hermosa' },
-          { value: 'punta-negra', name: 'Punta Negra' },
-          { value: 'rimac', name: 'Rímac' },
-          { value: 'san-bartolo', name: 'San Bartolo' },
-          { value: 'san-borja', name: 'San Borja' },
-          { value: 'san-isidro', name: 'San Isidro' },
-          { value: 'san-juan-de-lurigancho', name: 'San Juan de Lurigancho' },
-          { value: 'san-juan-de-miraflores', name: 'San Juan de Miraflores' },
-          { value: 'san-luis', name: 'San Luis' },
-          { value: 'san-martin-de-porres', name: 'San Martín de Porres' },
-          { value: 'san-miguel', name: 'San Miguel' },
-          { value: 'santa-anita', name: 'Santa Anita' },
-          { value: 'santa-maria-del-mar', name: 'Santa María del Mar' },
-          { value: 'santa-rosa', name: 'Santa Rosa' },
-          { value: 'santiago-de-surco', name: 'Santiago de Surco' },
-          { value: 'surquillo', name: 'Surquillo' },
-          { value: 'villa-el-salvador', name: 'Villa El Salvador' },
-          { value: 'villa-maria-del-triunfo', name: 'Villa María del Triunfo' }
-        ],
-        'callao-callao': [
-          { value: 'bellavista', name: 'Bellavista' },
-          { value: 'callao', name: 'Callao' },
-          { value: 'carmen-de-la-legua-reynoso', name: 'Carmen de la Legua Reynoso' },
-          { value: 'la-perla', name: 'La Perla' },
-          { value: 'la-punta', name: 'La Punta' },
-          { value: 'ventanilla', name: 'Ventanilla' }
-        ],
-        'cajamarca-cajamarca': [
-          { value: 'cajamarca', name: 'Cajamarca' },
-          { value: 'asanmanga', name: 'Asunción' },
-          { value: 'chetilla', name: 'Chetilla' },
-          { value: 'cospan', name: 'Cospán' },
-          { value: 'encanada', name: 'Encañada' },
-          { value: 'jesus', name: 'Jesús' },
-          { value: 'llacanora', name: 'Llacanora' },
-          { value: 'los-banos-del-inca', name: 'Los Baños del Inca' },
-          { value: 'magdalena', name: 'Magdalena' },
-          { value: 'matara', name: 'Matara' },
-          { value: 'namora', name: 'Namora' },
-          { value: 'san-juan', name: 'San Juan' }
-        ],
-        'arequipa-arequipa': [
-          { value: 'arequipa', name: 'Arequipa' },
-          { value: 'alto-selva-alegre', name: 'Alto Selva Alegre' },
-          { value: 'cayma', name: 'Cayma' },
-          { value: 'cerro-colorado', name: 'Cerro Colorado' },
-          { value: 'characato', name: 'Characato' },
-          { value: 'chiguata', name: 'Chiguata' },
-          { value: 'jacobo-hunter', name: 'Jacobo Hunter' },
-          { value: 'la-joya', name: 'La Joya' },
-          { value: 'mariano-melgar', name: 'Mariano Melgar' },
-          { value: 'miraflores', name: 'Miraflores' },
-          { value: 'mollebaya', name: 'Mollebaya' },
-          { value: 'paucarpata', name: 'Paucarpata' },
-          { value: 'pocsi', name: 'Pocsi' },
-          { value: 'polobaya', name: 'Polobaya' },
-          { value: 'quequeña', name: 'Quequeña' },
-          { value: 'sabandia', name: 'Sabandía' },
-          { value: 'sachaca', name: 'Sachaca' },
-          { value: 'san-juan-de-siguas', name: 'San Juan de Siguas' },
-          { value: 'san-juan-de-tarucani', name: 'San Juan de Tarucani' },
-          { value: 'santa-isabel-de-siguas', name: 'Santa Isabel de Siguas' },
-          { value: 'santa-rita-de-siguas', name: 'Santa Rita de Siguas' },
-          { value: 'socabaya', name: 'Socabaya' },
-          { value: 'tiabaya', name: 'Tiabaya' },
-          { value: 'uchumayo', name: 'Uchumayo' },
-          { value: 'vitor', name: 'Vitor' },
-          { value: 'yanahuara', name: 'Yanahuara' },
-          { value: 'yarabamba', name: 'Yarabamba' },
-          { value: 'yura', name: 'Yura' }
-        ],
-        'cusco-cusco': [
-          { value: 'cusco', name: 'Cusco' },
-          { value: 'ccorca', name: 'Ccorca' },
-          { value: 'poroy', name: 'Poroy' },
-          { value: 'san-jeronimo', name: 'San Jerónimo' },
-          { value: 'san-sebastian', name: 'San Sebastián' },
-          { value: 'santiago', name: 'Santiago' },
-          { value: 'saylla', name: 'Saylla' },
-          { value: 'wanchaq', name: 'Wanchaq' }
-        ],
-        'piura-piura': [
-          { value: 'piura', name: 'Piura' },
-          { value: 'castilla', name: 'Castilla' },
-          { value: 'catacaos', name: 'Catacaos' },
-          { value: 'cura-mori', name: 'Cura Mori' },
-          { value: 'el-tallan', name: 'El Tallán' },
-          { value: 'la-arena', name: 'La Arena' },
-          { value: 'la-union', name: 'La Unión' },
-          { value: 'las-lomas', name: 'Las Lomas' },
-          { value: 'tambo-grande', name: 'Tambo Grande' },
-          { value: 'veintiseis-de-octubre', name: 'Veintiséis de Octubre' }
-        ],
-        'la-libertad-trujillo': [
-          { value: 'trujillo', name: 'Trujillo' },
-          { value: 'el-porvenir', name: 'El Porvenir' },
-          { value: 'florencia-de-mora', name: 'Florencia de Mora' },
-          { value: 'huanchaco', name: 'Huanchaco' },
-          { value: 'la-esperanza', name: 'La Esperanza' },
-          { value: 'laredo', name: 'Laredo' },
-          { value: 'moche', name: 'Moche' },
-          { value: 'poroto', name: 'Poroto' },
-          { value: 'salaverry', name: 'Salaverry' },
-          { value: 'simbal', name: 'Simbal' },
-          { value: 'victor-larco-herrera', name: 'Víctor Larco Herrera' }
-        ],
-        'lambayeque-chiclayo': [
-          { value: 'chiclayo', name: 'Chiclayo' },
-          { value: 'cañaris', name: 'Cañaris' },
-          { value: 'ferreñafe', name: 'Ferreñafe' },
-          { value: 'incahuasi', name: 'Incahuasi' },
-          { value: 'jayanca', name: 'Jayanca' },
-          { value: 'lagunas', name: 'Lagunas' },
-          { value: 'monsefú', name: 'Monsefú' },
-          { value: 'motupe', name: 'Motupe' },
-          { value: 'olmos', name: 'Olmos' },
-          { value: 'pacora', name: 'Pacora' },
-          { value: 'patapo', name: 'Patapo' },
-          { value: 'picsi', name: 'Picsi' },
-          { value: 'pimentel', name: 'Pimentel' },
-          { value: 'pompeya', name: 'Pompeya' },
-          { value: 'pucala', name: 'Pucalá' },
-          { value: 'pueblo-nuevo', name: 'Pueblo Nuevo' },
-          { value: 'reque', name: 'Reque' },
-          { value: 'santa-rosa', name: 'Santa Rosa' },
-          { value: 'saña', name: 'Saña' },
-          { value: 'zana', name: 'Zaña' }
+        'apurimac': [
+          { value: 'abancay', name: 'Abancay' }
         ]
       },
       availableProvinces: [],
-      availableDistricts: [],
       
       error: {
         country: false,
@@ -819,7 +553,6 @@ export default {
         phone: false,
         department: false,
         province: false,
-        district: false,
         password: false,
         sponsorCode: false,
       },
@@ -930,7 +663,7 @@ export default {
   },
   methods: {
     async submit() {
-      const { dni, name, lastName, password, phone, sponsorCode, email, birthDate, acceptTerms, department, province, district } = this;
+      const { dni, name, lastName, password, phone, sponsorCode, email, birthDate, acceptTerms, department, province } = this;
 
       if (!dni) {
         this.error.dni = true;
@@ -990,11 +723,6 @@ export default {
         this.alert = "Debe seleccionar una provincia";
         return;
       }
-      if (!district) {
-        this.error.district = true;
-        this.alert = "Debe seleccionar un distrito";
-        return;
-      }
       if (!acceptTerms) {
         this.alert = "Debes aceptar los términos.";
         return;
@@ -1014,7 +742,6 @@ export default {
           code: sponsorCode,
           department,
           province,
-          district,
         });
 
         this.sending = false;
@@ -1057,17 +784,14 @@ export default {
       if (name == "sponsorCode") this.error.sponsorCode = false;
       if (name == "department") this.error.department = false;
       if (name == "province") this.error.province = false;
-      if (name == "district") this.error.district = false;
     },
 
     async onDepartmentChange() {
       this.reset('department');
       
-      // Limpiar provincias y distritos cuando cambia el departamento
+      // Limpiar provincias cuando cambia el departamento
       this.province = "";
-      this.district = "";
       this.availableProvinces = [];
-      this.availableDistricts = [];
       
       if (!this.department) return;
       
@@ -1098,35 +822,7 @@ export default {
     async onProvinceChange() {
       this.reset('province');
       
-      // Limpiar distritos cuando cambia la provincia
-      this.district = "";
-      this.availableDistricts = [];
-      
       if (!this.province || !this.department) return;
-      
-      // Primero intentar con datos estáticos
-      const districtKey = `${this.department}-${this.province}`;
-      if (this.districtsData[districtKey]) {
-        this.availableDistricts = this.districtsData[districtKey];
-        return;
-      }
-      
-      // Si no hay datos estáticos, intentar con la API
-      try {
-        const response = await fetch(`/api/app/delivery?type=districts&department=${this.department}&province=${this.province}`);
-        const data = await response.json();
-        
-        if (data.districts && data.districts.length > 0) {
-          this.availableDistricts = data.districts;
-        } else {
-          // Si la API no tiene datos, mostrar mensaje
-          console.warn(`No hay datos de distritos para ${this.department} - ${this.province}`);
-          this.availableDistricts = [];
-        }
-      } catch (error) {
-        console.error('Error cargando distritos desde API:', error);
-        this.availableDistricts = [];
-      }
     },
   },
 };
