@@ -109,6 +109,25 @@ input[type="checkbox"]:checked
   &:hover
     color #d209b6
 
+// Ocultar icono nativo del input date y dar funcionalidad al icono personalizado
+.date-input
+  &::-webkit-calendar-picker-indicator
+    display none
+    -webkit-appearance none
+  
+  &::-webkit-inner-spin-button
+    display none
+    -webkit-appearance none
+
+// Icono de calendario personalizado
+.calendar-icon
+  cursor pointer
+  pointer-events auto
+  transition color 0.3s ease
+  
+  &:hover
+    color #d209b6
+
 // Icono de contraseña con cursor pointer
 .show-icon
   cursor pointer
