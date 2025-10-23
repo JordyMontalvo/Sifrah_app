@@ -104,6 +104,10 @@ input[type="checkbox"]:checked
 .password-icon
   cursor pointer
   pointer-events auto
+  transition color 0.3s ease
+  
+  &:hover
+    color #d209b6
 
 // Icono de contraseña con cursor pointer
 .show-icon
@@ -119,7 +123,7 @@ input[type="checkbox"]:checked
   position absolute
   margin-left -23px
   top 10px
-  pointer-events none
+  pointer-events auto
   color #9f00ad
   font-size 16px
   z-index 10

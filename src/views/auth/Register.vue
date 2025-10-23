@@ -161,7 +161,7 @@
           <i 
             :class="showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"
             class="overflow-icon password-icon"
-            @click="showPassword = !showPassword"
+            @click="togglePassword"
           ></i>
         </div>
       </div>
@@ -823,6 +823,10 @@ export default {
       this.reset('province');
       
       if (!this.province || !this.department) return;
+    },
+
+    togglePassword() {
+      this.showPassword = !this.showPassword;
     },
   },
 };
