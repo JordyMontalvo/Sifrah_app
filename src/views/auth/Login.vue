@@ -27,7 +27,7 @@
           <input
             id="dni"
             class="input"
-            style="border: solid 2px #d209b6; margin-left: 5px; padding-right: 40px;"
+            style="border: solid 2px #d209b6;  padding-right: 40px;"
             placeholder="Dni"
             oninput="this.value=this.value.replace(/(?![0-9])./gmi,'')"
             v-model="dni"
