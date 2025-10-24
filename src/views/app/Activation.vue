@@ -167,7 +167,7 @@
                   </div>
 
 
-                  <div v-if="!isMasterPlan" class="cart-button-container-mobile">
+                  <div class="cart-button-container-mobile">
                     <div class="cart-info-left">
                       <div class="cart-price-info">
                         <span class="total-price">Monto: S/ {{ cartTotal.toFixed(2) }}</span>
@@ -272,8 +272,8 @@
               </div>
             </div>
 
-            <!-- DIV PADRE DEL CARRITO DE COMPRAS - Solo visible si no es plan MASTER -->
-            <div v-if="!isMasterPlan" class="carrito-compras-container">
+            <!-- DIV PADRE DEL CARRITO DE COMPRAS -->
+            <div class="carrito-compras-container">
               <!-- Carrito fijo en el lado derecho -->
               <div class="sticky-cart-sidebar">
                 <div class="cart-header">
@@ -399,8 +399,8 @@
         </div>
       </div>
 
-      <!-- Interfaz del carrito detallado (pegada a la derecha) - Solo visible si no es plan MASTER -->
-      <div v-if="showCartDetailModal && !isMasterPlan" class="cart-detail-interface">
+      <!-- Interfaz del carrito detallado (pegada a la derecha) -->
+      <div v-if="showCartDetailModal" class="cart-detail-interface">
         <div class="cart-detail-interface-content">
 
           <div class="cart-detail-header">
@@ -611,11 +611,6 @@ export default {
       return ["Todos", ...ret];
     },
 
-    // Computed property para determinar si el usuario tiene plan MASTER
-    isMasterPlan() {
-      const plan = this.$store.state.plan;
-      return plan === 'master' || (plan && plan.id === 'master');
-    },
 
     // Computed properties para el catálogo de productos
     catalogProducts() {
