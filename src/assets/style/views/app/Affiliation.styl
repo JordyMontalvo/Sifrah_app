@@ -177,6 +177,7 @@
 /* Sección de paquetes */
 .packages-section
   padding 30px
+  position relative
 
 .section-title
   font-size 1.3rem
@@ -186,7 +187,7 @@
 
 .packages-grid
   display grid
-  grid-template-columns repeat(auto-fit, minmax(280px, 1fr))
+  grid-template-columns repeat(3, 1fr)
   gap 20px
 
 .package-card
@@ -739,6 +740,11 @@
     max-width none
     position static
 
+@media (max-width: 1024px)
+  .packages-grid
+    grid-template-columns repeat(2, 1fr)
+    gap 18px
+
 @media (max-width: 768px)
   .affiliation-main-container
     padding 10px
@@ -752,7 +758,36 @@
     font-size 1.5rem
 
   .packages-grid
-    grid-template-columns 1fr
+    display flex
+    overflow-x auto
+    gap 15px
+    padding 0 10px
+    scroll-snap-type x mandatory
+    -webkit-overflow-scrolling touch
+    scrollbar-width none
+    -ms-overflow-style none
+    position relative
+    
+    &::after
+      content ''
+      position absolute
+      top 0
+      right 0
+      width 20px
+      height 100%
+      background linear-gradient(to left, rgba(255,255,255,1), rgba(255,255,255,0))
+      pointer-events none
+      z-index 1
+    
+    &::-webkit-scrollbar
+      display none
+    
+    .package-card
+      flex 0 0 280px
+      scroll-snap-align start
+      min-height 200px
+      position relative
+      z-index 2
 
   .products-grid
     grid-template-columns repeat(auto-fit, minmax(200px, 1fr))

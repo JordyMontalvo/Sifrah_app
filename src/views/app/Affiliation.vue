@@ -304,8 +304,8 @@
             </div>
           </div>
 
-          <!-- Carrito de compras lateral -->
-          <div class="shopping-cart-sidebar">
+          <!-- Carrito de compras lateral - Solo visible si no es plan MASTER -->
+          <div v-if="!showMasterTrophy" class="shopping-cart-sidebar">
             <div class="cart-header">
               <h3>Carrito de Compras</h3>
               <button class="close-cart-btn">
