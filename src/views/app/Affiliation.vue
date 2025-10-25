@@ -83,7 +83,7 @@
       </div>
 
         <!-- Mensaje que aparece cuando se redirige desde opciones bloqueadas -->
-        <div v-if="showRedirectMessage" class="affiliation-notification">
+        <div v-if="showRedirectMessage && !(affiliation && affiliation.status === 'pending')" class="affiliation-notification">
           <div class="affiliation-notification-content">
             <div class="affiliation-notification-header">
               <i class="fas fa-star" style="color: #ffd700; margin-right: 10px;"></i>
@@ -97,7 +97,7 @@
         
        
         
-        <section v-if="!loading" class="affiliation-main-container">
+        <section v-if="!loading && !(affiliation && affiliation.status === 'pending')" class="affiliation-main-container">
           <!-- Contenido principal -->
           <div class="affiliation-content">
             <div v-if="showMasterTrophy">
