@@ -50,7 +50,7 @@
   font-size 15px
   color rgba(137, 136, 141, 1)
   text-decoration none
-  padding 10px 20px
+  padding 10px 30px
   border-bottom solid 2px rgba(137, 136, 141, 1)
   margin-top 10%
   margin-bottom 10%
@@ -95,7 +95,7 @@
 
 @media (max-width: 1260px)
   .login-button
-    width 280px
+    width 255px
 
 @media (max-width: 1260px)
   .label-login
@@ -182,10 +182,10 @@
     font-size 14px !important
   
   .input
-    padding-right 50px !important
+    padding-right 90px !important
   
   .input.pass
-    padding-right 51px !important
+    padding-right 90px !important
 
 // Ajustes de margin-top para móvil
 @media (max-width: 768px)
@@ -215,5 +215,7 @@
   .input
     padding-right 30px !important
   
-  .input.pass
-    padding-right 30px !important
+// Ocultar título del formulario en móvil
+@media (max-width: 768px)
+  .welcome-title-form
+    display none
