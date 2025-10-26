@@ -97,17 +97,13 @@ export default {
 .auth-tabs {
   position: fixed;
   top: 0;
-  left: 45%;
-  margin-top: 25px;
-  transform: translateX(100%);
+  left: 60%;
   display: flex;
   background-color: #9f00ad; /* fondo base */
   border-radius: 0;
-  overflow: hidden;
   width: fit-content;
   z-index: 1000;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  transition: all 0.1s ease;
 }
 
 /* Responsive para las pestañas */
@@ -149,25 +145,20 @@ export default {
   color: white;
   font-weight: bold;
   background-color: transparent;
-  transition: background 0.3s ease;
   display: flex; /* Para centrar el texto */
   align-items: center; /* Centrar verticalmente */
   justify-content: center;
-  transition: all 0.1s ease;
   /* Centrar horizontalmente */
 }
 .tab:first-child.active {
   border-bottom-left-radius: 0;
-  transition: all 0.1s ease;
 }
 .tab.active {
   border-bottom-right-radius: 0;
-  transition: all 0.1s ease;
 }
 .tab.active {
   background-color: #FFD900;
   color: #9F00AD;
-  transition: all 0.3s ease;
 }
 
 .form {
@@ -301,7 +292,7 @@ export default {
 /* Estilos específicos para la página de registro en móvil */
 @media (max-width: 768px) {
   .auth.register-page .mobile-welcome-text {
-    top: 100px !important;
+    top: 40px !important;
   }
 }
 

@@ -6,7 +6,7 @@ input[type="checkbox"]:checked
 .register-button
   // Color de fondo normal
   background #9f00ad
-  width 280px // Ancho del botón
+  width 460px // Ancho del botón
   height 50px // Altura del botón
   color white // Color del texto
   border none // Sin borde
@@ -25,13 +25,11 @@ input[type="checkbox"]:checked
   text-decoration none
   padding 10px 20px
   border-bottom solid 2px rgba(137, 136, 141, 1)
-  transition all 0.3s ease
 
   &.active
     color #4b2e12 // marrón oscuro
     border-bottom solid 4px #ffb57a // barra amarilla más gruesa
     font-weight bold
-    transition all 0.1s ease
     position relative
 
     &::after
@@ -90,8 +88,8 @@ input[type="checkbox"]:checked
   top 50%
   transform translateY(-50%)
   pointer-events none
-  color #9f00ad
-  font-size 16px
+  color #9f00ad82
+  font-size 20px
   z-index 10
   margin 0
   padding 0
@@ -140,11 +138,11 @@ input[type="checkbox"]:checked
 // Iconos que se desbordan - posicionamiento específico
 .overflow-icon
   position absolute
-  margin-left -23px
-  top 10px
+  margin-left -30px
+  top 15px
   pointer-events auto
-  color #9f00ad
-  font-size 16px
+  color #9f00ad82
+  font-size 20px
   z-index 10
 
 // Ajustar padding de inputs para dar espacio al icono
@@ -157,7 +155,7 @@ input[type="checkbox"]:checked
 @media (min-width: 1110px) and (max-width: 1199px)
   .input-icon
     right 13px
-    font-size 17px
+    font-size 21px
   
   .input-container .input-register-new
     padding-right 43px
@@ -165,7 +163,7 @@ input[type="checkbox"]:checked
 @media (min-width: 1200px)
   .input-icon
     right 12px
-    font-size 16px
+    font-size 20px
   
   .input-container .input-register-new
     padding-right 40px
@@ -173,7 +171,7 @@ input[type="checkbox"]:checked
 @media (min-width: 769px) and (max-width: 1109px)
   .input-icon
     right 14px
-    font-size 16px
+    font-size 20px
   
   .input-container .input-register-new
     padding-right 42px
@@ -181,7 +179,7 @@ input[type="checkbox"]:checked
 @media (max-width: 768px)
   .input-icon
     right 10px
-    font-size 14px
+    font-size 18px
   
   .input-container .input-register-new
     padding-right 35px
@@ -189,7 +187,7 @@ input[type="checkbox"]:checked
 @media (max-width: 480px)
   .input-icon
     right 8px
-    font-size 13px
+    font-size 17px
   
   .input-container .input-register-new
     padding-right 30px
@@ -197,7 +195,7 @@ input[type="checkbox"]:checked
 @media (max-width: 375px)
   .input-icon
     right 6px
-    font-size 12px
+    font-size 16px
   
   .input-container .input-register-new
     padding-right 25px
