@@ -132,9 +132,9 @@
       </table>
       <br />
 
-      <a v-bind:href="link">
+      <router-link :to="`/register/${token}`">
         <button class="button">Nuevo Registro</button>
-      </a>
+      </router-link>
       <br />
 
       <i class="icon fas fa-user-shield"></i>

@@ -1,5 +1,5 @@
 <template>
-  <div class="auth" :class="{ 'register-page': $route.path === '/register' }">
+  <div class="auth" :class="{ 'register-page': $route.path.startsWith('/register') }">
     <!-- Frase para móvil en el fondo fucsia -->
     <div class="mobile-welcome-text">
       <h1 class="mobile-welcome-title">BIENVENIDO</h1>
@@ -17,7 +17,7 @@
       <router-link
         to="/register"
         class="tab"
-        :class="{ active: $route.path === '/register' }"
+        :class="{ active: $route.path.startsWith('/register') }"
       >
         REGISTRO
       </router-link>
