@@ -98,8 +98,18 @@
        
         
         <section v-if="!loading && !(affiliation && affiliation.status === 'pending')" class="affiliation-main-container">
-          <!-- Contenido principal -->
-          <div class="affiliation-content">
+          <!-- Banner principal - Fuera del contenedor para ocupar todo el ancho -->
+          <div v-if="!showMasterTrophy && step === 1" class="affiliation-banner-full">
+            <div class="banner-content">
+              <h3>¡Comienza tu viaje con Sifrah!</h3>
+              <p>Elige tu plan de afiliación y descubre un mundo de oportunidades</p>
+            </div>
+          </div>
+
+          <!-- Contenedor principal con layout flex -->
+          <div class="affiliation-content-wrapper">
+            <!-- Contenido principal -->
+            <div class="affiliation-content">
             <div v-if="showMasterTrophy">
               <div class="master-trophy-container">
                 <img
@@ -129,13 +139,6 @@
           </div>
               <!-- Paso 1: Selección de productos -->
               <div v-if="step === 1">
-                <!-- Banner principal -->
-                <div class="affiliation-banner">
-                  <div class="banner-content">
-                    <h3>¡Comienza tu viaje con Sifrah!</h3>
-                    <p>Elige tu plan de afiliación y descubre un mundo de oportunidades</p>
-                  </div>
-                </div>
 
                 <!-- Sección 1: Selección de paquetes -->
                 <div class="packages-section">
@@ -221,69 +224,57 @@
                   </div>
 
                   <!-- Grid de productos -->
-                  <div class="products-grid">
+                  <div class="products-catalog-grid">
                     <div 
                       v-for="(product, i) in filteredCatalogProducts" 
                       :key="product.id || i"
-                      class="product-card"
+                      class="product-catalog-card"
                       v-if="
                         product.plans &&
                         product.plans[selec_plan.id] &&
                         Object.values(product.plans).some((plan) => plan === true)
                       "
+                      @click="openProductModal(product)"
                     >
+                      <!-- Esquina decorativa de la tarjeta -->
+                      <div class="card-corner"></div>
+                      
                       <!-- Badge de puntos -->
-                      <div class="product-points-badge">
+                      <div class="points-badge">
                         <i class="fas fa-star"></i>
                         {{ product.points }} pts
                       </div>
                       
                       <!-- Imagen del producto -->
-                      <div class="product-image-container" @click="openProductModal(product)">
+                      <div class="product-image-container">
                         <img 
                           :src="product.img || 'https://via.placeholder.com/150x150/f0f0f0/666666?text=Sin+Imagen'" 
                           :alt="product.name"
-                          class="product-image"
+                          class="product-catalog-img"
                           @error="handleImageError"
                           @load="handleImageLoad"
                         />
                       </div>
                      
                       <!-- Información del producto -->
-                      <div class="product-info">
-                        <h4 class="product-name">{{ product.name }}</h4>
-                        <div class="product-description">
-                          {{ product.subdescription || product.description }}
+                      <div class="product-catalog-info">
+                        <h4 class="product-catalog-name">{{ product.name }}</h4>
+                        <div v-if="product.subdescription" class="product-catalog-info-text">
+                          {{ product.subdescription }}
                         </div>
-                        <div class="product-price">
+                        <div class="product-catalog-price">
                           Precio Socio: <span class="price-amount">S/ {{ getProductPrice(product) }}</span>
                         </div>
                       </div>
                      
                       <!-- Controles de cantidad -->
-                      <div class="product-controls">
-                        <div v-if="upgradeMode ? upgradeProducts[i].total > 0 : products[i].total > 0" class="quantity-selector">
-                          <button class="qty-btn" @click.stop="less(i)">-</button>
-                          <span class="qty-display">
-                            {{ upgradeMode ? upgradeProducts[i].total : products[i].total }}
-                          </span>
-                          <button
-                            class="qty-btn"
-                            @click.stop="more(i)"
-                            :disabled="
-                              upgradeMode
-                                ? totalUpgradeProducts +
-                                    (Number(product.weight) || 1) >
-                                  maxUpgradeProducts
-                                : false
-                            "
-                          >
-                            +
-                          </button>
-                        </div>
-                        <button 
-                          v-else
-                          class="add-to-cart-btn"
+                      <div v-if="upgradeMode ? upgradeProducts[i].total > 0 : products[i].total > 0" class="product-quantity-controls">
+                        <button class="qty-control-btn" @click.stop="less(i)">-</button>
+                        <span class="qty-display">
+                          {{ upgradeMode ? upgradeProducts[i].total : products[i].total }}
+                        </span>
+                        <button
+                          class="qty-control-btn"
                           @click.stop="more(i)"
                           :disabled="
                             upgradeMode
@@ -293,19 +284,33 @@
                               : false
                           "
                         >
-                          <i class="fas fa-shopping-cart"></i>
-                          Agregar
+                          +
                         </button>
                       </div>
+                      <button 
+                        v-else
+                        class="add-to-cart-btn"
+                        @click.stop="more(i)"
+                        :disabled="
+                          upgradeMode
+                            ? totalUpgradeProducts +
+                                (Number(product.weight) || 1) >
+                              maxUpgradeProducts
+                            : false
+                        "
+                      >
+                        <i class="fas fa-shopping-cart"></i>
+                        Agregar
+                      </button>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
+            </div>
 
-          <!-- Carrito de compras lateral - Solo visible si no es plan MASTER -->
-          <div v-if="!showMasterTrophy" class="shopping-cart-sidebar">
+            <!-- Carrito de compras lateral - Solo visible si no es plan MASTER -->
+            <div v-if="!showMasterTrophy" class="shopping-cart-sidebar">
             <div class="cart-header">
               <h3>Carrito de Compras</h3>
               <button class="close-cart-btn">
@@ -360,7 +365,6 @@
             </div>
             
             <div class="cart-actions">
-              <button class="view-detail-btn">Ver detalle</button>
               <button 
                 class="go-to-pay-btn"
                 :disabled="
@@ -371,7 +375,9 @@
               >
                 Ir a Pagar
               </button>
+              <button class="view-detail-btn">Ver detalle</button>
             </div>
+          </div>
           </div>
         </section>
 
@@ -707,7 +713,16 @@ export default {
       );
       return productsWithPlans
         .map((x) => x.type)
-        .filter((v, i, self) => i == self.indexOf(v));
+        .filter((v, i, self) => i == self.indexOf(v))
+        .map(category => {
+          // Capitalizar correctamente las categorías
+          if (category === 'SALUD') return 'Salud';
+          if (category === 'BELLEZA') return 'Belleza';
+          if (category === 'NUTRICION') return 'Nutrición';
+          if (category === 'BIENESTAR') return 'Bienestar';
+          // Para otras categorías, solo capitalizar la primera letra
+          return category.charAt(0).toUpperCase() + category.slice(1).toLowerCase();
+        });
     },
     title() {
       return "Productos";
@@ -788,7 +803,17 @@ export default {
       return this.products.filter(product => {
         // Solo filtrar por búsqueda y categoría
         const matchesSearch = !this.searchTerm || product.name.toLowerCase().includes(this.searchTerm.toLowerCase());
-        const matchesCategory = this.selectedCategories.length === 0 || this.selectedCategories.includes(product.type);
+        
+        // Convertir las categorías seleccionadas de vuelta a su formato original para comparar
+        const originalSelectedCategories = this.selectedCategories.map(category => {
+          if (category === 'Salud') return 'SALUD';
+          if (category === 'Belleza') return 'BELLEZA';
+          if (category === 'Nutrición') return 'NUTRICION';
+          if (category === 'Bienestar') return 'BIENESTAR';
+          return category.toUpperCase();
+        });
+        
+        const matchesCategory = this.selectedCategories.length === 0 || originalSelectedCategories.includes(product.type);
         
         return matchesSearch && matchesCategory;
       });

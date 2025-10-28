@@ -83,11 +83,39 @@
   padding 0
 
 .affiliation-main-container
-  display flex
-  gap 20px
   max-width 1400px
   margin 0 auto
-  padding 20px
+  padding 0
+
+/* Banner de ancho completo */
+.affiliation-banner-full
+  background #ff6b9d
+  color white
+  padding 40px 30px
+  border-radius 12px
+  text-align center
+  width 100%
+  margin-bottom 20px
+
+  .banner-content
+    max-width 1200px
+    margin 0 auto
+    
+    h3
+      font-size 1.8rem
+      font-weight 700
+      margin 0 0 10px 0
+
+    p
+      font-size 1.1rem
+      margin 0
+      opacity 0.9
+
+/* Contenedor principal con layout flex */
+.affiliation-content-wrapper
+  display flex
+  gap 20px
+  padding 0 20px
 
 .affiliation-content
   flex 2
@@ -107,7 +135,7 @@
   flex-direction column
   height fit-content
   position sticky
-  top 20px
+  top 120px
 
 /* Header de afiliación */
 .affiliation-header
@@ -251,15 +279,16 @@
   border-radius 12px
   text-align center
 
-  h5
-    font-size 1.2rem
-    font-weight 700
-    margin 0 0 8px 0
+  .kit-content
+    h5
+      font-size 1.2rem
+      font-weight 700
+      margin 0 0 8px 0
 
-  p
-    font-size 1rem
-    margin 0
-    opacity 0.9
+    p
+      font-size 1rem
+      margin 0
+      opacity 0.9
 
 /* Sección de productos */
 .products-section
@@ -336,39 +365,87 @@
     color white
     border-color #ff6b9d
 
-/* Grid de productos */
-.products-grid
+/* Grid de productos con estilo de catálogo */
+.products-catalog-grid
   display grid
-  grid-template-columns repeat(auto-fit, minmax(250px, 1fr))
+  grid-template-columns repeat(auto-fit, minmax(280px, 1fr))
   gap 20px
+  width 100%
+  padding 20px 0
 
-.product-card
-  background #fff
-  border 1px solid #e0e0e0
+.product-catalog-card
+  background linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%)
   border-radius 12px
+  box-shadow 0 4px 15px rgba(0,0,0,0.1), 0 2px 6px rgba(0,0,0,0.08)
   padding 20px
+  display flex
+  flex-direction column
+  align-items center
   position relative
-  transition all 0.2s
+  transition all 0.3s ease
   cursor pointer
+  border 1px solid #f0f0f0
+  min-height 300px
+  overflow hidden
 
-  &:hover
-    border-color #ff6b9d
-    transform translateY(-2px)
-    box-shadow 0 8px 25px rgba(255, 107, 157, 0.15)
-
-.product-points-badge
+.product-catalog-card::before
+  content ''
   position absolute
-  top 10px
-  right 10px
+  top 2px
+  left 2px
+  right 2px
+  bottom 2px
+  border 1px solid #f0f0f0
+  border-radius 10px
+  pointer-events none
+  z-index 1
+
+.product-catalog-card::after
+  content ''
+  position absolute
+  top 6px
+  left 6px
+  right 6px
+  bottom 6px
+  border 1px solid #e8e8e8
+  border-radius 8px
+  pointer-events none
+  z-index 1
+
+.product-catalog-card:hover
+  box-shadow 0 8px 25px rgba(0,0,0,0.18), 0 4px 12px rgba(0,0,0,0.12)
+  border 2px solid #ff6b9d
+  transform translateY(-2px)
+  background linear-gradient(145deg, #ffffff 0%, #fafafa 100%)
+
+.product-catalog-card .card-corner
+  position absolute
+  top 0
+  left 0
+  width 0
+  height 0
+  border-style solid
+  border-width 25px 25px 0 0
+  border-color #ff6b9d transparent transparent transparent
+  z-index 2
+  opacity 0.9
+
+.points-badge
+  position absolute
+  top 12px
+  right 12px
   background #ff6b9d
-  color white
-  border-radius 15px
-  padding 4px 8px
+  color #fff
+  border-radius 4px
+  padding 6px 12px
   font-size 0.8rem
   font-weight 600
   display flex
   align-items center
   gap 4px
+  box-shadow 0 3px 8px rgba(0,0,0,0.2)
+  z-index 3
+  border 2px solid #fff
 
 .product-image-container
   width 100%
@@ -379,41 +456,37 @@
   margin-bottom 15px
   overflow hidden
 
-.product-image
+.product-catalog-img
   max-width 100%
   max-height 100%
   object-fit contain
 
-.product-info
+.product-catalog-info
   text-align center
   margin-bottom 15px
+  flex-grow 1
 
-.product-name
+.product-catalog-name
   font-size 1.1rem
   font-weight 700
   color #333
   margin 0 0 8px 0
 
-.product-description
+.product-catalog-info-text
   font-size 0.9rem
   color #666
   margin 0 0 10px 0
 
-.product-price
+.product-catalog-price
   font-size 1rem
   color #333
   font-weight 600
 
   .price-amount
-    color #ff6b9d
+    color #333
     font-weight 700
 
-.product-controls
-  display flex
-  justify-content center
-  align-items center
-
-.quantity-selector
+.product-quantity-controls
   display flex
   align-items center
   gap 10px
@@ -421,7 +494,7 @@
   border-radius 8px
   padding 5px 10px
 
-.qty-btn
+.qty-control-btn
   background #ff6b9d
   color white
   border none
@@ -733,7 +806,7 @@
 
 /* Responsive */
 @media (max-width: 1200px)
-  .affiliation-main-container
+  .affiliation-content-wrapper
     flex-direction column
 
   .shopping-cart-sidebar
@@ -745,9 +818,51 @@
     grid-template-columns repeat(2, 1fr)
     gap 18px
 
+  .products-catalog-grid
+    grid-template-columns repeat(3, 1fr)
+    gap 18px
+
 @media (max-width: 768px)
-  .affiliation-main-container
-    padding 10px
+  .affiliation-content-wrapper
+    padding 0 10px
+
+  .affiliation-banner-full
+    padding 30px 20px
+    margin-bottom 15px
+    
+    .banner-content
+      h3
+        font-size 1.5rem
+      
+      p
+        font-size 1rem
+
+  .products-catalog-grid
+    grid-template-columns repeat(2, 1fr)
+    gap 12px
+
+  .product-catalog-card
+    padding 12px
+    min-height 260px
+
+  .product-image-container
+    height 100px
+
+  .points-badge
+    top 10px
+    right 10px
+    padding 5px 10px
+    font-size 0.75rem
+
+  .product-catalog-name
+    font-size 0.95rem
+
+  .product-catalog-price
+    font-size 0.9rem
+
+  .add-to-cart-btn
+    padding 8px 16px
+    font-size 0.9rem
 
   .affiliation-header
     padding 15px 20px
@@ -801,6 +916,53 @@
 
   .product-modal-image
     max-height 150px
+
+/* Pantallas muy pequeñas */
+@media (max-width: 480px)
+  .affiliation-banner-full
+    padding 20px 15px
+    
+    .banner-content
+      h3
+        font-size 1.3rem
+      
+      p
+        font-size 0.9rem
+
+  .products-catalog-grid
+    grid-template-columns repeat(2, 1fr)
+    gap 10px
+
+  .product-catalog-card
+    padding 8px
+    min-height 240px
+
+  .product-image-container
+    height 80px
+
+  .points-badge
+    top 8px
+    right 8px
+    padding 4px 8px
+    font-size 0.7rem
+
+  .product-catalog-name
+    font-size 0.85rem
+
+  .product-catalog-price
+    font-size 0.8rem
+
+  .qty-control-btn
+    width 24px
+    height 24px
+    font-size 0.9rem
+
+  .add-to-cart-btn
+    padding 6px 12px
+    font-size 0.8rem
+
+  .affiliation-content-wrapper
+    padding 0 5px
 
 /* Estilos existentes que se mantienen */
 .affiliation-bg
