@@ -180,6 +180,20 @@
                     </div>
                   </div>
                 </div>
+                <!-- Resumen del carrito móvil - Copiado de Activation.vue -->
+                <div class="cart-button-container-mobile">
+                  <div class="cart-info-left">
+                    <div class="cart-price-info">
+                      <span class="total-price">Monto: S/ {{ upgradeMode ? upgradeDifference : (selec_plan ? selec_plan.amount : 0) }}.00</span>
+                      <span class="total-items">Puntos: {{ selec_plan ? selec_plan.affiliation_points : 0 }} pts</span>
+                    </div>
+                  </div>
+                  <button @click="showCartDetailModal = true" class="cart-square-btn">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>Ver carrito</span>
+                  </button>
+                </div>
+
                 <!-- Sección 3: Selección de productos -->
                 <div class="products-section">
                   <h4 class="section-title">3.- Escoge tus productos:</h4>
@@ -311,60 +325,140 @@
 
             <!-- Carrito de compras lateral - Solo visible si no es plan MASTER -->
             <div v-if="!showMasterTrophy" class="shopping-cart-sidebar">
-            <div class="cart-header">
-              <h3>Carrito de Compras</h3>
-              <button class="close-cart-btn">
+              <div class="cart-header">
+                <h3>Carrito de Compras</h3>
+                <p class="cart-subtitle">Puedes hacer scroll para ver todos tus productos.</p>
+                <button class="close-cart-btn">
+                  <i class="fas fa-times"></i>
+                </button>
+              </div>
+              
+              <div class="cart-content">
+                <div v-if="(upgradeMode ? totalUpgradeProducts : total) === 0" class="empty-cart">
+                  <div class="empty-cart-icon">
+                    <i class="fas fa-shopping-cart"></i>
+                  </div>
+                  <p class="empty-cart-text">Tu carrito está vacío</p>
+                  <p class="empty-cart-subtext">Agrega productos para comenzar</p>
+                </div>
+                
+                <div v-else class="cart-items">
+                  <div class="cart-scroll">
+                    <div
+                      v-for="product in (upgradeMode ? upgradeProducts : products) || []"
+                      v-if="product.total > 0"
+                      class="cart-item"
+                    >
+                      <img
+                        :src="product.img || 'https://via.placeholder.com/50x50/f0f0f0/666666?text=Sin+Imagen'"
+                        :alt="product.name"
+                        class="cart-item-img"
+                        @error="handleImageError"
+                      />
+                      <div class="cart-item-info">
+                        <span class="cart-item-name">{{ product.name }}</span>
+                        <span class="cart-item-qty">{{ product.total }} x S/{{ getProductPrice(product) }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="cart-summary">
+                <h4 class="summary-title">Resumen</h4>
+                <div class="summary-item">
+                  <span>Total productos:</span>
+                  <span>{{ upgradeMode ? totalUpgradeProducts : total }} items</span>
+                </div>
+                <div class="summary-item">
+                  <span>Puntos:</span>
+                  <span>{{ selec_plan ? selec_plan.affiliation_points : 0 }}.00</span>
+                </div>
+                <div class="summary-total">
+                  <span>Total:</span>
+                  <span>S/ {{ upgradeMode ? upgradeDifference : (selec_plan ? selec_plan.amount : 0) }}.00</span>
+                </div>
+              </div>
+              
+              <div class="cart-actions">
+                <button 
+                  class="go-to-pay-btn"
+                  :disabled="
+                    (upgradeMode ? totalUpgradeProducts : total) !==
+                    (upgradeMode ? maxUpgradeProducts : (selec_plan ? selec_plan.max_products : 0))
+                  "
+                  @click="handleGoToStep2"
+                >
+                  Ir a Pagar
+                </button>
+                <button class="view-detail-btn" @click="showCartDetailModal = true">Ver detalle</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Modal del carrito detallado -->
+        <div v-if="showCartDetailModal" class="cart-detail-modal" @click="closeCartDetailModal">
+          <div class="cart-detail-content" @click.stop>
+            <div class="cart-detail-header">
+              <h2>Carrito de Compras</h2>
+              <p>Puedes hacer scroll para ver todos tus productos.</p>
+              <button @click="closeCartDetailModal" class="close-cart-detail-btn">
                 <i class="fas fa-times"></i>
               </button>
             </div>
             
-            <div class="cart-content">
-              <div v-if="(upgradeMode ? totalUpgradeProducts : total) === 0" class="empty-cart">
-                <div class="empty-cart-icon">
-                  <i class="fas fa-shopping-cart"></i>
+            <div class="cart-detail-body">
+              <!-- Lista de productos del carrito -->
+              <div class="cart-detail-items">
+                <div v-if="cartItems.length === 0" class="empty-cart-detail">
+                  <div class="empty-cart-icon">
+                    <i class="fas fa-shopping-cart"></i>
+                  </div>
+                  <p class="empty-cart-text">Tu carrito está vacío</p>
+                  <p class="empty-cart-subtext">Agrega productos para comenzar</p>
                 </div>
-                <p class="empty-cart-text">Tu carrito está vacío</p>
-                <p class="empty-cart-subtext">Agregar productos para comenzar</p>
-              </div>
-              
-              <div v-else class="cart-items">
-                <div class="cart-scroll">
-                  <div
-                    v-for="product in (upgradeMode ? upgradeProducts : products) || []"
-                    v-if="product.total > 0"
-                    class="cart-item"
-                  >
-                    <img
-                      :src="product.img || 'https://via.placeholder.com/50x50/f0f0f0/666666?text=Sin+Imagen'"
-                      :alt="product.name"
-                      class="cart-item-img"
-                      @error="handleImageError"
-                    />
-                    <div class="cart-item-info">
-                      <span class="cart-item-name">{{ product.name }}</span>
-                      <span class="cart-item-qty">{{ product.total }} x S/{{ getProductPrice(product) }}</span>
+                
+                <div v-else class="cart-items">
+                  <div class="cart-scroll">
+                    <div
+                      v-for="product in cartItems"
+                      :key="product.id"
+                      class="cart-item"
+                    >
+                      <img
+                        :src="product.img || 'https://via.placeholder.com/50x50/f0f0f0/666666?text=Sin+Imagen'"
+                        :alt="product.name"
+                        class="cart-item-img"
+                        @error="handleImageError"
+                      />
+                      <div class="cart-item-info">
+                        <span class="cart-item-name">{{ product.name }}</span>
+                        <span class="cart-item-qty">{{ product.total }} x S/{{ getProductPrice(product) }}</span>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
             
-            <div class="cart-summary">
+            <div class="cart-detail-summary">
+              <h4 class="summary-title">Resumen</h4>
               <div class="summary-item">
-                <span>Concepto:</span>
-                <span>{{ selec_plan ? selec_plan.name : 'Sin Pack' }}</span>
+                <span>Total productos:</span>
+                <span>{{ upgradeMode ? totalUpgradeProducts : total }} items</span>
               </div>
               <div class="summary-item">
                 <span>Puntos:</span>
-                <span>{{ selec_plan ? selec_plan.affiliation_points : 0 }} pts</span>
+                <span>{{ selec_plan ? selec_plan.affiliation_points : 0 }}.00</span>
               </div>
               <div class="summary-total">
                 <span>Total:</span>
-                <span>S/. {{ upgradeMode ? upgradeDifference : (selec_plan ? selec_plan.amount : 0) }}</span>
+                <span>S/ {{ upgradeMode ? upgradeDifference : (selec_plan ? selec_plan.amount : 0) }}.00</span>
               </div>
             </div>
             
-            <div class="cart-actions">
+            <div class="cart-detail-actions">
               <button 
                 class="go-to-pay-btn"
                 :disabled="
@@ -375,11 +469,10 @@
               >
                 Ir a Pagar
               </button>
-              <button class="view-detail-btn">Ver detalle</button>
+              <button class="view-detail-btn" @click="closeCartDetailModal">Ver detalle</button>
             </div>
           </div>
-          </div>
-        </section>
+        </div>
 
 
 
@@ -687,6 +780,7 @@ export default {
        selectedCategories: [],
        selectedProduct: null,
        imageLoaded: false,
+       showCartDetailModal: false,
      };
    },
   computed: {
@@ -824,6 +918,16 @@ export default {
       const productsToShow = this.catalogProducts.length > 0 ? this.catalogProducts : this.products;
       
       return productsToShow || [];
+    },
+
+    cartItems() {
+      if (!this.products) return [];
+      
+      if (this.upgradeMode) {
+        return this.upgradeProducts.filter(product => product.total > 0);
+      } else {
+        return this.products.filter(product => product.total > 0);
+      }
     },
 
 
@@ -1093,6 +1197,54 @@ export default {
       this.imageLoaded = false; // Resetear la carga de imagen al cerrar el modal
       // Restaurar scroll del body
       document.body.style.overflow = 'auto';
+    },
+
+    closeCartDetailModal() {
+      this.showCartDetailModal = false;
+    },
+
+    increaseQuantity(item) {
+      if (this.upgradeMode) {
+        const productIndex = this.upgradeProducts.findIndex(p => p.id === item.id);
+        if (productIndex !== -1) {
+          this.more(productIndex);
+        }
+      } else {
+        const productIndex = this.products.findIndex(p => p.id === item.id);
+        if (productIndex !== -1) {
+          this.more(productIndex);
+        }
+      }
+    },
+
+    decreaseQuantity(item) {
+      if (this.upgradeMode) {
+        const productIndex = this.upgradeProducts.findIndex(p => p.id === item.id);
+        if (productIndex !== -1) {
+          this.less(productIndex);
+        }
+      } else {
+        const productIndex = this.products.findIndex(p => p.id === item.id);
+        if (productIndex !== -1) {
+          this.less(productIndex);
+        }
+      }
+    },
+
+    removeFromCart(index) {
+      if (this.cartItems[index]) {
+        if (this.upgradeMode) {
+          const productIndex = this.upgradeProducts.findIndex(p => p.id === this.cartItems[index].id);
+          if (productIndex !== -1) {
+            this.upgradeProducts[productIndex].total = 0;
+          }
+        } else {
+          const productIndex = this.products.findIndex(p => p.id === this.cartItems[index].id);
+          if (productIndex !== -1) {
+            this.products[productIndex].total = 0;
+          }
+        }
+      }
     },
 
     handleImageError(event) {

@@ -547,30 +547,44 @@
     cursor not-allowed
     transform none
 
-/* Carrito lateral */
+/* Carrito lateral - Diseño móvil moderno */
 .cart-header
-  display flex
-  justify-content space-between
-  align-items center
   padding 20px
   border-bottom 1px solid #eee
+  position relative
 
   h3
     font-size 1.2rem
     font-weight 700
     color #333
-    margin 0
+    margin 0 0 8px 0
+
+.cart-subtitle
+  font-size 0.9rem
+  color #999
+  margin 0
+  font-weight 400
 
 .close-cart-btn
+  position absolute
+  top 20px
+  right 20px
   background none
   border none
   font-size 1.2rem
   color #999
   cursor pointer
   transition color 0.2s
+  width 30px
+  height 30px
+  display flex
+  align-items center
+  justify-content center
+  border-radius 50%
 
   &:hover
     color #ff6b9d
+    background #f8f9fa
 
 .cart-content
   flex 1
@@ -579,21 +593,22 @@
 .empty-cart
   text-align center
   padding 40px 20px
+  border-bottom 1px solid #eee
 
 .empty-cart-icon
   font-size 3rem
-  color #ccc
-  margin-bottom 15px
+  color #ddd
+  margin-bottom 20px
 
 .empty-cart-text
   font-size 1.1rem
   font-weight 600
-  color #666
+  color #8e24aa
   margin 0 0 8px 0
 
 .empty-cart-subtext
   font-size 0.9rem
-  color #999
+  color #999 !important
   margin 0
 
 .cart-items
@@ -634,7 +649,13 @@
 .cart-summary
   padding 20px
   border-top 1px solid #eee
-  background #f8f9fa
+  background #fff
+
+.summary-title
+  font-size 1rem
+  font-weight 700
+  color #333
+  margin 0 0 15px 0
 
 .summary-item
   display flex
@@ -643,21 +664,25 @@
   font-size 0.9rem
 
   span:first-child
-    color #666
+    color #333
+    font-weight 600
 
   span:last-child
     font-weight 600
-    color #333
+    color #d209b6
 
 .summary-total
   display flex
   justify-content space-between
   font-size 1.1rem
   font-weight 700
-  color #ff6b9d
+  color #000
   margin-top 10px
   padding-top 10px
   border-top 1px solid #ddd
+  
+  span:last-child
+    color #d209b6
 
 .cart-actions
   padding 20px
@@ -666,21 +691,7 @@
   gap 10px
 
 .view-detail-btn
-  background #f8f9fa
-  color #666
-  border 1px solid #ddd
-  border-radius 8px
-  padding 12px
-  font-weight 600
-  cursor pointer
-  transition all 0.2s
-
-  &:hover
-    background #e9ecef
-    color #333
-
-.go-to-pay-btn
-  background #ff6b9d
+  background #8e24aa
   color white
   border none
   border-radius 8px
@@ -688,10 +699,26 @@
   font-weight 600
   cursor pointer
   transition all 0.2s
+  order 2
+
+  &:hover
+    background #7b1fa2
+    transform translateY(-1px)
+
+.go-to-pay-btn
+  background #ba68c8
+  color white
+  border none
+  border-radius 8px
+  padding 12px
+  font-weight 600
+  cursor pointer
+  transition all 0.2s
+  order 1
 
   &:hover:not(:disabled)
-    background #e55a8a
-    transform translateY(-2px)
+    background #ab47bc
+    transform translateY(-1px)
 
   &:disabled
     background #ccc
@@ -804,7 +831,233 @@
     background rgba(255, 255, 255, 1)
     transform scale(1.1)
 
+/* Resumen del carrito móvil - Copiado de Activation.vue */
+.cart-button-container-mobile
+  display flex
+  flex-direction row
+  align-items center
+  justify-content space-between
+  margin 15px 0
+  padding 15px 20px
+  background #fff
+  border-radius 15px
+  box-shadow 0 4px 12px rgba(0,0,0,0.1)
+
+.cart-info-left
+  display flex
+  flex-direction column
+  flex 1
+
+.cart-title
+  margin 0 0 8px 0
+  font-size 1.1rem
+  font-weight 600
+  color #333
+
+.cart-price-info
+  display flex
+  flex-direction column
+  gap 4px
+
+.total-price
+  font-size 1rem
+  color #000
+  font-weight 700
+
+.total-items
+  font-size 1rem
+  color #000
+  font-weight 700
+
+.cart-square-btn
+  background #a62994
+  color #fff
+  border none
+  padding 16px 20px
+  border-radius 12px
+  font-size 0.9rem
+  font-weight 600
+  cursor pointer
+  transition all 0.3s ease
+  box-shadow 0 4px 15px rgba(210,9,182,0.341)
+  display flex
+  flex-direction row
+  align-items center
+  justify-content center
+  gap 10px
+  white-space nowrap
+
+.cart-square-btn i
+  font-size 1.2rem
+
+.cart-square-btn:hover
+  background linear-gradient(135deg, #c2185b 0%, #ad1457 100%)
+  transform translateY(-2px)
+  box-shadow 0 6px 20px rgba(255, 107, 53, 0.4)
+
+.cart-square-btn:active
+  transform translateY(0)
+
+/* Modal del carrito detallado */
+.cart-detail-modal
+  position fixed
+  top 0
+  left 0
+  width 100%
+  height 100%
+  background #fff
+  z-index 1000
+  display flex
+  flex-direction column
+
+.cart-detail-content
+  background #fff
+  width 100%
+  height 100%
+  overflow hidden
+  position relative
+  display flex
+  flex-direction column
+
+.cart-detail-header
+  padding 20px
+  border-bottom 1px solid #eee
+  background #fff
+  position relative
+  flex-shrink 0
+
+  h2
+    font-size 1.4rem
+    font-weight 700
+    color #8e24aa
+    margin 0 0 8px 0
+
+  p
+    font-size 0.9rem
+    color #999
+    margin 0
+
+.close-cart-detail-btn
+  position absolute
+  top 15px
+  right 15px
+  background rgba(255, 255, 255, 0.9)
+  border none
+  font-size 1.2rem
+  color #999
+  cursor pointer
+  transition all 0.2s
+  padding 8px
+  border-radius 50%
+  width 35px
+  height 35px
+  display flex
+  align-items center
+  justify-content center
+  z-index 10
+
+  &:hover
+    color #8e24aa
+    background rgba(255, 255, 255, 1)
+    transform scale(1.1)
+
+.cart-detail-body
+  flex 1
+  padding 20px
+  overflow-y auto
+
+.cart-detail-items
+  .empty-cart-detail
+    text-align center
+    padding 40px 20px
+    border-bottom 1px solid #eee
+
+    .empty-cart-icon
+      font-size 3rem
+      color #ddd
+      margin-bottom 20px
+
+    .empty-cart-text
+      font-size 1.1rem
+      font-weight 600
+      color #8e24aa
+      margin 0 0 8px 0
+
+    .empty-cart-subtext
+      font-size 0.9rem
+      color #999 !important
+      margin 0
+
+  .cart-items
+    .cart-scroll
+      max-height 300px
+      overflow-y auto
+
+    .cart-item
+      display flex
+      align-items center
+      gap 12px
+      padding 12px 0
+      border-bottom 1px solid #f0f0f0
+
+      &:last-child
+        border-bottom none
+
+    .cart-item-img
+      width 50px
+      height 50px
+      object-fit contain
+      border-radius 6px
+
+    .cart-item-info
+      flex 1
+
+    .cart-item-name
+      font-size 0.9rem
+      font-weight 600
+      color #333
+      display block
+      margin-bottom 4px
+
+    .cart-item-qty
+      font-size 0.8rem
+      color #666
+
+.cart-detail-summary
+  padding 20px
+  border-top 1px solid #eee
+  background #fff
+  flex-shrink 0
+
+.cart-detail-actions
+  padding 20px
+  display flex
+  flex-direction column
+  gap 10px
+  border-top 1px solid #eee
+  flex-shrink 0
+
 /* Responsive */
+@media (min-width: 768px)
+  .cart-detail-modal
+    background rgba(0,0,0,0.6)
+    display flex
+    justify-content center
+    align-items center
+
+  .cart-detail-content
+    background #fff
+    border-radius 15px
+    box-shadow 0 10px 30px rgba(0,0,0,0.3)
+    width 90%
+    max-width 500px
+    max-height 90vh
+    height auto
+
+@media (min-width: 1060px)
+  .cart-button-container-mobile
+    display none
+
 @media (max-width: 1200px)
   .affiliation-content-wrapper
     flex-direction column
@@ -836,6 +1089,71 @@
       
       p
         font-size 1rem
+
+  /* Resumen del carrito móvil - Copiado de Activation.vue */
+  .cart-button-container-mobile
+    display flex
+    flex-direction row
+    align-items center
+    justify-content space-between
+    margin 15px 0
+    padding 15px 20px
+    background #fff
+    border-radius 15px
+    box-shadow 0 4px 12px rgba(0,0,0,0.1)
+
+  .cart-info-left
+    display flex
+    flex-direction column
+    flex 1
+
+  .cart-price-info
+    display flex
+    flex-direction column
+    gap 4px
+
+  .total-price
+    font-size 1rem
+    color #000
+    font-weight 700
+
+  .total-items
+    font-size 1rem
+    color #000
+    font-weight 700
+
+  .cart-square-btn
+    background #a62994
+    color #fff
+    border none
+    padding 16px 20px
+    border-radius 12px
+    font-size 0.9rem
+    font-weight 600
+    cursor pointer
+    transition all 0.3s ease
+    box-shadow 0 4px 15px rgba(210,9,182,0.341)
+    display flex
+    flex-direction row
+    align-items center
+    justify-content center
+    gap 10px
+    white-space nowrap
+
+  .cart-square-btn i
+    font-size 1.2rem
+
+  .cart-square-btn:hover
+    background linear-gradient(135deg, #c2185b 0%, #ad1457 100%)
+    transform translateY(-2px)
+    box-shadow 0 6px 20px rgba(255, 107, 53, 0.4)
+
+  .cart-square-btn:active
+    transform translateY(0)
+
+  /* Ocultar carrito lateral en móvil */
+  .shopping-cart-sidebar
+    display none
 
   .products-catalog-grid
     grid-template-columns repeat(2, 1fr)
@@ -917,6 +1235,44 @@
   .product-modal-image
     max-height 150px
 
+  /* Modal del carrito en móvil */
+  .cart-detail-content
+    width 95%
+    max-height 95vh
+    margin 10px
+
+  .cart-detail-header
+    padding 15px
+
+  .cart-detail-body
+    padding 15px
+    max-height 300px
+
+  .cart-detail-item
+    padding 12px 0
+    gap 12px
+
+  .cart-detail-item-image
+    width 50px
+    height 50px
+
+  .cart-detail-item-info
+    h4
+      font-size 0.9rem
+
+  .cart-detail-item-details
+    gap 10px
+
+  .cart-detail-item-price,
+  .cart-detail-item-points
+    font-size 0.8rem
+
+  .cart-detail-summary
+    padding 15px
+
+  .cart-detail-actions
+    padding 15px
+
 /* Pantallas muy pequeñas */
 @media (max-width: 480px)
   .affiliation-banner-full
@@ -928,6 +1284,19 @@
       
       p
         font-size 0.9rem
+
+  /* Resumen del carrito en pantallas muy pequeñas */
+  .cart-button-container-mobile
+    margin 12px 0
+    padding 12px 15px
+
+  .total-price,
+  .total-items
+    font-size 0.9rem
+
+  .cart-square-btn
+    padding 12px 16px
+    font-size 0.8rem
 
   .products-catalog-grid
     grid-template-columns repeat(2, 1fr)
@@ -1347,7 +1716,7 @@
   font-size 14px
 
 .summary-total
-  color: #ff9800;
+  color: #000;
   font-weight: 800;
   font-size: 18px;
   margin-top 8px
