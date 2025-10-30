@@ -1,3 +1,5 @@
+@import './Activation.styl'
+
 /* Estilos para el mensaje verde de afiliación */
 .affiliation-notification
   background linear-gradient(135deg, #4CAF50, #45a049)
@@ -1992,8 +1994,8 @@
 }
 .affiliation-alert
   background #fffbe6
-  color #ff9800
-  border 2px solid #ff9800
+  color #d209b6
+  border 2px solid #d209b6
   border-radius 14px
   padding 24px 18px
   margin 32px auto
@@ -2077,3 +2079,28 @@
     transform rotate(0deg)
   100%
     transform rotate(360deg)
+
+/* Overrides móviles para evitar scroll horizontal en el modal del carrito (afiliación) */
+@media (max-width: 768px)
+  .cart-detail-interface
+    overflow-x hidden
+
+  .cart-detail-interface-content
+    width 100% !important
+    max-width 100vw !important
+    box-sizing border-box
+    overflow-x hidden
+    border-radius 0
+
+  .cart-detail-body,
+  .cart-detail-summary,
+  .cart-detail-actions,
+  .cart-detail-items,
+  .cart-detail-item
+    width 100%
+    box-sizing border-box
+    overflow-x hidden
+
+  .cart-detail-item-image img
+    max-width 100%
+    height auto
