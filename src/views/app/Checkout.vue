@@ -859,11 +859,19 @@ export default {
     },
     
     cartTotal() {
+      // Si es checkout de afiliación, usar el precio total del plan
+      if (this.$store.state.isAffiliationCheckout && this.$store.state.affiliationTotal !== null) {
+        return this.$store.state.affiliationTotal;
+      }
       return this.cartItems.reduce((sum, item) => 
         sum + this.getProductPrice(item) * item.total, 0);
     },
     
     cartPoints() {
+      // Si es checkout de afiliación, usar los puntos del plan
+      if (this.$store.state.isAffiliationCheckout && this.$store.state.affiliationPoints !== null) {
+        return this.$store.state.affiliationPoints;
+      }
       return this.cartItems.reduce((sum, item) => 
         sum + item.points * item.total, 0);
     },
@@ -1243,7 +1251,14 @@ export default {
     },
     
     returnToStore() {
-      this.$router.push('/activation');
+      // Si es checkout de afiliación, regresar a affiliation, sino a activation
+      const isAffiliation = this.$store.state.isAffiliationCheckout;
+      if (isAffiliation) {
+        this.$store.commit('clearAffiliationCheckout');
+        this.$router.push('/affiliation');
+      } else {
+        this.$router.push('/activation');
+      }
     },
     
     processOrder() {
@@ -1253,6 +1268,8 @@ export default {
     },
     
     goToDashboard() {
+      // Limpiar estado de afiliación al ir al dashboard
+      this.$store.commit('clearAffiliationCheckout');
       this.$router.push('/dashboard');
     },
     
@@ -1822,6 +1839,7 @@ export default {
         this.activationSuccess = true;
         this.showConfirmation = true;
         this.$store.commit('setCartItems', []); // Limpiar el carrito en el store
+        this.$store.commit('clearAffiliationCheckout'); // Limpiar el estado de afiliación
         // Opcional: limpiar los datos del formulario aquí si no se va a redirigir
         // this.$router.push('/dashboard'); // Redirigir al dashboard o a una página de éxito
 

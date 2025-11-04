@@ -185,7 +185,7 @@
                   <div class="cart-info-left">
                     <div class="cart-price-info">
                       <span class="total-price">Monto: S/ {{ upgradeMode ? upgradeDifference : (selec_plan ? selec_plan.amount : 0) }}.00</span>
-                      <span class="total-items">Puntos: {{ selec_plan ? selec_plan.affiliation_points : 0 }} pts</span>
+                      <span class="total-items">Puntos: {{ upgradeMode ? upgradePoints : (selec_plan ? selec_plan.affiliation_points : 0) }} pts</span>
                     </div>
                   </div>
                   <button @click="openCartDetailModal" class="cart-square-btn">
@@ -381,7 +381,7 @@
                     </div>
                     <div class="summary-row">
                       <span>Puntos:</span>
-                      <span>{{ selec_plan ? selec_plan.affiliation_points : 0 }}.00</span>
+                      <span>{{ upgradeMode ? upgradePoints : (selec_plan ? selec_plan.affiliation_points : 0) }}.00</span>
                     </div>
                     <div class="summary-row total-row">
                       <span>Total:</span>
@@ -468,7 +468,7 @@
                   </div>
                   <div class="summary-row">
                     <span>Puntos:</span>
-                    <span>{{ selec_plan ? selec_plan.affiliation_points : 0 }}.00</span>
+                    <span>{{ upgradeMode ? upgradePoints : (selec_plan ? selec_plan.affiliation_points : 0) }}.00</span>
                   </div>
                   <div class="summary-row total-row">
                     <span>Total:</span>
@@ -1571,7 +1571,35 @@ export default {
         }
       }
       this.selectError = "";
-      this.goToStep(2);
+      
+      // Preparar los productos del carrito para checkout
+      const productsForCart = (this.upgradeMode ? this.upgradeProducts : this.products)
+        .filter(product => product.total > 0)
+        .map(product => ({
+          ...product,
+          price: this.getProductPrice(product),
+          total: product.total
+        }));
+      
+      // Calcular el precio total y los puntos de afiliación
+      const affiliationTotal = this.upgradeMode 
+        ? this.upgradeDifference 
+        : (this.selec_plan ? this.selec_plan.amount : 0);
+      const affiliationPoints = this.upgradeMode
+        ? this.upgradePoints
+        : (this.selec_plan ? this.selec_plan.affiliation_points : 0);
+      
+      // Guardar los productos en el store para que checkout pueda acceder a ellos
+      this.$store.commit('setCartItems', productsForCart);
+      
+      // Guardar el precio total y los puntos de afiliación en el store
+      this.$store.commit('setAffiliationCheckout', {
+        total: affiliationTotal,
+        points: affiliationPoints
+      });
+      
+      // Redirigir a checkout en lugar de cambiar al paso 2
+      this.$router.push('/checkout');
     },
     // async pagarConMercadoPago() {
     //   try {

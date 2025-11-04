@@ -23,6 +23,9 @@ export default new Vuex.Store({
     birthdate:   null,
     total_points: null,
     cartItems: [],
+    affiliationTotal: null,
+    affiliationPoints: null,
+    isAffiliationCheckout: false,
 
     fb:   'https://www.facebook.com/profile.php?id=61555335617817',
     is:   'https://www.instagram.com/sifrahcorp',
@@ -214,6 +217,16 @@ export default new Vuex.Store({
     },
     setCartItems: (state, cartItems) => {
       state.cartItems = cartItems
+    },
+    setAffiliationCheckout: (state, { total, points }) => {
+      state.affiliationTotal = total
+      state.affiliationPoints = points
+      state.isAffiliationCheckout = true
+    },
+    clearAffiliationCheckout: (state) => {
+      state.affiliationTotal = null
+      state.affiliationPoints = null
+      state.isAffiliationCheckout = false
     },
     
     // Mutaciones de menú
