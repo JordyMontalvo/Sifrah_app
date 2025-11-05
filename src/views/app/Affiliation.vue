@@ -1599,7 +1599,17 @@ export default {
       });
       
       // Redirigir a checkout en lugar de cambiar al paso 2
-      this.$router.push('/checkout');
+      console.log('Affiliation.vue: Redirigiendo a checkout con productos:', productsForCart.length);
+      console.log('Affiliation.vue: Estado de afiliación:', this.$store.state.affiliated);
+      this.$router.push('/checkout').catch(err => {
+        console.error('Error al navegar a checkout:', err);
+        // Si hay un error de navegación, intentar de nuevo
+        if (err.name !== 'NavigationDuplicated') {
+          this.$nextTick(() => {
+            this.$router.push('/checkout');
+          });
+        }
+      });
     },
     // async pagarConMercadoPago() {
     //   try {

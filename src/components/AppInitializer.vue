@@ -61,11 +61,6 @@ export default {
           console.log('AppInitializer: Permitiendo acceso a registro con código de referido a pesar de sesión activa');
           // No redirigir
         }
-        // Solo redirigir si es necesario y no estamos ya en la ruta correcta
-        else if (!affiliated && this.$route.path !== '/affiliation' && this.$route.path !== '/profile' && this.$route.path !== '/password' && this.$route.path !== '/security') {
-          console.log('AppInitializer: Usuario no afiliado, redirigiendo a affiliation...');
-          this.$router.push('/affiliation');
-        }
         // Si está afiliado y está en la página de afiliación, redirigir al dashboard
         else if (affiliated && this.$route.path === '/affiliation') {
           console.log('AppInitializer: Usuario afiliado, redirigiendo a dashboard...');
@@ -75,6 +70,15 @@ export default {
         else if (affiliated && this.$route.path === '/') {
           console.log('AppInitializer: Usuario afiliado en raíz, redirigiendo a dashboard...');
           this.$router.push('/dashboard');
+        }
+        // Solo redirigir si es necesario y no estamos ya en la ruta correcta
+        // Permitir acceso a checkout y activation para que usuarios nuevos puedan pagar su paquete de afiliación
+        else if (!affiliated) {
+          const allowedRoutesForNonAffiliated = ['/affiliation', '/profile', '/password', '/security', '/checkout', '/activation'];
+          if (!allowedRoutesForNonAffiliated.includes(this.$route.path)) {
+            console.log('AppInitializer: Usuario no afiliado, redirigiendo a affiliation...');
+            this.$router.push('/affiliation');
+          }
         }
       } else {
         console.log('AppInitializer: No hay sesión activa');
@@ -129,7 +133,9 @@ export default {
         }
         
         // Si no está afiliado y no está en una ruta permitida
-        if (!affiliated && this.$route.path !== '/affiliation' && this.$route.path !== '/profile' && this.$route.path !== '/password' && this.$route.path !== '/security') {
+        // Permitir acceso a checkout y activation para que usuarios nuevos puedan pagar su paquete de afiliación
+        const allowedRoutesForNonAffiliated = ['/affiliation', '/profile', '/password', '/security', '/checkout', '/activation'];
+        if (!affiliated && !allowedRoutesForNonAffiliated.includes(this.$route.path)) {
           console.log('AppInitializer: Redirección por cambio de ruta - usuario no afiliado');
           this.$router.push('/affiliation');
         }

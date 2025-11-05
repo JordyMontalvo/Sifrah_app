@@ -330,8 +330,10 @@ router.beforeEach(async (to, from, next) => {
     return
   }
 
-  // Si está autenticado pero no afiliado y no está en afiliación
-  if (session && !affiliated && to.path !== '/affiliation' && to.path !== '/profile' && to.path !== '/password' && to.path !== '/security') {
+  // Permitir acceso explícito a checkout y activation para usuarios no afiliados
+  // Esto permite que usuarios nuevos puedan pagar su paquete de afiliación
+  const allowedRoutesForNonAffiliated = ['/affiliation', '/profile', '/password', '/security', '/checkout', '/activation']
+  if (session && (affiliated === false || affiliated === null) && !allowedRoutesForNonAffiliated.includes(to.path)) {
     console.log('Router Guard: Usuario autenticado pero no afiliado, redirigiendo a /affiliation')
     next({ path: '/affiliation' })
     return
