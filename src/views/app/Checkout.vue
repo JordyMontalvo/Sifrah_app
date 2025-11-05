@@ -1826,20 +1826,75 @@ export default {
           return;
         }
 
-        console.log('Payload de activación final a enviar:', payload);
         const session = this.$store.state.session;
-        const { data } = await api.Activation.POST(session, payload);
+        const isAffiliationCheckout = this.$store.state.isAffiliationCheckout;
+        
+        // Si es checkout de afiliación, usar el endpoint de afiliación
+        if (isAffiliationCheckout) {
+          const affiliationPlan = this.$store.state.affiliationPlan;
+          if (!affiliationPlan) {
+            throw new Error('No se encontró el plan de afiliación. Por favor, vuelve a seleccionar un plan.');
+          }
+          
+          // Para afiliación, validar que se haya seleccionado una oficina
+          let officeId = null;
+          if (this.deliveryMethod === 'pickup') {
+            if (!this.selectedOffice) {
+              this.activationError = 'Por favor, selecciona un punto de recogida.';
+              this.sending = false;
+              return;
+            }
+            officeId = this.selectedOffice.id;
+          } else {
+            // Para afiliación, si no hay pickup, usar la primera oficina disponible o null
+            // El endpoint de afiliación puede manejar office como null
+            if (this.offices && this.offices.length > 0) {
+              officeId = this.offices[0].id;
+            }
+          }
+          
+          // Construir payload para afiliación
+          const affiliationPayload = {
+            products: productsToActivate,
+            plan: affiliationPlan, // El plan completo
+            voucher: voucherUrl,
+            office: officeId,
+            check: this.check,
+            pay_method: this.pay_method,
+            bank: this.selectedBank ? this.getBankInfo(this.selectedBank).name : null,
+            date: this.paymentDate || new Date().toISOString().split('T')[0],
+            voucher_number: this.voucherNumber,
+          };
+          
+          console.log('Payload de afiliación final a enviar:', affiliationPayload);
+          const { data } = await api.Afiliation.POST(session, affiliationPayload);
+          
+          if (data.error) {
+            throw new Error(data.msg || 'Error al procesar la afiliación.');
+          }
+          
+          // Éxito en la afiliación
+          this.orderNumber = data.orderNumber || 'N/A';
+          this.activationSuccess = true;
+          this.showConfirmation = true;
+          this.$store.commit('setCartItems', []); // Limpiar el carrito en el store
+          this.$store.commit('clearAffiliationCheckout'); // Limpiar el estado de afiliación
+        } else {
+          // Es una activación normal
+          console.log('Payload de activación final a enviar:', payload);
+          const { data } = await api.Activation.POST(session, payload);
 
-        if (data.error) {
-          throw new Error(data.msg || 'Error al procesar la activación.');
+          if (data.error) {
+            throw new Error(data.msg || 'Error al procesar la activación.');
+          }
+
+          // Éxito en la activación
+          this.orderNumber = data.orderNumber || 'N/A'; // Suponiendo que la API devuelve un número de orden
+          this.activationSuccess = true;
+          this.showConfirmation = true;
+          this.$store.commit('setCartItems', []); // Limpiar el carrito en el store
+          this.$store.commit('clearAffiliationCheckout'); // Limpiar el estado de afiliación
         }
-
-        // Éxito en la activación
-        this.orderNumber = data.orderNumber || 'N/A'; // Suponiendo que la API devuelve un número de orden
-        this.activationSuccess = true;
-        this.showConfirmation = true;
-        this.$store.commit('setCartItems', []); // Limpiar el carrito en el store
-        this.$store.commit('clearAffiliationCheckout'); // Limpiar el estado de afiliación
         // Opcional: limpiar los datos del formulario aquí si no se va a redirigir
         // this.$router.push('/dashboard'); // Redirigir al dashboard o a una página de éxito
 

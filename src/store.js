@@ -25,6 +25,7 @@ export default new Vuex.Store({
     cartItems: [],
     affiliationTotal: null,
     affiliationPoints: null,
+    affiliationPlan: null,
     isAffiliationCheckout: false,
 
     fb:   'https://www.facebook.com/profile.php?id=61555335617817',
@@ -218,14 +219,16 @@ export default new Vuex.Store({
     setCartItems: (state, cartItems) => {
       state.cartItems = cartItems
     },
-    setAffiliationCheckout: (state, { total, points }) => {
+    setAffiliationCheckout: (state, { total, points, plan }) => {
       state.affiliationTotal = total
       state.affiliationPoints = points
+      state.affiliationPlan = plan
       state.isAffiliationCheckout = true
     },
     clearAffiliationCheckout: (state) => {
       state.affiliationTotal = null
       state.affiliationPoints = null
+      state.affiliationPlan = null
       state.isAffiliationCheckout = false
     },
     

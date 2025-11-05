@@ -1592,10 +1592,11 @@ export default {
       // Guardar los productos en el store para que checkout pueda acceder a ellos
       this.$store.commit('setCartItems', productsForCart);
       
-      // Guardar el precio total y los puntos de afiliación en el store
+      // Guardar el precio total, puntos y plan de afiliación en el store
       this.$store.commit('setAffiliationCheckout', {
         total: affiliationTotal,
-        points: affiliationPoints
+        points: affiliationPoints,
+        plan: this.selec_plan // Guardar el plan completo para usarlo en checkout
       });
       
       // Redirigir a checkout en lugar de cambiar al paso 2

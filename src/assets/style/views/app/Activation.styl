@@ -3807,23 +3807,27 @@
   
   /* Estilos específicos para el modal del carrito en móviles */
   .cart-detail-interface {
-    justify-content: flex-start;
+    justify-content: flex-end;
     align-items: stretch;
   }
   
   .cart-detail-interface-content {
-    width: 59%;
-    height: 100vh;
+    width: 100%;
+    /* Evitar ocupar toda la pantalla en móvil para que no quede espacio en blanco */
+    height: auto;
+    max-height: 92vh;
     border-radius: 0;
-    overflow-y: auto;
+    /* Permitir scroll si el contenido supera la altura */
+    overflow: auto;
     animation: slideInRight 0.3s ease-out;
   }
   
   .cart-detail-body {
     padding: 10px;
-    flex: 1;
-    overflow-y: auto;
-    max-height: calc(100vh - 180px);
+    /* No forzar a ocupar el espacio restante; así no queda hueco blanco */
+    flex: 0 0 auto;
+    overflow-y: visible;
+    max-height: none;
   }
   
   .cart-detail-item {
