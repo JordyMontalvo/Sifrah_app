@@ -291,11 +291,17 @@
                           class="qty-control-btn"
                           @click.stop="more(i)"
                           :disabled="
-                            upgradeMode
-                              ? totalUpgradeProducts +
-                                  (Number(product.weight) || 1) >
-                                maxUpgradeProducts
-                              : false
+                            (() => {
+                              const productName = (product.name || '').toUpperCase();
+                              const itemWeight = (productName.includes('VIGORPROST') || productName.includes('VIGORPF')) 
+                                ? 0.5 
+                                : (Number(product.weight) || 1);
+                              if (upgradeMode) {
+                                return validationTotalItems + itemWeight > maxUpgradeProducts;
+                              } else {
+                                return validationTotalItems + itemWeight > (selec_plan ? selec_plan.max_products : 0);
+                              }
+                            })()
                           "
                         >
                           +
@@ -306,11 +312,17 @@
                         class="add-to-cart-btn"
                         @click.stop="more(i)"
                         :disabled="
-                          upgradeMode
-                            ? totalUpgradeProducts +
-                                (Number(product.weight) || 1) >
-                              maxUpgradeProducts
-                            : false
+                          (() => {
+                            const productName = (product.name || '').toUpperCase();
+                            const itemWeight = (productName.includes('VIGORPROST') || productName.includes('VIGORPF')) 
+                              ? 0.5 
+                              : (Number(product.weight) || 1);
+                            if (upgradeMode) {
+                              return validationTotalItems + itemWeight > maxUpgradeProducts;
+                            } else {
+                              return validationTotalItems + itemWeight > (selec_plan ? selec_plan.max_products : 0);
+                            }
+                          })()
                         "
                       >
                         <i class="fas fa-shopping-cart"></i>
@@ -377,7 +389,7 @@
                   <div class="summary-details">
                     <div class="summary-row">
                       <span>Total productos:</span>
-                      <span class="summary-value">{{ upgradeMode ? totalUpgradeProducts : total }} items</span>
+                      <span class="summary-value">{{ displayTotalItems.toFixed(1) }} items</span>
                     </div>
                     <div class="summary-row">
                       <span>Puntos:</span>
@@ -392,11 +404,11 @@
 
                 <div class="cart-actions">
                   <button 
-                    class="pay-btn"
-                    :disabled="
-                      (upgradeMode ? totalUpgradeProducts : total) !==
-                      (upgradeMode ? maxUpgradeProducts : (selec_plan ? selec_plan.max_products : 0))
-                    "
+                      class="pay-btn"
+                      :disabled="
+                       (upgradeMode ? validationTotalItems : validationTotalItems) !==
+                       (upgradeMode ? maxUpgradeProducts : (selec_plan ? selec_plan.max_products : 0))
+                      "
                     @click="handleGoToStep2"
                   >
                     Ir a Pagar
@@ -442,7 +454,23 @@
                     <div class="cart-detail-quantity-controls">
                       <button @click="decreaseQuantity(item)" class="qty-control-btn">-</button>
                       <span class="quantity-display">{{ item.total }}</span>
-                      <button @click="increaseQuantity(item)" class="qty-control-btn">+</button>
+                      <button 
+                        @click="increaseQuantity(item)" 
+                        class="qty-control-btn"
+                        :disabled="
+                          (() => {
+                            const productName = (item.name || '').toUpperCase();
+                            const itemWeight = (productName.includes('VIGORPROST') || productName.includes('VIGORPF')) 
+                              ? 0.5 
+                              : (Number(item.weight) || 1);
+                            if (upgradeMode) {
+                              return validationTotalItems + itemWeight > maxUpgradeProducts;
+                            } else {
+                              return validationTotalItems + itemWeight > (selec_plan ? selec_plan.max_products : 0);
+                            }
+                          })()
+                        "
+                      >+</button>
                     </div>
                     <button @click="removeFromCart(index)" class="remove-cart-item-btn">
                       <i class="fas fa-trash"></i>
@@ -464,7 +492,7 @@
                 <div class="cart-detail-summary-details">
                   <div class="summary-row">
                     <span>Total productos:</span>
-                    <span class="summary-value">{{ upgradeMode ? totalUpgradeProducts : total }} items</span>
+                    <span class="summary-value">{{ displayTotalItems.toFixed(1) }} items</span>
                   </div>
                   <div class="summary-row">
                     <span>Puntos:</span>
@@ -478,11 +506,11 @@
               </div>
 
               <div class="cart-detail-actions">
-                <button class="go-to-pay-btn" @click="handleGoToStep2"
-                  :disabled="
-                    (upgradeMode ? totalUpgradeProducts : total) !==
-                    (upgradeMode ? maxUpgradeProducts : (selec_plan ? selec_plan.max_products : 0))
-                  "
+                  <button class="go-to-pay-btn" @click="handleGoToStep2"
+                    :disabled="
+                     validationTotalItems !==
+                     (upgradeMode ? maxUpgradeProducts : (selec_plan ? selec_plan.max_products : 0))
+                    "
                 >
                   Ir a Pagar
                 </button>
@@ -548,11 +576,11 @@
             
             <!-- Botón Afiliarme solo para móvil, antes de boletas -->
             <div
-              v-if="
-                step === 1 &&
-                (upgradeMode ? totalUpgradeProducts : total) ===
-                  (upgradeMode ? maxUpgradeProducts : (selec_plan ? selec_plan.max_products : 0))
-              "
+                v-if="
+                  step === 1 &&
+                 validationTotalItems ===
+                   (upgradeMode ? maxUpgradeProducts : (selec_plan ? selec_plan.max_products : 0))
+                "
               class="afiliarme-mobile-btn"
             >
               <button class="main-action-btn" @click="handleGoToStep2">
@@ -910,6 +938,64 @@ export default {
         (a, b) => a + (Number(b.total) || 0) * (Number(b.weight) || 1),
         0
       );
+    },
+    
+    // Total de items para mostrar en el resumen (VIGORPROST cuenta como 0.5)
+    displayTotalItems() {
+      if (this.upgradeMode) {
+        if (!this.upgradeProducts) return 0;
+        return this.upgradeProducts.reduce((total, product) => {
+          if (!product.total || product.total <= 0) return total;
+          const productName = (product.name || '').toUpperCase();
+          // VIGORPROST cuenta como 0.5 items solo en la visualización
+          if (productName.includes('VIGORPROST') || productName.includes('VIGORPF')) {
+            return total + (product.total * 0.5);
+          }
+          return total + product.total;
+        }, 0);
+      } else {
+        if (!this.products) return 0;
+        return this.products.reduce((total, product) => {
+          if (!product.total || product.total <= 0) return total;
+          const productName = (product.name || '').toUpperCase();
+          // VIGORPROST cuenta como 0.5 items solo en la visualización
+          if (productName.includes('VIGORPROST') || productName.includes('VIGORPF')) {
+            return total + (product.total * 0.5);
+          }
+          return total + product.total;
+        }, 0);
+      }
+    },
+    
+    // Total de items para validaciones (VIGORPROST cuenta como 0.5)
+    validationTotalItems() {
+      if (this.upgradeMode) {
+        if (!this.upgradeProducts) return 0;
+        return this.upgradeProducts.reduce((total, product) => {
+          if (!product.total || product.total <= 0) return total;
+          const productName = (product.name || '').toUpperCase();
+          // VIGORPROST cuenta como 0.5 items en las validaciones
+          if (productName.includes('VIGORPROST') || productName.includes('VIGORPF')) {
+            return total + (product.total * 0.5);
+          }
+          // Para otros productos, usar el peso normal
+          const weight = Number(product.weight) || 1;
+          return total + (product.total * weight);
+        }, 0);
+      } else {
+        if (!this.products) return 0;
+        return this.products.reduce((total, product) => {
+          if (!product.total || product.total <= 0) return total;
+          const productName = (product.name || '').toUpperCase();
+          // VIGORPROST cuenta como 0.5 items en las validaciones
+          if (productName.includes('VIGORPROST') || productName.includes('VIGORPF')) {
+            return total + (product.total * 0.5);
+          }
+          // Para otros productos, usar el peso normal
+          const weight = Number(product.weight) || 1;
+          return total + (product.total * weight);
+        }, 0);
+      }
     },
 
     // Nuevas propiedades computadas para el catálogo de productos
@@ -1378,20 +1464,33 @@ export default {
       if (this.upgradeMode) {
         if (!this.upgradeProducts || !this.upgradeProducts[idx]) return;
         const product = this.upgradeProducts[idx];
-        const nextTotal =
-          this.totalUpgradeProducts + (Number(product.weight) || 1);
+        
+        // Calcular el peso del producto (VIGORPROST = 0.5, otros usan weight normal)
+        const productName = (product.name || '').toUpperCase();
+        const itemWeight = (productName.includes('VIGORPROST') || productName.includes('VIGORPF')) 
+          ? 0.5 
+          : (Number(product.weight) || 1);
+        
+        const currentTotal = this.validationTotalItems;
+        const nextTotal = currentTotal + itemWeight;
         if (nextTotal > this.maxUpgradeProducts) return;
         this.upgradeProducts[idx].total += 1;
       } else {
         if (!this.products || !this.products[idx]) return;
         const product = this.products[idx];
-        const productWeight = Number(product.weight);
-        if (isNaN(productWeight) || productWeight <= 0) return;
-        const currentTotal = this.products.reduce(
-          (a, b) => a + (Number(b.total) || 0) * Number(b.weight || 1),
-          0
-        );
-        const newTotal = currentTotal + productWeight;
+        
+        // Calcular el peso del producto (VIGORPROST = 0.5, otros usan weight normal)
+        const productName = (product.name || '').toUpperCase();
+        const itemWeight = (productName.includes('VIGORPROST') || productName.includes('VIGORPF')) 
+          ? 0.5 
+          : (Number(product.weight) || 1);
+        
+        if (isNaN(itemWeight) || itemWeight <= 0) return;
+        
+        // Calcular el total actual usando validationTotalItems
+        const currentTotal = this.validationTotalItems;
+        const newTotal = currentTotal + itemWeight;
+        
         if (newTotal > this.selec_plan.max_products) return;
         product.total += 1;
       }
@@ -1536,9 +1635,9 @@ export default {
         this.closeCartDetailModal();
       }
       if (this.upgradeMode) {
-        const total = this.totalUpgradeProducts;
+        const total = this.validationTotalItems;
         if (total !== this.maxUpgradeProducts) {
-          this.selectError = `Debes seleccionar exactamente ${this.maxUpgradeProducts} productos adicionales para tu upgrade (considerando el peso de cada producto).`;
+          this.selectError = `Debes seleccionar exactamente ${this.maxUpgradeProducts} items adicionales para tu upgrade. Actualmente tienes ${total.toFixed(1)} items.`;
           return;
         }
       } else {
@@ -1564,9 +1663,10 @@ export default {
           return;
         }
         
-        // Validar cantidad total de productos
-        if (this.total !== this.selec_plan.max_products) {
-          this.selectError = `Debes seleccionar exactamente ${this.selec_plan.max_products} productos para continuar.`;
+        // Validar cantidad total de productos usando el peso visual (VIGORPROST = 0.5)
+        const validationTotal = this.validationTotalItems;
+        if (validationTotal !== this.selec_plan.max_products) {
+          this.selectError = `Debes seleccionar exactamente ${this.selec_plan.max_products} items para continuar. Actualmente tienes ${validationTotal.toFixed(1)} items.`;
           return;
         }
       }
