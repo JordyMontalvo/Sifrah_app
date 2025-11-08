@@ -32,6 +32,7 @@ class API {
     Transfers,
     Offices,
     ActivationBanners,
+    AffiliationBanners,
     PaymentMethods,
   }) {
     this.Profile = new Profile();
@@ -48,6 +49,7 @@ class API {
     this.Transfers = new Transfers();
     this.Offices = new Offices();
     this.ActivationBanners = new ActivationBanners();
+    this.AffiliationBanners = new AffiliationBanners();
     this.PaymentMethods = new PaymentMethods();
   }
 
@@ -268,6 +270,12 @@ class ActivationBanners {
   }
 }
 
+class AffiliationBanners {
+  GET(session) {
+    return axios.get(`/app/affiliation-banners?session=${session}`);
+  }
+}
+
 class PaymentMethods {
   GET(session) {
     return axios.get(`/app/payment-methods?session=${session}`);
@@ -289,5 +297,6 @@ export default new API({
   Transfers,
   Offices,
   ActivationBanners,
+  AffiliationBanners,
   PaymentMethods,
 });

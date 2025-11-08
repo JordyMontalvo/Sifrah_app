@@ -99,8 +99,19 @@
         
         <section v-if="!loading && !(affiliation && affiliation.status === 'pending')" class="affiliation-main-container">
           <!-- Banner principal - Fuera del contenedor para ocupar todo el ancho -->
-          <div v-if="!showMasterTrophy && step === 1" class="affiliation-banner-full">
-            <div class="banner-content">
+          <div
+            v-if="!showMasterTrophy && step === 1"
+            class="affiliation-banner-full"
+            :class="{ 'has-image': affiliationBanners.hero }"
+          >
+            <img
+              v-if="affiliationBanners.hero"
+              :src="affiliationBanners.hero"
+              alt="Banner de afiliación"
+              class="affiliation-banner-full__image"
+              @error="handleBannerImageError('hero')"
+            />
+            <div v-else class="banner-content">
               <h3>¡Comienza tu viaje con Sifrah!</h3>
               <p>Elige tu plan de afiliación y descubre un mundo de oportunidades</p>
             </div>
@@ -173,12 +184,22 @@
                 <!-- Sección 2: Kit de inicio -->
                 <div class="kit-section">
                   <h4 class="section-title">2.- Llévate tu Kit de Inicio:</h4>
-                  <div class="kit-banner">
-                    <div class="kit-content">
-                      <h5>Kit de Inicio Incluido</h5>
-                      <p>Todo lo que necesitas para comenzar</p>
-                    </div>
+                <div
+                  class="kit-banner"
+                  :class="{ 'has-image': affiliationBanners.kit }"
+                >
+                  <img
+                    v-if="affiliationBanners.kit"
+                    :src="affiliationBanners.kit"
+                    alt="Banner Kit de Inicio"
+                    class="kit-banner__image"
+                    @error="handleBannerImageError('kit')"
+                  />
+                  <div v-else class="kit-content">
+                    <h5>Kit de Inicio Incluido</h5>
+                    <p>Todo lo que necesitas para comenzar</p>
                   </div>
+                </div>
                 </div>
                 <!-- Resumen del carrito móvil - Copiado de Activation.vue -->
                 <div class="cart-button-container-mobile">
@@ -831,6 +852,10 @@ export default {
        selectedProduct: null,
        imageLoaded: false,
        showCartDetailModal: false,
+      affiliationBanners: {
+        hero: "",
+        kit: "",
+      },
      };
    },
   computed: {
@@ -1060,7 +1085,7 @@ export default {
         console.log('Affiliation.vue: Ya tenemos estado de afiliación, sincronizando...');
         
         // Sincronizar el estado desde el store en lugar de hacer llamada al API
-        this.syncStateFromStore();
+        await this.syncStateFromStore();
         return;
       }
       
@@ -1123,6 +1148,7 @@ export default {
       this.offices = data.offices || [];
       this.affiliation = data.affiliation || null;
       this.affiliations = data.affiliations || [];
+      await this.loadAffiliationBanners();
 
       // Llamar checkUpgradeMode después de que todo esté cargado
       if (this.selec_plan) {
@@ -1168,6 +1194,30 @@ export default {
   },
   
   methods: {
+    async loadAffiliationBanners() {
+      try {
+        const { data } = await api.AffiliationBanners.GET(this.session);
+        if (data && data.affiliationBanners) {
+          this.affiliationBanners = {
+            hero: data.affiliationBanners.hero || "",
+            kit: data.affiliationBanners.kit || "",
+          };
+        }
+      } catch (error) {
+        console.error("Error fetching affiliation banners:", error);
+      }
+    },
+    handleBannerImageError(position) {
+      if (!position) return;
+      try {
+        this.$set(this.affiliationBanners, position, "");
+      } catch (err) {
+        this.affiliationBanners = {
+          ...this.affiliationBanners,
+          [position]: "",
+        };
+      }
+    },
     openCartDetailModal() {
       this.showCartDetailModal = true;
       try {
@@ -1245,6 +1295,7 @@ export default {
         this.offices = data.offices || [];
         this.affiliation = data.affiliation || null;
         this.affiliations = data.affiliations || [];
+        await this.loadAffiliationBanners();
         
         // Llamar checkUpgradeMode después de que todo esté cargado
         if (this.selec_plan) {
