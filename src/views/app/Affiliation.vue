@@ -1366,6 +1366,9 @@ export default {
       body.style.height = '100%';
       html.style.overflow = 'hidden';
       html.style.height = '100%';
+      
+      // Agregar clase al body para resetear el transform del content
+      body.classList.add('product-modal-open');
     },
 
     closeProductModal() {
@@ -1378,6 +1381,9 @@ export default {
       body.style.height = '';
       html.style.overflow = '';
       html.style.height = '';
+      
+      // Remover clase del body para restaurar el transform del content
+      body.classList.remove('product-modal-open');
     },
 
     closeCartDetailModal() {

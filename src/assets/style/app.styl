@@ -43,6 +43,7 @@ body, .app
       transform translate(-70%, 0)
       overflow auto
       position relative
+      transition transform .5s
     &.open
       .menu 
       .content
@@ -120,6 +121,13 @@ body, .app
       display none
 
   
+// Cuando hay un modal de producto abierto, resetear el transform del content
+// Solo aplicar en móvil donde el transform afecta (menor a 768px)
+@media (max-width: 767px)
+  body.product-modal-open .app > section .content
+    transform none !important
+    transition none !important
+
 @media (min-width: d-break)
   .app
     >header

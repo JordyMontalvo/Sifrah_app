@@ -757,9 +757,9 @@
   position fixed
   top 0
   left 0
-  width 100%
-  height 100%
+  width 100vw
   height 100vh
+  height 100%
   height -webkit-fill-available
   background rgba(0,0,0,0.6)
   display flex
@@ -772,6 +772,9 @@
   box-sizing border-box
   overflow-y auto
   -webkit-overflow-scrolling touch
+  transform none !important
+  margin 0
+  will-change auto
 
 .product-modal-content
   background #fff
@@ -788,6 +791,8 @@
   flex-direction column
   margin auto
   align-self center
+  transform none !important
+  will-change auto
 
 .product-modal-header
   padding 20px
