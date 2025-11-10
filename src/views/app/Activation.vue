@@ -1017,17 +1017,29 @@ export default {
       this.selectedProduct = product;
       this.imageLoaded = false; // Resetear la carga de imagen al abrir el modal
       // Prevenir scroll del body cuando el modal está abierto
-      document.body.classList.add('modal-open');
-      // Quitar el transform del contenido
-      document.getElementsByClassName('content')[0].style.transform = 'none';
+      const body = document.body;
+      const html = document.documentElement;
+      body.style.overflow = 'hidden';
+      body.style.height = '100%';
+      html.style.overflow = 'hidden';
+      html.style.height = '100%';
+      
+      // Agregar clase al body para resetear el transform del content
+      body.classList.add('product-modal-open');
     },
     closeProductModal() {
       this.selectedProduct = null;
       this.imageLoaded = false; // Resetear la carga de imagen al cerrar el modal
       // Restaurar scroll del body
-      document.body.classList.remove('modal-open');
-      // Restaurar el transform del contenido
-      document.getElementsByClassName('content')[0].style.removeProperty('transform');
+      const body = document.body;
+      const html = document.documentElement;
+      body.style.overflow = '';
+      body.style.height = '';
+      html.style.overflow = '';
+      html.style.height = '';
+      
+      // Remover clase del body para restaurar el transform del content
+      body.classList.remove('product-modal-open');
     },
     addToCart(product) {
       const existingItem = this.cartItems.find(item => item.id === product.id);
