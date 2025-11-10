@@ -1360,14 +1360,24 @@ export default {
       this.selectedProduct = product;
       this.imageLoaded = false; // Resetear la carga de imagen al abrir el modal
       // Prevenir scroll del body cuando el modal está abierto
-      document.body.style.overflow = 'hidden';
+      const body = document.body;
+      const html = document.documentElement;
+      body.style.overflow = 'hidden';
+      body.style.height = '100%';
+      html.style.overflow = 'hidden';
+      html.style.height = '100%';
     },
 
     closeProductModal() {
       this.selectedProduct = null;
       this.imageLoaded = false; // Resetear la carga de imagen al cerrar el modal
       // Restaurar scroll del body
-      document.body.style.overflow = 'auto';
+      const body = document.body;
+      const html = document.documentElement;
+      body.style.overflow = '';
+      body.style.height = '';
+      html.style.overflow = '';
+      html.style.height = '';
     },
 
     closeCartDetailModal() {
