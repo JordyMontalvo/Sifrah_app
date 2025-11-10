@@ -225,26 +225,11 @@
           <div class="dashboard-section">
             <div class="section-header">
               <h3>Bono Viaje</h3>
-              <p>Completa los porcentajes y ¡disfruta el viaje!</p>
+              <p>Estado y progreso del socio</p>
             </div>
-            <div class="travel-bonus">
-              <div class="travel-progress">
-                <div class="travel-circle">
-                  <div class="travel-fill" :style="{ transform: `rotate(${15 * 3.6}deg)` }"></div>
-                  <div class="travel-center">
-                    <span class="travel-percentage">15%</span>
-                  </div>
-                </div>
-                <span class="travel-label">Internacional</span>
-              </div>
-              <div class="travel-progress">
-                <div class="travel-circle">
-                  <div class="travel-fill orange" :style="{ transform: `rotate(${46 * 3.6}deg)` }"></div>
-                  <div class="travel-center">
-                    <span class="travel-percentage">46%</span>
-                  </div>
-                </div>
-                <span class="travel-label">Nacional</span>
+            <div class="travel-bonus-info">
+              <div class="travel-bonus-text">
+                <p>{{ travelBonusText || 'Tu progreso hacia el Bono Viaje se actualizará próximamente. ¡Sigue trabajando para alcanzar tus objetivos!' }}</p>
               </div>
             </div>
           </div>
@@ -326,6 +311,7 @@ export default {
       plans: null,
       plan: null ,
       total_points: null,
+      travelBonusText: null,
 
       op: 1,
       op2: 0,
@@ -450,6 +436,7 @@ export default {
     this.directs = data.directs || [];
     this.frontals = data.frontals || [];
     this.total_points = data.total_points;
+    this.travelBonusText = data.travelBonusText || 'Tu progreso hacia el Bono Viaje se actualizará próximamente. ¡Sigue trabajando para alcanzar tus objetivos!';
 
     // Iniciar autoplay del banner si corresponde
     this.setupBannerAutoplay();
