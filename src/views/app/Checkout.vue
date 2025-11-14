@@ -1743,6 +1743,9 @@ export default {
         // Solo agregar voucher2 si existe
         if (voucherUrl2) {
           payload.voucher2 = voucherUrl2;
+          console.log('voucher2 agregado al payload de activación:', voucherUrl2);
+        } else {
+          console.log('No hay voucher2 para agregar al payload de activación');
         }
 
         if (this.deliveryMethod === 'pickup') {
@@ -1882,6 +1885,12 @@ export default {
             date: this.paymentDate || new Date().toISOString().split('T')[0],
             voucher_number: this.voucherNumber,
           };
+          
+          // Solo agregar voucher2 si existe
+          if (voucherUrl2) {
+            affiliationPayload.voucher2 = voucherUrl2;
+            console.log('voucher2 agregado al affiliationPayload:', voucherUrl2);
+          }
           
           console.log('Payload de afiliación final a enviar:', affiliationPayload);
           const { data } = await api.Afiliation.POST(session, affiliationPayload);
