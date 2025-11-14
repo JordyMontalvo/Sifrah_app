@@ -1688,17 +1688,23 @@ export default {
       this.sending = true;
 
       try {
+        const session = this.$store.state.session;
+        const isAffiliationCheckout = this.$store.state.isAffiliationCheckout;
+        
+        // Determinar el directorio según el tipo de checkout
+        const uploadDir = isAffiliationCheckout ? 'affiliations' : 'activations';
+        
         let voucherUrl = null;
         let voucherUrl2 = null;
         if (this.pay_method === 'bank') {
           if (this.voucherFile) {
-            console.log('Subiendo primera imagen de voucher...');
-            voucherUrl = await lib.upload(this.voucherFile, this.voucherFile.name, 'activations');
+            console.log(`Subiendo primera imagen de voucher a ${uploadDir}...`);
+            voucherUrl = await lib.upload(this.voucherFile, this.voucherFile.name, uploadDir);
             console.log('Primera imagen subida:', voucherUrl);
           }
           if (this.voucherFile2) {
-            console.log('Subiendo segunda imagen de voucher...');
-            voucherUrl2 = await lib.upload(this.voucherFile2, this.voucherFile2.name, 'activations');
+            console.log(`Subiendo segunda imagen de voucher a ${uploadDir}...`);
+            voucherUrl2 = await lib.upload(this.voucherFile2, this.voucherFile2.name, uploadDir);
             console.log('Segunda imagen subida:', voucherUrl2);
           } else {
             console.log('No hay segunda imagen de voucher para subir');
@@ -1846,9 +1852,6 @@ export default {
           return;
         }
 
-        const session = this.$store.state.session;
-        const isAffiliationCheckout = this.$store.state.isAffiliationCheckout;
-        
         // Si es checkout de afiliación, usar el endpoint de afiliación
         if (isAffiliationCheckout) {
           const affiliationPlan = this.$store.state.affiliationPlan;
@@ -1874,6 +1877,10 @@ export default {
           }
           
           // Construir payload para afiliación
+          console.log('🔍 Debug afiliación - voucherUrl:', voucherUrl);
+          console.log('🔍 Debug afiliación - voucherUrl2:', voucherUrl2);
+          console.log('🔍 Debug afiliación - voucherFile2 existe:', !!this.voucherFile2);
+          
           const affiliationPayload = {
             products: productsToActivate,
             plan: affiliationPlan, // El plan completo
@@ -1889,10 +1896,12 @@ export default {
           // Solo agregar voucher2 si existe
           if (voucherUrl2) {
             affiliationPayload.voucher2 = voucherUrl2;
-            console.log('voucher2 agregado al affiliationPayload:', voucherUrl2);
+            console.log('✅ voucher2 agregado al affiliationPayload:', voucherUrl2);
+          } else {
+            console.log('❌ voucherUrl2 es null/undefined, no se agregará al affiliationPayload');
           }
           
-          console.log('Payload de afiliación final a enviar:', affiliationPayload);
+          console.log('📦 Payload de afiliación final a enviar:', affiliationPayload);
           const { data } = await api.Afiliation.POST(session, affiliationPayload);
           
           if (data.error) {
