@@ -1692,10 +1692,16 @@ export default {
         let voucherUrl2 = null;
         if (this.pay_method === 'bank') {
           if (this.voucherFile) {
+            console.log('Subiendo primera imagen de voucher...');
             voucherUrl = await lib.upload(this.voucherFile, this.voucherFile.name, 'activations');
+            console.log('Primera imagen subida:', voucherUrl);
           }
           if (this.voucherFile2) {
+            console.log('Subiendo segunda imagen de voucher...');
             voucherUrl2 = await lib.upload(this.voucherFile2, this.voucherFile2.name, 'activations');
+            console.log('Segunda imagen subida:', voucherUrl2);
+          } else {
+            console.log('No hay segunda imagen de voucher para subir');
           }
         }
 
@@ -1729,11 +1735,15 @@ export default {
 
           // Datos del voucher (si aplica) - ahora con soporte para dos imágenes
           voucher: voucherUrl,
-          voucher2: voucherUrl2,
           bank: this.selectedBank ? this.getBankInfo(this.selectedBank).name : null,
           bank_info: this.selectedBank ? this.getBankInfo(this.selectedBank) : null,
           voucher_number: this.voucherNumber,
         };
+        
+        // Solo agregar voucher2 si existe
+        if (voucherUrl2) {
+          payload.voucher2 = voucherUrl2;
+        }
 
         if (this.deliveryMethod === 'pickup') {
           if (!this.selectedOffice) {

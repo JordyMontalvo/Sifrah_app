@@ -1677,31 +1677,45 @@ export default {
       this.sending = true;
 
       let voucher2 = null;
-      if (voucher)
+      if (voucher) {
+        console.log('Subiendo primera imagen de voucher...');
         voucher = await lib.upload(
           this.voucher_file,
           this.voucher_file.name,
           "affiliations"
         );
-      if (this.voucher_file2)
+        console.log('Primera imagen subida:', voucher);
+      }
+      if (this.voucher_file2) {
+        console.log('Subiendo segunda imagen de voucher...');
         voucher2 = await lib.upload(
           this.voucher_file2,
           this.voucher_file2.name,
           "affiliations"
         );
+        console.log('Segunda imagen subida:', voucher2);
+      } else {
+        console.log('No hay segunda imagen de voucher para subir');
+      }
 
-      const { data } = await api.Afiliation.POST(this.session, {
+      const payload = {
         products,
         plan,
         voucher,
-        voucher2,
         office: office.id,
         check,
         pay_method,
         bank,
         date,
         voucher_number,
-      });
+      };
+      
+      // Solo agregar voucher2 si existe
+      if (voucher2) {
+        payload.voucher2 = voucher2;
+      }
+      
+      const { data } = await api.Afiliation.POST(this.session, payload);
       console.log({ data });
 
       this.sending = false;
