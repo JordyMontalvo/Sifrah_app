@@ -1596,15 +1596,22 @@ export default {
       reader.readAsDataURL(this.voucher_file);
     },
     change2(e) {
-      this.voucher_file2 = e.target.files[0];
+      const file = e.target.files[0];
+      if (file) {
+        this.voucher_file2 = file;
+        console.log('Segundo archivo seleccionado:', file.name, file.size, 'bytes');
 
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        this.voucher2 = e.target.result;
-      };
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          this.voucher2 = e.target.result;
+          console.log('Preview del segundo voucher cargado');
+        };
 
-      if (this.voucher_file2) {
         reader.readAsDataURL(this.voucher_file2);
+      } else {
+        this.voucher_file2 = null;
+        this.voucher2 = null;
+        console.log('Segundo archivo eliminado');
       }
     },
 
@@ -1679,6 +1686,7 @@ export default {
       let voucher2 = null;
       if (voucher) {
         console.log('Subiendo primera imagen de voucher...');
+        console.log('Archivo 1:', this.voucher_file ? { name: this.voucher_file.name, size: this.voucher_file.size } : 'no existe');
         voucher = await lib.upload(
           this.voucher_file,
           this.voucher_file.name,
@@ -1688,6 +1696,7 @@ export default {
       }
       if (this.voucher_file2) {
         console.log('Subiendo segunda imagen de voucher...');
+        console.log('Archivo 2:', { name: this.voucher_file2.name, size: this.voucher_file2.size });
         voucher2 = await lib.upload(
           this.voucher_file2,
           this.voucher_file2.name,
@@ -1696,6 +1705,8 @@ export default {
         console.log('Segunda imagen subida:', voucher2);
       } else {
         console.log('No hay segunda imagen de voucher para subir');
+        console.log('this.voucher_file2:', this.voucher_file2);
+        console.log('this.voucher2 (preview):', this.voucher2);
       }
 
       const payload = {
@@ -1713,7 +1724,12 @@ export default {
       // Solo agregar voucher2 si existe
       if (voucher2) {
         payload.voucher2 = voucher2;
+        console.log('voucher2 agregado al payload:', voucher2);
+      } else {
+        console.log('voucher2 es null o undefined, no se agregará al payload');
       }
+      
+      console.log('Payload de afiliación final a enviar:', payload);
       
       const { data } = await api.Afiliation.POST(this.session, payload);
       console.log({ data });
