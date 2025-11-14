@@ -700,6 +700,13 @@
                     <img class="voucher" v-show="voucher" :src="voucher" />
                     <input type="file" @change="change" :disabled="pending" />
                   </label>
+                  <label class="voucher-label" style="margin-top: 15px;">
+                    <span class="input" v-show="!voucher2"
+                      >Segundo comprobante de pago (opcional)</span
+                    >
+                    <img class="voucher" v-show="voucher2" :src="voucher2" />
+                    <input type="file" @change="change2" :disabled="pending" />
+                  </label>
                 </div>
               </div>
               <div class="action-section">
@@ -809,6 +816,8 @@ export default {
       selec_plan: null,
       voucher: null,
       voucher_file: null,
+      voucher2: null,
+      voucher_file2: null,
       office: null,
       offices: null,
 
@@ -1586,6 +1595,18 @@ export default {
 
       reader.readAsDataURL(this.voucher_file);
     },
+    change2(e) {
+      this.voucher_file2 = e.target.files[0];
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        this.voucher2 = e.target.result;
+      };
+
+      if (this.voucher_file2) {
+        reader.readAsDataURL(this.voucher_file2);
+      }
+    },
 
     async POST() {
       let products = this.upgradeMode ? this.upgradeProducts : this.products;
@@ -1655,10 +1676,17 @@ export default {
       this.error = null;
       this.sending = true;
 
+      let voucher2 = null;
       if (voucher)
         voucher = await lib.upload(
           this.voucher_file,
           this.voucher_file.name,
+          "affiliations"
+        );
+      if (this.voucher_file2)
+        voucher2 = await lib.upload(
+          this.voucher_file2,
+          this.voucher_file2.name,
           "affiliations"
         );
 
@@ -1666,6 +1694,7 @@ export default {
         products,
         plan,
         voucher,
+        voucher2,
         office: office.id,
         check,
         pay_method,

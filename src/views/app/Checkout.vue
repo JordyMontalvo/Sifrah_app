@@ -1689,8 +1689,14 @@ export default {
 
       try {
         let voucherUrl = null;
-        if (this.pay_method === 'bank' && this.voucherFile) {
-          voucherUrl = await lib.upload(this.voucherFile, this.voucherFile.name, 'activations');
+        let voucherUrl2 = null;
+        if (this.pay_method === 'bank') {
+          if (this.voucherFile) {
+            voucherUrl = await lib.upload(this.voucherFile, this.voucherFile.name, 'activations');
+          }
+          if (this.voucherFile2) {
+            voucherUrl2 = await lib.upload(this.voucherFile2, this.voucherFile2.name, 'activations');
+          }
         }
 
         // Preparar los productos del carrito para la API, incluyendo todos los detalles y filtrando por cantidad
@@ -1721,8 +1727,9 @@ export default {
           proofRazonSocial: this.proofData.razonSocial,
           proofDireccionFiscal: this.proofData.direccionFiscal,
 
-          // Datos del voucher (si aplica)
+          // Datos del voucher (si aplica) - ahora con soporte para dos imágenes
           voucher: voucherUrl,
+          voucher2: voucherUrl2,
           bank: this.selectedBank ? this.getBankInfo(this.selectedBank).name : null,
           bank_info: this.selectedBank ? this.getBankInfo(this.selectedBank) : null,
           voucher_number: this.voucherNumber,
