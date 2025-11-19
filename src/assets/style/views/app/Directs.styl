@@ -1,0 +1,332 @@
+.directs-container
+  padding 20px
+  max-width 1400px
+  margin 0 auto
+
+// Header morado con Nuevo Registro
+.header-card
+  background #d209b666
+  border-radius 12px
+  padding 20px
+  margin-bottom 20px
+  box-shadow 0 4px 6px rgba(0, 0, 0, 0.1)
+  
+  .new-register-btn
+    background #d209b6
+    color white
+    padding 12px 24px
+    border-radius 8px
+    text-decoration none
+    font-weight bold
+    font-size 16px
+    display inline-block
+    margin-bottom 20px
+    transition all 0.3s ease
+    border none
+    cursor pointer
+    
+    &:hover
+      background #9f00ad
+      transform translateY(-2px)
+      box-shadow 0 4px 8px rgba(255, 107, 157, 0.3)
+
+  .header-fields
+    display flex
+    gap 20px
+    flex-wrap wrap
+    
+    .field-group
+      flex 1
+      min-width 250px
+      position relative
+      display flex
+      align-items center
+      gap 10px
+      
+      .field-icon
+        color #333
+        font-size 18px
+        min-width 20px
+        
+      .field-input
+        flex 1
+        padding 12px 16px
+        border 1px solid #e0e0e0
+        border-radius 8px
+        font-size 14px
+        background white
+        cursor pointer
+        transition all 0.3s ease
+        
+        &:hover
+          border-color #9f00ad
+          box-shadow 0 2px 4px rgba(159, 0, 173, 0.1)
+        
+        &:focus
+          outline none
+          border-color #9f00ad
+          box-shadow 0 0 0 3px rgba(159, 0, 173, 0.1)
+      
+      .copy-message
+        position absolute
+        right 10px
+        color #4caf50
+        font-size 12px
+        font-weight bold
+        white-space nowrap
+
+// Filtros y búsqueda
+.filters-section
+  display flex
+  gap 15px
+  margin-bottom 20px
+  flex-wrap wrap
+  
+  .search-container
+    flex 1
+    min-width 250px
+    position relative
+    display flex
+    align-items center
+    
+    .search-icon
+      position absolute
+      left 15px
+      color #757575
+      font-size 16px
+      z-index 1
+      
+    .search-input
+      width 100%
+      padding 12px 16px 12px 45px
+      border 1px solid #e0e0e0
+      border-radius 8px
+      font-size 14px
+      background white
+      transition all 0.3s ease
+      
+      &:focus
+        outline none
+        border-color #9f00ad
+        box-shadow 0 0 0 3px rgba(159, 0, 173, 0.1)
+      
+      &::placeholder
+        color #bdbdbd
+  
+  .state-select
+    padding 12px 40px 12px 16px
+    border 1px solid #e0e0e0
+    border-radius 8px
+    font-size 14px
+    background white
+    cursor pointer
+    appearance none
+    background-image url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23757575' d='M6 9L1 4h10z'/%3E%3C/svg%3E")
+    background-repeat no-repeat
+    background-position right 12px center
+    transition all 0.3s ease
+    min-width 200px
+    
+    &:focus
+      outline none
+      border-color #9f00ad
+      box-shadow 0 0 0 3px rgba(159, 0, 173, 0.1)
+
+// Tabs y botón Ver toda Mi Red
+.tabs-section
+  display flex
+  justify-content space-between
+  align-items center
+  margin-bottom 20px
+  gap 20px
+  flex-wrap wrap
+  
+  .tabs
+    display flex
+    gap 0
+    border-bottom 2px solid #e0e0e0
+    
+    .tab
+      padding 12px 24px
+      background transparent
+      border none
+      border-bottom 3px solid transparent
+      color #757575
+      font-size 16px
+      font-weight 500
+      cursor pointer
+      transition all 0.3s ease
+      position relative
+      bottom -2px
+      
+      &:hover
+        color #9f00ad
+        
+      &.active
+        color #9f00ad
+        border-bottom-color #ffd700
+        font-weight bold
+        
+  .view-network-btn
+    background #d209b6
+    color white
+    padding 12px 24px
+    border-radius 8px
+    border none
+    font-weight bold
+    font-size 14px
+    cursor pointer
+    transition all 0.3s ease
+    white-space nowrap
+    
+    &:hover
+      background #9f00ad
+      transform translateY(-2px)
+      box-shadow 0 4px 8px rgba(255, 107, 157, 0.3)
+
+// Tabla de datos
+.table-container
+  background white
+  border-radius 12px
+  overflow hidden
+  box-shadow 0 2px 8px rgba(0, 0, 0, 0.1)
+  
+  .data-table
+    width 100%
+    border-collapse collapse
+    
+    thead
+      background #9f00ad
+      
+      th
+        padding 16px
+        text-align left
+        color white
+        font-weight 600
+        font-size 14px
+        text-transform uppercase
+        letter-spacing 0.5px
+        
+    tbody
+      tr
+        border-bottom 1px solid #e0e0e0
+        transition background 0.2s ease
+        
+        &:hover
+          background #f5f5f5
+        
+        &:last-child
+          border-bottom none
+        
+        td
+          padding 16px
+          color #424242
+          font-size 14px
+          text-align left
+          
+          .status-badge
+            display inline-flex
+            align-items center
+            gap 6px
+            padding 6px 12px
+            border-radius 20px
+            font-size 12px
+            font-weight 600
+            white-space nowrap
+            
+            i
+              font-size 10px
+              
+            &.affiliated
+              background #c8e6c9
+              color #2e7d32
+              
+            &.not-affiliated
+              background #ffcdd2
+              color #c62828
+              
+            &.activated
+              background #c8e6c9
+              color #2e7d32
+              
+            &.not-activated
+              background #ffcdd2
+              color #c62828
+          
+          .score-cell
+            display inline-flex
+            align-items center
+            gap 8px
+            color #424242
+            font-weight 500
+            
+            .whatsapp-icon
+              color #25d366
+              font-size 18px
+          
+          .radio-input
+            width 18px
+            height 18px
+            cursor pointer
+            
+          .no-data
+            text-align center
+            color #757575
+            padding 40px
+            font-style italic
+
+// Responsive
+@media (max-width: 768px)
+  .directs-container
+    padding 15px
+    
+  .header-card
+    padding 15px
+    
+    .header-fields
+      flex-direction column
+      gap 15px
+      
+      .field-group
+        min-width 100%
+        
+  .filters-section
+    flex-direction column
+    
+    .search-container,
+    .state-select
+      width 100%
+      min-width 100%
+      
+  .tabs-section
+    flex-direction column
+    align-items stretch
+    
+    .tabs
+      width 100%
+      
+      .tab
+        flex 1
+        text-align center
+        
+    .view-network-btn
+      width 100%
+      
+  .table-container
+    overflow-x auto
+    
+    .data-table
+      min-width 600px
+
+@media (max-width: 480px)
+  .header-card
+    .new-register-btn
+      width 100%
+      text-align center
+      
+  .tabs-section
+    .tabs
+      .tab
+        padding 10px 16px
+        font-size 14px
+
