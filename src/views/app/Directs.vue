@@ -95,7 +95,6 @@
               <th>Afiliado</th>
               <th>Activo</th>
               <th>Puntaje</th>
-              <th>Apalancar</th>
             </tr>
           </thead>
           <tbody>
@@ -121,17 +120,9 @@
                   <i class="fab fa-whatsapp whatsapp-icon"></i>
                 </span>
               </td>
-              <td>
-                <input
-                  type="radio"
-                  v-model="coverage"
-                  :value="{ id: frontal.id }"
-                  class="radio-input"
-                />
-              </td>
             </tr>
             <tr v-if="filteredFrontals.length === 0">
-              <td colspan="7" class="no-data">No hay frontales disponibles</td>
+              <td colspan="6" class="no-data">No hay frontales disponibles</td>
             </tr>
           </tbody>
         </table>
@@ -205,7 +196,6 @@ export default {
       frontals: [],
       loading: true,
       // branch: null,
-      coverage: null,
       token: null,
 
       c_token: false,
@@ -293,14 +283,14 @@ export default {
       return filtered;
     },
   },
-  watch: {
-    async coverage(a, b) {
-      const { data } = await api.coverage(this.session, {
-        coverage: this.coverage,
-      });
-      console.log({ data });
-    },
-  },
+  // watch: {
+  //   async coverage(a, b) {
+  //     const { data } = await api.coverage(this.session, {
+  //       coverage: this.coverage,
+  //     });
+  //     console.log({ data });
+  //   },
+  // },
   async created() {
     // GET data
     const { data } = await api.directs(this.session);
@@ -328,7 +318,7 @@ export default {
     // this.branch = data.branch
     this.token = data.token;
     this.id = data.id;
-    this.coverage = data.coverage;
+    // this.coverage = data.coverage; // Removido - ya no se usa
     // this.directs  = data.directs.reverse()
     this.directs = data.directs;
     this.frontals = data.frontals;
