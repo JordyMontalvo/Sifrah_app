@@ -117,7 +117,12 @@
               <td>
                 <span class="score-cell">
                   {{ formatPoints(frontal.points) }}
-                  <i class="fab fa-whatsapp whatsapp-icon"></i>
+                  <i 
+                    class="fab fa-whatsapp whatsapp-icon" 
+                    @click.stop="openWhatsApp(frontal.phone)"
+                    :class="{ 'disabled': !frontal.phone }"
+                    :title="frontal.phone ? `Abrir WhatsApp: ${frontal.phone}` : 'Sin teléfono'"
+                  ></i>
                 </span>
               </td>
             </tr>
@@ -161,7 +166,12 @@
               <td>
                 <span class="score-cell">
                   {{ formatPoints(direct.points) }}
-                  <i class="fab fa-whatsapp whatsapp-icon"></i>
+                  <i 
+                    class="fab fa-whatsapp whatsapp-icon" 
+                    @click.stop="openWhatsApp(direct.phone)"
+                    :class="{ 'disabled': !direct.phone }"
+                    :title="direct.phone ? `Abrir WhatsApp: ${direct.phone}` : 'Sin teléfono'"
+                  ></i>
                 </span>
               </td>
             </tr>
@@ -361,6 +371,44 @@ export default {
       }
       const pts = Number(points) || 0;
       return String(pts).padStart(6, '0');
+    },
+    
+    openWhatsApp(phone) {
+      // Validar que haya un teléfono
+      if (!phone) {
+        alert('Este usuario no tiene número de teléfono registrado');
+        return;
+      }
+      
+      // Limpiar el número: quitar espacios, guiones, paréntesis y otros caracteres
+      let cleanPhone = String(phone).replace(/\D/g, '');
+      
+      // Si el número está vacío después de limpiar, mostrar error
+      if (!cleanPhone || cleanPhone.length === 0) {
+        alert('El número de teléfono no es válido');
+        return;
+      }
+      
+      // Quitar el 0 inicial si existe (formato peruano con 0 inicial)
+      if (cleanPhone.startsWith('0')) {
+        cleanPhone = cleanPhone.substring(1);
+      }
+      
+      // Si el número no empieza con código de país, asumir que es peruano (51)
+      if (!cleanPhone.startsWith('51')) {
+        // Si tiene 9 dígitos (formato peruano sin código de país), agregar 51
+        if (cleanPhone.length === 9) {
+          cleanPhone = '51' + cleanPhone;
+        }
+        // Si tiene menos de 9 dígitos, también agregar código de país (asumiendo que es peruano)
+        else if (cleanPhone.length < 9) {
+          cleanPhone = '51' + cleanPhone;
+        }
+      }
+      
+      // Abrir WhatsApp con el número formateado
+      const whatsappUrl = `https://wa.me/${cleanPhone}`;
+      window.open(whatsappUrl, '_blank');
     },
   },
 

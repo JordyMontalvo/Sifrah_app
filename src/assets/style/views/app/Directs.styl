@@ -263,6 +263,30 @@
             .whatsapp-icon
               color #25d366
               font-size 18px
+              cursor pointer
+              transition all 0.3s ease
+              padding 4px
+              border-radius 50%
+              display inline-flex
+              align-items center
+              justify-content center
+              
+              &:hover
+                color #128c7e
+                background rgba(37, 211, 102, 0.1)
+                transform scale(1.1)
+              
+              &:active
+                transform scale(0.95)
+              
+              &.disabled
+                color #bdbdbd
+                cursor not-allowed
+                opacity 0.5
+                
+                &:hover
+                  background transparent
+                  transform none
           
           .radio-input
             width 18px
