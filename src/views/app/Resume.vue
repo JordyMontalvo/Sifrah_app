@@ -183,7 +183,6 @@ export default {
   async created() {
     // GET data
     const { data } = await api.tree(this.session, null);
-    console.log({ data });
 
     this.loading = false;
 
@@ -214,23 +213,19 @@ export default {
       this.count += 1;
       setTimeout(() => {
         if (this.count == 1) {
-          console.log("click ...");
           this.selec_node = node;
           this.open = true;
         } else {
-          console.log("double click ...");
           this.GET(node.id);
         }
         this.count = 0;
       }, 300);
     },
     async GET(id) {
-      console.log("GET ... ", id);
       this.loading = true;
 
       // GET data by id
       const { data } = await api.tree(this.session, id);
-      console.log({ data });
 
       this.loading = false;
 
@@ -240,7 +235,6 @@ export default {
     },
 
     closed() {
-      console.log("closed ...");
       this.open = false;
     },
   },

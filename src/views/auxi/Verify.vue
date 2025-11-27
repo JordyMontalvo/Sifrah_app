@@ -27,7 +27,7 @@ export default {
   },
   async created() {
     // GET data
-    const { data } = await api.verify(this.session); console.log({ data })
+    const { data } = await api.verify(this.session);
 
     this.loading = false
 

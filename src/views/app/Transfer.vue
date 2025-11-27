@@ -156,7 +156,6 @@ export default {
   async created() {
     // GET data
     const { data } = await api.Transfer.GET(this.session);
-    console.log({ data });
 
     this.loading = false;
 
@@ -180,7 +179,6 @@ export default {
   methods: {
     async validate() {
       let { dni, amount, desc } = this;
-      console.log({ dni, amount, desc });
 
       if (!dni) return (this.error = "ingresar dni");
       if (!amount) return (this.error = "ingresar monto");
@@ -195,7 +193,6 @@ export default {
         desc,
         type: "validate",
       });
-      console.log({ data });
 
       this.validating = false;
 
@@ -209,7 +206,6 @@ export default {
 
     async send() {
       let { dni, amount, desc, password } = this;
-      console.log({ password });
 
       if (!password) return (this.error2 = "ingresar password");
 
@@ -222,7 +218,6 @@ export default {
         password,
         type: "send",
       });
-      console.log({ data });
 
       this.sending = false;
 

@@ -146,7 +146,6 @@ export default {
       }
     },
     showLocalStorage() {
-      console.log('📦 Contenido de localStorage:', this.localStorageData)
       alert('📦 Revisa la consola para ver el contenido de localStorage')
     },
     forceRestore() {

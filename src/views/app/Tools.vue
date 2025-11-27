@@ -38,7 +38,6 @@ export default {
   async created() {
     // GET data
     const { data } = await api.tools(this.session);
-    console.log({ data });
 
     this.loading = false;
 

@@ -192,7 +192,6 @@ import lib from "@/lib";
 import Spinner from "@/components/Spinner.vue";
 
 const ROOT = process.env.VUE_APP_ROOT;
-console.log({ ROOT });
 
 export default {
   components: {
@@ -304,7 +303,6 @@ export default {
   async created() {
     // GET data
     const { data } = await api.directs(this.session);
-    console.log({ data });
 
     this.loading = false;
 
@@ -332,8 +330,6 @@ export default {
     // this.directs  = data.directs.reverse()
     this.directs = data.directs;
     this.frontals = data.frontals;
-    console.log('Directs:', this.directs);
-    console.log('Frontals:', this.frontals);
     // this.childs = data.childs
     // this.names  = data.names
   },

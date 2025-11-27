@@ -247,7 +247,7 @@
                       <h4>Agencia de Transporte</h4>
                       <div class="form-group">
                         <label>Agencia</label>
-                        <select v-model="deliveryData.agency" class="form-select agency-select" @change="console.log('Agencia seleccionada:', deliveryData.agency)">
+                        <select v-model="deliveryData.agency" class="form-select agency-select">
                           <option value="">Seleccione el PDE</option>
                           <option v-for="agency in availableAgencies" :key="agency._id" :value="agency.agency_code">
                             {{ agency.agency_name }}
@@ -901,10 +901,8 @@ export default {
     },
     
     canProceedToNextStep() {
-      console.log('Validando paso', this.currentStep, 'con deliveryMethod:', this.deliveryMethod);
       if (this.currentStep === 1) {
         if (this.deliveryMethod === 'delivery') {
-          console.log('Delivery Data:', this.deliveryData);
           const basicInfo = this.deliveryData.recipientName && 
                            this.deliveryData.document && 
                            this.deliveryData.document.length === 8 &&
@@ -912,21 +910,16 @@ export default {
                            this.deliveryData.department &&
                            this.deliveryData.province &&
                            this.deliveryData.district;
-          console.log('Basic Info Valid:', basicInfo);
           
           if (this.showAgencyField) {
-            console.log('Show Agency Field:', this.showAgencyField, 'Agency selected:', this.deliveryData.agency);
-            console.log('Available Agencies:', this.availableAgencies); // Añadido para depuración
             return basicInfo && this.deliveryData.agency;
           }
           
           return basicInfo;
         }
-        console.log('Pickup selected:', this.selectedPickupPoint);
         return this.deliveryMethod && this.selectedPickupPoint;
       }
       if (this.currentStep === 2) {
-        console.log('Proof Data:', this.proofData);
         // Para boleta solo requiere documento con exactamente 8 números
         if (this.proofData.type === 'boleta') {
           return this.proofData.document && this.proofData.document.length === 8;
@@ -944,13 +937,6 @@ export default {
     },
     
     showAgencyField() {
-      console.log('Debug showAgencyField:', {
-        department: this.deliveryData.department,
-        province: this.deliveryData.province,
-        deptNotLima: this.deliveryData.department !== 'lima',
-        provNotLima: this.deliveryData.province !== 'lima'
-      });
-      
       // Mostrar agencia si el departamento NO es lima O la provincia NO es lima
       return (this.deliveryData.department && this.deliveryData.department !== 'lima') ||
              (this.deliveryData.province && this.deliveryData.province !== 'lima');
@@ -1024,13 +1010,11 @@ export default {
         }
       }
       
-      console.log('Método de pago seleccionado:', this.pay_method);
     },
     
     selectBankOption(bank) {
       this.selectedBank = bank;
       this.showBankOptions = false; // Cerrar el desplegable al seleccionar
-      console.log('Banco seleccionado:', bank);
     },
     
     getBankDisplayName(bankId) {
@@ -1173,7 +1157,6 @@ export default {
     },
     
     async onDepartmentChange() {
-      console.log('🌍 Departamento cambiado a:', this.deliveryData.department);
       
       // Resetear campos dependientes
       this.deliveryData.province = '';
@@ -1196,7 +1179,6 @@ export default {
     },
     
     async onProvinceChange() {
-      console.log('🏙️ Provincia cambiada a:', this.deliveryData.province);
       
       // Resetear campos dependientes
       this.deliveryData.district = '';
@@ -1210,7 +1192,6 @@ export default {
     },
     
     async onDistrictChange() {
-      console.log('🏘️ Distrito cambiado a:', this.deliveryData.district);
       
       // Reset zona info
       this.deliveryZoneInfo = null;
@@ -1290,7 +1271,6 @@ export default {
               horario: office.horario || 'Horario no disponible',
               dias: office.dias || 'Días no disponible',
             }));
-            console.log('Oficinas cargadas desde servidor:', this.offices);
             return;
           }
         }
@@ -1332,7 +1312,6 @@ export default {
             accounts: "Información de cuentas no disponible"
           }
         ];
-        console.log('Usando oficinas por defecto:', this.offices);
       }
     },
     
@@ -1342,7 +1321,6 @@ export default {
         const { data } = await api.PaymentMethods.GET(this.$store.state.session);
         if (data && data.paymentMethods) {
           this.paymentMethods = data.paymentMethods;
-          console.log('✅ Métodos de pago cargados:', this.paymentMethods);
         } else {
           console.warn('⚠️ No se encontraron métodos de pago en la respuesta');
           this.paymentMethods = [];
@@ -1356,15 +1334,12 @@ export default {
     },
     
     onPickupPointChange() {
-      console.log('Punto de recogida cambiado:', this.selectedPickupPoint);
-      console.log('Oficina seleccionada:', this.selectedOffice);
     },
     
     async loadDepartments() {
       try {
         const { data } = await api.getDeliveryInfo({ type: 'departments' });
         this.availableDepartments = data.departments || [];
-        console.log('✅ Departamentos cargados:', this.availableDepartments);
       } catch (error) {
         console.error('❌ Error cargando departamentos:', error);
         this.availableDepartments = [];
@@ -1375,7 +1350,6 @@ export default {
       try {
         const { data } = await api.getDeliveryInfo({ type: 'provinces', department: department });
         this.availableProvinces = data.provinces || [];
-        console.log('✅ Provincias cargadas para', department, ':', this.availableProvinces);
       } catch (error) {
         console.error('❌ Error cargando provincias:', error);
         this.availableProvinces = [];
@@ -1386,7 +1360,6 @@ export default {
       try {
         const { data } = await api.getDeliveryInfo({ type: 'districts', department: department, province: province });
         this.availableDistricts = data.districts || [];
-        console.log('✅ Distritos cargados para', department, '/', province, ':', this.availableDistricts);
       } catch (error) {
         console.error('❌ Error cargando distritos:', error);
         this.availableDistricts = [];
@@ -1397,7 +1370,6 @@ export default {
       try {
         const { data } = await api.getDeliveryInfo({ type: 'agencies-by-department', department: department });
         this.availableAgencies = data.agencies || [];
-        console.log('Agencias cargadas para', department, ':', this.availableAgencies);
       } catch (error) {
         console.error('Error cargando agencias:', error);
         // Eliminamos el fallback con datos por defecto para depender completamente de la API
@@ -1409,7 +1381,6 @@ export default {
       try {
         const { data } = await api.getDeliveryInfo({ type: 'zone-by-district', district: district });
         this.deliveryZoneInfo = data.zone || null;
-        console.log('🎯 Zona encontrada para', district, ':', this.deliveryZoneInfo);
       } catch (error) {
         console.error('❌ Error cargando zona:', error);
         this.deliveryZoneInfo = null;
@@ -1417,7 +1388,6 @@ export default {
     },
 
     async refreshOffices() {
-      console.log('Actualizando oficinas...');
       await this.loadOffices();
       // Mostrar mensaje de confirmación
       if (this.$toast) {
@@ -1432,7 +1402,6 @@ export default {
       if (office.googleMapsUrl && office.googleMapsUrl.trim() !== '') {
         try {
           const googleUrl = office.googleMapsUrl;
-          console.log('URL de Google Maps:', googleUrl);
           
           // Diferentes patrones para extraer coordenadas
           let coordsMatch = googleUrl.match(/@(-?\d+\.?\d*),(-?\d+\.?\d*)/); // @lat,lng
@@ -1444,7 +1413,6 @@ export default {
           }
           
           if (coordsMatch) {
-            console.log('Coordenadas extraídas de Google Maps:', coordsMatch);
             return {
               lat: parseFloat(coordsMatch[1]),
               lng: parseFloat(coordsMatch[2])
@@ -1486,7 +1454,6 @@ export default {
     },
     
     initMap(office) {
-      console.log('Iniciando mapa para oficina:', office);
       
       // Verificar que Leaflet está disponible
       if (typeof L === 'undefined') {
@@ -1495,7 +1462,6 @@ export default {
       }
       
       const coords = this.getMapCoordinates(office);
-      console.log('Coordenadas extraídas:', coords);
       
       if (!coords) {
         console.warn('No se pudieron obtener coordenadas para la oficina:', office.name);
@@ -1511,13 +1477,11 @@ export default {
       
       // Limpiar el mapa si ya existe
       if (this.map) {
-        console.log('Limpiando mapa anterior');
         this.map.remove();
         this.map = null;
       }
       
       try {
-        console.log('Creando nuevo mapa con coordenadas:', coords);
         
         // Crear mapa de Leaflet
         this.map = L.map('map', {
@@ -1559,7 +1523,6 @@ export default {
         setTimeout(() => {
           if (this.map) {
             this.map.invalidateSize();
-            console.log('Mapa inicializado correctamente');
           }
         }, 200);
         
@@ -1570,7 +1533,6 @@ export default {
     
     // Método para inicializar el mapa pequeño en la card de datos de despacho
     initSmallMap(office) {
-      console.log('Iniciando mapa pequeño para oficina:', office);
       
       // Verificar que Leaflet está disponible
       if (typeof L === 'undefined') {
@@ -1579,7 +1541,6 @@ export default {
       }
       
       const coords = this.getMapCoordinates(office);
-      console.log('Coordenadas extraídas para mapa pequeño:', coords);
       
       if (!coords) {
         console.warn('No se pudieron obtener coordenadas para la oficina:', office.name);
@@ -1595,13 +1556,11 @@ export default {
       
       // Limpiar el mapa pequeño si ya existe
       if (this.smallMap) {
-        console.log('Limpiando mapa pequeño anterior');
         this.smallMap.remove();
         this.smallMap = null;
       }
       
       try {
-        console.log('Creando nuevo mapa pequeño con coordenadas:', coords);
         
         // Crear mapa pequeño de Leaflet
         this.smallMap = L.map('small-map', {
@@ -1642,7 +1601,6 @@ export default {
         setTimeout(() => {
           if (this.smallMap) {
             this.smallMap.invalidateSize();
-            console.log('Mapa pequeño inicializado correctamente');
           }
         }, 200);
         
@@ -1698,16 +1656,10 @@ export default {
         let voucherUrl2 = null;
         if (this.pay_method === 'bank') {
           if (this.voucherFile) {
-            console.log(`Subiendo primera imagen de voucher a ${uploadDir}...`);
             voucherUrl = await lib.upload(this.voucherFile, this.voucherFile.name, uploadDir);
-            console.log('Primera imagen subida:', voucherUrl);
           }
           if (this.voucherFile2) {
-            console.log(`Subiendo segunda imagen de voucher a ${uploadDir}...`);
             voucherUrl2 = await lib.upload(this.voucherFile2, this.voucherFile2.name, uploadDir);
-            console.log('Segunda imagen subida:', voucherUrl2);
-          } else {
-            console.log('No hay segunda imagen de voucher para subir');
           }
         }
 
@@ -1749,9 +1701,6 @@ export default {
         // Solo agregar voucher2 si existe
         if (voucherUrl2) {
           payload.voucher2 = voucherUrl2;
-          console.log('voucher2 agregado al payload de activación:', voucherUrl2);
-        } else {
-          console.log('No hay voucher2 para agregar al payload de activación');
         }
 
         if (this.deliveryMethod === 'pickup') {
@@ -1778,20 +1727,12 @@ export default {
           payload.deliveryInfo.district = this.deliveryData.district;
           
           //  MEJORADO: Agregar precio del delivery con mejor manejo y depuración
-          console.log('🚚 Debug Delivery Info:', {
-            deliveryZoneInfo: this.deliveryZoneInfo,
-            department: this.deliveryData.department,
-            showAgencyField: this.showAgencyField,
-            agency: this.deliveryData.agency
-          });
-          
           // Inicializar campos de delivery
           payload.deliveryInfo.deliveryPrice = 0;
           payload.deliveryInfo.deliveryType = 'unknown';
           
           if (this.deliveryZoneInfo && this.deliveryData.department === 'lima') {
             // Para Lima: incluir información de zona y precio
-            console.log('🏙️ Lima - Zona encontrada:', this.deliveryZoneInfo);
             payload.deliveryInfo.deliveryZone = {
               zone_id: this.deliveryZoneInfo.zone_id,
               zone_name: this.deliveryZoneInfo.zone_name,
@@ -1799,25 +1740,20 @@ export default {
             };
             payload.deliveryInfo.deliveryPrice = parseFloat(this.deliveryZoneInfo.price) || 0;
             payload.deliveryInfo.deliveryType = 'zone';
-            console.log('💰 Precio de delivery Lima:', payload.deliveryInfo.deliveryPrice);
           } else if (this.showAgencyField && this.deliveryData.agency) {
             // Para provincias: incluir agencia
-            console.log('🏔️ Provincia - Agencia seleccionada:', this.deliveryData.agency);
             payload.deliveryInfo.agency = this.deliveryData.agency;
             payload.deliveryInfo.deliveryPrice = 0; // Precio por consultar
             payload.deliveryInfo.deliveryNote = 'Costo por confirmar con la agencia';
             payload.deliveryInfo.deliveryType = 'agency';
-            console.log('📦 Precio de delivery Provincia: Por consultar');
           } else {
             // Caso por defecto - sin información de delivery
-            console.log('⚠️ Sin información de delivery válida');
             payload.deliveryInfo.deliveryPrice = 0;
             payload.deliveryInfo.deliveryType = 'none';
             payload.deliveryInfo.deliveryNote = 'Información de delivery no disponible';
           }
           
           // Log final del payload de delivery
-          console.log('📋 Payload Delivery Info Final:', payload.deliveryInfo);
         }
 
         // Validaciones finales antes de enviar
@@ -1877,10 +1813,6 @@ export default {
           }
           
           // Construir payload para afiliación
-          console.log('🔍 Debug afiliación - voucherUrl:', voucherUrl);
-          console.log('🔍 Debug afiliación - voucherUrl2:', voucherUrl2);
-          console.log('🔍 Debug afiliación - voucherFile2 existe:', !!this.voucherFile2);
-          
           const affiliationPayload = {
             products: productsToActivate,
             plan: affiliationPlan, // El plan completo
@@ -1896,12 +1828,8 @@ export default {
           // Solo agregar voucher2 si existe
           if (voucherUrl2) {
             affiliationPayload.voucher2 = voucherUrl2;
-            console.log('✅ voucher2 agregado al affiliationPayload:', voucherUrl2);
-          } else {
-            console.log('❌ voucherUrl2 es null/undefined, no se agregará al affiliationPayload');
           }
           
-          console.log('📦 Payload de afiliación final a enviar:', affiliationPayload);
           const { data } = await api.Afiliation.POST(session, affiliationPayload);
           
           if (data.error) {
@@ -1916,7 +1844,6 @@ export default {
           this.$store.commit('clearAffiliationCheckout'); // Limpiar el estado de afiliación
         } else {
           // Es una activación normal
-          console.log('Payload de activación final a enviar:', payload);
           const { data } = await api.Activation.POST(session, payload);
 
           if (data.error) {
@@ -1945,10 +1872,8 @@ export default {
   watch: {
     selectedPickupPoint: {
       handler(newPickupPoint) {
-        console.log('Punto de recogida cambió a:', newPickupPoint);
         if (newPickupPoint) {
           const office = this.offices.find(o => o.id == newPickupPoint);
-          console.log('Oficina encontrada:', office);
           if (office) {
             // Esperar a que el DOM se actualice
             this.$nextTick(() => {
@@ -2017,7 +1942,6 @@ export default {
       if (data) {
         this.balance = data.balance || 0;
         this._balance = data._balance || 0;
-        console.log('✅ Saldo de usuario cargado:', { balance: this.balance, _balance: this._balance });
       }
     } catch (error) {
       console.error('❌ Error cargando el saldo del usuario:', error);

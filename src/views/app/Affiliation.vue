@@ -800,7 +800,6 @@ import lib from "@/lib";
 import Spinner from "@/components/Spinner.vue";
 
 const INVOICE_ROOT = process.env.VUE_APP_INVOICE_ROOT;
-console.log({ INVOICE_ROOT });
 
 export default {
   components: {
@@ -1084,14 +1083,12 @@ export default {
   async created() {
     try {
       // Verificar si ya tenemos el estado de afiliación en el store
-      console.log('Affiliation.vue: Estado actual del store:', {
         session: this.$store.state.session,
         affiliated: this.$store.state.affiliated
       });
       
       // Si ya tenemos el estado de afiliación, no hacer llamada al API
       if (this.$store.state.affiliated !== null && this.$store.state.affiliated !== undefined) {
-        console.log('Affiliation.vue: Ya tenemos estado de afiliación, sincronizando...');
         
         // Sincronizar el estado desde el store en lugar de hacer llamada al API
         await this.syncStateFromStore();
@@ -1099,9 +1096,7 @@ export default {
       }
       
       // Solo hacer llamada al API si no tenemos el estado
-      console.log('Affiliation.vue: No tenemos estado de afiliación, haciendo llamada al API...');
       const { data } = await api.Afiliation.GET(this.session);
-      console.log("API Response:", data);
 
       // error
       if (data.error && data.msg == "invalid session") {
@@ -1197,7 +1192,6 @@ export default {
       
       // Pequeño delay para asegurar que la interfaz se renderice suavemente
       setTimeout(() => {
-        console.log('Affiliation.vue: Carga completada, interfaz lista');
       }, 100);
     }
   },
@@ -1241,16 +1235,13 @@ export default {
     },
     // Método para sincronizar estado desde el store
     async syncStateFromStore() {
-      console.log('Affiliation.vue: Sincronizando estado desde el store...');
       
       // IMPORTANTE: Permitir que usuarios afiliados accedan libremente
       // Ellos pueden querer acceder para hacer upgrade o ver historial
-      console.log('Affiliation.vue: Estado de afiliación:', this.$store.state.affiliated);
       
       try {
         // Hacer llamada al API para obtener datos necesarios para la afiliación
         const { data } = await api.Afiliation.GET(this.session);
-        console.log('Affiliation.vue: Datos cargados para afiliación:', data);
         
         if (data.error && data.msg == "invalid session") {
           this.$router.push("/login");
@@ -1335,7 +1326,6 @@ export default {
           }, 4000);
         }
         
-        console.log('Affiliation.vue: Datos cargados exitosamente');
         
       } catch (error) {
         console.error('Affiliation.vue: Error al cargar datos para afiliación:', error);
@@ -1455,7 +1445,6 @@ export default {
     },
 
     handleImageLoad(event) {
-      console.log('Imagen cargada correctamente:', event.target.src);
     },
 
 
@@ -1599,19 +1588,16 @@ export default {
       const file = e.target.files[0];
       if (file) {
         this.voucher_file2 = file;
-        console.log('Segundo archivo seleccionado:', file.name, file.size, 'bytes');
 
         const reader = new FileReader();
         reader.onload = (e) => {
           this.voucher2 = e.target.result;
-          console.log('Preview del segundo voucher cargado');
         };
 
         reader.readAsDataURL(this.voucher_file2);
       } else {
         this.voucher_file2 = null;
         this.voucher2 = null;
-        console.log('Segundo archivo eliminado');
       }
     },
 
@@ -1685,28 +1671,19 @@ export default {
 
       let voucher2 = null;
       if (voucher) {
-        console.log('Subiendo primera imagen de voucher...');
-        console.log('Archivo 1:', this.voucher_file ? { name: this.voucher_file.name, size: this.voucher_file.size } : 'no existe');
         voucher = await lib.upload(
           this.voucher_file,
           this.voucher_file.name,
           "affiliations"
         );
-        console.log('Primera imagen subida:', voucher);
       }
       if (this.voucher_file2) {
-        console.log('Subiendo segunda imagen de voucher...');
-        console.log('Archivo 2:', { name: this.voucher_file2.name, size: this.voucher_file2.size });
         voucher2 = await lib.upload(
           this.voucher_file2,
           this.voucher_file2.name,
           "affiliations"
         );
-        console.log('Segunda imagen subida:', voucher2);
-      } else {
-        console.log('No hay segunda imagen de voucher para subir');
-        console.log('this.voucher_file2:', this.voucher_file2);
-        console.log('this.voucher2 (preview):', this.voucher2);
+      }
       }
 
       const payload = {
@@ -1724,15 +1701,9 @@ export default {
       // Solo agregar voucher2 si existe
       if (voucher2) {
         payload.voucher2 = voucher2;
-        console.log('voucher2 agregado al payload:', voucher2);
-      } else {
-        console.log('voucher2 es null o undefined, no se agregará al payload');
       }
       
-      console.log('Payload de afiliación final a enviar:', payload);
-      
       const { data } = await api.Afiliation.POST(this.session, payload);
-      console.log({ data });
 
       this.sending = false;
       this.pending = true;
@@ -1826,8 +1797,6 @@ export default {
       });
       
       // Redirigir a checkout en lugar de cambiar al paso 2
-      console.log('Affiliation.vue: Redirigiendo a checkout con productos:', productsForCart.length);
-      console.log('Affiliation.vue: Estado de afiliación:', this.$store.state.affiliated);
       this.$router.push('/checkout').catch(err => {
         console.error('Error al navegar a checkout:', err);
         // Si hay un error de navegación, intentar de nuevo

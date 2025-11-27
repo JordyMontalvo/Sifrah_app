@@ -82,7 +82,7 @@ export default {
   },
   async created() {
     // GET data
-    const { data } = await api.status(this.session); console.log({ data })
+    const { data } = await api.status(this.session);
 
     this.loading = false
 

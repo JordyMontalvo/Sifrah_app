@@ -289,7 +289,6 @@ export default new Vuex.Store({
         const session = localStorage.getItem('session')
         if (session) {
           commit('SET_SESSION', session)
-          console.log('Sesión restaurada:', !!session);
         }
         
         const office_id = localStorage.getItem('office_id')

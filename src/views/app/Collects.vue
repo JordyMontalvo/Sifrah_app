@@ -92,7 +92,6 @@ export default {
   async created() {
     // GET data
     const { data } = await api.Collects.GET(this.session);
-    console.log({ data });
 
     this.loading = false;
 

@@ -169,7 +169,6 @@ export default {
   async created() {
     // GET data
     const { data } = await api.Collect.GET(this.session);
-    console.log({ data });
 
     this.loading = false;
 
@@ -240,7 +239,6 @@ export default {
         desc,
         office,
       });
-      console.log({ data });
 
       this.sending = false;
 

@@ -82,7 +82,7 @@ export default {
   },
   async created() {
     // GET data
-    const { data } = await api.Security.GET(this.session); console.log({ data })
+    const { data } = await api.Security.GET(this.session);
 
     this.loading = false
 
@@ -129,7 +129,7 @@ export default {
         dni,
         relation,
         phone,
-      }); console.log({ data })
+      });
 
       this.sending = false
 

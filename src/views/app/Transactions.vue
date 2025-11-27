@@ -74,7 +74,6 @@ export default {
   async created() {
     // GET data
     const { data } = await api.transactions(this.session);
-    console.log({ data });
 
     this.loading = false;
 

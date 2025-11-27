@@ -145,7 +145,6 @@ export default {
   },
   async created() {
     const { data } = await api.bonuses(this.session);
-    console.log({ data });
     let n;
 
     this.pays = data.pays;

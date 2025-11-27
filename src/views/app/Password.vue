@@ -57,7 +57,7 @@ export default {
   },
   async created() {
     // GET data
-    const { data } = await api.Password.GET(this.session); console.log({ data })
+    const { data } = await api.Password.GET(this.session);
 
     this.loading = false
 
@@ -84,7 +84,7 @@ export default {
       const { data } = await api.Password.UPDATE(this.session, {
         oldPassword,
         newPassword,
-      }); console.log({ data })
+      });
 
       this.sending = false
 

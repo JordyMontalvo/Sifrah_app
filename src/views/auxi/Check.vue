@@ -12,7 +12,7 @@ export default {
     if(!check) return this.$router.push('/login')
 
     // POST check string
-    const { data } = await api.check(check); console.log({ data })
+    const { data } = await api.check(check);
 
     // error
     if(data.error) return this.$router.push('/login')

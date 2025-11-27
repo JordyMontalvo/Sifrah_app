@@ -699,7 +699,6 @@ export default {
     try {
       // GET data
       const { data } = await api.Activation.GET(this.session);
-      console.log({ data });
 
       // error
       if (data.error && data.msg == "invalid session") {
@@ -721,9 +720,6 @@ export default {
       this.current_points = data.points || 0;
       this.current_profit = data.profit || 0;
       this.products = data.products ? data.products.map((a) => ({ ...a, total: 0 })) : [];
-      console.log("[Activation.vue] Productos recibidos del API:", data.products ? data.products.map(p => ({ id: p.id, name: p.name, subdescription: p.subdescription })) : "No hay productos");
-      console.log("[Activation.vue] Estructura completa del primer producto:", this.products.length > 0 ? this.products[0] : "No hay productos");
-      console.log("[Activation.vue] Campos disponibles en productos:", this.products.length > 0 ? Object.keys(this.products[0]) : "No hay productos");
       this.product = this.products.length > 0 ? this.products[0] : null;
 
       this.balance = data.balance || 0;
@@ -738,7 +734,6 @@ export default {
         const { data: bannersData } = await api.ActivationBanners.GET(this.session);
         if (bannersData.activationBanners) {
           this.activationBanners = bannersData.activationBanners;
-          console.log("[Activation.vue] Banners de activación cargados:", this.activationBanners);
         }
       } catch (bannerError) {
         console.error("Error loading activation banners:", bannerError);
@@ -799,7 +794,6 @@ export default {
       reader.readAsDataURL(this.file);
     },
     reset() {
-      console.log("reset ...");
 
       this.products.forEach((product) => {
         product.total = 0;
