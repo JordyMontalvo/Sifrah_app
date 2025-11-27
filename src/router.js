@@ -28,6 +28,7 @@ import Collect      from './views/app/Collect.vue'
 import Collects     from './views/app/Collects.vue'
 import Closeds      from './views/app/Closeds.vue'
 import Tools        from './views/app/Tools.vue'
+import FlyerEditor  from './views/app/FlyerEditor.vue'
 import Profile      from './views/app/Profile.vue'
 import Password     from './views/app/Password.vue'
 import Security     from './views/app/Security.vue'
@@ -194,6 +195,11 @@ const routes = [
   {
     path: '/tools',
     component: Tools,
+    meta: { requiresAuth: true, requiresAffiliation: true }
+  },
+  {
+    path: '/flyer-editor',
+    component: FlyerEditor,
     meta: { requiresAuth: true, requiresAffiliation: true }
   },
   {

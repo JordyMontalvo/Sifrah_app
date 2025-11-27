@@ -192,6 +192,14 @@
         </router-link>
 
         <router-link
+          to="/flyer-editor"
+          @click.native="close"
+          v-if="office_id == null && affiliated"
+        >
+          <i class="fas fa-image"></i> EDITOR DE FLYER
+        </router-link>
+
+        <router-link
           to="/profile"
           @click.native="close"
           v-if="office_id == null"
@@ -445,6 +453,9 @@ export default {
     commissions() {
       return this.$store.state.commissions;
     },
+    education() {
+      return this.$store.state.education;
+    },
     affiliationLink() {
       return `${ROOT}/register/${this.token}`;
     },
@@ -523,7 +534,7 @@ export default {
     },
     actived(i) {
       // Verificar afiliación antes de permitir acceso a opciones restringidas
-      if (!this.affiliated && (i === 1 || i === 2 || i === 3)) {
+      if (!this.affiliated && (i === 1 || i === 2 || i === 3 || i === 4)) {
         // Mostrar mensaje de afiliación requerida
         this.showAffiliationRequiredMessage();
         // Limpiar estados de menús si no está afiliado
@@ -540,6 +551,7 @@ export default {
       if (i == 1) this.$store.commit("SET_NETWORK");
       if (i == 2) this.$store.commit("SET_COMMISSIONS");
       if (i == 3) this.$store.commit("SET_RESUME");
+      if (i == 4) this.$store.commit("SET_EDUCATION");
     },
 
     close() {

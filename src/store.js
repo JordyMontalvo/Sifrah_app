@@ -42,6 +42,7 @@ export default new Vuex.Store({
     buys: false,
     network: false,
     commissions: false,
+    education: false,
   },
   mutations: {
     SET_SESSION: (state, session) => {
@@ -241,30 +242,42 @@ export default new Vuex.Store({
       state.buys = false
       state.network = false
       state.commissions = false
+      state.education = false
     },
     SET_BUYS: (state) => {
       state.resume = false
       state.buys = !state.buys
       state.network = false
       state.commissions = false
+      state.education = false
     },
     SET_NETWORK: (state) => {
       state.resume = false
       state.buys = false
       state.network = !state.network
       state.commissions = false
+      state.education = false
     },
     SET_COMMISSIONS: (state) => {
       state.resume = false
       state.buys = false
       state.network = false
       state.commissions = !state.commissions
+      state.education = false
+    },
+    SET_EDUCATION: (state) => {
+      state.resume = false
+      state.buys = false
+      state.network = false
+      state.commissions = false
+      state.education = !state.education
     },
     CLEAR_MENU_STATES: (state) => {
       state.resume = false
       state.buys = false
       state.network = false
       state.commissions = false
+      state.education = false
     },
   },
   actions: {
