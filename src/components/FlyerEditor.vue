@@ -64,6 +64,10 @@
           @mousemove="handleMouseMove"
           @mouseup="handleMouseUp"
           @mouseleave="handleMouseUp"
+          @touchstart="handleTouchStart"
+          @touchmove="handleTouchMove"
+          @touchend="handleTouchEnd"
+          @touchcancel="handleTouchEnd"
         ></canvas>
         <div v-if="showInstructions" class="canvas-instructions">
           <p><i class="fas fa-info-circle"></i> Haz clic y arrastra la imagen para moverla. Usa las esquinas para redimensionar.</p>
@@ -104,11 +108,17 @@ export default {
       initialPortraitSize: 0,
       showInstructions: true,
       handleSize: 12,
+      isMobile: false,
     };
   },
   mounted() {
     this.loadBaseImage();
     this.loadScriptFont();
+    // Detectar si es móvil
+    this.isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    if (this.isMobile) {
+      this.handleSize = 20; // Handles más grandes en móvil
+    }
     // Ocultar instrucciones después de 5 segundos
     setTimeout(() => {
       this.showInstructions = false;
@@ -183,9 +193,13 @@ export default {
       const scaleX = canvas.width / rect.width;
       const scaleY = canvas.height / rect.height;
       
+      // Soporte para eventos táctiles
+      const clientX = event.touches ? event.touches[0].clientX : event.clientX;
+      const clientY = event.touches ? event.touches[0].clientY : event.clientY;
+      
       return {
-        x: (event.clientX - rect.left) * scaleX,
-        y: (event.clientY - rect.top) * scaleY
+        x: (clientX - rect.left) * scaleX,
+        y: (clientY - rect.top) * scaleY
       };
     },
     isPointInCircle(x, y, centerX, centerY, radius) {
@@ -197,6 +211,8 @@ export default {
       if (!this.portraitImageObj) return null;
       
       const radius = this.portraitSize / 2;
+      // Área táctil más grande en móvil para facilitar el toque
+      const touchArea = this.isMobile ? this.handleSize * 2 : this.handleSize;
       const handles = [
         { name: 'top-left', x: this.portraitX - radius, y: this.portraitY - radius },
         { name: 'top-right', x: this.portraitX + radius, y: this.portraitY - radius },
@@ -207,7 +223,7 @@ export default {
       for (const handle of handles) {
         const dx = x - handle.x;
         const dy = y - handle.y;
-        if (dx * dx + dy * dy <= this.handleSize * this.handleSize) {
+        if (dx * dx + dy * dy <= touchArea * touchArea) {
           return handle.name;
         }
       }
@@ -319,6 +335,71 @@ export default {
       if (canvas) {
         canvas.style.cursor = 'default';
       }
+    },
+    handleTouchStart(event) {
+      if (!this.portraitImageObj) return;
+      
+      event.preventDefault(); // Prevenir scroll en móvil
+      const coords = this.getCanvasCoordinates(event);
+      const handle = this.getHandleAt(coords.x, coords.y);
+      
+      if (handle) {
+        // Iniciar redimensionamiento
+        this.isResizing = true;
+        this.selectedHandle = handle;
+        this.dragStartX = coords.x;
+        this.dragStartY = coords.y;
+        this.initialPortraitX = this.portraitX;
+        this.initialPortraitY = this.portraitY;
+        this.initialPortraitSize = this.portraitSize;
+      } else if (this.isPointInCircle(coords.x, coords.y, this.portraitX, this.portraitY, this.portraitSize / 2)) {
+        // Iniciar movimiento
+        this.isDragging = true;
+        this.dragStartX = coords.x;
+        this.dragStartY = coords.y;
+        this.initialPortraitX = this.portraitX;
+        this.initialPortraitY = this.portraitY;
+      }
+    },
+    handleTouchMove(event) {
+      if (!this.portraitImageObj) return;
+      
+      event.preventDefault(); // Prevenir scroll en móvil
+      const canvas = this.$refs.canvas;
+      if (!canvas) return;
+      
+      const coords = this.getCanvasCoordinates(event);
+      
+      if (this.isDragging) {
+        // Mover la imagen
+        const dx = coords.x - this.dragStartX;
+        const dy = coords.y - this.dragStartY;
+        this.portraitX = this.initialPortraitX + dx;
+        this.portraitY = this.initialPortraitY + dy;
+        this.updateCanvas();
+      } else if (this.isResizing && this.selectedHandle) {
+        // Redimensionar la imagen desde las esquinas
+        const centerX = this.initialPortraitX;
+        const centerY = this.initialPortraitY;
+        const currentDistance = Math.sqrt(
+          Math.pow(coords.x - centerX, 2) + Math.pow(coords.y - centerY, 2)
+        );
+        
+        // El nuevo tamaño es el doble de la distancia desde el centro
+        let newSize = currentDistance * 2;
+        
+        // Limitar el tamaño
+        newSize = Math.max(150, Math.min(450, newSize));
+        this.portraitSize = newSize;
+        
+        this.updateCanvas();
+      }
+    },
+    handleTouchEnd(event) {
+      event.preventDefault();
+      this.isDragging = false;
+      this.isResizing = false;
+      this.selectedHandle = null;
     },
     updateCanvas(showHandles = true) {
       if (!this.baseImage) return;
@@ -745,6 +826,11 @@ export default {
   box-shadow 0 4px 12px rgba(0, 0, 0, 0.1)
   cursor default
   user-select none
+  touch-action none
+  -webkit-touch-callout none
+  -webkit-user-select none
+  -moz-user-select none
+  -ms-user-select none
 
 .canvas-instructions
   position absolute
