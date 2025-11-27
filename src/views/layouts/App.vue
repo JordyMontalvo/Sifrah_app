@@ -21,15 +21,44 @@
         <span v-if="country == 'Costa Rica'" style="font-size: 28px;">🇨🇷</span>
           &nbsp;&nbsp;&nbsp;SUEÑA SIN LIMITES
       </h3>-->
-      <img
-        src="../../assets/img/logo/logo-sifrah-BLANCO.png"
-        alt=""
-        class="logo"
-      />
-      <i
-        class="burger fas fa-bars"
-        @click.stop="toggleMenu"
-      ></i>
+      <div class="header-left">
+        <img
+          src="../../assets/img/logo/logo-sifrah-BLANCO.png"
+          alt=""
+          class="logo"
+        />
+      </div>
+      
+      <div class="header-center" v-if="office_id == null">
+        <div class="header-user-info">
+          <div class="header-code" v-if="token">Cód: {{ token }}</div>
+          <div class="header-dni" v-if="dni">{{ dni }}</div>
+        </div>
+      </div>
+      
+      <div class="header-right">
+        <label v-if="office_id == null" class="header-photo-label">
+          <img
+            v-if="photoState == 'default'"
+            class="header-photo"
+            :src="photo"
+          />
+          <img
+            v-if="photoState == 'changed'"
+            class="header-photo"
+            :src="newPhoto"
+          />
+          <input type="file" @change="changePhoto" style="display: none;" />
+        </label>
+        <i class="fas fa-share-alt header-icon" @click="copy_affiliation_link"></i>
+        <router-link to="/profile" v-if="office_id == null" class="header-icon-link">
+          <i class="fas fa-cog header-icon"></i>
+        </router-link>
+        <i
+          class="burger fas fa-bars header-icon"
+          @click.stop="toggleMobileTabsMenu"
+        ></i>
+      </div>
 
       <!-- <h4>{{ name }} {{ lastName }} <i class=""
                       :class="{'yellow': affiliated, 'blue': _activated, 'green': activated}"></i>
@@ -294,6 +323,161 @@
       </div>
     </section>
 
+    <!-- Overlay para menú de tabs en móvil -->
+    <div 
+      v-if="showMobileTabsMenu" 
+      class="mobile-tabs-overlay"
+      @click="closeMobileTabsMenu"
+    >
+      <div class="mobile-tabs-menu" @click.stop>
+        <div class="mobile-tabs-header">
+          <div class="mobile-menu-user-info" v-if="office_id == null">
+            <label v-if="office_id == null">
+              <img v-if="photoState == 'default'" class="mobile-menu-photo" :src="photo" />
+              <img v-if="photoState == 'changed'" class="mobile-menu-photo" :src="newPhoto" />
+            </label>
+            <div>
+              <p class="mobile-menu-name">{{ name }} {{ lastName }}</p>
+              <p class="mobile-menu-email">{{ email }}</p>
+            </div>
+          </div>
+          <i class="fas fa-times" @click="closeMobileTabsMenu"></i>
+        </div>
+        
+        <div class="mobile-tabs-content">
+          <img
+            src="../../assets/img/logo/logo-sifrah-BLANCO.png"
+            style="width: 100px; height: 100px; margin: 20px auto; display: block;"
+            class="mobile-menu-logo"
+          />
+
+          <a @click="handleInicioClickAndClose" v-if="office_id == null" class="mobile-menu-item">
+            <img src="@/assets/img/home-desktop-icon.svg" alt="Inicio" style="width: 20px; height: 20px; margin-right: 12px;">
+            <span>INICIO</span>
+          </a>
+
+          <a @click.stop="toggleMobileSubmenu(0)" class="mobile-menu-item mobile-menu-item-with-submenu">
+            <span style="display: flex; align-items: center;">
+              <img src="@/assets/img/products-desktop-icon.svg" alt="Productos" style="width: 20px; height: 20px; margin-right: 12px;">
+              PRODUCTOS
+            </span>
+            <i class="fa fa-angle-down" :class="{ 'rotated': mobileSubmenus[0] }"></i>
+          </a>
+          <div class="mobile-submenu" :class="{ 'active': mobileSubmenus[0] }">
+            <router-link to="/activation" v-if="affiliated" @click.native="handleNavigationClickAndClose" class="mobile-submenu-item">
+              <i class="fas fa-shopping-bag"></i>
+              <span>COMPRAS</span>
+            </router-link>
+            <router-link to="/affiliation" @click.native="handleNavigationClickAndClose" class="mobile-submenu-item">
+              <img src="@/assets/img/affiliation-desktop-icon.svg" alt="Afiliación" style="width: 16px; height: 16px; margin-right: 12px;">
+              <span>AFILIACIÓN</span>
+            </router-link>
+            <router-link to="/activations" v-if="affiliated" @click.native="handleNavigationClickAndClose" class="mobile-submenu-item">
+              <img src="@/assets/img/history-desktop-icon.svg" alt="Historial" style="width: 16px; height: 16px; margin-right: 12px;">
+              <span>HISTORIAL</span>
+            </router-link>
+          </div>
+
+          <a @click.stop="toggleMobileSubmenu(1)" v-if="tree" class="mobile-menu-item mobile-menu-item-with-submenu">
+            <span style="display: flex; align-items: center;">
+              <i class="fa fa-users" style="width: 20px; margin-right: 12px;"></i>
+              ORGANIZACIÓN
+            </span>
+            <i class="fa fa-angle-down" :class="{ 'rotated': mobileSubmenus[1] }"></i>
+          </a>
+          <div class="mobile-submenu" :class="{ 'active': mobileSubmenus[1] }" v-if="tree">
+            <router-link to="/tree" @click.native="handleNavigationClickAndClose" class="mobile-submenu-item">
+              <img src="@/assets/img/red-desktop-icon.svg" alt="Red" style="width: 16px; height: 16px; margin-right: 12px;">
+              <span>RED</span>
+            </router-link>
+            <router-link to="/directs" @click.native="handleNavigationClickAndClose" class="mobile-submenu-item">
+              <img src="@/assets/img/records-desktop-icon.svg" alt="Registros" style="width: 16px; height: 16px; margin-right: 12px;">
+              <span>REGISTROS</span>
+            </router-link>
+          </div>
+
+          <a @click.stop="toggleMobileSubmenu(2)" v-if="tree" class="mobile-menu-item mobile-menu-item-with-submenu">
+            <span style="display: flex; align-items: center;">
+              <img src="@/assets/img/commissions-desktop-icon.svg" alt="Comisiones" style="width: 20px; height: 20px; margin-right: 12px;">
+              COMISIONES
+            </span>
+            <i class="fa fa-angle-down" :class="{ 'rotated': mobileSubmenus[2] }"></i>
+          </a>
+          <div class="mobile-submenu" :class="{ 'active': mobileSubmenus[2] }" v-if="tree">
+            <router-link to="/transfer" @click.native="handleNavigationClickAndClose" class="mobile-submenu-item">
+              <i class="fas fa-wallet"></i>
+              <span>MONEDERO</span>
+            </router-link>
+            <router-link to="/transactions" @click.native="handleNavigationClickAndClose" class="mobile-submenu-item">
+              <img src="@/assets/img/movements-desktop-icon.svg" alt="Movimientos" style="width: 16px; height: 16px; margin-right: 12px;">
+              <span>MOVIMIENTOS</span>
+            </router-link>
+            <router-link to="/collect" @click.native="handleNavigationClickAndClose" class="mobile-submenu-item">
+              <img src="@/assets/img/withdrawals-desktop-icon.svg" alt="Retiros" style="width: 16px; height: 16px; margin-right: 12px;">
+              <span>RETIROS</span>
+            </router-link>
+          </div>
+
+          <a @click.stop="toggleMobileSubmenu(3)" v-if="tree && office_id == null" class="mobile-menu-item mobile-menu-item-with-submenu">
+            <span style="display: flex; align-items: center;">
+              <img src="@/assets/img/summary-desktop-icon.svg" alt="Resumen" style="width: 20px; height: 20px; margin-right: 12px;">
+              RESUMEN
+            </span>
+            <i class="fa fa-angle-down" :class="{ 'rotated': mobileSubmenus[3] }"></i>
+          </a>
+          <div class="mobile-submenu" :class="{ 'active': mobileSubmenus[3] }" v-if="tree && office_id == null">
+            <router-link to="/bonuses" v-if="affiliated" @click.native="handleNavigationClickAndClose" class="mobile-submenu-item">
+              <img src="@/assets/img/bonuses-desktop-icon.svg" alt="Bonificaciones" style="width: 16px; height: 16px; margin-right: 12px;">
+              <span>BONIFICACIONES</span>
+            </router-link>
+            <router-link to="/resume" @click.native="handleNavigationClickAndClose" class="mobile-submenu-item">
+              <img src="@/assets/img/personal-desktop-icon.svg" alt="Personal" style="width: 16px; height: 16px; margin-right: 12px;">
+              <span>PERSONAL</span>
+            </router-link>
+            <router-link to="/closeds" @click.native="handleNavigationClickAndClose" class="mobile-submenu-item">
+              <img src="@/assets/img/closures-desktop-icon.svg" alt="Cierres" style="width: 16px; height: 16px; margin-right: 12px;">
+              <span>CIERRES</span>
+            </router-link>
+          </div>
+
+          <router-link
+            to="/tools"
+            @click.native="handleNavigationClickAndClose"
+            v-if="office_id == null && affiliated"
+            class="mobile-menu-item"
+          >
+            <img src="@/assets/img/education-desktop-icon.svg" alt="Educación" style="width: 20px; height: 20px; margin-right: 12px;">
+            <span>EDUCACIÓN</span>
+          </router-link>
+
+          <router-link
+            to="/flyer-editor"
+            @click.native="handleNavigationClickAndClose"
+            v-if="office_id == null && affiliated"
+            class="mobile-menu-item"
+          >
+            <i class="fas fa-image" style="width: 20px; margin-right: 12px;"></i>
+            <span>EDITOR DE FLYER</span>
+          </router-link>
+
+          <router-link
+            to="/profile"
+            @click.native="handleNavigationClickAndClose"
+            v-if="office_id == null"
+            class="mobile-menu-item"
+          >
+            <i class="fas fa-user" style="width: 20px; margin-right: 12px;"></i>
+            <span>PERFIL</span>
+          </router-link>
+
+          <a @click="handleLogoutAndClose" class="mobile-menu-item mobile-menu-item-logout">
+            <i class="fas fa-sign-out-alt" style="width: 20px; margin-right: 12px;"></i>
+            <span>CERRAR SESIÓN</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
     <footer class="footer-Dashboard">
       <a @click="handleInicioClick">
         <img src="@/assets/img/home-icon.svg" alt="Inicio" style="width: 20px; height: 20px;">
@@ -350,6 +534,14 @@ export default {
       endX: 0,
       notification: null,
       notificationTimer: null,
+      showMobileTabsMenu: false,
+      isMobile: false,
+      mobileSubmenus: {
+        0: false, // Productos
+        1: false, // Organización
+        2: false, // Comisiones
+        3: false, // Resumen
+      },
     };
   },
   watch: {
@@ -370,6 +562,12 @@ export default {
   },
   created() {
     this.startNotificationLoop();
+    this.checkMobile();
+    window.addEventListener('resize', this.checkMobile);
+  },
+  beforeDestroy() {
+    if (this.notificationTimer) clearInterval(this.notificationTimer);
+    window.removeEventListener('resize', this.checkMobile);
   },
   computed: {
     // user
@@ -462,6 +660,9 @@ export default {
     token() {
       return this.$store.state.token;
     },
+    dni() {
+      return this.$store.state.dni;
+    },
   },
   methods: {
     startNotificationLoop() {
@@ -493,9 +694,6 @@ export default {
         this.notification = null;
       }
     },
-    beforeDestroy() {
-      if (this.notificationTimer) clearInterval(this.notificationTimer);
-    },
 
     toggleMenu() {
       this.$store.commit("SET_OPEN");
@@ -504,6 +702,35 @@ export default {
       if (this.open) {
         this.$store.commit("SET_OPEN");
       }
+    },
+    checkMobile() {
+      this.isMobile = window.innerWidth < 768;
+    },
+    toggleMobileTabsMenu() {
+      if (this.isMobile) {
+        this.showMobileTabsMenu = !this.showMobileTabsMenu;
+      } else {
+        // En desktop, mantener el comportamiento original del sidebar
+        this.toggleMenu();
+      }
+    },
+    closeMobileTabsMenu() {
+      this.showMobileTabsMenu = false;
+    },
+    handleInicioClickAndClose() {
+      this.closeMobileTabsMenu();
+      this.handleInicioClick();
+    },
+    handleNavigationClickAndClose() {
+      this.closeMobileTabsMenu();
+      this.handleNavigationClick();
+    },
+    toggleMobileSubmenu(index) {
+      this.mobileSubmenus[index] = !this.mobileSubmenus[index];
+    },
+    handleLogoutAndClose() {
+      this.closeMobileTabsMenu();
+      this.logout();
     },
     handleInicioClick() {
       // Verificar afiliación antes de permitir acceso a INICIO
@@ -833,5 +1060,189 @@ export default {
   }
 }
 
+/* Overlay para menú de tabs en móvil */
+.mobile-tabs-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.3s ease;
+}
+
+.mobile-tabs-menu {
+  width: 100%;
+  height: 100%;
+  background: #D209B6;
+  display: flex;
+  flex-direction: column;
+  animation: slideUp 0.3s ease;
+  overflow-y: auto;
+}
+
+.mobile-tabs-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+  background: rgba(159, 0, 173, 0.3);
+}
+
+.mobile-menu-user-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+}
+
+.mobile-menu-photo {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.mobile-menu-name {
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+  margin: 0;
+}
+
+.mobile-menu-email {
+  color: white;
+  font-size: 12px;
+  margin: 0;
+  opacity: 0.9;
+}
+
+.mobile-tabs-header i {
+  color: white;
+  font-size: 28px;
+  cursor: pointer;
+  padding: 8px;
+}
+
+.mobile-tabs-content {
+  flex: 1;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.mobile-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 20px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  color: white;
+  font-size: 16px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  border: 1px solid transparent;
+  margin-bottom: 12px;
+  cursor: pointer;
+}
+
+.mobile-menu-item:hover,
+.mobile-menu-item.router-link-active {
+  background: rgba(159, 0, 173, 0.5);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.mobile-menu-item-with-submenu i.fa-angle-down {
+  transition: transform 0.3s ease;
+  font-size: 18px;
+}
+
+.mobile-menu-item-with-submenu i.fa-angle-down.rotated {
+  transform: rotate(180deg);
+}
+
+.mobile-menu-item-logout {
+  background: rgba(159, 0, 173, 0.8) !important;
+  margin-top: 20px;
+}
+
+.mobile-submenu {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+  margin-left: 20px;
+  margin-bottom: 12px;
+}
+
+.mobile-submenu.active {
+  max-height: 500px;
+}
+
+.mobile-submenu-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  color: white;
+  font-size: 14px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  margin-bottom: 8px;
+}
+
+.mobile-submenu-item:hover,
+.mobile-submenu-item.router-link-active {
+  background: rgba(159, 0, 173, 0.4);
+}
+
+.mobile-submenu-item i {
+  font-size: 16px;
+  width: 20px;
+  text-align: center;
+}
+
+.mobile-submenu-item img {
+  width: 16px;
+  height: 16px;
+}
+
+.mobile-menu-logo {
+  margin-bottom: 20px;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+/* Ocultar el overlay en desktop */
+@media (min-width: 768px) {
+  .mobile-tabs-overlay {
+    display: none !important;
+  }
+}
 
 </style>

@@ -18,6 +18,7 @@ export default new Vuex.Store({
     tree:       null,
     email:      null,
     token:      null,
+    dni:        null,
     address:    null,
     city:       null,
     birthdate:   null,
@@ -167,6 +168,14 @@ export default new Vuex.Store({
         localStorage.setItem('token', token)
       } else {
         localStorage.removeItem('token')
+      }
+    },
+    SET_DNI: (state, dni) => {
+      state.dni = dni
+      if (dni) {
+        localStorage.setItem('dni', dni)
+      } else {
+        localStorage.removeItem('dni')
       }
     },
     SET_ADDRESS: (state, address) => {
@@ -334,6 +343,9 @@ export default new Vuex.Store({
         
         const token = localStorage.getItem('token')
         if (token) commit('SET_TOKEN', token)
+        
+        const dni = localStorage.getItem('dni')
+        if (dni) commit('SET_DNI', dni)
         
         const address = localStorage.getItem('address')
         if (address) commit('SET_ADDRESS', address)

@@ -1083,9 +1083,6 @@ export default {
   async created() {
     try {
       // Verificar si ya tenemos el estado de afiliación en el store
-        session: this.$store.state.session,
-        affiliated: this.$store.state.affiliated
-      });
       
       // Si ya tenemos el estado de afiliación, no hacer llamada al API
       if (this.$store.state.affiliated !== null && this.$store.state.affiliated !== undefined) {
@@ -1114,6 +1111,8 @@ export default {
       this.$store.commit("SET_COUNTRY", data.country);
       this.$store.commit("SET_PHOTO", data.photo);
       this.$store.commit("SET_TREE", data.tree);
+      if (data.dni) this.$store.commit("SET_DNI", data.dni);
+      if (data.token) this.$store.commit("SET_TOKEN", data.token);
 
       // Usar directamente los planes que llegan del backend
       this.plans = data.plans || [];
@@ -1683,7 +1682,6 @@ export default {
           this.voucher_file2.name,
           "affiliations"
         );
-      }
       }
 
       const payload = {

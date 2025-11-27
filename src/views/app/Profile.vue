@@ -228,6 +228,8 @@ export default {
     this.$store.commit("SET_CITY", data.city);
     this.$store.commit("SET_EMAIL", data.email);
     this.$store.commit("SET_BIRTHDATE", data.birthdate);
+    this.$store.commit("SET_DNI", data.dni);
+    this.$store.commit("SET_TOKEN", data.token);
     this.country = data.country;
     this.dni = data.dni;
     this.name = data.name;
