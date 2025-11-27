@@ -3,6 +3,25 @@
     <div class="editor-container">
       <div class="editor-controls">
         <div class="control-group">
+          <label>Seleccionar Flyer:</label>
+          <div class="select" v-if="!loadingFlyers">
+            <select v-model="selectedFlyerId" @change="onFlyerChange" class="select-flyer">
+              <option value="">Seleccione un flyer</option>
+              <option 
+                v-for="flyer in availableFlyers" 
+                :key="flyer.id" 
+                :value="flyer.id"
+              >
+                {{ flyer.name }}
+              </option>
+            </select>
+          </div>
+          <div v-else class="loading-flyers">
+            <i class="fas fa-spinner fa-spin"></i> Cargando flyers...
+          </div>
+        </div>
+
+        <div class="control-group">
           <label>Nombre del Socio:</label>
           <input 
             type="text" 
@@ -78,8 +97,16 @@
 </template>
 
 <script>
+import api from '@/api';
+
 export default {
   name: 'FlyerEditor',
+  props: {
+    session: {
+      type: String,
+      required: true,
+    },
+  },
   data() {
     return {
       nombreSocio: '',
@@ -109,16 +136,21 @@ export default {
       showInstructions: true,
       handleSize: 12,
       isMobile: false,
+      // Flyers disponibles
+      availableFlyers: [],
+      selectedFlyerId: '',
+      loadingFlyers: true,
     };
   },
-  mounted() {
-    this.loadBaseImage();
+  async mounted() {
     this.loadScriptFont();
     // Detectar si es móvil
     this.isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
     if (this.isMobile) {
       this.handleSize = 20; // Handles más grandes en móvil
     }
+    // Cargar flyers disponibles
+    await this.loadFlyers();
     // Ocultar instrucciones después de 5 segundos
     setTimeout(() => {
       this.showInstructions = false;
@@ -132,7 +164,50 @@ export default {
       link.rel = 'stylesheet';
       document.head.appendChild(link);
     },
-    loadBaseImage() {
+    async loadFlyers() {
+      try {
+        this.loadingFlyers = true;
+        const { data } = await api.Flyers.GET(this.session);
+        
+        if (data.error) {
+          console.error('Error al cargar flyers:', data.msg);
+          // Si hay error, usar el flyer por defecto
+          this.loadDefaultFlyer();
+          return;
+        }
+
+        this.availableFlyers = data.flyers || [];
+        
+        // Si hay flyers disponibles, seleccionar el primero por defecto
+        if (this.availableFlyers.length > 0) {
+          this.selectedFlyerId = this.availableFlyers[0].id;
+          this.loadBaseImage(this.availableFlyers[0].base_image_url);
+        } else {
+          // Si no hay flyers, usar el por defecto
+          this.loadDefaultFlyer();
+        }
+      } catch (error) {
+        console.error('Error al cargar flyers:', error);
+        this.loadDefaultFlyer();
+      } finally {
+        this.loadingFlyers = false;
+      }
+    },
+
+    loadDefaultFlyer() {
+      // Cargar el flyer por defecto (el que estaba hardcodeado)
+      const defaultImage = require('@/assets/img/bienvenido-pack-empresario.png');
+      this.loadBaseImage(defaultImage);
+    },
+
+    onFlyerChange() {
+      const selectedFlyer = this.availableFlyers.find(f => f.id === this.selectedFlyerId);
+      if (selectedFlyer && selectedFlyer.base_image_url) {
+        this.loadBaseImage(selectedFlyer.base_image_url);
+      }
+    },
+
+    loadBaseImage(imageSrc) {
       const img = new Image();
       img.crossOrigin = 'anonymous';
       img.onload = () => {
@@ -150,7 +225,7 @@ export default {
         console.error('Error al cargar la imagen base');
         alert('Error al cargar la imagen base. Por favor, verifique que la imagen existe.');
       };
-      img.src = require('@/assets/img/bienvenido-pack-empresario.png');
+      img.src = imageSrc;
     },
     handleImageUpload(event) {
       const file = event.target.files[0];
@@ -619,6 +694,28 @@ export default {
   &:focus
     outline none
     border-color #9f00ad
+
+.select-flyer
+  width 100%
+  padding 10px
+  border 1px solid #ddd
+  border-radius 4px
+  font-size 16px
+  box-sizing border-box
+  background-color white
+  cursor pointer
+
+  &:focus
+    outline none
+    border-color #9f00ad
+
+.loading-flyers
+  padding 10px
+  text-align center
+  color #9f00ad
+
+  i
+    margin-right 8px
 
 .image-upload-section
   display flex

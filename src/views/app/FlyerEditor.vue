@@ -3,7 +3,7 @@
     <Spinner v-if="loading" :size="40" :color="'#086eb6'" />
 
     <div v-if="!loading">
-      <FlyerEditorComponent />
+      <FlyerEditorComponent :session="session" />
     </div>
   </App>
 </template>
@@ -23,6 +23,7 @@ export default {
   data() {
     return {
       loading: true,
+      title: "EDITOR DE FLYER",
     };
   },
   computed: {

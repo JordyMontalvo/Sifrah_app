@@ -34,6 +34,7 @@ class API {
     ActivationBanners,
     AffiliationBanners,
     PaymentMethods,
+    Flyers,
   }) {
     this.Profile = new Profile();
     this.Password = new Password();
@@ -51,6 +52,7 @@ class API {
     this.ActivationBanners = new ActivationBanners();
     this.AffiliationBanners = new AffiliationBanners();
     this.PaymentMethods = new PaymentMethods();
+    this.Flyers = new Flyers();
   }
 
   register(data) {
@@ -282,6 +284,12 @@ class PaymentMethods {
   }
 }
 
+class Flyers {
+  GET(session) {
+    return axios.get(`/app/flyers?session=${session}`);
+  }
+}
+
 export default new API({
   Profile,
   Password,
@@ -299,4 +307,5 @@ export default new API({
   ActivationBanners,
   AffiliationBanners,
   PaymentMethods,
+  Flyers,
 });
