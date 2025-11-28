@@ -30,7 +30,12 @@
       </div>
       
       <div class="header-center" v-if="office_id == null">
-        <div class="header-user-info">
+        <div 
+          class="header-user-info"
+          :style="{ left: textPosition.x + 'px', top: textPosition.y + 'px' }"
+          @mousedown="startDrag"
+          @touchstart="startDrag"
+        >
           <div class="header-code" v-if="token">Cód: {{ token }}</div>
           <div class="header-dni" v-if="dni">{{ dni }}</div>
         </div>
@@ -542,6 +547,12 @@ export default {
         2: false, // Comisiones
         3: false, // Resumen
       },
+      textPosition: {
+        x: 0,
+        y: 0,
+      },
+      isDragging: false,
+      dragStart: { x: 0, y: 0 },
     };
   },
   watch: {
@@ -564,10 +575,19 @@ export default {
     this.startNotificationLoop();
     this.checkMobile();
     window.addEventListener('resize', this.checkMobile);
+    this.loadTextPosition();
+    window.addEventListener('mousemove', this.onDrag);
+    window.addEventListener('touchmove', this.onDrag);
+    window.addEventListener('mouseup', this.stopDrag);
+    window.addEventListener('touchend', this.stopDrag);
   },
   beforeDestroy() {
     if (this.notificationTimer) clearInterval(this.notificationTimer);
     window.removeEventListener('resize', this.checkMobile);
+    window.removeEventListener('mousemove', this.onDrag);
+    window.removeEventListener('touchmove', this.onDrag);
+    window.removeEventListener('mouseup', this.stopDrag);
+    window.removeEventListener('touchend', this.stopDrag);
   },
   computed: {
     // user
@@ -731,6 +751,69 @@ export default {
     handleLogoutAndClose() {
       this.closeMobileTabsMenu();
       this.logout();
+    },
+    loadTextPosition() {
+      const saved = localStorage.getItem('headerTextPosition');
+      if (saved) {
+        try {
+          this.textPosition = JSON.parse(saved);
+        } catch (e) {
+          this.textPosition = { x: 0, y: 0 };
+        }
+      }
+    },
+    saveTextPosition() {
+      localStorage.setItem('headerTextPosition', JSON.stringify(this.textPosition));
+    },
+    startDrag(event) {
+      this.isDragging = true;
+      const clientX = event.touches ? event.touches[0].clientX : event.clientX;
+      const clientY = event.touches ? event.touches[0].clientY : event.clientY;
+      
+      const headerCenter = event.currentTarget.parentElement;
+      const rect = headerCenter.getBoundingClientRect();
+      
+      this.dragStart = {
+        x: clientX - rect.left - this.textPosition.x,
+        y: clientY - rect.top - this.textPosition.y,
+      };
+      
+      event.preventDefault();
+    },
+    onDrag(event) {
+      if (!this.isDragging) return;
+      
+      const clientX = event.touches ? event.touches[0].clientX : event.clientX;
+      const clientY = event.touches ? event.touches[0].clientY : event.clientY;
+      
+      const headerCenter = document.querySelector('.header-center');
+      if (!headerCenter) return;
+      
+      const rect = headerCenter.getBoundingClientRect();
+      
+      this.textPosition = {
+        x: clientX - rect.left - this.dragStart.x,
+        y: clientY - rect.top - this.dragStart.y,
+      };
+      
+      // Limitar el movimiento dentro del contenedor
+      const textBox = document.querySelector('.header-user-info');
+      if (textBox) {
+        const textRect = textBox.getBoundingClientRect();
+        const maxX = rect.width - textRect.width;
+        const maxY = rect.height - textRect.height;
+        
+        this.textPosition.x = Math.max(0, Math.min(this.textPosition.x, maxX));
+        this.textPosition.y = Math.max(0, Math.min(this.textPosition.y, maxY));
+      }
+      
+      event.preventDefault();
+    },
+    stopDrag() {
+      if (this.isDragging) {
+        this.isDragging = false;
+        this.saveTextPosition();
+      }
     },
     handleInicioClick() {
       // Verificar afiliación antes de permitir acceso a INICIO

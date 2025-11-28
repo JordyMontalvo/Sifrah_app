@@ -1,25 +1,68 @@
 <template>
   <div class="flyer-editor">
-    <div class="editor-container">
-      <div class="editor-controls">
-        <div class="control-group">
-          <label>Seleccionar Flyer:</label>
-          <div class="select" v-if="!loadingFlyers">
-            <select v-model="selectedFlyerId" @change="onFlyerChange" class="select-flyer">
-              <option value="">Seleccione un flyer</option>
-              <option 
-                v-for="flyer in availableFlyers" 
-                :key="flyer.id" 
-                :value="flyer.id"
-              >
-                {{ flyer.name }}
-              </option>
-            </select>
-          </div>
-          <div v-else class="loading-flyers">
-            <i class="fas fa-spinner fa-spin"></i> Cargando flyers...
-          </div>
+    <!-- Vista de Listado de Flyers -->
+    <div v-if="!editingMode" class="flyers-list-view">
+      <div class="list-header">
+        <h2 class="list-title">Filtrar flyers</h2>
+        <div class="filter-section">
+          <select v-model="selectedCategory" class="category-select">
+            <option value="">Selecciona la categoría...</option>
+            <option v-for="category in categories" :key="category" :value="category">
+              {{ category }}
+            </option>
+          </select>
         </div>
+      </div>
+      
+      <div v-if="loadingFlyers" class="loading-container">
+        <i class="fas fa-spinner fa-spin"></i>
+        <p>Cargando flyers...</p>
+      </div>
+      
+      <div v-else class="flyers-grid">
+        <div 
+          v-for="flyer in filteredFlyers" 
+          :key="flyer.id" 
+          class="flyer-card"
+        >
+          <div class="flyer-card-image">
+            <img 
+              :src="getFlyerImage(flyer)" 
+              :alt="flyer.name"
+              @error="handleImageError"
+            />
+          </div>
+          <div class="flyer-card-content">
+            <h3 class="flyer-card-title">{{ flyer.name }}</h3>
+            <p v-if="flyer.category" class="flyer-card-category">{{ flyer.category }}</p>
+          </div>
+          <button @click="startEditing(flyer)" class="btn-edit-flyer">
+            <i class="fas fa-edit"></i> Editar Flyer
+          </button>
+        </div>
+      </div>
+      
+      <div v-if="!loadingFlyers && filteredFlyers.length === 0" class="no-flyers">
+        <i class="fas fa-inbox"></i>
+        <p v-if="availableFlyers.length === 0">No hay flyers disponibles</p>
+        <p v-else>No hay flyers en la categoría seleccionada</p>
+        <p v-if="availableFlyers.length > 0" class="no-flyers-hint">
+          Total de flyers: {{ availableFlyers.length }}
+        </p>
+      </div>
+    </div>
+
+    <!-- Vista de Editor -->
+    <div v-else class="editor-container">
+      <div class="editor-header">
+        <button @click="backToList" class="btn-back">
+          <i class="fas fa-arrow-left"></i> Volver a Flyers
+        </button>
+        <h3 class="editor-title">{{ currentFlyer && currentFlyer.name ? currentFlyer.name : 'Editor de Flyer' }}</h3>
+      </div>
+      
+      <div class="editor-content">
+        <div class="editor-controls">
 
         <div class="control-group">
           <label>Nombre del Socio:</label>
@@ -71,25 +114,26 @@
             </button>
           </div>
         </div>
-      </div>
+        </div>
 
-      <div class="canvas-container">
-        <canvas 
-          ref="canvas" 
-          :width="canvasWidth" 
-          :height="canvasHeight"
-          class="flyer-canvas"
-          @mousedown="handleMouseDown"
-          @mousemove="handleMouseMove"
-          @mouseup="handleMouseUp"
-          @mouseleave="handleMouseUp"
-          @touchstart="handleTouchStart"
-          @touchmove="handleTouchMove"
-          @touchend="handleTouchEnd"
-          @touchcancel="handleTouchEnd"
-        ></canvas>
-        <div v-if="showInstructions" class="canvas-instructions">
-          <p><i class="fas fa-info-circle"></i> Haz clic y arrastra la imagen para moverla. Usa las esquinas para redimensionar.</p>
+        <div class="canvas-container">
+          <canvas 
+            ref="canvas" 
+            :width="canvasWidth" 
+            :height="canvasHeight"
+            class="flyer-canvas"
+            @mousedown="handleMouseDown"
+            @mousemove="handleMouseMove"
+            @mouseup="handleMouseUp"
+            @mouseleave="handleMouseUp"
+            @touchstart="handleTouchStart"
+            @touchmove="handleTouchMove"
+            @touchend="handleTouchEnd"
+            @touchcancel="handleTouchEnd"
+          ></canvas>
+          <div v-if="showInstructions" class="canvas-instructions">
+            <p><i class="fas fa-info-circle"></i> Haz clic y arrastra la imagen para moverla. Usa las esquinas para redimensionar.</p>
+          </div>
         </div>
       </div>
     </div>
@@ -126,6 +170,7 @@ export default {
       textColor: '#FFFFFF',
       // Estado de interacción
       isDragging: false,
+      isDraggingText: false,
       isResizing: false,
       selectedHandle: null,
       dragStartX: 0,
@@ -133,6 +178,8 @@ export default {
       initialPortraitX: 0,
       initialPortraitY: 0,
       initialPortraitSize: 0,
+      initialTextX: 0,
+      initialTextY: 0,
       showInstructions: true,
       handleSize: 12,
       isMobile: false,
@@ -140,7 +187,21 @@ export default {
       availableFlyers: [],
       selectedFlyerId: '',
       loadingFlyers: true,
+      editingMode: false,
+      currentFlyer: null,
+      selectedCategory: '',
+      categories: [],
     };
+  },
+  computed: {
+    filteredFlyers() {
+      if (!this.selectedCategory) {
+        return this.availableFlyers;
+      }
+      return this.availableFlyers.filter(flyer => 
+        flyer.category === this.selectedCategory
+      );
+    },
   },
   async mounted() {
     this.loadScriptFont();
@@ -151,10 +212,6 @@ export default {
     }
     // Cargar flyers disponibles
     await this.loadFlyers();
-    // Ocultar instrucciones después de 5 segundos
-    setTimeout(() => {
-      this.showInstructions = false;
-    }, 5000);
   },
   methods: {
     loadScriptFont() {
@@ -167,31 +224,88 @@ export default {
     async loadFlyers() {
       try {
         this.loadingFlyers = true;
+        console.log('Cargando flyers con sesión:', this.session);
         const { data } = await api.Flyers.GET(this.session);
+        
+        console.log('Respuesta completa de la API:', data);
         
         if (data.error) {
           console.error('Error al cargar flyers:', data.msg);
-          // Si hay error, usar el flyer por defecto
-          this.loadDefaultFlyer();
+          this.availableFlyers = [];
           return;
         }
 
-        this.availableFlyers = data.flyers || [];
-        
-        // Si hay flyers disponibles, seleccionar el primero por defecto
-        if (this.availableFlyers.length > 0) {
-          this.selectedFlyerId = this.availableFlyers[0].id;
-          this.loadBaseImage(this.availableFlyers[0].base_image_url);
-        } else {
-          // Si no hay flyers, usar el por defecto
-          this.loadDefaultFlyer();
+        // Verificar la estructura de la respuesta
+        let flyers = [];
+        if (data.flyers && Array.isArray(data.flyers)) {
+          flyers = data.flyers;
+        } else if (Array.isArray(data)) {
+          flyers = data;
+        } else if (data.data && Array.isArray(data.data)) {
+          flyers = data.data;
         }
+        
+        console.log('Flyers encontrados:', flyers.length);
+        console.log('Primer flyer:', flyers[0]);
+        
+        this.availableFlyers = flyers;
+        
+        // Extraer categorías únicas
+        const uniqueCategories = [...new Set(this.availableFlyers.map(f => f.category).filter(Boolean))];
+        this.categories = uniqueCategories;
+        
+        console.log('Categorías encontradas:', this.categories);
       } catch (error) {
         console.error('Error al cargar flyers:', error);
-        this.loadDefaultFlyer();
+        console.error('Stack:', error.stack);
+        this.availableFlyers = [];
       } finally {
         this.loadingFlyers = false;
       }
+    },
+    
+    startEditing(flyer) {
+      this.currentFlyer = flyer;
+      this.selectedFlyerId = flyer.id;
+      this.editingMode = true;
+      
+      // Cargar la imagen base del flyer seleccionado
+      if (flyer.base_image_url) {
+        this.loadBaseImage(flyer.base_image_url);
+      } else {
+        this.loadDefaultFlyer();
+      }
+      
+      // Ocultar instrucciones después de 5 segundos
+      setTimeout(() => {
+        this.showInstructions = false;
+      }, 5000);
+    },
+    
+    backToList() {
+      this.editingMode = false;
+      this.currentFlyer = null;
+      this.selectedFlyerId = '';
+      this.nombreSocio = '';
+      this.portraitImage = null;
+      this.portraitImageObj = null;
+      this.showInstructions = true;
+    },
+    
+    getFlyerImage(flyer) {
+      if (flyer.base_image_url) return flyer.base_image_url;
+      if (flyer.image_url) return flyer.image_url;
+      if (flyer.preview_url) return flyer.preview_url;
+      // Imagen por defecto
+      try {
+        return require('@/assets/img/bienvenido-pack-empresario.png');
+      } catch (e) {
+        return 'https://via.placeholder.com/400x600/f0f0f0/666666?text=Flyer';
+      }
+    },
+    handleImageError(event) {
+      // Si falla la imagen, usar un placeholder
+      event.target.src = 'https://via.placeholder.com/400x600/f0f0f0/666666?text=Imagen+no+disponible';
     },
 
     loadDefaultFlyer() {
@@ -201,9 +315,15 @@ export default {
     },
 
     onFlyerChange() {
+      if (!this.editingMode) return;
       const selectedFlyer = this.availableFlyers.find(f => f.id === this.selectedFlyerId);
-      if (selectedFlyer && selectedFlyer.base_image_url) {
-        this.loadBaseImage(selectedFlyer.base_image_url);
+      if (selectedFlyer) {
+        this.currentFlyer = selectedFlyer;
+        if (selectedFlyer.base_image_url) {
+          this.loadBaseImage(selectedFlyer.base_image_url);
+        } else {
+          this.loadDefaultFlyer();
+        }
       }
     },
 
@@ -282,6 +402,25 @@ export default {
       const dy = y - centerY;
       return dx * dx + dy * dy <= radius * radius;
     },
+    isPointInText(x, y, textX, textY, text) {
+      if (!text) return false;
+      // Crear un canvas temporal para medir el texto
+      const tempCanvas = document.createElement('canvas');
+      const tempCtx = tempCanvas.getContext('2d');
+      tempCtx.font = `${this.fontSize}px 'Dancing Script', 'Great Vibes', 'Pacifico', 'Brush Script MT', 'Lucida Handwriting', cursive`;
+      const metrics = tempCtx.measureText(text);
+      const textWidth = metrics.width;
+      const textHeight = this.fontSize;
+      
+      // Área de detección del texto (con padding para facilitar el clic)
+      const padding = 20;
+      const left = textX - textWidth / 2 - padding;
+      const right = textX + textWidth / 2 + padding;
+      const top = textY - textHeight / 2 - padding;
+      const bottom = textY + textHeight / 2 + padding;
+      
+      return x >= left && x <= right && y >= top && y <= bottom;
+    },
     getHandleAt(x, y) {
       if (!this.portraitImageObj) return null;
       
@@ -329,9 +468,23 @@ export default {
       ctx.restore();
     },
     handleMouseDown(event) {
+      const coords = this.getCanvasCoordinates(event);
+      
+      // Primero verificar si se hace clic en el texto del nombre
+      if (this.nombreSocio && this.isPointInText(coords.x, coords.y, this.textX, this.textY, this.nombreSocio)) {
+        // Iniciar movimiento del texto
+        this.isDraggingText = true;
+        this.dragStartX = coords.x;
+        this.dragStartY = coords.y;
+        this.initialTextX = this.textX;
+        this.initialTextY = this.textY;
+        event.preventDefault();
+        return;
+      }
+      
+      // Si hay imagen de retrato, verificar interacción con ella
       if (!this.portraitImageObj) return;
       
-      const coords = this.getCanvasCoordinates(event);
       const handle = this.getHandleAt(coords.x, coords.y);
       
       if (handle) {
@@ -360,7 +513,14 @@ export default {
       
       const coords = this.getCanvasCoordinates(event);
       
-      if (this.isDragging) {
+      if (this.isDraggingText) {
+        // Mover el texto
+        const dx = coords.x - this.dragStartX;
+        const dy = coords.y - this.dragStartY;
+        this.textX = this.initialTextX + dx;
+        this.textY = this.initialTextY + dy;
+        this.updateCanvas();
+      } else if (this.isDragging) {
         // Mover la imagen
         const dx = coords.x - this.dragStartX;
         const dy = coords.y - this.dragStartY;
@@ -397,13 +557,18 @@ export default {
           canvas.style.cursor = 'nwse-resize';
         } else if (this.isPointInCircle(coords.x, coords.y, this.portraitX, this.portraitY, this.portraitSize / 2)) {
           canvas.style.cursor = 'move';
+        } else if (this.nombreSocio && this.isPointInText(coords.x, coords.y, this.textX, this.textY, this.nombreSocio)) {
+          canvas.style.cursor = 'move';
         } else {
           canvas.style.cursor = 'default';
         }
+      } else if (this.nombreSocio && this.isPointInText(coords.x, coords.y, this.textX, this.textY, this.nombreSocio)) {
+        canvas.style.cursor = 'move';
       }
     },
     handleMouseUp() {
       this.isDragging = false;
+      this.isDraggingText = false;
       this.isResizing = false;
       this.selectedHandle = null;
       const canvas = this.$refs.canvas;
@@ -412,10 +577,23 @@ export default {
       }
     },
     handleTouchStart(event) {
-      if (!this.portraitImageObj) return;
-      
       event.preventDefault(); // Prevenir scroll en móvil
       const coords = this.getCanvasCoordinates(event);
+      
+      // Primero verificar si se toca el texto del nombre
+      if (this.nombreSocio && this.isPointInText(coords.x, coords.y, this.textX, this.textY, this.nombreSocio)) {
+        // Iniciar movimiento del texto
+        this.isDraggingText = true;
+        this.dragStartX = coords.x;
+        this.dragStartY = coords.y;
+        this.initialTextX = this.textX;
+        this.initialTextY = this.textY;
+        return;
+      }
+      
+      // Si hay imagen de retrato, verificar interacción con ella
+      if (!this.portraitImageObj) return;
+      
       const handle = this.getHandleAt(coords.x, coords.y);
       
       if (handle) {
@@ -437,15 +615,20 @@ export default {
       }
     },
     handleTouchMove(event) {
-      if (!this.portraitImageObj) return;
-      
       event.preventDefault(); // Prevenir scroll en móvil
       const canvas = this.$refs.canvas;
       if (!canvas) return;
       
       const coords = this.getCanvasCoordinates(event);
       
-      if (this.isDragging) {
+      if (this.isDraggingText) {
+        // Mover el texto
+        const dx = coords.x - this.dragStartX;
+        const dy = coords.y - this.dragStartY;
+        this.textX = this.initialTextX + dx;
+        this.textY = this.initialTextY + dy;
+        this.updateCanvas();
+      } else if (this.isDragging) {
         // Mover la imagen
         const dx = coords.x - this.dragStartX;
         const dy = coords.y - this.dragStartY;
@@ -473,6 +656,7 @@ export default {
     handleTouchEnd(event) {
       event.preventDefault();
       this.isDragging = false;
+      this.isDraggingText = false;
       this.isResizing = false;
       this.selectedHandle = null;
     },
@@ -969,4 +1153,191 @@ export default {
 
   .btn-export
     width 100%
+
+/* Vista de Listado de Flyers */
+.flyers-list-view
+  padding 20px
+  max-width 1400px
+  margin 0 auto
+
+.list-header
+  margin-bottom 30px
+
+.list-title
+  font-size 24px
+  font-weight bold
+  color #333
+  margin-bottom 20px
+
+.filter-section
+  margin-bottom 20px
+
+.category-select
+  width 100%
+  max-width 400px
+  padding 12px 16px
+  border 1px solid #ddd
+  border-radius 8px
+  font-size 16px
+  background-color white
+  cursor pointer
+  transition all 0.3s ease
+
+  &:focus
+    outline none
+    border-color #9f00ad
+    box-shadow 0 0 0 3px rgba(159, 0, 173, 0.1)
+
+.loading-container
+  display flex
+  flex-direction column
+  align-items center
+  justify-content center
+  padding 60px 20px
+  color #9f00ad
+
+  i
+    font-size 48px
+    margin-bottom 16px
+
+  p
+    font-size 18px
+    margin 0
+
+.flyers-grid
+  display grid
+  grid-template-columns repeat(auto-fill, minmax(280px, 1fr))
+  gap 24px
+  margin-top 20px
+
+.flyer-card
+  background white
+  border-radius 12px
+  overflow hidden
+  box-shadow 0 4px 12px rgba(0, 0, 0, 0.1)
+  transition all 0.3s ease
+  display flex
+  flex-direction column
+
+  &:hover
+    transform translateY(-4px)
+    box-shadow 0 8px 24px rgba(0, 0, 0, 0.15)
+
+.flyer-card-image
+  width 100%
+  height 400px
+  overflow hidden
+  background #f5f5f5
+  display flex
+  align-items center
+  justify-content center
+
+  img
+    width 100%
+    height 100%
+    object-fit cover
+    transition transform 0.3s ease
+
+  &:hover img
+    transform scale(1.05)
+
+.flyer-card-content
+  padding 16px
+
+.flyer-card-title
+  font-size 18px
+  font-weight 600
+  color #333
+  margin 0 0 8px 0
+
+.flyer-card-category
+  font-size 14px
+  color #666
+  margin 0
+
+.btn-edit-flyer
+  margin 16px
+  padding 12px 24px
+  background-color #4CAF50
+  color white
+  border none
+  border-radius 8px
+  font-size 16px
+  font-weight 600
+  cursor pointer
+  transition all 0.3s ease
+  display flex
+  align-items center
+  justify-content center
+  gap 8px
+  margin-top auto
+
+  &:hover
+    background-color #45a049
+    transform translateY(-2px)
+    box-shadow 0 4px 12px rgba(76, 175, 80, 0.3)
+
+  i
+    font-size 16px
+
+.no-flyers
+  text-align center
+  padding 60px 20px
+  color #999
+
+  i
+    font-size 64px
+    margin-bottom 16px
+    opacity 0.5
+
+  p
+    font-size 18px
+    margin 0
+    margin-bottom 8px
+
+  .no-flyers-hint
+    font-size 14px
+    color #666
+    margin-top 8px
+
+/* Header del Editor */
+.editor-header
+  display flex
+  align-items center
+  gap 16px
+  margin-bottom 20px
+  padding-bottom 16px
+  border-bottom 2px solid #e0e0e0
+
+.btn-back
+  padding 10px 20px
+  background-color #6c757d
+  color white
+  border none
+  border-radius 8px
+  font-size 14px
+  font-weight 600
+  cursor pointer
+  transition all 0.3s ease
+  display flex
+  align-items center
+  gap 8px
+
+  &:hover
+    background-color #5a6268
+    transform translateY(-2px)
+
+  i
+    font-size 14px
+
+.editor-title
+  font-size 20px
+  font-weight 600
+  color #333
+  margin 0
+
+.editor-content
+  display flex
+  gap 20px
+  flex-wrap wrap
 </style>
