@@ -32,7 +32,6 @@
       <div class="header-center" v-if="office_id == null">
         <div 
           class="header-user-info"
-          :style="{ left: textPosition.x + 'px', top: textPosition.y + 'px' }"
           @mousedown="startDrag"
           @touchstart="startDrag"
         >
