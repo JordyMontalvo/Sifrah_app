@@ -75,6 +75,41 @@
           />
         </div>
 
+        <div class="control-group" v-if="nombreSocio">
+          <label>Tamaño del Texto: {{ fontSize }}px</label>
+          <div class="text-size-controls">
+            <button @click="decreaseFontSize" class="size-btn" :disabled="fontSize <= 12">
+              <i class="fas fa-minus"></i>
+            </button>
+            <input 
+              type="range" 
+              v-model.number="fontSize" 
+              @input="updateCanvas"
+              min="12" 
+              max="200" 
+              step="1"
+              class="input-range"
+            />
+            <button @click="increaseFontSize" class="size-btn" :disabled="fontSize >= 200">
+              <i class="fas fa-plus"></i>
+            </button>
+            <input 
+              type="number" 
+              v-model.number="fontSize" 
+              @input="updateCanvas"
+              min="12" 
+              max="200" 
+              class="input-number-size"
+            />
+          </div>
+          <div class="size-buttons">
+            <button @click="setFontSize(24)" class="size-btn-small">Pequeño (24px)</button>
+            <button @click="setFontSize(42)" class="size-btn-small">Mediano (42px)</button>
+            <button @click="setFontSize(60)" class="size-btn-small">Grande (60px)</button>
+            <button @click="setFontSize(100)" class="size-btn-small">Muy Grande (100px)</button>
+          </div>
+        </div>
+
         <div class="control-group">
           <label>Imagen del Retrato:</label>
           <div class="image-upload-section">
@@ -302,6 +337,22 @@ export default {
       } catch (e) {
         return 'https://via.placeholder.com/400x600/f0f0f0/666666?text=Flyer';
       }
+    },
+    decreaseFontSize() {
+      if (this.fontSize > 12) {
+        this.fontSize = Math.max(12, this.fontSize - 2);
+        this.updateCanvas();
+      }
+    },
+    increaseFontSize() {
+      if (this.fontSize < 200) {
+        this.fontSize = Math.min(200, this.fontSize + 2);
+        this.updateCanvas();
+      }
+    },
+    setFontSize(size) {
+      this.fontSize = size;
+      this.updateCanvas();
     },
     handleImageError(event) {
       // Si falla la imagen, usar un placeholder
@@ -1025,6 +1076,7 @@ export default {
   border-radius 3px
   background #ddd
   outline none
+  margin 0 12px
 
   &::-webkit-slider-thumb
     appearance none
@@ -1041,6 +1093,74 @@ export default {
     background #9f00ad
     cursor pointer
     border none
+
+.text-size-controls
+  display flex
+  align-items center
+  gap 8px
+  margin-top 12px
+
+  .size-btn
+    width 40px
+    height 40px
+    padding 0
+    background-color #9f00ad
+    color white
+    border none
+    border-radius 6px
+    font-size 16px
+    font-weight 600
+    cursor pointer
+    transition all 0.3s ease
+    display flex
+    align-items center
+    justify-content center
+
+    &:hover:not(:disabled)
+      background-color #7d0088
+      transform translateY(-2px)
+      box-shadow 0 4px 12px rgba(159, 0, 173, 0.3)
+
+    &:disabled
+      opacity 0.5
+      cursor not-allowed
+
+  .input-number-size
+    width 80px
+    padding 8px
+    border 1px solid #ddd
+    border-radius 4px
+    font-size 14px
+    text-align center
+
+    &:focus
+      outline none
+      border-color #9f00ad
+
+.size-buttons
+  display flex
+  flex-wrap wrap
+  gap 8px
+  margin-top 12px
+
+.size-btn-small
+  flex 1
+  min-width 120px
+  padding 8px 12px
+  background-color #f3e5f5
+  color #9f00ad
+  border 2px solid #9f00ad
+  border-radius 6px
+  font-size 13px
+  font-weight 600
+  cursor pointer
+  transition all 0.3s ease
+
+  &:hover
+    background-color #9f00ad
+    color white
+    transform translateY(-2px)
+    box-shadow 0 4px 12px rgba(159, 0, 173, 0.3)
 
 .input-color
   width 60px
