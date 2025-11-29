@@ -49,7 +49,7 @@
             v-if="token" 
             @click.stop="copy_token_code" 
             class="header-code-button"
-            style="background: none; border: none; color: white; font-size: 14px; font-weight: 600; cursor: pointer; padding: 0; margin: 0; white-space: nowrap; pointer-events: auto;"
+            style="background: none; border: none; color: white; font-size: 14px; font-weight: 600; cursor: pointer; padding: 0; margin: 0; margin-right: 12px; white-space: nowrap; pointer-events: auto;"
           >
             Cód: {{ token }}
           </button>
@@ -973,10 +973,10 @@ export default {
         setTimeout(() => (this.c_affiliation_link = false), 4000);
       } else {
         // Si no existe, copiar el link de afiliación global
-        console.log("Copying Affiliation Link:", this.affiliationLink);
-        lib.copy("link-global");
-        this.c_affiliation_link = true;
-        setTimeout(() => (this.c_affiliation_link = false), 4000);
+      console.log("Copying Affiliation Link:", this.affiliationLink);
+      lib.copy("link-global");
+      this.c_affiliation_link = true;
+      setTimeout(() => (this.c_affiliation_link = false), 4000);
       }
     },
     copy_token_code() {
