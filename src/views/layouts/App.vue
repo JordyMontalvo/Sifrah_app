@@ -53,7 +53,7 @@
           >
             Cód: {{ token }}
           </button>
-          <div class="header-dni" v-if="dni">{{ dni }}</div>
+          <div class="header-dni header-dni-mobile" v-if="dni">{{ dni }}</div>
           <span v-if="c_token_code" style="position: absolute; top: 100%; left: -10px; margin-top: 10px; white-space: nowrap; color: #4CAF50; font-size: 12px; font-weight: 600; z-index: 1000; display: flex; align-items: center; gap: 4px;">
             Código copiado <i class="fas fa-check" style="color: #4CAF50;"></i>
           </span>
@@ -1538,6 +1538,10 @@ export default {
       padding: 0;
       display: flex;
       align-items: center;
+    }
+    
+    .header-dni-mobile {
+      display: none;
     }
     
     .header-right {
