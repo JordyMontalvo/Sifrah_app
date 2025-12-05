@@ -76,6 +76,24 @@
         </div>
 
         <div class="control-group" v-if="nombreSocio">
+          <label>Tipografía:</label>
+          <select 
+            v-model="selectedFont" 
+            @change="updateCanvas"
+            class="font-select"
+          >
+            <option 
+              v-for="font in availableFonts" 
+              :key="font.value" 
+              :value="font.value"
+              :data-weight="font.weight || '400'"
+            >
+              {{ font.label }}
+            </option>
+          </select>
+        </div>
+
+        <div class="control-group" v-if="nombreSocio">
           <label>Tamaño del Texto: {{ fontSize }}px</label>
           <div class="text-size-controls">
             <button @click="decreaseFontSize" class="size-btn" :disabled="fontSize <= 12">
@@ -203,6 +221,13 @@ export default {
       textY: 1050, // Más abajo, debajo de EMPRESARIO
       fontSize: 42,
       textColor: '#FFFFFF',
+      selectedFont: 'Dancing Script', // Tipografía actual por defecto
+      availableFonts: [
+        { name: 'Dancing Script', value: 'Dancing Script', label: 'LA TIPOGRAFÍA ACTUAL' },
+        { name: 'Montserrat Black', value: 'Montserrat', weight: '900', label: 'Montserrat black' },
+        { name: 'Calibri Regular', value: 'Calibri', weight: '400', label: 'Calibri regular' },
+        { name: 'Source Serif Bold', value: 'Source Serif Pro', weight: '700', label: 'Source Serif Variable bold' }
+      ],
       // Estado de interacción
       isDragging: false,
       isDraggingText: false,
@@ -250,11 +275,14 @@ export default {
   },
   methods: {
     loadScriptFont() {
-      // Cargar fuente script de Google Fonts
-      const link = document.createElement('link');
-      link.href = 'https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&family=Great+Vibes&family=Pacifico&display=swap';
-      link.rel = 'stylesheet';
-      document.head.appendChild(link);
+      // Cargar fuentes de Google Fonts
+      // Verificar si ya existe el link para no duplicarlo
+      if (!document.querySelector('link[href*="fonts.googleapis.com/css2?family=Dancing"]')) {
+        const link = document.createElement('link');
+        link.href = 'https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&family=Great+Vibes&family=Pacifico&family=Montserrat:wght@900&family=Source+Serif+Pro:wght@700&display=swap';
+        link.rel = 'stylesheet';
+        document.head.appendChild(link);
+      }
     },
     async loadFlyers() {
       try {
@@ -453,12 +481,46 @@ export default {
       const dy = y - centerY;
       return dx * dx + dy * dy <= radius * radius;
     },
+    getFontFamily() {
+      const selectedFontObj = this.availableFonts.find(f => f.value === this.selectedFont);
+      if (!selectedFontObj) return "'Dancing Script', 'Great Vibes', 'Pacifico', 'Brush Script MT', 'Lucida Handwriting', cursive";
+      
+      // Para Montserrat, usar con comillas
+      if (selectedFontObj.value === 'Montserrat') {
+        return "'Montserrat', sans-serif";
+      } 
+      // Para Calibri (fuente del sistema), usar directamente
+      else if (selectedFontObj.value === 'Calibri') {
+        return 'Calibri, sans-serif';
+      } 
+      // Para Source Serif Pro, usar con comillas
+      else if (selectedFontObj.value === 'Source Serif Pro') {
+        return "'Source Serif Pro', serif";
+      }
+      
+      // Para Dancing Script, mantener las fuentes de fallback
+      return "'Dancing Script', 'Great Vibes', 'Pacifico', 'Brush Script MT', 'Lucida Handwriting', cursive";
+    },
+    getFontWeight() {
+      const selectedFontObj = this.availableFonts.find(f => f.value === this.selectedFont);
+      return (selectedFontObj && selectedFontObj.weight) ? selectedFontObj.weight : '400';
+    },
+    getFontString() {
+      const weight = this.getFontWeight();
+      const family = this.getFontFamily();
+      // Formato correcto para canvas: "weight size family" o "size family"
+      // El peso debe ser 'normal', 'bold', o un número (100-900)
+      if (weight && weight !== '400' && weight !== 'normal') {
+        return `${weight} ${this.fontSize}px ${family}`;
+      }
+      return `${this.fontSize}px ${family}`;
+    },
     isPointInText(x, y, textX, textY, text) {
       if (!text) return false;
       // Crear un canvas temporal para medir el texto
       const tempCanvas = document.createElement('canvas');
       const tempCtx = tempCanvas.getContext('2d');
-      tempCtx.font = `${this.fontSize}px 'Dancing Script', 'Great Vibes', 'Pacifico', 'Brush Script MT', 'Lucida Handwriting', cursive`;
+      tempCtx.font = this.getFontString();
       const metrics = tempCtx.measureText(text);
       const textWidth = metrics.width;
       const textHeight = this.fontSize;
@@ -784,12 +846,11 @@ export default {
         }
       }
 
-      // Dibujar nombre del socio con fuente script/manuscrita
+      // Dibujar nombre del socio con la tipografía seleccionada
       if (this.nombreSocio) {
         ctx.save();
-        // Usar fuente script similar a "Nuevo socio" del flyer
-        // Intentar usar fuentes script de Google Fonts, con fallback
-        ctx.font = `${this.fontSize}px 'Dancing Script', 'Great Vibes', 'Pacifico', 'Brush Script MT', 'Lucida Handwriting', cursive`;
+        // Usar la tipografía seleccionada
+        ctx.font = this.getFontString();
         ctx.fillStyle = this.textColor;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
@@ -925,6 +986,20 @@ export default {
   border-radius 4px
   font-size 16px
   box-sizing border-box
+
+  &:focus
+    outline none
+    border-color #9f00ad
+
+.font-select
+  width 100%
+  padding 10px
+  border 1px solid #ddd
+  border-radius 4px
+  font-size 16px
+  box-sizing border-box
+  background-color white
+  cursor pointer
 
   &:focus
     outline none
