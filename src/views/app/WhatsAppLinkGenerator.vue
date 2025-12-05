@@ -122,8 +122,8 @@ export default {
     return {
       loading: true,
       title: "GENERADOR DE LINKS DE WHATSAPP",
-      selectedCountry: "EC",
-      countryCode: "593",
+      selectedCountry: "PE",
+      countryCode: "51",
       phoneNumber: "",
       message: "",
       generatedLink: "",
