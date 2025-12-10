@@ -1148,14 +1148,11 @@ export default {
           openCartDetailModal() {
         this.showCartDetailModal = true;
         document.body.classList.add('modal-open');
-        console.log('1');
-        document.getElementsByClassName('content')[0].style.transform = 'none';
       },
       
       closeCartDetailModal() {
         this.showCartDetailModal = false;
         document.body.classList.remove('modal-open');
-        document.getElementsByClassName('content')[0].style.removeProperty('transform');
       },
       
       scrollToProducts() {

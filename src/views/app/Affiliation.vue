@@ -1225,12 +1225,6 @@ export default {
       try {
         document.body.classList.add('modal-open');
       } catch (e) {}
-      this.$nextTick(() => {
-        try {
-          const contentEl = document.getElementsByClassName('content')[0];
-          if (contentEl && contentEl.style) contentEl.style.transform = 'none';
-        } catch (e) {}
-      });
     },
     // Método para sincronizar estado desde el store
     async syncStateFromStore() {
@@ -1388,8 +1382,6 @@ export default {
       this.showCartDetailModal = false;
       try {
         document.body.classList.remove('modal-open');
-        const contentEl = document.getElementsByClassName('content')[0];
-        if (contentEl && contentEl.style) contentEl.style.removeProperty('transform');
       } catch (e) {}
     },
 
