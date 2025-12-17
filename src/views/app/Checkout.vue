@@ -679,7 +679,7 @@
                   <div class="form-field-simple">
                     <label>Comprobante de Pago</label>
                     <div class="file-upload-simple">
-                      <input type="file" @change="onVoucherFileChange" id="voucher-file" />
+                      <input type="file" accept="image/*" @change="onVoucherFileChange" id="voucher-file" />
                       <label for="voucher-file" class="file-label-simple">
                         <i class="fas fa-upload"></i>
                         <span>{{ voucherPreview ? 'Cambiar archivo' : 'Seleccionar archivo' }}</span>
@@ -688,7 +688,7 @@
                     <img v-if="voucherPreview" :src="voucherPreview" class="voucher-preview-img" />
                     
                     <div class="file-upload-simple" style="margin-top: 15px;">
-                      <input type="file" @change="onVoucherFileChange2" id="voucher-file-2" />
+                      <input type="file" accept="image/*" @change="onVoucherFileChange2" id="voucher-file-2" />
                       <label for="voucher-file-2" class="file-label-simple">
                         <i class="fas fa-upload"></i>
                         <span>{{ voucherPreview2 ? 'Cambiar archivo' : 'Seleccionar archivo' }}</span>
@@ -1612,6 +1612,15 @@ export default {
     onVoucherFileChange(event) {
       const file = event.target.files[0];
       if (file) {
+        if (!file.type || !file.type.startsWith('image/')) {
+          this.voucherFile = null;
+          this.voucherPreview = null;
+          if (event && event.target) event.target.value = '';
+          const msg = 'Solo se permiten imágenes (JPG, PNG, WEBP, etc.) para el voucher.';
+          this.activationError = msg;
+          if (this.$toast && typeof this.$toast.error === 'function') this.$toast.error(msg);
+          return;
+        }
         this.voucherFile = file;
         const reader = new FileReader();
         reader.onload = (e) => {
@@ -1627,6 +1636,15 @@ export default {
     onVoucherFileChange2(event) {
       const file = event.target.files[0];
       if (file) {
+        if (!file.type || !file.type.startsWith('image/')) {
+          this.voucherFile2 = null;
+          this.voucherPreview2 = null;
+          if (event && event.target) event.target.value = '';
+          const msg = 'Solo se permiten imágenes (JPG, PNG, WEBP, etc.) para el voucher.';
+          this.activationError = msg;
+          if (this.$toast && typeof this.$toast.error === 'function') this.$toast.error(msg);
+          return;
+        }
         this.voucherFile2 = file;
         const reader = new FileReader();
         reader.onload = (e) => {
@@ -1870,6 +1888,22 @@ export default {
   },
   
   watch: {
+    activationError: {
+      handler(msg) {
+        if (!msg) return
+        if (this.$toast && typeof this.$toast.error === 'function') {
+          this.$toast.error(msg)
+        }
+      }
+    },
+    activationSuccess: {
+      handler(ok) {
+        if (!ok) return
+        if (this.$toast && typeof this.$toast.success === 'function') {
+          this.$toast.success('¡Orden enviada exitosamente!')
+        }
+      }
+    },
     selectedPickupPoint: {
       handler(newPickupPoint) {
         if (newPickupPoint) {

@@ -396,7 +396,7 @@
           </div> -->
         </header>
         <section
-          style="overflow: auto"
+          :style="getSectionStyle()"
           :class="{ slide: open }"
           @touchstart="startTouch"
           @touchmove="moveTouch"
@@ -769,6 +769,14 @@ export default {
     },
   },
   methods: {
+    getSectionStyle() {
+      // En desktop y cuando estamos en la vista de activación, quitar overflow para que el sticky funcione
+      if (window.innerWidth >= 1024 && document.body.classList.contains('activation-view')) {
+        return { overflow: 'visible' };
+      }
+      // En móvil o otras vistas, mantener overflow auto
+      return { overflow: 'auto' };
+    },
     startNotificationLoop() {
     
       setTimeout(() => {

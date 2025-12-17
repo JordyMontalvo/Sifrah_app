@@ -674,6 +674,22 @@ export default {
     }
   },
   watch: {
+    error: {
+      handler(msg) {
+        if (!msg) return;
+        if (this.$toast && typeof this.$toast.error === "function") {
+          this.$toast.error(msg);
+        }
+      }
+    },
+    success: {
+      handler(ok) {
+        if (!ok) return;
+        if (this.$toast && typeof this.$toast.success === "function") {
+          this.$toast.success("¡Orden enviada exitosamente!");
+        }
+      }
+    },
     cartItems: {
       handler(newItems) {
         // Sincronizar con el store cada vez que cambie el carrito
@@ -696,6 +712,8 @@ export default {
     }
   },
   async created() {
+    // Agregar clase al body para permitir que el sticky funcione
+    document.body.classList.add('activation-view');
     try {
       // GET data
       const { data } = await api.Activation.GET(this.session);
@@ -760,11 +778,28 @@ export default {
   mounted() {
     // Asegurar que el scroll esté habilitado al montar el componente
     document.body.classList.remove('modal-open');
+    
+    // Hacer el carrito fijo al hacer scroll en desktop
+    this.$nextTick(() => {
+      if (window.innerWidth >= 1024) {
+        this.setupStickyCart();
+      }
+      
+      // Escuchar cambios de tamaño de ventana
+      window.addEventListener('resize', this.handleResize);
+    });
   },
 
   beforeDestroy() {
-    // Limpiar la clase antes de destruir el componente
+    // Limpiar las clases antes de destruir el componente
     document.body.classList.remove('modal-open');
+    document.body.classList.remove('activation-view');
+    
+    // Remover listener de resize
+    window.removeEventListener('resize', this.handleResize);
+    
+    // Limpiar estilos del carrito
+    this.removeStickyCart();
   },
 
   methods: {
@@ -784,7 +819,24 @@ export default {
       product.total -= 1;
     },
     onFileChange(e) {
-      this.file = e.target.files[0];
+      const file = e && e.target && e.target.files ? e.target.files[0] : null;
+      if (!file) {
+        this.file = null;
+        this.voucher = null;
+        return;
+      }
+
+      if (!file.type || !file.type.startsWith("image/")) {
+        this.file = null;
+        this.voucher = null;
+        if (e && e.target) e.target.value = "";
+        const msg = "Solo se permiten imágenes (JPG, PNG, WEBP, etc.) para el voucher.";
+        this.error = msg;
+        if (this.$toast && typeof this.$toast.error === "function") this.$toast.error(msg);
+        return;
+      }
+
+      this.file = file;
 
       const reader = new FileReader();
       reader.onload = (e) => {
@@ -986,6 +1038,76 @@ export default {
 
 
     // Métodos para el catálogo de productos
+    handleResize() {
+      if (window.innerWidth >= 1024) {
+        this.setupStickyCart();
+      } else {
+        this.removeStickyCart();
+      }
+    },
+    
+    setupStickyCart() {
+      this.$nextTick(() => {
+        const cart = document.querySelector('.sticky-cart-sidebar');
+        if (!cart) {
+          setTimeout(() => this.setupStickyCart(), 100);
+          return;
+        }
+        
+        // Lista de todos los contenedores que pueden tener overflow
+        const containersToFix = [
+          '.app > section .content',
+          '.app > section',
+          '.tienda-sifrah-container',
+          '.productos-compras-section',
+          '.catalog-container',
+          '.catalog-content-wrapper',
+          '.catalog-inner-wrapper',
+          '.products-main-area',
+          '.carrito-compras-container'
+        ];
+        
+        // Remover overflow y transform de TODOS los contenedores
+        containersToFix.forEach(selector => {
+          const el = document.querySelector(selector);
+          if (el) {
+            el.style.setProperty('overflow', 'visible', 'important');
+            el.style.setProperty('transform', 'none', 'important');
+            el.style.setProperty('height', 'auto', 'important');
+            el.style.setProperty('max-height', 'none', 'important');
+          }
+        });
+        
+        // Asegurar que catalog-container tenga altura suficiente
+        const catalogContainer = document.querySelector('.catalog-container');
+        if (catalogContainer) {
+          const viewportHeight = window.innerHeight;
+          catalogContainer.style.setProperty('min-height', `${viewportHeight - 200}px`, 'important');
+        }
+        
+        // Forzar position sticky con estilos inline
+        cart.style.setProperty('position', 'sticky', 'important');
+        cart.style.setProperty('top', '20px', 'important');
+        cart.style.setProperty('align-self', 'flex-start', 'important');
+        cart.style.setProperty('z-index', '100', 'important');
+        cart.style.setProperty('transform', 'none', 'important');
+        
+        console.log('Sticky cart configurado:', {
+          position: cart.style.position,
+          top: cart.style.top,
+          computedPosition: window.getComputedStyle(cart).position
+        });
+      });
+    },
+    
+    removeStickyCart() {
+      const cart = document.querySelector('.sticky-cart-sidebar');
+      if (!cart) return;
+      cart.style.position = '';
+      cart.style.top = '';
+      cart.style.alignSelf = '';
+    },
+    
     toggleCategory(category) {
       if (category === "Todos") {
         // Si se hace clic en "Todos", limpiar todas las selecciones

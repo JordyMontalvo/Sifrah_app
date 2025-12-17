@@ -136,6 +136,11 @@ body, .app
       overflow auto
       position relative
       transition transform .5s
+    /* En la vista de activación SOLO EN DESKTOP, quitar el transform translate para que el sticky funcione */
+    @media (min-width: 1024px)
+      body.activation-view &
+        transform none !important
+        transition none !important
     &.open
       .menu 
       .content

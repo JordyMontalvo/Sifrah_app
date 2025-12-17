@@ -1276,6 +1276,10 @@
   max-width: 1800px;
   margin: 0 0 0 20px;
   padding: 20px;
+  /* Asegurar que no tenga overflow que rompa el sticky */
+  overflow: visible;
+  position: relative;
+  height: auto;
 /*   background: #fafafa;
   border-radius: 20px;
   box-shadow: 0 8px 32px rgba(0,0,0,0.1); */
@@ -1290,6 +1294,10 @@
 .productos-compras-section {
   margin-top: -20px;
   padding: 20px 0;
+  /* Asegurar que no tenga overflow que rompa el sticky */
+  overflow: visible;
+  position: relative;
+  height: auto;
 }
 
 /* Barra de puntos del usuario */
@@ -1338,8 +1346,13 @@
   flex-direction: column;
   align-items: flex-end;
   justify-content: flex-start;
-  height: 100%;
+  height: auto;
   position: relative;
+  align-self: flex-start;
+  /* Asegurar que el contenedor no rompa el sticky */
+  overflow: visible;
+  /* Asegurar que esté en el contexto correcto para sticky */
+  flex: 0 0 auto;
 }
 
 /* Carrito sticky en el lado derecho */
@@ -1350,9 +1363,10 @@
   box-shadow: 0 4px 20px rgba(0,0,0,0.1);
   display: flex;
   flex-direction: column;
-  max-height: calc(100vh - 20px);
+  max-height: calc(100vh - 40px);
   min-height: 700px;
   overflow-y: auto;
+  position: -webkit-sticky;
   position: sticky;
   top: 20px;
   align-self: flex-start;
@@ -1362,7 +1376,10 @@
   margin-top: 0;
   transform: translateZ(0);
   transition: all 0.3s ease;
-  flex: 0 0 380px;
+  flex: 0 0 420px;
+  will-change: transform;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
 
 /* Estilos para el título principal de la tienda */
@@ -1639,12 +1656,138 @@
   overflow: visible;
   padding-top: 20px;
   width: 100%;
+  /* Asegurar que el contenedor tenga el comportamiento correcto para sticky */
+  height: auto;
+  min-height: 100vh;
 }
 
-/* Asegurar que el contenedor tenga el comportamiento correcto para sticky */
-.catalog-container {
-  height: auto;
-  overflow: visible;
+/* En desktop, asegurar que el sticky funcione correctamente */
+@media (min-width: 1024px) {
+  /* CRÍTICO: El sticky solo funciona si el scroll está en el viewport, no en un contenedor con overflow */
+  /* QUITAR EL TRANSFORM TRANSLATE que rompe el sticky */
+  body.activation-view .app > section:not(.open) .content {
+    overflow: visible !important;
+    height: auto !important;
+    max-height: none !important;
+    /* QUITAR el transform translate que rompe el sticky */
+    transform: none !important;
+    /* Remover cualquier restricción de altura */
+    min-height: auto !important;
+  }
+  
+  /* También cuando el menú está abierto */
+  body.activation-view .app > section.open .content {
+    overflow: visible !important;
+    transform: none !important;
+  }
+  
+  /* Asegurar que el section tampoco tenga overflow o transform */
+  body.activation-view .app > section {
+    overflow: visible !important;
+    height: auto !important;
+    transform: none !important;
+  }
+  
+  /* Asegurar que el app no tenga overflow */
+  body.activation-view .app {
+    overflow: visible !important;
+    height: auto !important;
+    min-height: 100vh !important;
+  }
+  
+  /* Asegurar que body y html no tengan overflow que rompa el sticky */
+  body.activation-view {
+    overflow: visible !important;
+    height: auto !important;
+  }
+  
+  body.activation-view html {
+    overflow: visible !important;
+    height: auto !important;
+  }
+  
+  /* Asegurar que los contenedores padres no rompan el sticky */
+  .productos-compras-section {
+    overflow: visible !important;
+  }
+  
+  /* Asegurar que el scroll sea del viewport, no del content */
+  .app > section:not(.open) {
+    overflow: visible !important;
+  }
+  
+  /* Asegurar que el carrito sticky funcione correctamente */
+  .sticky-cart-sidebar {
+    position: -webkit-sticky !important;
+    position: sticky !important;
+    top: 20px !important;
+    align-self: flex-start !important;
+    /* Forzar que esté en el contexto correcto */
+    will-change: transform;
+    /* Asegurar que no haya transform que rompa el sticky */
+    transform: none !important;
+  }
+  
+  /* Asegurar que el contenedor del catálogo tenga altura suficiente y contexto correcto */
+  .catalog-container {
+    min-height: calc(100vh - 100px);
+    position: relative;
+    overflow: visible !important;
+    /* Asegurar que el contenedor tenga suficiente altura para que el sticky funcione */
+    align-items: flex-start !important;
+  }
+  
+  /* Asegurar que el contenedor del carrito tenga el contexto correcto */
+  .carrito-compras-container {
+    position: relative;
+    align-self: flex-start;
+    overflow: visible !important;
+    /* Asegurar que esté en el contexto correcto para sticky */
+    height: auto !important;
+  }
+  
+  /* Asegurar que products-main-area no rompa el sticky */
+  .products-main-area {
+    overflow: visible !important;
+    position: relative !important;
+  }
+  
+  .catalog-content-wrapper {
+    overflow: visible !important;
+    position: relative !important;
+    height: auto !important;
+    min-height: 100vh !important;
+  }
+  
+  .catalog-inner-wrapper {
+    overflow: visible !important;
+    position: relative !important;
+    height: auto !important;
+    min-height: 100vh !important;
+  }
+  
+  /* Asegurar que productos-compras-section no rompa el sticky */
+  .productos-compras-section {
+    overflow: visible !important;
+    position: relative !important;
+    height: auto !important;
+    min-height: 100vh !important;
+  }
+  
+  /* Asegurar que tienda-sifrah-container no rompa el sticky */
+  .tienda-sifrah-container {
+    overflow: visible !important;
+    position: relative !important;
+    height: auto !important;
+  }
+  
+  /* CRÍTICO: Asegurar que el contenedor del catálogo tenga altura suficiente */
+  .catalog-container {
+    min-height: calc(100vh - 200px) !important;
+    height: auto !important;
+    /* Asegurar que el contenedor tenga suficiente altura para que el sticky funcione */
+    align-items: flex-start !important;
+  }
 }
 
 /* Contenedor wrapper para controlar el comportamiento sticky del carrito */
