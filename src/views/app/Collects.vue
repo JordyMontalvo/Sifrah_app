@@ -61,6 +61,7 @@ import App from "@/views/layouts/App";
 import api from "@/api";
 import Spinner from "@/components/Spinner.vue";
 import SkeletonLoader from "@/components/SkeletonLoader.vue";
+import lib from "@/lib";
 
 export default {
   components: {
@@ -81,8 +82,13 @@ export default {
   },
   filters: {
     date(val) {
-      return new Date(val).toLocaleDateString();
-      // return new Date(val).toLocaleString()
+      if (!val) return "";
+      const parsedDate = lib.parseDate(val);
+      if (isNaN(parsedDate.getTime())) {
+        return "Fecha inválida";
+      }
+      return parsedDate.toLocaleDateString();
+      // return parsedDate.toLocaleString()
     },
     status(val) {
       if (val == "pending") return "Pendiente";
