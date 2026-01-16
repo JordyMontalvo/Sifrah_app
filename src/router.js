@@ -36,6 +36,8 @@ import Security     from './views/app/Security.vue'
 import Resume       from './views/app/Resume.vue'
 import frontales from './views/app/frontales.vue'
 import Checkout from './views/app/Checkout.vue'
+import SharedStore from './views/app/SharedStore.vue'
+import ShareStore from './views/app/ShareStore.vue'
 
 
 Vue.use(Router)
@@ -237,6 +239,17 @@ const routes = [
     path: '/checkout',
     component: Checkout,
     meta: { requiresAuth: true }
+  },
+  {
+    path: '/share-store',
+    component: ShareStore,
+    meta: { requiresAuth: true, requiresAffiliation: true }
+  },
+  // Ruta pública para tienda compartida
+  {
+    path: '/tienda/:userId',
+    component: SharedStore,
+    meta: { requiresNoAuth: false, public: true }
   }
 ]
 
@@ -251,6 +264,14 @@ const router = new Router({
 })
 
 router.beforeEach(async (to, from, next) => {
+  // Permitir acceso a rutas públicas sin autenticación
+  const isPublicRoute = to.matched.some(record => record.meta.public)
+  if (isPublicRoute) {
+    console.log('Router Guard: Ruta pública, permitiendo acceso sin autenticación')
+    next()
+    return
+  }
+
   const requiresNoAuth = to.matched.some(record => record.meta.requiresNoAuth)
   const requiresAuth   = to.matched.some(record => record.meta.requiresAuth)
   const requiresAffiliation = to.matched.some(record => record.meta.requiresAffiliation)

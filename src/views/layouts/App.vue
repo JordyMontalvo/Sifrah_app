@@ -310,6 +310,9 @@
           <router-link to="/whatsapp-link-generator" @click.native="close">
             <i class="fab fa-whatsapp"></i> GENERADOR DE LINKS DE WHATSAPP
           </router-link>
+          <router-link to="/share-store" @click.native="close">
+            <i class="fas fa-share-alt"></i> COMPARTIR TIENDA
+          </router-link>
         </div>
 
         <router-link
@@ -534,6 +537,10 @@
             <router-link to="/whatsapp-link-generator" @click.native="handleNavigationClickAndClose" class="mobile-submenu-item">
               <i class="fab fa-whatsapp"></i>
               <span>GENERADOR DE LINKS DE WHATSAPP</span>
+            </router-link>
+            <router-link to="/share-store" @click.native="handleNavigationClickAndClose" class="mobile-submenu-item">
+              <i class="fas fa-share-alt"></i>
+              <span>COMPARTIR TIENDA</span>
             </router-link>
           </div>
 

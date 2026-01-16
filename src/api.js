@@ -7,11 +7,11 @@ const getBaseURL = () => {
     return process.env.VUE_APP_SERVER + "/api";
   }
   
-  // Si no, usar la configuración por defecto según el entorno
+  // En desarrollo, usar ruta relativa para que funcione con el proxy
   const isDevelopment = process.env.NODE_ENV === 'development';
   return isDevelopment 
-    ? "http://localhost:3000/api" 
-    : "https://tu-app-backend.herokuapp.com/api"; // URL de ejemplo de Heroku
+    ? "/api"  // Ruta relativa - el proxy redirigirá a localhost:3000
+    : "https://tu-app-backend.herokuapp.com/api";
 };
 
 axios.defaults.baseURL = getBaseURL();
@@ -35,6 +35,7 @@ class API {
     AffiliationBanners,
     PaymentMethods,
     Flyers,
+    SharedStore,
   }) {
     this.Profile = new Profile();
     this.Password = new Password();
@@ -53,6 +54,7 @@ class API {
     this.AffiliationBanners = new AffiliationBanners();
     this.PaymentMethods = new PaymentMethods();
     this.Flyers = new Flyers();
+    this.SharedStore = new SharedStore();
   }
 
   register(data) {
@@ -290,6 +292,12 @@ class Flyers {
   }
 }
 
+class SharedStore {
+  GET(userId) {
+    return axios.get(`/public/shared-store/${userId}`);
+  }
+}
+
 export default new API({
   Profile,
   Password,
@@ -308,4 +316,5 @@ export default new API({
   AffiliationBanners,
   PaymentMethods,
   Flyers,
+  SharedStore,
 });

@@ -34,6 +34,9 @@ export default {
     session() {
       return this.$store.state.session;
     },
+    title() {
+      return "Educación";
+    },
   },
   async created() {
     // GET data
