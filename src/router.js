@@ -269,8 +269,14 @@ const router = new Router({
 router.beforeEach(async (to, from, next) => {
   // Permitir acceso a rutas públicas sin autenticación
   const isPublicRoute = to.matched.some(record => record.meta.public)
-  if (isPublicRoute) {
-    console.log('Router Guard: Ruta pública, permitiendo acceso sin autenticación')
+  const isSharedStorePath = to.path.startsWith('/tienda/')
+  
+  if (isPublicRoute || isSharedStorePath) {
+    console.log('Router Guard: Ruta pública, permitiendo acceso sin autenticación', {
+      path: to.path,
+      isPublicRoute,
+      isSharedStorePath
+    })
     next()
     return
   }
