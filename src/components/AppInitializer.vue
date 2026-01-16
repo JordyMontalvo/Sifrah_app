@@ -88,6 +88,11 @@ export default {
           console.log('AppInitializer: Permitiendo acceso directo a registro con código de referido sin sesión activa');
           // No redirigir
         }
+        // Permitir acceso a tienda compartida sin sesión
+        else if (this.$route.path.startsWith('/tienda/')) {
+          console.log('AppInitializer: Permitiendo acceso a tienda compartida sin sesión');
+          // No redirigir
+        }
         // Si no hay sesión y no está en login, redirigir a login
         else if (this.$route.path !== '/login' && this.$route.path !== '/welcome' && this.$route.path !== '/register' && this.$route.path !== '/remember' && this.$route.path !== '/reset-password') {
           console.log('AppInitializer: No hay sesión, redirigiendo a login...');
