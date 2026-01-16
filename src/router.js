@@ -43,11 +43,20 @@ import ShareStore from './views/app/ShareStore.vue'
 Vue.use(Router)
 
 const routes = [
-  // all
+  // ⭐ RUTAS PÚBLICAS PRIMERO (antes del catch-all)
+  // Ruta pública para tienda compartida - NO REQUIERE AUTENTICACIÓN
+  {
+    path: '/tienda/:userId',
+    component: SharedStore,
+    meta: { public: true, requiresAuth: false }
+  },
+  
+  // Catch-all - debe estar DESPUÉS de las rutas públicas
   {
     path: '*',
     redirect: '/login'
   },
+  
   // Redirección por defecto para usuarios autenticados
   {
     path: '/',
@@ -244,12 +253,6 @@ const routes = [
     path: '/share-store',
     component: ShareStore,
     meta: { requiresAuth: true, requiresAffiliation: true }
-  },
-  // Ruta pública para tienda compartida
-  {
-    path: '/tienda/:userId',
-    component: SharedStore,
-    meta: { requiresNoAuth: false, public: true }
   }
 ]
 
