@@ -297,9 +297,7 @@
                         <div v-if="product.subdescription" class="product-catalog-info-text">
                           {{ product.subdescription }}
                         </div>
-                        <div class="product-catalog-price">
-                          Precio Socio: <span class="price-amount">S/ {{ getProductPrice(product) }}</span>
-                        </div>
+
                       </div>
                      
                       <!-- Controles de cantidad -->
@@ -380,7 +378,7 @@
                     <div class="cart-item-info">
                       <h4>{{ product.name }}</h4>
                       <div class="cart-item-details">
-                        <span class="cart-item-price">S/ {{ getProductPrice(product) }}</span>
+
                         <span class="cart-item-points">{{ product.points }}pts</span>
                       </div>
                     </div>
@@ -467,7 +465,7 @@
                   <div class="cart-detail-item-info">
                     <h4>{{ item.name }}</h4>
                     <div class="cart-detail-item-details">
-                      <span class="cart-detail-item-price">S/ {{ getProductPrice(item) }}</span>
+
                       <span class="cart-detail-item-points">{{ item.points }}pts</span>
                     </div>
                   </div>
@@ -582,7 +580,7 @@
                     <!-- Panel derecho - Información -->
                     <div class="product-modal-right">
                       <div class="product-modal-info">
-                        <div class="modal-product-price">S/ {{ getProductPrice(selectedProduct) }}</div>
+
                         <div class="modal-product-points">{{ selectedProduct.points }} pts</div>
                         
                         <div class="product-description">
