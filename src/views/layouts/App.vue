@@ -865,6 +865,9 @@ export default {
       localStorage.setItem('headerTextPosition', JSON.stringify(this.textPosition));
     },
     startDrag(event) {
+      // Si el clic/toque es en el botón de copiar, no iniciar el drag para permitir el evento click
+      if (event.target.closest('.header-code-button')) return;
+      
       this.isDragging = true;
       const clientX = event.touches ? event.touches[0].clientX : event.clientX;
       const clientY = event.touches ? event.touches[0].clientY : event.clientY;
@@ -1001,29 +1004,40 @@ export default {
     },
     copy_affiliation_link() {
       if (this.affiliationLink) {
-        const tempInput = document.createElement('input');
-        tempInput.value = this.affiliationLink;
-        document.body.appendChild(tempInput);
-        tempInput.select();
-        document.execCommand('copy');
-        document.body.removeChild(tempInput);
-        
+        this.copyToClipboard(this.affiliationLink);
         this.c_affiliation_link = true;
         setTimeout(() => (this.c_affiliation_link = false), 4000);
       }
     },
     copy_token_code() {
       if (this.token) {
-        const tempInput = document.createElement('input');
-        tempInput.value = this.token;
-        document.body.appendChild(tempInput);
-        tempInput.select();
-        document.execCommand('copy');
-        document.body.removeChild(tempInput);
-
+        this.copyToClipboard(this.token);
         this.c_token_code = true;
         setTimeout(() => (this.c_token_code = false), 4000);
       }
+    },
+    copyToClipboard(text) {
+      // Usar navigator.clipboard si está disponible y en contexto seguro
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(text).catch(err => {
+          this.fallbackCopy(text);
+        });
+      } else {
+        this.fallbackCopy(text);
+      }
+    },
+    fallbackCopy(text) {
+      const tempInput = document.createElement('input');
+      tempInput.value = text;
+      // Asegurarse de que el input esté en el body pero invisible
+      tempInput.style.position = 'fixed';
+      tempInput.style.left = '-9999px';
+      tempInput.style.top = '0';
+      document.body.appendChild(tempInput);
+      tempInput.select();
+      tempInput.setSelectionRange(0, 99999); // Para móviles
+      document.execCommand('copy');
+      document.body.removeChild(tempInput);
     },
     startTouch(event) {
       this.startX = event.touches[0].clientX; // Guardar la posición inicial del toque
