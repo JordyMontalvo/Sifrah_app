@@ -1000,27 +1000,27 @@ export default {
       this.photoState = "default";
     },
     copy_affiliation_link() {
-      const linkInput = document.querySelector('#link');
-      if (linkInput && linkInput.value) {
-        lib.copy("link");
-        this.c_affiliation_link = true;
-        setTimeout(() => (this.c_affiliation_link = false), 4000);
-      } else {
-        console.log("Copying Affiliation Link:", this.affiliationLink);
-        lib.copy("link-global");
+      if (this.affiliationLink) {
+        const tempInput = document.createElement('input');
+        tempInput.value = this.affiliationLink;
+        document.body.appendChild(tempInput);
+        tempInput.select();
+        document.execCommand('copy');
+        document.body.removeChild(tempInput);
+        
         this.c_affiliation_link = true;
         setTimeout(() => (this.c_affiliation_link = false), 4000);
       }
     },
     copy_token_code() {
-      const tokenInput = document.querySelector('.header-code-button');
-      if (tokenInput && this.token) {
+      if (this.token) {
         const tempInput = document.createElement('input');
         tempInput.value = this.token;
         document.body.appendChild(tempInput);
         tempInput.select();
         document.execCommand('copy');
         document.body.removeChild(tempInput);
+
         this.c_token_code = true;
         setTimeout(() => (this.c_token_code = false), 4000);
       }
