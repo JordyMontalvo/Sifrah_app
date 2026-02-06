@@ -1110,7 +1110,7 @@ export default {
       this.$store.commit("SET_PHOTO", data.photo);
       this.$store.commit("SET_TREE", data.tree);
       if (data.dni) this.$store.commit("SET_DNI", data.dni);
-      if (data.token) this.$store.commit("SET_TOKEN", data.token);
+      this.$store.commit("SET_TOKEN", data.token);
 
       // Usar directamente los planes que llegan del backend
       this.plans = data.plans || [];
