@@ -1,39 +1,40 @@
-import Vue    from 'vue'
+import Vue from 'vue'
 import Router from 'vue-router'
 import store from './store'
 
 // Auth
-import Welcome  from './views/auth/Welcome.vue'
-import Login    from './views/auth/Login.vue'
+import Welcome from './views/auth/Welcome.vue'
+import Login from './views/auth/Login.vue'
 import Register from './views/auth/Register.vue'
 import Remember from './views/auth/Remember.vue'
 import ResetPassword from './views/auth/ResetPassword.vue'
 // Aux
 import Logout from './views/auxi/Logout.vue'
 // import Verify from './views/auxi/Verify.vue'
-import Check  from './views/auxi/Check.vue'
+import Check from './views/auxi/Check.vue'
 // App
-import Dashboard    from './views/app/Dashboard.vue'
-import Status       from './views/app/Status.vue'
-import Affiliation  from './views/app/Affiliation.vue'
-import Activation   from './views/app/Activation.vue'
-import Activations  from './views/app/Activations.vue'
-import Transfer     from './views/app/Transfer.vue'
-import Transfers    from './views/app/Transfers.vue'
-import Directs      from './views/app/Directs.vue'
-import Tree         from './views/app/Tree.vue'
-import Bonuses      from './views/app/Bonuses.vue'
+import Dashboard from './views/app/Dashboard.vue'
+import Status from './views/app/Status.vue'
+import Affiliation from './views/app/Affiliation.vue'
+import Activation from './views/app/Activation.vue'
+import Activations from './views/app/Activations.vue'
+import Transfer from './views/app/Transfer.vue'
+import Transfers from './views/app/Transfers.vue'
+import Directs from './views/app/Directs.vue'
+import Tree from './views/app/Tree.vue'
+import Bonuses from './views/app/Bonuses.vue'
 import Transactions from './views/app/Transactions.vue'
-import Collect      from './views/app/Collect.vue'
-import Collects     from './views/app/Collects.vue'
-import Closeds      from './views/app/Closeds.vue'
-import Tools        from './views/app/Tools.vue'
-import FlyerEditor  from './views/app/FlyerEditor.vue'
+import Collect from './views/app/Collect.vue'
+import Collects from './views/app/Collects.vue'
+import Closeds from './views/app/Closeds.vue'
+import Tools from './views/app/Tools.vue'
+import Materials from './views/app/Materials.vue'
+import FlyerEditor from './views/app/FlyerEditor.vue'
 import WhatsAppLinkGenerator from './views/app/WhatsAppLinkGenerator.vue'
-import Profile      from './views/app/Profile.vue'
-import Password     from './views/app/Password.vue'
-import Security     from './views/app/Security.vue'
-import Resume       from './views/app/Resume.vue'
+import Profile from './views/app/Profile.vue'
+import Password from './views/app/Password.vue'
+import Security from './views/app/Security.vue'
+import Resume from './views/app/Resume.vue'
 import frontales from './views/app/frontales.vue'
 import Checkout from './views/app/Checkout.vue'
 import SharedStore from './views/app/SharedStore.vue'
@@ -50,20 +51,20 @@ const routes = [
     component: SharedStore,
     meta: { public: true, requiresAuth: false }
   },
-  
+
   // Catch-all - debe estar DESPUÉS de las rutas públicas
   {
     path: '*',
     redirect: '/login'
   },
-  
+
   // Redirección por defecto para usuarios autenticados
   {
     path: '/',
     redirect: to => {
       const session = localStorage.getItem('session');
       const affiliated = localStorage.getItem('affiliated') === 'true';
-      
+
       if (!session) {
         return '/login';
       } else if (!affiliated) {
@@ -210,6 +211,11 @@ const routes = [
     meta: { requiresAuth: true, requiresAffiliation: true }
   },
   {
+    path: '/materials',
+    component: Materials,
+    meta: { requiresAuth: true, requiresAffiliation: true }
+  },
+  {
     path: '/flyer-editor',
     component: FlyerEditor,
     meta: { requiresAuth: true, requiresAffiliation: true }
@@ -270,7 +276,7 @@ router.beforeEach(async (to, from, next) => {
   // Permitir acceso a rutas públicas sin autenticación
   const isPublicRoute = to.matched.some(record => record.meta.public)
   const isSharedStorePath = to.path.startsWith('/tienda/')
-  
+
   if (isPublicRoute || isSharedStorePath) {
     console.log('Router Guard: Ruta pública, permitiendo acceso sin autenticación', {
       path: to.path,
@@ -282,14 +288,14 @@ router.beforeEach(async (to, from, next) => {
   }
 
   const requiresNoAuth = to.matched.some(record => record.meta.requiresNoAuth)
-  const requiresAuth   = to.matched.some(record => record.meta.requiresAuth)
+  const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
   const requiresAffiliation = to.matched.some(record => record.meta.requiresAffiliation)
 
   // Obtener datos del store (estado actual) y localStorage (estado persistido)
-  const session   = store.state.session || localStorage.getItem('session')
+  const session = store.state.session || localStorage.getItem('session')
   const office_id = store.state.office_id || localStorage.getItem('office_id')
-  const path      = localStorage.getItem('path')
-  
+  const path = localStorage.getItem('path')
+
   // Mejorar la obtención del estado de afiliación
   let affiliated = null
   if (store.state.affiliated !== null && store.state.affiliated !== undefined) {
@@ -304,11 +310,11 @@ router.beforeEach(async (to, from, next) => {
     }
   }
 
-  console.log('Router Guard:', { 
-    to: to.path, 
+  console.log('Router Guard:', {
+    to: to.path,
     from: from.path,
-    session: !!session, 
-    affiliated, 
+    session: !!session,
+    affiliated,
     office_id: !!office_id,
     requiresAuth,
     requiresAffiliation,
@@ -340,7 +346,7 @@ router.beforeEach(async (to, from, next) => {
       next()
       return
     }
-    
+
     if (affiliated) {
       console.log('Router Guard: Usuario autenticado y afiliado, redirigiendo a /dashboard')
       next({ path: '/dashboard' })
@@ -357,7 +363,7 @@ router.beforeEach(async (to, from, next) => {
     next()
     return
   }
-  
+
   // Si requiere autenticación y no está autenticado
   if (requiresAuth && !session) {
     console.log('Router Guard: Requiere autenticación pero no hay sesión, redirigiendo a /login')

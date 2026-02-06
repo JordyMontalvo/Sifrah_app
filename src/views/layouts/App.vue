@@ -304,6 +304,9 @@
           <router-link to="/tools" @click.native="close">
             <img src="@/assets/img/education-desktop-icon.svg" alt="Educación" style="width: 16px; height: 16px; margin-right: 8px;"> EDUCACIÓN
           </router-link>
+          <router-link to="/materials" @click.native="close">
+            <i class="fas fa-folder"></i> MATERIALES
+          </router-link>
           <router-link to="/flyer-editor" @click.native="close">
             <i class="fas fa-image"></i> EDITOR DE FLYER
           </router-link>
@@ -530,6 +533,10 @@
             <i class="fa fa-angle-down" :class="{ 'rotated': mobileSubmenus[4] }"></i>
           </a>
           <div class="mobile-submenu" :class="{ 'active': mobileSubmenus[4] }" v-if="office_id == null && affiliated">
+            <router-link to="/materials" @click.native="handleNavigationClickAndClose" class="mobile-submenu-item">
+              <i class="fas fa-folder"></i>
+              <span>MATERIALES</span>
+            </router-link>
             <router-link to="/flyer-editor" @click.native="handleNavigationClickAndClose" class="mobile-submenu-item">
               <i class="fas fa-image"></i>
               <span>EDITOR DE FLYER</span>
