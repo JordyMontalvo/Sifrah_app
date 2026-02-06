@@ -1250,6 +1250,7 @@ export default {
         if (data._activated !== undefined) this.$store.commit("SET__ACTIVATED", data._activated);
         if (data.balance !== undefined) this.$store.commit("SET_BALANCE", data.balance);
         if (data._balance !== undefined) this.$store.commit("SET__BALANCE", data._balance);
+        this.$store.commit("SET_TOKEN", data.token); // Siempre actualizar el token
         
         // Cargar datos específicos para la afiliación
         this.plans = data.plans || [];
