@@ -968,6 +968,11 @@ export default {
       return this.offices.find(office => office.id == this.selectedPickupPoint);
     },
     
+    // Obtener el DNI del usuario desde el store
+    userDNI() {
+      return this.$store.state.dni || '';
+    },
+    
     hasDeliveryInfo() {
       return this.deliveryMethod === 'delivery' && 
              ((this.deliveryZoneInfo && this.deliveryData.department === 'lima') ||
@@ -1945,6 +1950,16 @@ export default {
       }
     },
 
+    // Watcher para autocompletar el documento cuando se selecciona 'boleta'
+    'proofData.type': {
+      handler(newType) {
+        // Si cambia a 'boleta' y el campo está vacío, autocompletar con el DNI
+        if (newType === 'boleta' && !this.proofData.document && this.userDNI) {
+          this.proofData.document = this.userDNI;
+        }
+      }
+    },
+
     // Computed para mostrar info de delivery
     hasDeliveryInfo() {
       return this.deliveryMethod === 'delivery' && 
@@ -1976,6 +1991,11 @@ export default {
       if (data) {
         this.balance = data.balance || 0;
         this._balance = data._balance || 0;
+        
+        // Guardar el DNI en el store si está disponible
+        if (data.dni) {
+          this.$store.commit('SET_DNI', data.dni);
+        }
       }
     } catch (error) {
       console.error('❌ Error cargando el saldo del usuario:', error);
@@ -1984,6 +2004,11 @@ export default {
 
     // Cargar departamentos disponibles
     await this.loadDepartments();
+    
+    // Autocompletar el campo de documento con el DNI del usuario
+    if (this.userDNI && this.proofData.type === 'boleta') {
+      this.proofData.document = this.userDNI;
+    }
     
     // Configurar actualización automática cada 30 segundos
     this.officesUpdateInterval = setInterval(async () => {
