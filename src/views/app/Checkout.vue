@@ -664,6 +664,9 @@
                     <div class="bank-info-item">
                       <strong>Tipo:</strong> {{ getBankInfo(selectedBank).type }}
                     </div>
+                    <div v-if="getBankInfo(selectedBank).cci" class="bank-info-item">
+                      <strong>CCI:</strong> {{ getBankInfo(selectedBank).cci }}
+                    </div>
                   </div>
                   
                 </div>
@@ -1034,7 +1037,8 @@ export default {
           name: method.name,
           account: method.account,
           holder: method.holder,
-          type: method.type
+          type: method.type,
+          cci: method.cci || ""
         };
       }
       return {};
