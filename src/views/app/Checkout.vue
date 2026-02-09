@@ -1959,7 +1959,9 @@ export default {
       handler(newType) {
         // Si cambia a 'boleta' y el campo está vacío, autocompletar con el DNI
         if (newType === 'boleta' && !this.proofData.document && this.userDNI) {
-          this.proofData.document = this.userDNI;
+          this.$nextTick(() => {
+            this.proofData.document = this.userDNI;
+          });
         }
       }
     },
