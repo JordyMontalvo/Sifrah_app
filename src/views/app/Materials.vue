@@ -2,26 +2,37 @@
   <App :session="session" :title="title">
     <Spinner v-if="loading" :size="40" :color="'#086eb6'" />
 
-    <div v-if="!loading" class="materials-container">
-      <div class="materials-card">
-        <div class="icon-container">
-          <i class="fas fa-folder-open"></i>
-        </div>
-        <h2>Kit de Materiales Sifrah</h2>
-        <p class="description">
-          Accede a nuestros materiales de marketing, videos de YouTube,
-          enlaces de WhatsApp y más recursos para tu negocio.
-        </p>
-        
-        <button @click="openMaterials" class="open-button">
+    <div v-if="!loading" class="materials-wrapper">
+      <!-- Botón flotante para abrir en nueva ventana -->
+      <div class="floating-button-container">
+        <button @click="openMaterials" class="floating-open-button" title="Abrir en nueva ventana">
           <i class="fas fa-external-link-alt"></i>
-          Abrir Materiales
+          Abrir en nueva ventana
         </button>
+      </div>
+      
+      <!-- Iframe con configuración para abrir links en nueva ventana -->
+      <div class="iframe-container">
+        <iframe 
+          ref="materialsFrame"
+          class="materials-iframe" 
+          :src="materialsUrl"
+          @error="handleIframeError"
+          sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox allow-forms"
+        ></iframe>
         
-        <p class="note">
-          <i class="fas fa-info-circle"></i>
-          Se abrirá en una nueva pestaña para mejor visualización
-        </p>
+        <!-- Mensaje de error si el iframe no carga -->
+        <div v-if="iframeError" class="iframe-error">
+          <div class="error-card">
+            <i class="fas fa-exclamation-triangle"></i>
+            <h3>No se puede cargar el contenido aquí</h3>
+            <p>Algunos servicios externos bloquean su visualización embebida por seguridad.</p>
+            <button @click="openMaterials" class="error-button">
+              <i class="fas fa-external-link-alt"></i>
+              Abrir Materiales en nueva ventana
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   </App>
@@ -40,6 +51,8 @@ export default {
   data() {
     return {
       loading: true,
+      materialsUrl: 'https://beacons.ai/sifrahcorp/mediakit',
+      iframeError: false,
     };
   },
   computed: {
@@ -49,6 +62,14 @@ export default {
     title() {
       return "Materiales";
     },
+  },
+  mounted() {
+    // Detectar si el iframe no carga después de 5 segundos
+    setTimeout(() => {
+      if (this.$refs.materialsFrame && !this.$refs.materialsFrame.contentDocument) {
+        this.iframeError = true;
+      }
+    }, 5000);
   },
   async created() {
     try {
@@ -79,66 +100,110 @@ export default {
   },
   methods: {
     openMaterials() {
-      window.open('https://beacons.ai/sifrahcorp/mediakit', '_blank', 'noopener,noreferrer');
+      window.open(this.materialsUrl, '_blank', 'noopener,noreferrer');
+    },
+    handleIframeError() {
+      this.iframeError = true;
     },
   },
 };
 </script>
 
 <style lang="stylus" scoped>
-.materials-container
-  display flex
-  justify-content center
-  align-items center
-  min-height calc(100vh - 200px)
-  padding 20px
+.materials-wrapper
+  position relative
+  width 100%
+  height calc(100vh - 80px)
+  overflow hidden
 
-.materials-card
+.floating-button-container
+  position absolute
+  top 20px
+  right 20px
+  z-index 1000
+
+.floating-open-button
   background linear-gradient(135deg, #667eea 0%, #764ba2 100%)
+  color white
+  border none
+  padding 12px 24px
+  font-size 14px
+  font-weight 600
+  border-radius 50px
+  cursor pointer
+  box-shadow 0 4px 15px rgba(102, 126, 234, 0.4)
+  display flex
+  align-items center
+  gap 8px
+  transition all 0.3s ease
+  
+  &:hover
+    transform translateY(-2px)
+    box-shadow 0 6px 20px rgba(102, 126, 234, 0.6)
+    background linear-gradient(135deg, #764ba2 0%, #667eea 100%)
+  
+  &:active
+    transform translateY(0)
+  
+  i
+    font-size 14px
+
+.iframe-container
+  position relative
+  width 100%
+  height 100%
+
+.materials-iframe
+  width 100%
+  height 100%
+  border 0
+  display block
+
+.iframe-error
+  position absolute
+  top 0
+  left 0
+  width 100%
+  height 100%
+  background rgba(248, 249, 250, 0.98)
+  display flex
+  align-items center
+  justify-content center
+  z-index 100
+  backdrop-filter blur(10px)
+
+.error-card
+  background linear-gradient(135deg, #f093fb 0%, #f5576c 100%)
   border-radius 20px
   padding 60px 40px
   text-align center
   max-width 500px
-  width 100%
-  box-shadow 0 20px 60px rgba(0, 0, 0, 0.3)
+  width 90%
+  box-shadow 0 20px 60px rgba(245, 87, 108, 0.3)
   color white
-  transition transform 0.3s ease, box-shadow 0.3s ease
-  
-  &:hover
-    transform translateY(-5px)
-    box-shadow 0 25px 70px rgba(0, 0, 0, 0.4)
-
-.icon-container
-  background rgba(255, 255, 255, 0.2)
-  width 100px
-  height 100px
-  border-radius 50%
-  display flex
-  align-items center
-  justify-content center
-  margin 0 auto 30px
-  backdrop-filter blur(10px)
+  animation slideIn 0.5s ease-out
   
   i
-    font-size 48px
+    font-size 64px
+    margin-bottom 20px
+    opacity 0.9
+  
+  h3
+    font-size 28px
+    font-weight 700
+    margin 0 0 15px 0
+    color white
+  
+  p
+    font-size 16px
+    line-height 1.6
+    margin-bottom 30px
+    opacity 0.95
     color white
 
-h2
-  font-size 32px
-  font-weight 700
-  margin 0 0 20px 0
-  color white
-
-.description
-  font-size 16px
-  line-height 1.6
-  margin-bottom 30px
-  opacity 0.95
-  color white
-
-.open-button
+.error-button
   background white
-  color #667eea
+  color #f5576c
   border none
   padding 16px 40px
   font-size 18px
@@ -150,12 +215,11 @@ h2
   display inline-flex
   align-items center
   gap 10px
-  margin-bottom 20px
   
   &:hover
     transform translateY(-2px)
     box-shadow 0 12px 30px rgba(0, 0, 0, 0.25)
-    background linear-gradient(135deg, #f093fb 0%, #f5576c 100%)
+    background linear-gradient(135deg, #667eea 0%, #764ba2 100%)
     color white
   
   &:active
@@ -164,16 +228,13 @@ h2
   i
     font-size 16px
 
-.note
-  font-size 14px
-  opacity 0.9
-  color rgba(255, 255, 255, 0.9)
-  display flex
-  align-items center
-  justify-content center
-  gap 8px
-  
-  i
-    font-size 16px
+@keyframes slideIn
+  from
+    opacity 0
+    transform translateY(-30px)
+  to
+    opacity 1
+    transform translateY(0)
 </style>
+
 
