@@ -5,23 +5,23 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    session:    null,
-    office_id:  null,
-    name:       null,
-    lastName:   null,
+    session: null,
+    office_id: null,
+    name: null,
+    lastName: null,
     affiliated: null,
-    activated:  null,
+    activated: null,
     _activated: null,
-    plan:       null,
-    country:    null,
-    photo:      null,
-    tree:       null,
-    email:      null,
-    token:      null,
-    dni:        null,
-    address:    null,
-    city:       null,
-    birthdate:   null,
+    plan: null,
+    country: null,
+    photo: null,
+    tree: null,
+    email: null,
+    token: null,
+    dni: null,
+    address: null,
+    city: null,
+    birthdate: null,
     total_points: null,
     cartItems: [],
     affiliationTotal: null,
@@ -29,10 +29,10 @@ export default new Vuex.Store({
     affiliationPlan: null,
     isAffiliationCheckout: false,
 
-    fb:   'https://www.facebook.com/profile.php?id=61555335617817',
-    is:   'https://www.instagram.com/sifrahcorp',
-    tk:   'https://www.tiktok.com/@sifrah.corp',
-    yt:   'https://www.youtube.com/@SIFRAHCORP',
+    fb: 'https://www.facebook.com/profile.php?id=61555335617817',
+    is: 'https://www.instagram.com/sifrahcorp',
+    tk: 'https://www.tiktok.com/@sifrah.corp',
+    yt: 'https://www.youtube.com/@SIFRAHCORP',
     wsp_pe: 'https://wa.me/qr/PYSNS6G6AYACB1',
     wsp_bo: '',
     wsp_ec: '',
@@ -54,7 +54,7 @@ export default new Vuex.Store({
         localStorage.removeItem('session')
       }
     },
-    SET_OFFICE_ID: (state, {office_id, path}) => {
+    SET_OFFICE_ID: (state, { office_id, path }) => {
       state.office_id = office_id
       if (office_id) {
         localStorage.setItem('office', 'true')
@@ -85,7 +85,7 @@ export default new Vuex.Store({
     SET_AFFILIATED: (state, affiliated) => {
       // Asegurar que affiliated sea un booleano válido
       let affiliatedValue = affiliated;
-      
+
       if (typeof affiliated === 'string') {
         affiliatedValue = affiliated === 'true';
       } else if (affiliated === null || affiliated === undefined) {
@@ -93,11 +93,11 @@ export default new Vuex.Store({
       } else {
         affiliatedValue = Boolean(affiliated);
       }
-      
+
       state.affiliated = affiliatedValue;
-      
+
       console.log('Store: SET_AFFILIATED llamado con:', affiliated, '-> convertido a:', affiliatedValue);
-      
+
       if (affiliatedValue !== null && affiliatedValue !== undefined) {
         localStorage.setItem('affiliated', affiliatedValue.toString());
         console.log('Store: affiliated guardado en localStorage:', affiliatedValue.toString());
@@ -241,7 +241,7 @@ export default new Vuex.Store({
       state.affiliationPlan = null
       state.isAffiliationCheckout = false
     },
-    
+
     // Mutaciones de menú
     SET_OPEN: (state) => {
       state.open = !state.open
@@ -294,80 +294,80 @@ export default new Vuex.Store({
     async restoreState({ commit }) {
       try {
         console.log('Restaurando estado desde localStorage...');
-        
+
         const session = localStorage.getItem('session')
         if (session) {
           commit('SET_SESSION', session)
         }
-        
+
         const office_id = localStorage.getItem('office_id')
         const path = localStorage.getItem('path')
         if (office_id) {
           commit('SET_OFFICE_ID', { office_id, path })
           console.log('Office ID restaurado:', !!office_id);
         }
-        
+
         const name = localStorage.getItem('name')
         if (name) commit('SET_NAME', name)
-        
+
         const lastName = localStorage.getItem('lastName')
         if (lastName) commit('SET_LAST_NAME', lastName)
-        
+
         const affiliated = localStorage.getItem('affiliated')
         if (affiliated !== null) {
           const isAffiliated = affiliated === 'true'
           commit('SET_AFFILIATED', isAffiliated)
           console.log('Estado de afiliación restaurado:', isAffiliated);
         }
-        
+
         const activated = localStorage.getItem('activated')
         if (activated !== null) commit('SET_ACTIVATED', activated === 'true')
-        
+
         const _activated = localStorage.getItem('_activated')
         if (_activated !== null) commit('SET__ACTIVATED', _activated === 'true')
-        
+
         const plan = localStorage.getItem('plan')
         if (plan) commit('SET_PLAN', plan)
-        
+
         const country = localStorage.getItem('country')
         if (country) commit('SET_COUNTRY', country)
-        
+
         const photo = localStorage.getItem('photo')
         if (photo) commit('SET_PHOTO', photo)
-        
+
         const tree = localStorage.getItem('tree')
         if (tree !== null) commit('SET_TREE', tree === 'true')
-        
+
         const email = localStorage.getItem('email')
         if (email) commit('SET_EMAIL', email)
-        
+
         const token = localStorage.getItem('token')
         if (token) commit('SET_TOKEN', token)
-        
+
         const dni = localStorage.getItem('dni')
         if (dni) commit('SET_DNI', dni)
-        
+
         const address = localStorage.getItem('address')
         if (address) commit('SET_ADDRESS', address)
-        
+
         const city = localStorage.getItem('city')
         if (city) commit('SET_CITY', city)
-        
+
         const birthdate = localStorage.getItem('birthdate')
         if (birthdate) commit('SET_BIRTHDATE', birthdate)
-        
+
         const total_points = localStorage.getItem('total_points')
         if (total_points !== null) commit('SET_TOTAL_POINTS', parseInt(total_points))
-        
+
         const balance = localStorage.getItem('balance')
         if (balance !== null) commit('SET_BALANCE', parseFloat(balance))
-        
+
         const _balance = localStorage.getItem('_balance')
         if (_balance !== null) commit('SET__BALANCE', parseFloat(_balance))
-        
+
         // Limpiar estados de los menús al restaurar (no deben persistir entre sesiones)
         commit('CLEAR_MENU_STATES')
-        
+
         console.log('Estado restaurado exitosamente');
         return true;
       } catch (error) {
@@ -375,7 +375,7 @@ export default new Vuex.Store({
         return false;
       }
     },
-    
+
     // Acción para limpiar todo el estado
     clearState({ commit }) {
       commit('SET_SESSION', null)
@@ -397,7 +397,7 @@ export default new Vuex.Store({
       commit('SET_TOTAL_POINTS', null)
       commit('SET_BALANCE', null)
       commit('SET__BALANCE', null)
-      
+
       // Limpiar estados de los menús
       commit('CLEAR_MENU_STATES')
     }

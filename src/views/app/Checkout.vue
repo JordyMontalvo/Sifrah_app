@@ -1982,7 +1982,16 @@ export default {
     
     // Verificar si hay productos en el carrito
     if (this.cartItems.length === 0) {
-      this.$router.push('/activation');
+      // Verificar si el usuario está afiliado para redirigir correctamente
+      const affiliated = this.$store.state.affiliated !== null 
+          ? this.$store.state.affiliated 
+          : (localStorage.getItem('affiliated') === 'true');
+          
+      if (!affiliated) {
+        this.$router.push('/affiliation');
+      } else {
+        this.$router.push('/activation');
+      }
     }
     
     // Cargar las oficinas disponibles
