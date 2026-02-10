@@ -130,7 +130,7 @@
                 <h2 class="master-trophy-title">¡Felicidades!</h2>
                 <p class="master-trophy-msg">
                   Has alcanzado el nivel
-                  <span class="master-trophy-master">MASTER</span>
+                  <span class="master-trophy-master">EMPRESARIO</span>
                 </p>
                 <button
                   class="main-action-btn master-trophy-btn"
