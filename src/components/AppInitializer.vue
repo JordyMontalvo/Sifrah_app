@@ -11,6 +11,8 @@
 </template>
 
 <script>
+import api from "@/api";
+
 export default {
   name: 'AppInitializer',
   data() {
@@ -29,23 +31,62 @@ export default {
       const session = this.$store.state.session || localStorage.getItem('session');
       
       if (session) {
-        console.log('AppInitializer: Sesión encontrada, verificando estado de afiliación...');
+        console.log('AppInitializer: Sesión encontrada, verificando estado en servidor...');
         
-        // Verificar estado de afiliación con mejor sincronización
         let affiliated = null;
-        if (this.$store.state.affiliated !== null && this.$store.state.affiliated !== undefined) {
-          affiliated = this.$store.state.affiliated;
-        } else {
-          const localAffiliated = localStorage.getItem('affiliated');
-          affiliated = localAffiliated === 'true';
-          // Sincronizar el store si no está definido
-          if (affiliated !== null) {
-            this.$store.commit('SET_AFFILIATED', affiliated);
-            console.log('AppInitializer: Estado de afiliación sincronizado desde localStorage:', affiliated);
+        
+        try {
+          // Obtener datos frescos del servidor
+          const { data } = await api.Afiliation.GET(session);
+          
+          if (data && !data.error) {
+            console.log('AppInitializer: Datos de usuario actualizados desde servidor');
+            
+            // Actualizar store con datos frescos
+            const userInfo = data;
+            
+            if (userInfo.name) this.$store.commit("SET_NAME", userInfo.name);
+            if (userInfo.lastName) this.$store.commit("SET_LAST_NAME", userInfo.lastName);
+            if (userInfo.email) this.$store.commit("SET_EMAIL", userInfo.email);
+            if (userInfo.photo) this.$store.commit("SET_PHOTO", userInfo.photo);
+            if (userInfo.plan) this.$store.commit("SET_PLAN", userInfo.plan);
+            if (userInfo.total_points !== undefined) this.$store.commit("SET_TOTAL_POINTS", userInfo.total_points);
+            
+            // Establecer estado de afiliación y otros campos
+            this.$store.commit("SET_AFFILIATED", userInfo.affiliated);
+            
+            if (userInfo.tree !== undefined) this.$store.commit("SET_TREE", userInfo.tree);
+            if (userInfo.activated !== undefined) this.$store.commit("SET_ACTIVATED", userInfo.activated);
+            if (userInfo._activated !== undefined) this.$store.commit("SET__ACTIVATED", userInfo._activated);
+            if (userInfo.country) this.$store.commit("SET_COUNTRY", userInfo.country);
+            if (userInfo.balance !== undefined) this.$store.commit("SET_BALANCE", userInfo.balance);
+            if (userInfo._balance !== undefined) this.$store.commit("SET__BALANCE", userInfo._balance);
+            
+            // Usar el valor fresco de afiliación
+            affiliated = userInfo.affiliated;
+            
+            // Esperar a que el store se actualice
+            await this.$nextTick();
+            
+          } else {
+             console.warn('AppInitializer: No se pudieron obtener datos frescos, usando caché local');
+             throw new Error('API Error or no data');
+          }
+        } catch (e) {
+          console.error('AppInitializer: Error al obtener datos del servidor:', e);
+          // Fallback a lógica original (localStorage/Store actual)
+          if (this.$store.state.affiliated !== null && this.$store.state.affiliated !== undefined) {
+            affiliated = this.$store.state.affiliated;
+          } else {
+            const localAffiliated = localStorage.getItem('affiliated');
+            affiliated = localAffiliated === 'true';
+            if (affiliated !== null) {
+              this.$store.commit('SET_AFFILIATED', affiliated);
+            }
           }
         }
         
-        console.log('AppInitializer: Estado de afiliación:', affiliated);
+        console.log('AppInitializer: Estado de afiliación final:', affiliated);
         console.log('AppInitializer: Ruta actual:', this.$route.path);
         console.log('AppInitializer: Store state:', {
           session: this.$store.state.session,
