@@ -6,10 +6,10 @@ const getBaseURL = () => {
   if (process.env.VUE_APP_SERVER) {
     return process.env.VUE_APP_SERVER + "/api";
   }
-  
+
   // En desarrollo, usar ruta relativa para que funcione con el proxy
   const isDevelopment = process.env.NODE_ENV === 'development';
-  return isDevelopment 
+  return isDevelopment
     ? "/api"  // Ruta relativa - el proxy redirigirá a localhost:3000
     : "https://tu-app-backend.herokuapp.com/api";
 };
@@ -36,6 +36,7 @@ class API {
     PaymentMethods,
     Flyers,
     SharedStore,
+    Materials,
   }) {
     this.Profile = new Profile();
     this.Password = new Password();
@@ -55,6 +56,7 @@ class API {
     this.PaymentMethods = new PaymentMethods();
     this.Flyers = new Flyers();
     this.SharedStore = new SharedStore();
+    this.Materials = new Materials();
   }
 
   register(data) {
@@ -119,9 +121,9 @@ class API {
 
 
   // Mercado Pago
-//   mercadopagoPreference(data) {
-//     return axios.post("http://localhost:4000/api/app/mercadopago", data);
-//   }
+  //   mercadopagoPreference(data) {
+  //     return axios.post("http://localhost:4000/api/app/mercadopago", data);
+  //   }
 
   // Email System
   sendPasswordReset(data) {
@@ -131,30 +133,30 @@ class API {
   validateEmail(email) {
     return axios.post("/auth/validate-email", { email });
   }
-  
+
   sendContactEmail(data) {
     return axios.post("/email/contact", data);
   }
-  
+
   sendWelcomeEmail(data) {
     return axios.post("/email/welcome", data);
   }
-  
+
   sendActivationEmail(data) {
     return axios.post("/email/activation", data);
   }
-  
+
   sendCommissionEmail(data) {
     return axios.post("/email/commission", data);
   }
-  
+
   testEmailService() {
     return axios.get("/email/test");
   }
-  
+
   getDeliveryInfo(params = {}) {
-    const queryString = Object.keys(params).length > 0 
-      ? '?' + new URLSearchParams(params).toString() 
+    const queryString = Object.keys(params).length > 0
+      ? '?' + new URLSearchParams(params).toString()
       : '';
     return axios.get(`/app/delivery${queryString}`);
   }
@@ -298,6 +300,12 @@ class SharedStore {
   }
 }
 
+class Materials {
+  GET() {
+    return axios.get('/app/materials');
+  }
+}
+
 export default new API({
   Profile,
   Password,
@@ -317,4 +325,5 @@ export default new API({
   PaymentMethods,
   Flyers,
   SharedStore,
+  Materials,
 });
