@@ -128,11 +128,15 @@ body, .app
     .content
       transition all .5s
     .menu
+      // En móvil el menú lateral no empuja el contenido, se muestra como overlay
       min-width 70%
       transform translate(-100%, 0)
     .content
       min-width 100%
-      transform translate(-70%, 0)
+      // Antes el contenido se desplazaba -70% para el efecto "push", lo que en móvil
+      // hacía que solo se viera un pedazo de la vista y el resto fuera espacio en blanco.
+      // Ahora el contenido ocupa siempre el 100% del ancho cuando el menú está oculto.
+      transform translate(0, 0)
       overflow auto
       position relative
       transition transform .5s
@@ -144,6 +148,8 @@ body, .app
     &.open
       .menu 
       .content
+        // Cuando el menú está abierto en móviles, mantenemos el contenido fijo y
+        // usamos el overlay móvil definido en App.vue, sin desplazar la vista.
         transform translate(0, 0)
         height auto
     // style
@@ -229,81 +235,199 @@ body, .app
   .app
     >header
       display none
-      // padding 16px 40px
-      padding 12px 40px
     >section
       .menu
-      .content
-        //height auto
-        min-width auto
-        transform none
+        min-width 300px // Balanced width
+        width 300px
+        transform translate(0, 0)
+        position fixed
       .content
         flex 1
-        // >header
-        //   padding 4px 16px
+        margin-left 300px // Balanced offset
+        min-width auto
+        transform none
         >section
           padding 8px 32px
 
 
 .menu
-  // background c-dark-blue
-  // background c-main-purple
-  // background c-main-green
+  position fixed
+  top 0
+  left 0
+  height 100vh
+  overflow hidden // No scroll on main container
+  z-index 100
+  background c-menu-dark-bg
   border-top-right-radius: 10px;
   border-bottom-right-radius: 10px;
   min-width 40%
-  //height auto // Asegura que el sidebar ocupe toda la altura de la vista
   transform translate(-100%, 0)
+  padding 40px 0 0 0 // Logout is flush at bottom
+  box-sizing border-box
+  display flex
+  flex-direction column
 
-  background #d209b6;
-  a
-    background  #d209b633
+  .menu-scroll-container
+    flex 1
+    overflow-y auto
+    display flex
+    flex-direction column
+    
+  .text-header
+    border-bottom 1px solid c-menu-border
+    margin-bottom 20px
+    padding 20px
+    
+  .photo-logo
+    margin 30px auto 30px auto
     display block
-    color white
-    font-size 14px
-    padding 16px
-    border: 1px solid transparent // Borde transparente por defecto
-    margin-bottom: 20px
-    border-radius: 10px
-    transition: background-color 0.3s ease
-    i
+    width 210px // Increased from 180px
+    cursor pointer
+
+  a
+    position relative // For absolute positioning the active bar
+    background transparent
+    display flex
+    align-items center
+    color c-menu-text-dim
+    font-size 15px
+    padding 18px 24px // Increased vertical padding
+    border-bottom 1px solid #1C1C1C // Subtle divider between items
+    margin-bottom 0
+    border-radius 0
+    transition all 0.3s ease
+    
+    span // Ensure grouping span is also a flex container
+      display flex
+      align-items center
+    
+    &:first-of-type
+      border-top 1px solid #1C1C1C // Divider above the first item (Inicio)
+    
+    &::before
+      content ''
+      position absolute
+      left 0
+      top 12.5% // Centered vertically for 75% height
+      height 75% // Increased to 75% height
+      width 4px
+      background transparent
+      transition background-color 0.3s ease
+
+    img, i, svg
       width 20px
       text-align center
-      margin-right 10px
+      margin-right 12px
+      opacity 0.7
 
     &:hover
-      background: #9f00ad
-      border-radius: 12px;
-      align-items: center;
+      background rgba(255, 255, 255, 0.05)
+      color white
+      img, i
+        opacity 1
 
-    &.router-link-active
-      background: #9f00ad
-      border-radius: 12px;
-      align-items: center;
+    &.router-link-active, &.active-parent, &.active
+      background transparent
+      color c-menu-active-pink
+      &::before
+        background c-menu-active-pink // Show the shorter bar
+      img, i, svg
+        opacity 1
+        color c-menu-active-pink
+        path
+          fill currentColor
+        &.fa-angle-down
+          transform rotate(180deg) 
+
+    i.fa-angle-down
+      transition transform 0.3s ease
+      font-size 16px
+      margin-left auto
+      margin-right 0
+
+  .logout-button
+    color c-menu-text-dim !important
+    margin-top auto // Push to bottom of the viewport
+    margin-bottom 0 // Flush with bottom
+    border-top 1px solid #1C1C1C // Consistent divider color
+    border-bottom none // Bottom edge of the menu
+    border-left none !important
+    padding 18px 24px
+    display flex
+    align-items center
+    transition all 0.3s ease
+    i
+      color #E91E63 !important // Keep only the icon pink
+      opacity 1
+      width 22px // Slightly reduced from 24px
+      font-size 18px // Slightly reduced from 20px
+      margin-right 12px
+    &:hover
+      background rgba(255, 255, 255, 0.05)
+      color white !important
       
 
 @media (min-width: d-break)
   .menu
     a
-      padding-right 40px
+      padding-right 24px
 
 
 .sub-menu
   display none
+  background c-menu-item-bg
+  border-bottom 1px solid #1C1C1C // Consistent divider after sub-menus
+  margin-bottom 0
+  
   a
-    font-size 10px
-    padding 12px
-    padding-left 32px
-    background: #d209b6
-    transition: background-color 0.3s ease
-
-    &:hover
-      background: #9f00ad
+    font-size 13px
+    padding 16px 24px 16px 48px
+    margin-bottom 2px
+    border-left none
+    background transparent
+    color c-menu-text-dim
+    
+    &::before
+      display none // Only main categories should have the left vertical bar
 
     i
-      width 12.5px
+      font-size 16px !important
+      width 20px
+      text-align center
+      
+    svg
+      width 18px !important
+      height auto
+
+
+    &:hover
+      background rgba(255, 255, 255, 0.05)
+      color white
+
+    &.router-link-active
+      background linear-gradient(90deg, #f06292 0%, #ec407a 100%) // Softer pink/pastel gradient
+      color white !important
+      border-left none
+      border-radius 6px
+      margin 4px 15px
+      padding-left 33px
+      font-weight 600
+      
+      i, svg, img
+        color white !important
+        opacity 1
+        
+        path
+          fill white !important
+          
+      i
+        font-size 16px // Reduced size significantly for sub-options
+
+
+  
   &.active
     display block
+    border-radius 8px
 
 
 // Dashboard

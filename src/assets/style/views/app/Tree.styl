@@ -33,6 +33,22 @@
       transform translateY(0) scale(1)
 
   // Estilos adicionales para Tree.vue
+  .mode-selector
+    display flex
+    flex-direction column
+    align-items center
+    justify-content flex-start
+    text-align center
+    margin-top 40px
+    margin-bottom 40px
+
+  .mode-title
+    font-size 28px
+    font-weight 700
+    color #333
+    text-align center
+    margin 30px 0 40px 0
+
   .cards-container
     display flex
     gap 45px
@@ -788,9 +804,10 @@
     .cards-container
       display grid
       grid-template-columns repeat(2, 1fr)
-      gap 15px
-      max-width 350px
-      margin 0 auto 40px auto
+      gap 12px
+      max-width 360px
+      margin 10px auto 32px auto
+      padding 0 16px
     
     .mode-selector .card
       width 140px
@@ -825,9 +842,10 @@
   // Para móviles muy pequeños
   @media (max-width: 480px)
     .cards-container
-      gap 12px
-      max-width 300px
-      margin 0 auto 30px auto
+      gap 10px
+      max-width 320px
+      margin 12px auto 28px auto
+      padding 0 16px
     
     .mode-selector .card
       width 120px

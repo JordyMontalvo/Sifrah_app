@@ -279,7 +279,7 @@ export default {
       // Verificar si ya existe el link para no duplicarlo
       if (!document.querySelector('link[href*="fonts.googleapis.com/css2?family=Dancing"]')) {
         const link = document.createElement('link');
-        link.href = 'https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&family=Great+Vibes&family=Pacifico&family=Montserrat:wght@900&family=Source+Serif+Pro:wght@700&display=swap';
+        link.href = 'https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&family=Great+Vibes&family=Pacifico&family=Montserrat:wght@300;400;500;600;700;900&family=Source+Serif+Pro:wght@700&display=swap';
         link.rel = 'stylesheet';
         document.head.appendChild(link);
       }
@@ -943,9 +943,12 @@ export default {
 
 <style lang="stylus" scoped>
 .flyer-editor
-  padding 20px
-  background-color #f5f5f5
-  min-height calc(100vh - 100px)
+  // Unificar el diseño con el resto de vistas del app layout:
+  // dejamos que el padding y el fondo lo maneje el contenedor interno
+  // para evitar el “salto” visual al cambiar de ruta.
+  padding 0
+  background-color transparent
+  min-height auto
 
 .editor-container
   display flex

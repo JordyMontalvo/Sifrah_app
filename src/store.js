@@ -246,6 +246,9 @@ export default new Vuex.Store({
     SET_OPEN: (state) => {
       state.open = !state.open
     },
+    FORCE_CLOSE_MENU: (state) => {
+      state.open = false
+    },
     SET_RESUME: (state) => {
       state.resume = !state.resume
       state.buys = false
