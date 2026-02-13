@@ -27,22 +27,7 @@
   margin: 0;
 }
 
-.section-header {
-  margin-bottom: 20px;
-}
 
-.section-header h3 {
-  color: #4a4a4a;
-  font-size: 20px;
-  font-weight: bold;
-  margin: 0 0 8px 0;
-}
-
-.section-header p {
-  color: #888;
-  font-size: 14px;
-  margin: 0;
-}
 
 /* Nivel Actual Redesign */
 .nivel-actual-section {

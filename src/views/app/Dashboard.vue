@@ -56,9 +56,6 @@
         <div class="dashboard-row">
           <!-- Nivel Actual Rediseñado -->
           <div class="dashboard-section nivel-actual-section">
-            <div class="section-header">
-              <h3>Nivel Actual</h3>
-            </div>
             
             <!-- Shortcuts Row -->
             <div class="shortcuts-row">
