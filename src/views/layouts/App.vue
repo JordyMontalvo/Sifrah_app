@@ -662,8 +662,8 @@
     </div>
 
     <footer class="footer-Dashboard">
-      <a @click="handleInicioClick">
-        <img src="@/assets/img/home-icon.svg" alt="Inicio" style="width: 20px; height: 20px;">
+      <a @click="handleInicioClick" :class="{ 'active': $route.path === '/dashboard' || $route.path === '/' }">
+        <i class="fas fa-home"></i>
         Inicio
       </a>
       <router-link to="/activation" v-if="affiliated" @click.native="handleNavigationClick">
