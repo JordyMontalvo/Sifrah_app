@@ -1,22 +1,30 @@
-/* Nuevo Dashboard Styles */
 .dashboard-container {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
   background: #fff;
   min-height: 100vh;
-  padding: 20px;
+  padding: 0;
+  overflow-x: hidden;
 }
 
 .dashboard-row {
+  box-sizing: border-box;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
   gap: 20px;
   margin-bottom: 20px;
+  width: 100%;
 }
 
 .dashboard-section {
+  box-sizing: border-box;
   background: white;
   border-radius: 16px;
   padding: 20px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  width: 100%;
+  margin: 0;
 }
 
 .section-header {
@@ -294,7 +302,34 @@
   font-size: 23px;
 }
 
-@media (max-width: 480px) {
+@media (max-width: 767px) {
+
+  .dashboard-container,
+  .dashboard-section,
+  .nivel-actual-section,
+  .max-rank-banner,
+  .stat-card {
+    box-sizing: border-box !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  .dashboard-container {
+    padding: 5px !important;
+    width: 100% !important;
+    overflow-x: hidden;
+  }
+
+  .dashboard-row {
+    display: flex !important;
+    flex-direction: column;
+    width: 100% !important;
+    grid-template-columns: 1fr !important;
+    gap: 15px;
+  }
+
   .nivel-actual-section {
     padding: 15px 12px;
   }
@@ -308,7 +343,24 @@
   }
 
   .shortcuts-row {
-    gap: 5px;
+    display: flex;
+    justify-content: flex-start;
+    gap: 10px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding-bottom: 5px;
+  }
+
+  .shortcuts-row::-webkit-scrollbar {
+    display: none;
+  }
+
+  .shortcut-item {
+    flex: 0 0 calc(25% - 10px);
+    scroll-snap-align: start;
+    min-width: 65px;
   }
 
   .shortcut-icon {
@@ -348,6 +400,10 @@
 
   .stat-value {
     font-size: 18px;
+  }
+
+  .pink-icon {
+    font-size: 20px;
   }
 }
 

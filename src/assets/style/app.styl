@@ -1,9 +1,15 @@
+*
+  box-sizing border-box
+
 @import 'vars.styl'
 
 body, .app
   font-family global-font
   background app-bg
   color app-text
+  margin 0
+  padding 0
+  overflow-x hidden
 
 // Tarjetas y contenedores
 .card, .profile-glass-card
@@ -132,7 +138,7 @@ body, .app
       min-width 70%
       transform translate(-100%, 0)
     .content
-      min-width 100%
+      width 100%
       // Antes el contenido se desplazaba -70% para el efecto "push", lo que en móvil
       // hacía que solo se viera un pedazo de la vista y el resto fuera espacio en blanco.
       // Ahora el contenido ocupa siempre el 100% del ancho cuando el menú está oculto.

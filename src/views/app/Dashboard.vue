@@ -63,25 +63,25 @@
             <!-- Shortcuts Row -->
             <div class="shortcuts-row">
               <router-link to="/tools" class="shortcut-item">
-                <div class="shortcut-icon"><i class="fas fa-bullhorn"></i></div>
-                <span>Audios</span>
+                <div class="shortcut-icon"><i class="fas fa-graduation-cap"></i></div>
+                <span>Educación</span>
               </router-link>
               <router-link to="/tools" class="shortcut-item">
                 <div class="shortcut-icon"><i class="fas fa-headphones"></i></div>
                 <span>Audios</span>
               </router-link>
               <router-link to="/tools" class="shortcut-item">
-                <div class="shortcut-icon"><i class="fas fa-quote-left"></i></div>
-                <span>Testimonios</span>
-              </router-link>
-              <router-link to="/tools" class="shortcut-item">
-                <div class="shortcut-icon"><i class="fas fa-graduation-cap"></i></div>
-                <span>Educación</span>
+                <div class="shortcut-icon"><i class="fas fa-book"></i></div>
+                <span>Libros</span>
               </router-link>
               <router-link to="/flyer-editor" class="shortcut-item">
                 <div class="shortcut-icon"><i class="fas fa-bullhorn rotate-icon"></i></div>
                 <span>Flyers</span>
               </router-link>
+              <a href="https://www.youtube.com/playlist?list=PLWYJViqkAe6HpJyjfc1vw01o5lThSUulM" target="_blank" class="shortcut-item">
+                <div class="shortcut-icon"><i class="fas fa-quote-left"></i></div>
+                <span>Testimonios</span>
+              </a>
             </div>
 
             <!-- Max Rank Banner -->
