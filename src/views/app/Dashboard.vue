@@ -54,49 +54,66 @@
       <div v-else class="dashboard-container">
         <!-- Top Row -->
         <div class="dashboard-row">
-          <!-- Nivel Actual -->
-          <div class="dashboard-section">
+          <!-- Nivel Actual Rediseñado -->
+          <div class="dashboard-section nivel-actual-section">
             <div class="section-header">
               <h3>Nivel Actual</h3>
             </div>
-            <div class="level-card">
-              <div class="level-icon">
-                <div class="medal-icon">
-                  <i class="fas fa-gem"></i>
-                  <span class="medal-text">{{ rank | _rank }}</span>
-                </div>
+            
+            <!-- Shortcuts Row -->
+            <div class="shortcuts-row">
+              <router-link to="/tools" class="shortcut-item">
+                <div class="shortcut-icon"><i class="fas fa-bullhorn"></i></div>
+                <span>Audios</span>
+              </router-link>
+              <router-link to="/tools" class="shortcut-item">
+                <div class="shortcut-icon"><i class="fas fa-headphones"></i></div>
+                <span>Audios</span>
+              </router-link>
+              <router-link to="/tools" class="shortcut-item">
+                <div class="shortcut-icon"><i class="fas fa-quote-left"></i></div>
+                <span>Testimonios</span>
+              </router-link>
+              <router-link to="/tools" class="shortcut-item">
+                <div class="shortcut-icon"><i class="fas fa-graduation-cap"></i></div>
+                <span>Educación</span>
+              </router-link>
+              <router-link to="/flyer-editor" class="shortcut-item">
+                <div class="shortcut-icon"><i class="fas fa-bullhorn rotate-icon"></i></div>
+                <span>Flyers</span>
+              </router-link>
+            </div>
+
+            <!-- Max Rank Banner -->
+            <div class="max-rank-banner">
+              <div class="banner-info">
+                <span class="banner-title">Rango Máximo Alcanzado</span>
+                <span class="banner-rank">{{ rank | _rank }}</span>
               </div>
-              <div class="level-info">
-                <!-- <h4>{{ plan }}</h4> -->
+              <div class="rank-badge">
+                <i class="fas fa-gem gem-icon"></i>
+                <span class="sparkle s1"></span>
+                <span class="sparkle s2"></span>
+                <span class="sparkle s3"></span>
+                <span class="sparkle s4"></span>
               </div>
             </div>
-            <div class="metrics-grid">
-              <div class="metric-card">
-                <i class="fas fa-user"></i>
-                <div class="metric-content">
-                  <span class="metric-value">{{ points || 0 }}</span>
-                  <span class="metric-label">Puntos Personales</span>
+
+            <!-- Bottom Stats Row -->
+            <div class="stats-row">
+              <div class="stat-card">
+                <div class="stat-header">
+                  <span class="stat-label">Saldo Ganado</span>
                 </div>
+                <span class="stat-value">S/ {{ Number(ins + insVirtual).toLocaleString('es-PE', { minimumFractionDigits: 2 }) }}</span>
               </div>
-              <div class="metric-card">
-                <i class="fas fa-users"></i>
-                <div class="metric-content">
-                  <span class="metric-value">{{ directs ? directs.length : 0 }}</span>
-                  <span class="metric-label">Directos</span>
+              <div class="stat-card">
+                <div class="stat-header">
+                  <span class="stat-label">Total de Personas</span>
                 </div>
-              </div>
-              <div class="metric-card">
-                <i class="fas fa-star"></i>
-                <div class="metric-content">
-                  <span class="metric-value">{{ rank | _rank }}</span>
-                  <span class="metric-label">Rango Actual</span>
-                </div>
-              </div>
-              <div class="metric-card">
-                <i class="fas fa-users"></i>
-                <div class="metric-content">
-                  <span class="metric-value">{{ total_points }}</span>
-                  <span class="metric-label">Puntos Grupales</span>
+                <div class="stat-row-item">
+                  <span class="stat-value">{{ n_affiliates || 0 }}</span>
+                  <i class="fas fa-users pink-icon"></i>
                 </div>
               </div>
             </div>
