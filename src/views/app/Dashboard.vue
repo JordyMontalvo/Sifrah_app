@@ -96,199 +96,114 @@
               </div>
             </div>
 
-            <!-- Bottom Stats Row -->
+            <!-- Bottom Stats Row (Keeping for reference as requested, but maybe user wanted to replace them? I will keep them but focus the 8 new cards below) -->
             <div class="stats-row">
               <div class="stat-card">
                 <div class="stat-header">
                   <span class="stat-label">Saldo Ganado</span>
                 </div>
                 <span class="stat-value">S/ {{ Number(ins + insVirtual).toLocaleString('es-PE', { minimumFractionDigits: 2 }) }}</span>
+                <div class="stat-icon"><i class="fas fa-wallet"></i></div>
               </div>
               <div class="stat-card">
                 <div class="stat-header">
                   <span class="stat-label">Total de Personas</span>
                 </div>
                 <div class="stat-row-item">
-                  <span class="stat-value">{{ n_affiliates || 0 }}</span>
-                  <i class="fas fa-users pink-icon"></i>
+                  <span class="stat-value">{{ n_affiliates_total || 0 }}</span>
                 </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Rango Diamante -->
-          <div class="dashboard-section">
-            <div class="section-header">
-              <h3>Rango Diamante</h3>
-            </div>
-            <div class="rank-progress">
-              <div class="circular-progress">
-                <div class="progress-circle">
-                  <div class="progress-fill" :style="{ transform: `rotate(${75 * 4.6}deg)` }"></div>
-                  <div class="progress-center">
-                    <i class="fas fa-medal"></i>
-                  </div>
-                </div>
-                <div class="progress-text">
-                  <span class="progress-percentage">75%</span>
-                  <span class="progress-label">Avance actual</span>
-                  <span class="progress-subtitle">a 32% de subir a Segundo Diamante</span>
-                </div>
-              </div>
-              <div class="rank-metrics">
-                <div class="metric-card">
-                  <i class="fas fa-user"></i>
-                  <div class="metric-content">
-                    <span class="metric-value">{{ points || 0 }}</span>
-                    <span class="metric-label">Puntos Personales</span>
-                    <div class="metric-progress">
-                      <div class="progress-bar" style="width: 60%"></div>
-                    </div>
-                  </div>
-                </div>
-                <div class="metric-card dark">
-                  <i class="fas fa-users"></i>
-                  <div class="metric-content">
-                    <span class="metric-value">{{ directs ? directs.length : 0 }}</span>
-                    <span class="metric-label">Directos</span>
-                    <div class="metric-progress">
-                      <div class="progress-bar" style="width: 75%"></div>
-                    </div>
-                  </div>
-                </div>
-                <div class="metric-card">
-                  <i class="fas fa-star"></i>
-                  <div class="metric-content">
-                    <span class="metric-value">{{ rank | _rank }}</span>
-                    <span class="metric-label">Rango Actual</span>
-                    <div class="metric-progress">
-                      <div class="progress-bar" style="width: 45%"></div>
-                    </div>
-                  </div>
-                </div>
-                <div class="metric-card dark">
-                  <i class="fas fa-users"></i>
-                  <div class="metric-content">
-                    <span class="metric-value">{{ total_points }}</span>
-                    <span class="metric-label">Puntos Grupales</span>
-                    <div class="metric-progress">
-                      <div class="progress-bar" style="width: 80%"></div>
-                    </div>
-                  </div>
-                </div>
+                <div class="stat-icon"><i class="fas fa-users"></i></div>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Middle Row -->
-        <div class="dashboard-row">
-          <!-- Pack de Afiliación -->
-          <div class="dashboard-section">
-            <div class="affiliation-pack">
-              <div class="pack-content">
-                <h4>Pack de Afiliación</h4>
-                <p v-if="userPlan && userPlan.name">{{ userPlan.name }}</p>
-                <p v-else>{{ plan }}</p>
+        <!-- New Info Cards Grid (8 Cards) -->
+        <div class="new-dashboard-grid">
+          <!-- 1. Próximo Rango -->
+          <div class="info-card">
+            <div class="info-icon"><i class="fas fa-chart-line"></i></div>
+            <div class="info-content">
+              <span class="info-title">Próximo Rango</span>
+              <span class="info-value">{{ provisionalRank | _rank }}</span>
+              <div class="progress-container">
+                <div class="progress-bar-new" :style="{ width: nextRankPercentage + '%' }"></div>
               </div>
-              <div class="pack-icon">
-                <img v-if="userPlan && userPlan.img" :src="userPlan.img" alt="Imagen del plan" style="width: 40px; height: 40px; border-radius: 50%; background: #fff; padding: 5px;" />
-                <i v-else class="fas fa-medal"></i>
-              </div>
+              <span class="info-subtitle">{{ nextRankPercentage }}% para alcanzar {{ nextRankName | _rank }}</span>
             </div>
           </div>
 
-          <!-- Comisiones -->
-          <div class="dashboard-section">
-            <div class="section-header">
-              <h3>Comisiones</h3>
-              <p>Completa los porcentajes y ¡disfruta el viaje!</p>
-            </div>
-            <div class="commissions-grid">
-              <div class="commission-card">
-                <div class="commission-icon gold">
-                  <i class="fas fa-medal"></i>
-                </div>
-                <div class="commission-content">
-                  <span class="commission-value">{{ balance || 0 }}</span>
-                  <span class="commission-label">Saldo Disponible</span>
-                </div>
-              </div>
-              <div class="commission-card">
-                <div class="commission-icon blue">
-                  <i class="fas fa-medal"></i>
-                </div>
-                <div class="commission-content">
-                  <span class="commission-value">{{ _balance || 0 }}</span>
-                  <span class="commission-label">Saldo No Disponible</span>
-                </div>
-              </div>
-              <div class="commission-card">
-                <div class="commission-icon purple">
-                  <i class="fas fa-medal"></i>
-                </div>
-                <div class="commission-content">
-                  <span class="commission-value">{{ Number(ins + insVirtual).toFixed(2) }}</span>
-                  <span class="commission-label">Total Ganado</span>
-                </div>
-              </div>
+          <!-- 2. Saldo disponible -->
+          <div class="info-card">
+            <div class="info-icon"><i class="fas fa-wallet"></i></div>
+            <div class="info-content">
+              <span class="info-title">Saldo Disponible</span>
+              <span class="info-value">S/ {{ (balance || 0).toLocaleString('es-PE', { minimumFractionDigits: 2 }) }}</span>
             </div>
           </div>
 
-          <!-- Bono Viaje -->
-          <div class="dashboard-section">
-            <div class="section-header">
-              <h3>Bono Viaje</h3>
-              <p>Estado y progreso del socio</p>
-            </div>
-            <div class="travel-bonus-info">
-              <div class="travel-bonus-text">
-                <p>{{ travelBonusText || 'Tu progreso hacia el Bono Viaje se actualizará próximamente. ¡Sigue trabajando para alcanzar tus objetivos!' }}</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Bottom Row -->
-        <div class="dashboard-row">
-          <!-- Últimos Ingresos -->
-          <div class="dashboard-section">
-            <div class="section-header">
-              <h3>Últimos Ingresos</h3>
-            </div>
-            <div class="latest-incomes">
-              <div v-if="directs && directs.length > 0" v-for="direct in directs.slice(0, 4)" :key="direct.id" class="income-item">
-                <div class="income-avatar">
-                  <img v-if="direct.photo" :src="direct.photo" alt="Avatar" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;" />
-                  <i v-else class="fas fa-user"></i>
-                </div>
-                <div class="income-content">
-                  <span class="income-name">{{ direct.name }} {{ direct.lastName }}</span>
-                  <span class="income-pack">{{ direct.plan || 'Usuario' }}</span>
-                </div>
-              </div>
-              <div v-if="!directs || directs.length === 0" class="income-item">
-                <div class="income-avatar">
-                  <i class="fas fa-user"></i>
-                </div>
-                <div class="income-content">
-                  <span class="income-name">No hay directos</span>
-                  <span class="income-pack">Aún no tienes afiliados</span>
-                </div>
-              </div>
+          <!-- 3. Total Ganado -->
+          <div class="info-card">
+            <div class="info-icon"><i class="fas fa-dollar-sign"></i></div>
+            <div class="info-content">
+              <span class="info-title">Total Ganado</span>
+              <span class="info-value">S/ {{ Number(ins + insVirtual).toLocaleString('es-PE', { minimumFractionDigits: 2 }) }}</span>
             </div>
           </div>
 
-          <!-- Comisiones Card -->
-          <div class="dashboard-section">
-            <div class="commissions-summary">
-              <div class="summary-icon">
-                <i class="fas fa-bullseye"></i>
-              </div>
-              <div class="summary-content">
-                <span class="summary-value">{{ Number(ins + insVirtual).toFixed(2) }}</span>
-                <span class="summary-label">Total Ganado</span>
-              </div>
+          <!-- 4. Rango Cerrado -->
+          <div class="info-card">
+            <div class="info-icon"><i class="fas fa-award"></i></div>
+            <div class="info-content">
+              <span class="info-title">Rango Cerrado</span>
+              <span class="info-value">{{ rank | _rank }}</span>
+            </div>
+          </div>
+
+          <!-- 5. Personas en tu Red -->
+          <div class="info-card">
+            <div class="info-icon"><i class="fas fa-network-wired"></i></div>
+            <div class="info-content">
+              <span class="info-title">Personas en tu Red</span>
+              <span class="info-value">{{ n_affiliates_total || 0 }}</span>
+              <span class="info-subtitle">Cantidad de personas en tu red</span>
+            </div>
+          </div>
+
+          <!-- 6. Saldo no disponible -->
+          <div class="info-card">
+            <div class="info-icon"><i class="fas fa-lock"></i></div>
+            <div class="info-content">
+              <span class="info-title">Saldo No Disponible</span>
+              <span class="info-value">S/ {{ (_balance || 0).toLocaleString('es-PE', { minimumFractionDigits: 2 }) }}</span>
+            </div>
+          </div>
+
+          <!-- 7. Pack afiliación -->
+          <div class="info-card">
+            <div class="info-icon"><i class="fas fa-box-open"></i></div>
+            <div class="info-content">
+              <span class="info-title">Pack Afiliación</span>
+              <span class="info-value">{{ formattedPlan }}</span>
+            </div>
+          </div>
+
+          <!-- 8. Total de puntos grupales -->
+          <div class="info-card">
+            <div class="info-icon"><i class="fas fa-star"></i></div>
+            <div class="info-content">
+              <span class="info-title">Total de Puntos Grupales</span>
+              <span class="info-value">{{ total_points || 0 }}</span>
+            </div>
+          </div>
+
+          <!-- 9. Bono Ahorro -->
+          <div class="info-card">
+            <div class="info-icon"><i class="fas fa-piggy-bank"></i></div>
+            <div class="info-content">
+              <span class="info-title">Bono Ahorro</span>
+              <span class="info-value">S/ 0.00</span>
+              <span class="info-subtitle">Saldo Canjeable</span>
             </div>
           </div>
         </div>
@@ -323,8 +238,11 @@ export default {
       frontals: [],
       loading: true,
       plans: null,
-      plan: null ,
       total_points: null,
+      n_affiliates_total: 0,
+      nextRankName: "",
+      nextRankPercentage: 0,
+      provisionalRank: "",
       travelBonusText: null,
 
       op: 1,
@@ -339,12 +257,16 @@ export default {
     session() {
       return this.$store.state.session;
     },
-    plan() {
-      if (this.$store.state.plan == "early") return "CLIENTE PREFERENTE";
-      if (this.$store.state.plan == "basic") return "EJECUTIVO";
-      if (this.$store.state.plan == "standard") return "DISTRIBUIDOR";
-      if (this.$store.state.plan == "master") return "EMPRESARIO";
-      return this.$store.state.plan;
+    formattedPlan() {
+      const p = this.$store.state.plan || this.plan;
+      if (!p || p === 'none') return "Ninguno";
+      const v = p.toLowerCase();
+      if (v == "early") return "Cliente preferente";
+      if (v == "basic") return "Ejecutivo";
+      if (v == "standard") return "Distribuidor";
+      if (v == "business") return "Empresarial";
+      if (v == "master") return "Empresario";
+      return p.charAt(0).toUpperCase() + p.slice(1).toLowerCase();
     },
     userPlan() {
       if (!this.plans) return null;
@@ -362,17 +284,26 @@ export default {
   },
   filters: {
     _rank(val) {
-      if (val == "none") return "Ninguno";
-      if (val == "active") return "ACTIVO";
-      if (val == "star") return "BRONCE";
-      if (val == "silver") return "PLATA";
-      if (val == "si") return "PLATINO";
-      if (val == "gold") return "ORO";
-      if (val == "sapphire") return "ZAFIRO";
-      if (val == "ruby") return "RUBY";
-      if (val == "emerald") return "ESMERALDA";
-      if (val == "diamond") return "DIAMANTE";
-      if (val == "master") return "MASTER";
+      if (!val) return "Ninguno";
+      const v = val.toLowerCase();
+      let result = "";
+      if (v == "none") result = "Ninguno";
+      else if (v == "active") result = "Activo";
+      else if (v == "star") result = "Bronce";
+      else if (v == "master") result = "Master";
+      else if (v == "silver") result = "Plata";
+      else if (v == "si") result = "Platino";
+      else if (v == "gold") result = "Oro";
+      else if (v == "sapphire") result = "Zafiro";
+      else if (v == "rubi" || v == "ruby") result = "Ruby";
+      else if (v == "emerald") result = "Esmeralda";
+      else if (v == "diamond" || v == "diamante") result = "Diamante";
+      else if (v.includes("doble diamante")) result = "Doble diamante";
+      else if (v.includes("triple diamante")) result = "Triple diamante";
+      else if (v.includes("diamante estrella")) result = "Diamante estrella";
+      else result = v;
+
+      return result.charAt(0).toUpperCase() + result.slice(1).toLowerCase();
     },
   },
   methods: {
@@ -447,9 +378,13 @@ export default {
     this.points = data.points;
     this.node = data.node || {};
     this.n_affiliates = data.n_affiliates;
+    this.n_affiliates_total = data.n_affiliates_total || 0;
     this.directs = data.directs || [];
     this.frontals = data.frontals || [];
     this.total_points = data.total_points;
+    this.nextRankName = data.nextRankName || "";
+    this.nextRankPercentage = data.nextRankPercentage || 0;
+    this.provisionalRank = data.provisionalRank || "none";
     this.travelBonusText = data.travelBonusText || 'Tu progreso hacia el Bono Viaje se actualizará próximamente. ¡Sigue trabajando para alcanzar tus objetivos!';
 
     // Iniciar autoplay del banner si corresponde
