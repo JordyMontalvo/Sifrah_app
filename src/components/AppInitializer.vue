@@ -219,7 +219,7 @@ export default {
   width: 50px;
   height: 50px;
   border: 4px solid #f3f3f3;
-  border-top: 4px solid #ff9800;
+  border-top: 4px solid #e91e63;
   border-radius: 50%;
   animation: spin 1s linear infinite;
   margin-bottom: 20px;

@@ -212,8 +212,8 @@
                 <i class="fas fa-trophy trophy-icon-closed"></i>
               </div>
               <div class="closed-rank-center">
-                <span class="dash-card-title" style="color: #ccc !important">Rango Cerrado</span>
-                <span class="dash-card-value" style="color: #fff !important">{{ rank | _rank }}</span>
+                <span class="banner-title">Rango Cerrado</span>
+                <span class="banner-rank">{{ rank | _rank }}</span>
               </div>
             </div>
             <div class="closed-rank-right">
