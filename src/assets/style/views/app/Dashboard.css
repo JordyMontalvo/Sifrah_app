@@ -51,9 +51,9 @@
 }
 
 .dash-card-value {
-  font-size: 24px;
+  font-size: 20px;
   color: #111;
-  font-weight: 700;
+  font-weight: 600;
   margin: 0;
   line-height: 1.2;
 }
@@ -422,7 +422,7 @@
 
   .dash-card-value,
   .dash-card-value-magenta {
-    font-size: 20px !important;
+    font-size: 18px !important;
     display: inline-block;
   }
 
