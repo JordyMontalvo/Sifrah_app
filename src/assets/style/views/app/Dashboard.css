@@ -42,6 +42,38 @@
   gap: 10px;
 }
 
+.dash-card-title {
+  font-size: 16px;
+  font-weight: 500;
+  color: #666;
+  margin: 0 0 4px 0;
+  line-height: 1.2;
+}
+
+.dash-card-value {
+  font-size: 24px;
+  color: #111;
+  font-weight: 700;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.dash-card-value-magenta {
+  font-size: 24px;
+  color: #B22D6E;
+  font-weight: 700;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.dash-card-subtitle {
+  font-size: 13px;
+  color: #999;
+  font-weight: 400;
+  margin: 4px 0 0 0;
+  line-height: 1.2;
+}
+
 .shortcut-item {
   display: flex;
   flex-direction: column;
@@ -107,7 +139,9 @@
   width: 100%;
   height: 100%;
   background: url('https://www.transparenttextures.com/patterns/carbon-fibre.png');
-  opacity: 0.15;
+  opacity: 0.45;
+  transform: none !important;
+  pointer-events: none;
 }
 
 .banner-info {
@@ -249,11 +283,11 @@
   background: #fff;
   border: 1px solid #f0f0f0;
   border-radius: 12px;
-  padding: 18px 22px;
+  padding: 16px 20px;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: center;
   min-height: 100px;
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
   overflow: hidden;
@@ -289,6 +323,32 @@
 
 .stat-card:hover::before {
   transform: scaleX(1);
+}
+
+/* Premium icons for stat cards */
+.stat-icon-premium {
+  position: absolute;
+  right: 15px;
+  bottom: 12px;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 1;
+  z-index: 1;
+}
+
+.money-bag-stat-svg {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.2));
+}
+
+.team-stat-svg {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 4px 6px rgba(233, 30, 99, 0.2));
 }
 
 .stat-icon {
@@ -333,23 +393,7 @@
 }
 
 
-.stat-label {
-  font-size: 20px;
-  color: #666;
-  margin: 0;
-  font-weight: 500;
-  transition: color 0.3s ease;
-}
-
-.stat-card:hover .stat-label {
-  color: #333;
-}
-
-.stat-value {
-  font-size: 20px;
-  font-weight: bold;
-  color: #111;
-}
+/* Standard typography applied via Dashboard.vue */
 
 @media (max-width: 767px) {
 
@@ -366,9 +410,24 @@
   }
 
   .dashboard-container {
-    padding: 5px !important;
+    padding: 10px 6px !important;
     width: 100% !important;
     overflow-x: hidden;
+  }
+
+  /* Mobile Typography Standardizations */
+  .dash-card-title {
+    font-size: 14px !important;
+  }
+
+  .dash-card-value,
+  .dash-card-value-magenta {
+    font-size: 20px !important;
+    display: inline-block;
+  }
+
+  .dash-card-subtitle {
+    font-size: 11px !important;
   }
 
   .dashboard-row {
@@ -387,8 +446,20 @@
     padding: 15px 16px;
   }
 
-  .stat-card {
-    padding: 15px 14px;
+  .stats-row {
+    gap: 5px !important;
+  }
+
+  .stat-card,
+  .info-card {
+    padding: 15px 10px !important;
+    min-height: 100px !important;
+  }
+
+  .new-dashboard-grid {
+    grid-template-columns: 1fr !important;
+    padding: 10px !important;
+    gap: 12px !important;
   }
 
   .shortcuts-row {
@@ -443,16 +514,145 @@
     font-size: 32px;
   }
 
+  /* Icon Scaling for Mobile */
+  .money-bag-container,
+  .wallet-container,
+  .piggy-bank-container {
+    width: 70px !important;
+    height: 70px !important;
+  }
+
+  .gauge-container {
+    width: 100px !important;
+    height: 65px !important;
+  }
+
+  .trophy-icon-closed {
+    font-size: 28px !important;
+  }
+
+  .rank-badge.static {
+    width: 45px !important;
+    height: 45px !important;
+  }
+
+  .gem-icon-closed {
+    font-size: 32px !important;
+  }
+
+  /* Specific Adjustments */
+  .merged-column {
+    padding: 12px 16px !important;
+  }
+
+  .merged-value-container {
+    padding-left: 0 !important;
+    margin-top: 4px;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    text-align: center !important;
+  }
+
+
+  .merged-header {
+    gap: 8px !important;
+  }
+
+  .merged-icon {
+    width: 30px !important;
+    height: 25px !important;
+  }
+
+  .personal-top-row {
+    padding: 10px 12px !important;
+  }
+
+  .personal-bottom-banner,
+  .pack-banner-box {
+    margin: 0 15px 15px 15px !important;
+    min-height: 45px !important;
+    padding: 0 12px !important;
+  }
+
+  .pack-content-wrapper .dash-card-title {
+    padding: 10px 12px 2px 12px !important;
+  }
+
   .stat-label {
     font-size: 14px;
+    display: none;
+    /* Replaced by dash-card-title */
   }
 
   .stat-value {
     font-size: 18px;
+    display: none;
+    /* Replaced by dash-card-value */
   }
 
-  .pink-icon {
-    font-size: 20px;
+  .stat-icon-premium {
+    width: 40px !important;
+    height: 40px !important;
+    right: 8px !important;
+    top: 60%;
+    transform: translateY(-50%);
+    bottom: auto !important;
+    opacity: 0.9;
+  }
+
+  .closed-rank-card {
+    min-height: 77px !important;
+    padding: 10px !important;
+  }
+
+  .closed-rank-right {
+    width: 90px !important;
+  }
+
+  .trophy-icon-closed {
+    font-size: 24px !important;
+  }
+
+  .gem-icon-closed {
+    font-size: 32px !important;
+    margin-left: 20px !important;
+  }
+
+  .next-rank-card {
+    order: 1;
+  }
+
+  .closed-rank-card {
+    order: 2;
+  }
+
+  .total-ganado-card {
+    order: 3;
+  }
+
+  .personal-points-card {
+    order: 4;
+  }
+
+  .merged-stats-card {
+    order: 5;
+  }
+
+  .saldo-disponible-card {
+    order: 6;
+  }
+
+  .saldo-no-disponible-card {
+    order: 7;
+  }
+
+  .pack-afiliacion-card {
+    order: 8;
+  }
+
+  .bono-ahorro-card {
+    order: 9;
   }
 }
 
@@ -1133,11 +1333,11 @@
 .info-card {
   background: #ffffff;
   border-radius: 12px;
-  padding: 22px 24px;
+  padding: 16px 20px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  min-height: 110px;
+  justify-content: center;
+  min-height: 130px;
   color: #333;
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
   border: 1px solid #f0f0f0;
@@ -1241,35 +1441,529 @@
   width: 100%;
 }
 
-.info-title {
-  font-size: 20px;
-  color: #666;
-  text-transform: none;
-  letter-spacing: normal;
-  margin-bottom: 5px;
-  font-weight: 500;
-}
+/* Standard info typography applied */
 
-.info-value {
-  font-size: 20px;
-  color: #111;
-  word-break: break-all;
-}
-
-.info-subtitle {
-  font-size: 13px;
-  color: #E91E63;
-  margin-top: 8px;
-  font-weight: 500;
-}
-
-.progress-container {
+.info-content-horizontal {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   width: 100%;
-  height: 6px;
-  background: #f0f0f0;
-  border-radius: 3px;
-  margin-top: 8px;
+  gap: 10px;
+}
+
+.info-text-side {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.next-rank-highlight {
+  color: #111;
+  font-weight: 700;
+}
+
+.gauge-container {
+  width: 120px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  margin-top: 0;
+}
+
+.gauge-svg {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.05));
+}
+
+.needle {
+  transform-origin: 50% 50px;
+  transition: transform 1.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.money-bag-container {
+  width: 90px;
+  height: 90px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.money-bag-svg {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+}
+
+.total-ganado-card {
+  min-height: 110px !important;
+  padding: 12px 20px !important;
+}
+
+/* Merged Network & Points Card */
+.merged-stats-card {
+  grid-column: span 2;
+  display: flex !important;
+  flex-direction: row !important;
+  padding: 0 !important;
+  background: #fff;
+  background-image: radial-gradient(#f0f0f0 1.2px, transparent 1.2px);
+  background-size: 20px 20px;
+  min-height: 110px !important;
+}
+
+.merged-column {
+  flex: 1;
+  padding: 15px 25px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.merged-divider {
+  width: 1px;
+  background: #eee;
+  margin: 15px 0;
+}
+
+.merged-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.merged-icon {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: none !important;
+  /* Disable hover animation */
+}
+
+.info-card:hover .merged-icon {
+  transform: none !important;
+  /* Prevent movement on hover */
+}
+
+.merged-icon svg {
+  width: 100%;
+  height: 100%;
+  opacity: 0.9;
+}
+
+.merged-title {
+  font-size: 20px;
+  color: #333;
+  font-weight: 500;
+}
+
+.merged-value-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: -5px;
+  text-align: center;
+  width: 100%;
+}
+
+.merged-value {
+  font-size: 32px;
+  font-weight: 700;
+  color: #222;
+  line-height: 1.1;
+}
+
+.merged-subtitle {
+  font-size: 14px;
+  color: #666;
+  margin-top: 5px;
+}
+
+.merged-subtitle.accent {
+  color: #E91E63;
+  opacity: 0.8;
+}
+
+@media (max-width: 992px) {
+  .merged-stats-card {
+    grid-column: span 1;
+    flex-direction: column !important;
+    min-height: auto !important;
+  }
+
+  .merged-divider {
+    width: 100%;
+    height: 1px;
+    margin: 0;
+  }
+
+  .merged-divider.thin {
+    width: 1px;
+    height: 40px;
+    margin: 0 10px;
+  }
+
+  .merged-value-container {
+    margin-left: 0;
+    align-items: center;
+    padding-left: 0;
+    width: 100%;
+  }
+}
+
+/* Puntos Personales Card */
+.personal-points-card {
+  padding: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  min-height: 130px !important;
+  justify-content: space-between;
+}
+
+.personal-top-row {
+  display: flex;
+  flex: 1;
+  padding: 8px 15px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.personal-info-side {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.personal-icon-wrapper {
+  width: 40px;
+  height: 40px;
+}
+
+.personal-icon-wrapper svg {
+  width: 100%;
+  height: 100%;
+}
+
+.personal-text-block {
+  display: flex;
+  flex-direction: column;
+}
+
+.personal-points-value {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+/* Standardized typography classes used in template */
+
+.merged-divider.thin {
+  height: 40px;
+  margin: 0 10px;
+}
+
+.personal-status-side {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  justify-content: flex-start;
+}
+
+.status-icon {
+  width: 24px;
+  height: 24px;
+}
+
+.status-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.status-text {
+  font-size: 18px;
+  font-weight: 500;
+  color: #f44336;
+}
+
+.personal-status-side.is-active .status-text {
+  color: #4caf50;
+}
+
+.personal-bottom-banner {
+  background: #242529;
+  color: #fff;
+  padding: 0 20px;
+  font-size: 18px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 52px;
+  margin: 0 15px 15px 15px;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  position: relative;
   overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.personal-bottom-banner::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url('https://www.transparenttextures.com/patterns/carbon-fibre.png');
+  opacity: 0.45;
+  transform: none !important;
+  pointer-events: none;
+}
+
+.personal-bottom-banner span,
+.personal-bottom-banner .banner-icon-side {
+  position: relative;
+  z-index: 1;
+}
+
+.banner-icon-side {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.briefcase-banner-svg {
+  width: 100%;
+  height: 100%;
+}
+
+@media (max-width: 992px) {
+  .personal-top-row {
+    flex-direction: row;
+    /* Keep horizontal on mobile if it fits, or adjust as needed */
+    padding: 10px 15px;
+  }
+}
+
+/* Pack de Afiliación Card */
+.pack-afiliacion-card {
+  min-height: 130px !important;
+  padding: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center;
+}
+
+.pack-content-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+  gap: 8px;
+}
+
+.pack-content-wrapper .dash-card-title {
+  padding: 15px 20px 5px 20px;
+}
+
+.pack-banner-box {
+  background: #242529;
+  border-radius: 12px;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 52px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+  position: relative;
+  overflow: hidden;
+  margin: 0 15px 15px 15px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.pack-banner-box::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url('https://www.transparenttextures.com/patterns/carbon-fibre.png');
+  opacity: 0.45;
+  transform: none !important;
+  pointer-events: none;
+}
+
+.pack-banner-box .banner-icon-side,
+.pack-banner-box .pack-name-text {
+  position: relative;
+  z-index: 1;
+}
+
+.pack-name-text {
+  color: #fff;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+/* Bono Ahorro Card */
+/* Saldo Disponible Card */
+.saldo-disponible-card {
+  min-height: 110px !important;
+  background: #fff;
+  background-image:
+    radial-gradient(#e0f2f1 1px, transparent 1px),
+    radial-gradient(#e0f2f1 1px, transparent 1px);
+  background-size: 20px 20px;
+  background-position: 0 0, 10px 10px;
+  border: 1px solid #e0e0e0 !important;
+}
+
+.amount-black {
+  color: #222 !important;
+  font-size: 32px;
+  font-weight: 700;
+}
+
+.wallet-container {
+  width: 90px;
+  height: 90px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.wallet-svg {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 4px 8px rgba(0, 128, 0, 0.15));
+}
+
+/* Saldo No Disponible Card (Premium Refine) */
+.saldo-no-disponible-card {
+  min-height: 110px !important;
+  background: radial-gradient(circle at top right, #333, #000) !important;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center;
+}
+
+/* Starry background effect */
+.saldo-no-disponible-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image:
+    radial-gradient(1px 1px at 20px 30px, #fff, rgba(0, 0, 0, 0)),
+    radial-gradient(1px 1px at 40px 70px, rgba(233, 30, 99, 0.5), rgba(0, 0, 0, 0)),
+    radial-gradient(1.5px 1.5px at 150px 40px, #fff, rgba(0, 0, 0, 0)),
+    radial-gradient(1px 1px at 280px 80px, rgba(233, 30, 99, 0.3), rgba(0, 0, 0, 0));
+  background-size: 300px 300px;
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.glow-horizontal-line {
+  position: absolute;
+  top: 45%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(to right,
+      transparent,
+      rgba(233, 30, 99, 0.2),
+      rgba(255, 255, 255, 0.4),
+      rgba(233, 30, 99, 0.2),
+      transparent);
+  box-shadow: 0 0 15px rgba(233, 30, 99, 0.3);
+  z-index: 1;
+}
+
+.bg-lock-icon-premium {
+  position: absolute;
+  right: -5px;
+  bottom: -15px;
+  width: 140px;
+  height: 140px;
+  pointer-events: none;
+  z-index: 0;
+  filter: drop-shadow(0 0 20px rgba(233, 30, 99, 0.2));
+  transform: rotate(-12deg);
+}
+
+.title-with-premium-lock {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 2px;
+}
+
+.premium-wallet-lock {
+  width: 38px;
+  height: 38px;
+  filter: drop-shadow(0 0 8px rgba(233, 30, 99, 0.4));
+}
+
+/* Standardized typography used */
+
+.info-subtitle-white {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.8);
+  margin-top: 6px;
+  font-weight: 400;
+  line-height: 1.3;
+}
+
+.magenta-text {
+  color: #ff4081;
+  font-weight: 600;
+}
+
+.saldo-no-disponible-card::after {
+  content: '';
+  position: absolute;
+  bottom: -25px;
+  left: 20%;
+  right: 20%;
+  height: 50px;
+  background: radial-gradient(ellipse at bottom, rgba(233, 30, 99, 0.5), transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.bono-ahorro-card {
+  min-height: 110px !important;
+  padding: 12px 20px !important;
+}
+
+.piggy-bank-container {
+  width: 100px;
+  height: 90px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.piggy-bank-svg {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
 }
 
 .progress-bar-new {
@@ -1279,34 +1973,104 @@
   transition: width 1s ease-in-out;
 }
 
-@media (max-width: 768px) {
-  .new-dashboard-grid {
-    grid-template-columns: 1fr;
-    padding: 15px 10px;
-    gap: 15px;
-  }
+/* Consolidated into main mobile media query */
 
-  .info-card {
-    padding: 20px;
-    gap: 15px;
-  }
+/* Closed Rank Card - Replicating Max Rank Style */
+.closed-rank-card {
+  min-height: 77px !important;
+  background: #242529 !important;
+  border-radius: 12px;
+  padding: 12px 20px !important;
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  position: relative !important;
+  overflow: hidden !important;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3) !important;
+  border: 1px solid rgba(255, 255, 255, 0.05) !important;
+  gap: 15px;
+}
 
-  .info-title {
-    font-size: 14px;
-  }
+.closed-rank-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url('https://www.transparenttextures.com/patterns/carbon-fibre.png');
+  opacity: 0.45;
+  transform: none !important;
+  pointer-events: none;
+}
 
-  .info-value {
-    font-size: 18px;
-  }
+.closed-rank-info-group,
+.closed-rank-right {
+  position: relative;
+  z-index: 1;
+}
 
-  .info-icon,
-  .stat-icon {
-    right: 15px;
-    bottom: 15px;
-  }
+.closed-rank-left {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
-  .info-icon i,
-  .stat-icon i {
-    font-size: 20px;
-  }
+.closed-rank-info-group {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  z-index: 10;
+}
+
+.trophy-icon-closed {
+  font-size: 36px;
+  color: #FFB300;
+  filter: drop-shadow(0 0 12px rgba(255, 179, 0, 0.4));
+}
+
+.closed-rank-center {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: left;
+}
+
+.banner-title-closed {
+  font-size: 16px;
+  color: #ccc;
+  margin-bottom: 2px;
+  display: block;
+}
+
+.banner-rank-closed {
+  font-size: 20px;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+  color: white;
+  display: block;
+}
+
+.closed-rank-right {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+.rank-badge.static {
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 10;
+}
+
+.gem-icon-closed {
+  font-size: 44px;
+  color: #4FBBC3;
+  filter: drop-shadow(0 0 12px rgba(79, 187, 195, 0.6));
 }
