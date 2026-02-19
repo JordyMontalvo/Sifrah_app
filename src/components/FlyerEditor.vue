@@ -829,16 +829,7 @@ export default {
           drawX, drawY, drawWidth, drawHeight
         );
         
-        // Dibujar borde dorado del círculo
         ctx.restore();
-        ctx.beginPath();
-        ctx.arc(this.portraitX, this.portraitY, this.portraitSize / 2, 0, Math.PI * 2);
-        ctx.strokeStyle = '#FFD700';
-        ctx.lineWidth = 4;
-        ctx.shadowColor = 'rgba(255, 215, 0, 0.8)';
-        ctx.shadowBlur = 10;
-        ctx.stroke();
-        ctx.shadowBlur = 0;
         
         // Dibujar handles de redimensionamiento solo si showHandles es true
         if (showHandles) {
