@@ -10,7 +10,7 @@
       <router-view />
     </div>
 
-    <header>
+    <header v-if="$route.path !== '/audios'">
       <!--<h3 class="slogan">
         <span v-if="country == 'Perú'"       style="font-size: 28px;">🇵🇪</span>
         <span v-if="country == 'Bolivia'"    style="font-size: 28px;">🇧🇴</span>
@@ -370,8 +370,8 @@
       </div>
 
       <div class="content">
-        <header>
-          <p style="font-weight: bold; font-size: 20px">{{ title }}</p>
+        <header v-if="$route.path !== '/audios' || !isMobile">
+          <p style="font-weight: bold; font-size: 20px">{{ $route.path === '/audios' ? 'Audio' : title }}</p>
           <div
           style="
               display: flex;
@@ -684,7 +684,7 @@
       </router-link>
     </footer>
 
-    <a href="https://wa.me/message/JCHJIVLZGG6MK1" target="_blank" class="wsp fab fa-whatsapp"></a>
+    <a v-if="!isMobile" href="https://wa.me/message/JCHJIVLZGG6MK1" target="_blank" class="wsp fab fa-whatsapp"></a>
     
     <!-- Panel de Debug (solo visible en desarrollo o cuando se habilite) -->
     <DebugPanel />
@@ -867,11 +867,18 @@ export default {
   methods: {
     getSectionStyle() {
       // En desktop y cuando estamos en la vista de activación, quitar overflow para que el sticky funcione
+      let styles = {};
       if (window.innerWidth >= 1024 && document.body.classList.contains('activation-view')) {
-        return { overflow: 'visible' };
+        styles.overflow = 'visible';
+      } else {
+        styles.overflow = 'auto';
       }
-      // En móvil o otras vistas, mantener overflow auto
-      return { overflow: 'auto' };
+      
+      if (this.$route.path === '/audios') {
+        styles.padding = '0';
+      }
+      
+      return styles;
     },
     startNotificationLoop() {
     

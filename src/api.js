@@ -37,6 +37,7 @@ class API {
     Flyers,
     SharedStore,
     Materials,
+    Audios,
   }) {
     this.Profile = new Profile();
     this.Password = new Password();
@@ -57,6 +58,7 @@ class API {
     this.Flyers = new Flyers();
     this.SharedStore = new SharedStore();
     this.Materials = new Materials();
+    this.Audios = new Audios();
   }
 
   register(data) {
@@ -306,6 +308,12 @@ class Materials {
   }
 }
 
+class Audios {
+  GET() {
+    return axios.get('/app/audios');
+  }
+}
+
 export default new API({
   Profile,
   Password,
@@ -326,4 +334,5 @@ export default new API({
   Flyers,
   SharedStore,
   Materials,
+  Audios,
 });

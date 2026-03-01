@@ -39,6 +39,7 @@ import frontales from './views/app/frontales.vue'
 import Checkout from './views/app/Checkout.vue'
 import SharedStore from './views/app/SharedStore.vue'
 import ShareStore from './views/app/ShareStore.vue'
+import Audios from './views/app/Audios.vue'
 
 
 Vue.use(Router)
@@ -258,6 +259,11 @@ const routes = [
   {
     path: '/share-store',
     component: ShareStore,
+    meta: { requiresAuth: true, requiresAffiliation: true }
+  },
+  {
+    path: '/audios',
+    component: Audios,
     meta: { requiresAuth: true, requiresAffiliation: true }
   }
 ]

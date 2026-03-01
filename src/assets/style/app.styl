@@ -142,7 +142,7 @@ body, .app
       // Antes el contenido se desplazaba -70% para el efecto "push", lo que en móvil
       // hacía que solo se viera un pedazo de la vista y el resto fuera espacio en blanco.
       // Ahora el contenido ocupa siempre el 100% del ancho cuando el menú está oculto.
-      transform translate(0, 0)
+      // Eliminamos el transform para que position: fixed funcione correctamente en hijos.
       overflow auto
       position relative
       transition transform .5s
@@ -177,8 +177,8 @@ body, .app
         padding 8px 16px
         padding-bottom 72px
 
-@media (max-width: 450px) 
-    .app >section .content >header 
+@media (max-width: 450px)
+    .app >section .content >header
       display none
 
   .share-button
@@ -198,12 +198,12 @@ body, .app
     /* position: relative; */
     /* left: 400px; */
     /* transform: translate(500px, 0); */
-    
+
     // Aumentar el margen izquierdo
 .footer-register
   display flex
   color white
-  
+
 .footer-Dashboard
     position fixed
     bottom 0
@@ -214,20 +214,20 @@ body, .app
     border-top: solid 1px app-border;
     background #111111
 
-    a 
-      display flex  
+    a
+      display flex
       flex-direction column
       align-items center
       text-align center
-      color white 
+      color white
       font-size 11px
       padding 6px 2px
       flex 1
       transition all 0.3s ease
-      
+
       &.router-link-active, &.active
         color c-menu-active-pink
-        i 
+        i
           color c-menu-active-pink
 
     i
@@ -242,7 +242,7 @@ body, .app
     @media (min-width: d-break)
       display none
 
-  
+
 // Cuando hay un modal de producto abierto, resetear el transform del content
 // Solo aplicar en móvil donde el transform afecta (menor a 768px)
 @media (max-width: 767px)
@@ -291,12 +291,12 @@ body, .app
     overflow-y auto
     display flex
     flex-direction column
-    
+
   .text-header
     border-bottom 1px solid c-menu-border
     margin-bottom 20px
     padding 20px
-    
+
   .photo-logo
     margin 30px auto 30px auto
     display block
@@ -315,14 +315,14 @@ body, .app
     margin-bottom 0
     border-radius 0
     transition all 0.3s ease
-    
+
     span // Ensure grouping span is also a flex container
       display flex
       align-items center
-    
+
     &:first-of-type
       border-top 1px solid #1C1C1C // Divider above the first item (Inicio)
-    
+
     &::before
       content ''
       position absolute
