@@ -21,20 +21,38 @@ class Lib {
       const xhr = new XMLHttpRequest();
       xhr.open('POST', url, true);
       
-      xhr.onload = () => {
-        if (xhr.status >= 200 && xhr.status < 300) {
-          const data = JSON.parse(xhr.responseText);
-          console.log(`[App] SUCCESS: ${data.url}`);
-          resolve(data.url);
-        } else {
-          reject(new Error(`Status ${xhr.status}`));
-        }
-      };
+      const reader = new FileReader();
+      reader.onload = () => {
+        const body = reader.result;
+        console.log(`[App] XHR Sending Buffer: ${body.byteLength} bytes`);
 
-      xhr.onerror = () => reject(new Error('Network Error'));
+        xhr.onload = () => {
+          if (xhr.status >= 200 && xhr.status < 300) {
+            const data = JSON.parse(xhr.responseText);
+            console.log(`[App] SUCCESS: ${data.url}`);
+            resolve(data.url);
+          } else {
+            console.error(`[App] Error ${xhr.status}: ${xhr.responseText}`);
+            reject(new Error(`Failed ${xhr.status}`));
+          }
+        };
+
+        xhr.onerror = () => {
+          console.error('[App] XHR Network Error');
+          reject(new Error('Network Error'));
+        };
+
+        xhr.onabort = () => {
+          console.warn('[App] XHR Aborted');
+          reject(new Error('Aborted'));
+        };
+
+        xhr.setRequestHeader('Content-Type', file.type || 'application/octet-stream');
+        xhr.send(body);
+      };
       
-      xhr.setRequestHeader('Content-Type', file.type || 'application/octet-stream');
-      xhr.send(file);
+      reader.onerror = () => reject(new Error('Read Error'));
+      reader.readAsArrayBuffer(file);
     });
   }
   copy(id) {
