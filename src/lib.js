@@ -1,11 +1,21 @@
 import ImageKit from 'imagekit-javascript'
 
-const SERVER    = process.env.VUE_APP_SERVER
-const publicKey = process.env.VUE_APP_IMAGEKIT_KEY
-const folder    = process.env.VUE_APP_IMAGEKIT_FOLDER
+const getServerURL = () => {
+  if (process.env.VUE_APP_SERVER) return process.env.VUE_APP_SERVER;
+  
+  // En desarrollo, el proxy redirige /api al puerto 3000
+  if (process.env.NODE_ENV === 'development') return '';
+  
+  // En producción, por defecto usar el origen actual
+  return window.location.origin;
+};
 
-const urlEndpoint            = 'https://ik.imagekit.io/asu'
-const authenticationEndpoint =  SERVER + '/api/auxi/imagekit'
+const SERVER    = getServerURL();
+const publicKey = process.env.VUE_APP_IMAGEKIT_KEY;
+const folder    = process.env.VUE_APP_IMAGEKIT_FOLDER;
+
+const urlEndpoint            = 'https://ik.imagekit.io/asu';
+const authenticationEndpoint = SERVER + '/api/auxi/imagekit';
 
 const imagekit = new ImageKit({ publicKey, urlEndpoint, authenticationEndpoint })
 

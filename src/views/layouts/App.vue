@@ -68,21 +68,27 @@
       
       <div class="header-right">
         <label v-if="office_id == null" class="header-photo-label">
-          <img
-            v-if="photoState == 'default'"
-            class="header-photo"
-            :src="photo"
-          />
-          <img
-            v-if="photoState == 'changed'"
-            class="header-photo"
-            :src="newPhoto"
-          />
+          <div class="header-photo-container">
+            <img
+              v-if="photoState == 'default'"
+              class="header-photo"
+              :src="photo"
+            />
+            <img
+              v-if="photoState == 'changed'"
+              class="header-photo"
+              :src="newPhoto"
+            />
+            <div class="header-photo-overlay">
+              <i class="fas fa-camera"></i>
+            </div>
+          </div>
           <input type="file" @change="changePhoto" style="display: none;" />
         </label>
         <div v-if="photoState == 'changed'" class="header-photo-controls">
-          <i @click="cancelNewPhoto" class="fas fa-times photo-control-cancel"></i>
-          <i @click="changeNewPhoto" class="fas fa-check photo-control-confirm"></i>
+          <i v-if="!sending" @click="cancelNewPhoto" class="fas fa-times photo-control-cancel"></i>
+          <i v-if="!sending" @click="changeNewPhoto" class="fas fa-check photo-control-confirm"></i>
+          <i v-else class="fas fa-spinner fa-spin" style="color: white; opacity: 0.8;"></i>
         </div>
         <!-- Contenedor compartir con mensaje único -->
         <div style="position: relative; display: inline-block;">
@@ -464,8 +470,13 @@
         <div class="mobile-tabs-header">
           <div class="mobile-menu-user-info" v-if="office_id == null">
             <label v-if="office_id == null" class="mobile-photo-label">
-              <img v-if="photoState == 'default'" class="mobile-menu-photo" :src="photo" />
-              <img v-if="photoState == 'changed'" class="mobile-menu-photo" :src="newPhoto" />
+              <div class="mobile-photo-container">
+                <img v-if="photoState == 'default'" class="mobile-menu-photo" :src="photo" />
+                <img v-if="photoState == 'changed'" class="mobile-menu-photo" :src="newPhoto" />
+                <div class="mobile-photo-overlay">
+                  <i class="fas fa-camera"></i>
+                </div>
+              </div>
               <input type="file" @change="changePhoto" style="display: none;" />
             </label>
             <div v-if="photoState == 'changed'" class="mobile-photo-controls">
@@ -742,6 +753,7 @@ export default {
       },
       isDragging: false,
       dragStart: { x: 0, y: 0 },
+      sending: false,
     };
   },
   watch: {
@@ -802,7 +814,7 @@ export default {
       return this.$store.state.country;
     },
     photo() {
-      return this.$store.state.photo;
+      return this.$store.state.photo || 'https://ik.imagekit.io/asu/Lehaim/avatar_bEyc3MFLf.png';
     },
     tree() {
       return this.$store.state.tree;
@@ -1097,7 +1109,12 @@ export default {
       reader.readAsDataURL(this.photoFile);
     },
     async changeNewPhoto() {
+      if (this.sending) return;
+      
       try {
+        this.sending = true;
+        this.notification = "Subiendo imagen...";
+        
         const ret = await lib.upload(
           this.photoFile,
           this.photoFile.name,
@@ -1111,16 +1128,18 @@ export default {
         await api.photo(this.session, { photo: ret });
         
         // Mostrar notificación de éxito
-        this.notification = "¡Foto de perfil actualizada!";
+        this.notification = "¡Foto de perfil actualizada exitosamente!";
         setTimeout(() => {
           this.notification = null;
-        }, 3000);
+        }, 4000);
       } catch (e) {
         console.error("Error uploading photo:", e);
-        this.notification = "Error al subir la foto. Intenta de nuevo.";
+        this.notification = "Error al subir la foto. Por favor intenta de nuevo.";
         setTimeout(() => {
           this.notification = null;
         }, 5000);
+      } finally {
+        this.sending = false;
       }
     },
     cancelNewPhoto() {

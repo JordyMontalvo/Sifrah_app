@@ -11,7 +11,7 @@ const getBaseURL = () => {
   const isDevelopment = process.env.NODE_ENV === 'development';
   return isDevelopment
     ? "/api"  // Ruta relativa - el proxy redirigirá a localhost:3000
-    : "https://tu-app-backend.herokuapp.com/api";
+    : "https://sifrah-server-0920254d8662.herokuapp.com/api";
 };
 
 axios.defaults.baseURL = getBaseURL();
