@@ -341,6 +341,15 @@ export default {
       this.cities = countryCities[this.country] || [];
     },
     async UPDATE() {
+      // Si hay una foto nueva por guardar, guardarla primero
+      if (this.photoState === "changed") {
+        try {
+          await this.changeNewPhoto();
+        } catch (e) {
+          console.error("Error saving photo as part of profile update:", e);
+        }
+      }
+
       const {
         email,
         phone,

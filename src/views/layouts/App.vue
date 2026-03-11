@@ -159,8 +159,8 @@
           </label>
 
           <div v-if="photoState == 'changed'" class="controls">
-            <i @click="cancelNewPhoto" class="fas fa-times"></i>
-            <i @click="changeNewPhoto" class="fas fa-check"></i>
+            <i @click="cancelNewPhoto" class="fas fa-times photo-control-cancel"></i>
+            <i @click="changeNewPhoto" class="fas fa-check photo-control-confirm"></i>
           </div>
           <div>
             <p style="color: white; font-size: 18px">
