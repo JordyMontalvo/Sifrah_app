@@ -12,32 +12,41 @@ const SERVER = getServerURL();
 
 class Lib {
   async upload(file, fileName, dir) {
-    try {
+    return new Promise((resolve, reject) => {
       const safeFileName = fileName.replace(/[^a-zA-Z0-9._-]/g, '_');
-      console.log(`[Lib] Uploading Binary: ${safeFileName} (${file.size} bytes)`);
-
       const url = `${SERVER}/api/auxi/bunny-upload?fileName=${encodeURIComponent(safeFileName)}&dir=${encodeURIComponent(dir)}`;
       
-      const response = await fetch(url, {
-        method: 'POST',
-        body: file,
-        headers: {
-          'Content-Type': file.type || 'application/octet-stream'
+      console.log(`[Lib] Starting App XHR Upload: ${safeFileName}`);
+
+      const xhr = new XMLHttpRequest();
+      xhr.open('POST', url, true);
+      
+      xhr.upload.onprogress = (e) => {
+        if (e.lengthComputable) {
+          const percent = Math.round((e.loaded / e.total) * 100);
+          console.log(`[App-Lib] Progress: ${percent}%`);
         }
-      });
+      };
 
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`Upload failed (${response.status}): ${errorText}`);
-      }
+      xhr.onload = () => {
+        if (xhr.status >= 200 && xhr.status < 300) {
+          const data = JSON.parse(xhr.responseText);
+          console.log(`[App-Lib] Success: ${data.url}`);
+          resolve(data.url);
+        } else {
+          console.error(`[App-Lib] Failed: ${xhr.status}`);
+          reject(new Error(`Error ${xhr.status}`));
+        }
+      };
 
-      const data = await response.json();
-      console.log(`[Lib] Upload Success: ${data.url}`);
-      return data.url;
-    } catch (error) {
-      console.error('[Lib] Binary Upload Critical Error:', error);
-      throw error;
-    }
+      xhr.onerror = () => reject(new Error('Network Error'));
+
+      xhr.setRequestHeader('Content-Type', file.type || 'application/octet-stream');
+
+      const reader = new FileReader();
+      reader.onload = () => xhr.send(reader.result);
+      reader.readAsArrayBuffer(file);
+    });
   }
   copy(id) {
     const el = document.querySelector(`#${id}`)
