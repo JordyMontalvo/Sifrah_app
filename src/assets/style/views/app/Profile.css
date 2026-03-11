@@ -293,3 +293,117 @@
     transform: rotate(360deg);
   }
 }
+
+/* Profile Photo Section Styles */
+.profile-photo-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.glass-photo-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+}
+
+.glass-photo-label-editable {
+  position: relative;
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  overflow: hidden;
+  cursor: pointer;
+  border: 4px solid #9f00ad;
+  box-shadow: 0 8px 25px rgba(159, 0, 173, 0.15);
+  transition: all 0.3s ease;
+}
+
+.glass-photo-label-editable:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 30px rgba(159, 0, 173, 0.25);
+  border-color: #d209b6;
+}
+
+.glass-profile-photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.glass-photo-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.glass-photo-label-editable:hover .glass-photo-overlay {
+  opacity: 1;
+}
+
+.glass-photo-overlay i {
+  font-size: 1.8rem;
+  margin-bottom: 6px;
+}
+
+.glass-photo-overlay span {
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.glass-photo-controls {
+  display: flex;
+  gap: 12px;
+  margin-top: 5px;
+}
+
+.glass-btn-cancel {
+  background: rgba(255, 82, 82, 0.1);
+  color: #ff5252;
+  border: 1.5px solid #ff5252;
+  padding: 10px 20px;
+  border-radius: 14px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: all 0.2s;
+}
+
+.glass-btn-cancel:hover {
+  background: #ff5252;
+  color: white;
+}
+
+.glass-btn-confirm {
+  background: linear-gradient(135deg, #9f00ad, #d209b6);
+  color: white;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 14px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  box-shadow: 0 4px 15px rgba(159, 173, 0, 0.3);
+  transition: all 0.2s;
+}
+
+.glass-btn-confirm:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(159, 0, 173, 0.4);
+  filter: brightness(1.1);
+}

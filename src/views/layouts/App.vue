@@ -80,6 +80,10 @@
           />
           <input type="file" @change="changePhoto" style="display: none;" />
         </label>
+        <div v-if="photoState == 'changed'" class="header-photo-controls">
+          <i @click="cancelNewPhoto" class="fas fa-times photo-control-cancel"></i>
+          <i @click="changeNewPhoto" class="fas fa-check photo-control-confirm"></i>
+        </div>
         <!-- Contenedor compartir con mensaje único -->
         <div style="position: relative; display: inline-block;">
           <!-- Ícono compartir para desktop -->
@@ -459,10 +463,15 @@
       <div class="mobile-tabs-menu" @click.stop>
         <div class="mobile-tabs-header">
           <div class="mobile-menu-user-info" v-if="office_id == null">
-            <label v-if="office_id == null">
+            <label v-if="office_id == null" class="mobile-photo-label">
               <img v-if="photoState == 'default'" class="mobile-menu-photo" :src="photo" />
               <img v-if="photoState == 'changed'" class="mobile-menu-photo" :src="newPhoto" />
+              <input type="file" @change="changePhoto" style="display: none;" />
             </label>
+            <div v-if="photoState == 'changed'" class="mobile-photo-controls">
+              <i @click="cancelNewPhoto" class="fas fa-times photo-control-cancel"></i>
+              <i @click="changeNewPhoto" class="fas fa-check photo-control-confirm"></i>
+            </div>
             <div>
               <p class="mobile-menu-name">{{ name }} {{ lastName }}</p>
               <p class="mobile-menu-email">{{ email }}</p>
@@ -1088,17 +1097,31 @@ export default {
       reader.readAsDataURL(this.photoFile);
     },
     async changeNewPhoto() {
-      const ret = await lib.upload(
-        this.photoFile,
-        this.photoFile.name,
-        "photos"
-      );
+      try {
+        const ret = await lib.upload(
+          this.photoFile,
+          this.photoFile.name,
+          "photos"
+        );
 
-      this.$store.commit("SET_PHOTO", ret);
+        this.$store.commit("SET_PHOTO", ret);
 
-      this.photoState = "default";
+        this.photoState = "default";
 
-      await api.photo(this.session, { photo: this.photo });
+        await api.photo(this.session, { photo: ret });
+        
+        // Mostrar notificación de éxito
+        this.notification = "¡Foto de perfil actualizada!";
+        setTimeout(() => {
+          this.notification = null;
+        }, 3000);
+      } catch (e) {
+        console.error("Error uploading photo:", e);
+        this.notification = "Error al subir la foto. Intenta de nuevo.";
+        setTimeout(() => {
+          this.notification = null;
+        }, 5000);
+      }
     },
     cancelNewPhoto() {
       this.photoState = "default";
@@ -1327,6 +1350,38 @@ export default {
  };
 </script>
 <style scoped>
+.header-photo-controls, .mobile-photo-controls, .controls {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.photo-control-cancel, .fa-times {
+  color: #ff5252;
+  cursor: pointer;
+  font-size: 18px;
+  transition: transform 0.2s;
+}
+
+.photo-control-confirm, .fa-check {
+  color: #4caf50;
+  cursor: pointer;
+  font-size: 18px;
+  transition: transform 0.2s;
+}
+
+.photo-control-cancel:hover, .photo-control-confirm:hover, .controls i:hover {
+  transform: scale(1.2);
+}
+
+.mobile-photo-label {
+  cursor: pointer;
+}
+
+.header-photo-label {
+  cursor: pointer;
+}
+
 .menu {
   transition: transform 0.3s ease;
   transform: translateX(-100%); /* Oculta el menú fuera de la vista */

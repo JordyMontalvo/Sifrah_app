@@ -26,6 +26,43 @@
           </div>
           <main class="profile-glass-main profile-glass-columns">
             <div class="profile-glass-col">
+              <section class="profile-glass-section profile-photo-section">
+                <h3>Foto de perfil</h3>
+                <div class="glass-photo-container">
+                  <label class="glass-photo-label-editable">
+                    <img
+                      v-if="photoState == 'default'"
+                      :src="photo"
+                      class="glass-profile-photo"
+                    />
+                    <img
+                      v-if="photoState == 'changed'"
+                      :src="newPhoto"
+                      class="glass-profile-photo"
+                    />
+                    <div class="glass-photo-overlay">
+                      <i class="fas fa-camera"></i>
+                      <span>Cambiar</span>
+                    </div>
+                    <input
+                      type="file"
+                      @change="changePhoto"
+                      style="display: none"
+                    />
+                  </label>
+                  <div
+                    v-if="photoState == 'changed'"
+                    class="glass-photo-controls"
+                  >
+                    <button @click="cancelNewPhoto" class="glass-btn-cancel">
+                      Cancelar
+                    </button>
+                    <button @click="changeNewPhoto" class="glass-btn-confirm">
+                      Guardar Foto
+                    </button>
+                  </div>
+                </div>
+              </section>
               <section class="profile-glass-section">
                 <h3>Datos personales</h3>
                 <div class="glass-form-group">
@@ -199,6 +236,9 @@ export default {
       c_link: false,
       showToast: false,
       cities: [],
+      photoState: "default",
+      newPhoto: null,
+      photoFile: null,
     };
   },
   computed: {
@@ -207,6 +247,9 @@ export default {
     },
     link() {
       return `${ROOT}/register/${this.token}`;
+    },
+    photo() {
+      return this.$store.state.photo;
     },
   },
   async created() {
@@ -336,6 +379,47 @@ export default {
       lib.copy("link");
       this.c_link = true;
       setTimeout(() => (this.c_link = false), 4000);
+    },
+    changePhoto(e) {
+      this.photoFile = e.target.files[0];
+
+      if (!this.photoFile) return;
+
+      const reader = new FileReader();
+
+      reader.onload = (e) => {
+        this.newPhoto = e.target.result;
+        this.photoState = "changed";
+      };
+
+      reader.readAsDataURL(this.photoFile);
+    },
+    async changeNewPhoto() {
+      try {
+        this.sending = true;
+        const ret = await lib.upload(
+          this.photoFile,
+          this.photoFile.name,
+          "photos"
+        );
+
+        this.$store.commit("SET_PHOTO", ret);
+        this.photoState = "default";
+
+        await api.photo(this.session, { photo: ret });
+
+        this.showToast = true;
+        setTimeout(() => (this.showToast = false), 3000);
+      } catch (e) {
+        console.error("Error updating photo:", e);
+      } finally {
+        this.sending = false;
+      }
+    },
+    cancelNewPhoto() {
+      this.photoState = "default";
+      this.newPhoto = null;
+      this.photoFile = null;
     },
   },
 };
