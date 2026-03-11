@@ -16,9 +16,10 @@ class Lib {
       const safeFileName = fileName.replace(/[^a-zA-Z0-9._-]/g, '_');
       console.log(`[Lib] Binary Upload Start: ${safeFileName} (${file.size} bytes)`);
 
-      // Enviamos el archivo RAW directamente en el body, sin FormData.
-      // Los metadatos van en cabeceras personalizadas.
-      const response = await fetch(`${SERVER}/api/auxi/bunny-upload`, {
+      // Enviamos metadatos por cabeceras Y por query params para seguridad extrema
+      const url = `${SERVER}/api/auxi/bunny-upload?fileName=${encodeURIComponent(safeFileName)}&dir=${encodeURIComponent(dir)}`;
+      
+      const response = await fetch(url, {
         method: 'POST',
         body: file, 
         headers: {
