@@ -13,20 +13,34 @@ const SERVER = getServerURL();
 class Lib {
   async upload(file, fileName, dir) {
     try {
+      console.log(`[Lib] Starting upload: ${fileName}, size: ${file.size} bytes`);
       const formData = new FormData();
       formData.append('fileName', fileName);
       formData.append('dir', dir);
       formData.append('file', file);
 
-      const response = await axios.post(`${SERVER}/api/auxi/bunny-upload`, formData);
+      // Usar fetch nativo para evitar interceptores de axios y problemas de timeout
+      const response = await fetch(`${SERVER}/api/auxi/bunny-upload`, {
+        method: 'POST',
+        body: formData,
+        // No establecer Content-Type, el navegador lo hará con el boundary correcto
+      });
 
-      if (response.data && response.data.url) {
-        return response.data.url;
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error(`[Lib] Upload failed (status ${response.status}): ${errorText}`);
+        throw new Error(`Error en servidor (${response.status}): ${errorText}`);
+      }
+
+      const data = await response.json();
+      if (data && data.url) {
+        console.log(`[Lib] Upload successful! URL: ${data.url}`);
+        return data.url;
       } else {
         throw new Error('No se recibió URL de Bunny.net');
       }
     } catch (error) {
-      console.error('Error al subir a Bunny.net:', error);
+      console.error('[Lib] Error crítico al subir a Bunny.net:', error);
       throw error;
     }
   }
