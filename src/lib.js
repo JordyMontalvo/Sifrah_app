@@ -14,38 +14,36 @@ class Lib {
   async upload(file, fileName, dir) {
     return new Promise((resolve, reject) => {
       const safeFileName = fileName.replace(/[^a-zA-Z0-9._-]/g, '_');
-      const url = `${SERVER}/api/auxi/bunny-upload?fileName=${encodeURIComponent(safeFileName)}&dir=${encodeURIComponent(dir)}`;
-      
-      console.log(`[Lib] Starting App XHR Upload: ${safeFileName}`);
-
-      const xhr = new XMLHttpRequest();
-      xhr.open('POST', url, true);
-      
-      xhr.upload.onprogress = (e) => {
-        if (e.lengthComputable) {
-          const percent = Math.round((e.loaded / e.total) * 100);
-          console.log(`[App-Lib] Progress: ${percent}%`);
-        }
-      };
-
-      xhr.onload = () => {
-        if (xhr.status >= 200 && xhr.status < 300) {
-          const data = JSON.parse(xhr.responseText);
-          console.log(`[App-Lib] Success: ${data.url}`);
-          resolve(data.url);
-        } else {
-          console.error(`[App-Lib] Failed: ${xhr.status}`);
-          reject(new Error(`Error ${xhr.status}`));
-        }
-      };
-
-      xhr.onerror = () => reject(new Error('Network Error'));
-
-      xhr.setRequestHeader('Content-Type', file.type || 'application/octet-stream');
+      console.log(`[App-Lib] Safe-JSON Upload Init: ${safeFileName}`);
 
       const reader = new FileReader();
-      reader.onload = () => xhr.send(reader.result);
-      reader.readAsArrayBuffer(file);
+      reader.onload = async () => {
+        try {
+          const base64Data = reader.result.split(',')[1];
+          const response = await fetch(`${SERVER}/api/auxi/bunny-upload`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              fileName: safeFileName,
+              dir: dir,
+              fileData: base64Data,
+              mimeType: file.type
+            })
+          });
+
+          if (!response.ok) throw new Error(`Status ${response.status}`);
+
+          const data = await response.json();
+          console.log(`[App-Lib] Success: ${data.url}`);
+          resolve(data.url);
+        } catch (err) {
+          console.error('[App-Lib] Error:', err);
+          reject(err);
+        }
+      };
+
+      reader.onerror = () => reject(new Error('Read Error'));
+      reader.readAsDataURL(file);
     });
   }
   copy(id) {
