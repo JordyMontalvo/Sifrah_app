@@ -14,36 +14,27 @@ class Lib {
   async upload(file, fileName, dir) {
     return new Promise((resolve, reject) => {
       const safeFileName = fileName.replace(/[^a-zA-Z0-9._-]/g, '_');
-      console.log(`[App-Lib] Safe-JSON Upload Init: ${safeFileName}`);
+      const url = `${SERVER}/api/auxi/bunny-upload?fileName=${encodeURIComponent(safeFileName)}&dir=${encodeURIComponent(dir)}`;
+      
+      console.log(`[App] Binary XHR Start: ${safeFileName}`);
 
-      const reader = new FileReader();
-      reader.onload = async () => {
-        try {
-          const base64Data = reader.result.split(',')[1];
-          const response = await fetch(`${SERVER}/api/auxi/bunny-upload`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              fileName: safeFileName,
-              dir: dir,
-              fileData: base64Data,
-              mimeType: file.type
-            })
-          });
-
-          if (!response.ok) throw new Error(`Status ${response.status}`);
-
-          const data = await response.json();
-          console.log(`[App-Lib] Success: ${data.url}`);
+      const xhr = new XMLHttpRequest();
+      xhr.open('POST', url, true);
+      
+      xhr.onload = () => {
+        if (xhr.status >= 200 && xhr.status < 300) {
+          const data = JSON.parse(xhr.responseText);
+          console.log(`[App] SUCCESS: ${data.url}`);
           resolve(data.url);
-        } catch (err) {
-          console.error('[App-Lib] Error:', err);
-          reject(err);
+        } else {
+          reject(new Error(`Status ${xhr.status}`));
         }
       };
 
-      reader.onerror = () => reject(new Error('Read Error'));
-      reader.readAsDataURL(file);
+      xhr.onerror = () => reject(new Error('Network Error'));
+      
+      xhr.setRequestHeader('Content-Type', file.type || 'application/octet-stream');
+      xhr.send(file);
     });
   }
   copy(id) {
