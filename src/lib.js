@@ -18,11 +18,7 @@ class Lib {
       formData.append('dir', dir);
       formData.append('file', file);
 
-      const response = await axios.post(`${SERVER}/api/auxi/bunny-upload`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      });
+      const response = await axios.post(`${SERVER}/api/auxi/bunny-upload`, formData);
 
       if (response.data && response.data.url) {
         return response.data.url;
