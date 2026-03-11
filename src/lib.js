@@ -13,20 +13,18 @@ const SERVER = getServerURL();
 class Lib {
   async upload(file, fileName, dir) {
     try {
-      console.log(`[Lib] Upload Attempt: ${fileName} (${file.size} bytes)`);
-      
-      const formData = new FormData();
       const safeFileName = fileName.replace(/[^a-zA-Z0-9._-]/g, '_');
-      formData.append('fileName', safeFileName);
-      formData.append('dir', dir);
-      formData.append('file', file, safeFileName);
+      console.log(`[Lib] Binary Upload Start: ${safeFileName} (${file.size} bytes)`);
 
+      // Enviamos el archivo RAW directamente en el body, sin FormData.
+      // Los metadatos van en cabeceras personalizadas.
       const response = await fetch(`${SERVER}/api/auxi/bunny-upload`, {
         method: 'POST',
-        body: formData,
-        mode: 'cors',
+        body: file, 
         headers: {
-          'Accept': 'application/json'
+          'x-file-name': safeFileName,
+          'x-dir': dir,
+          'Content-Type': file.type || 'application/octet-stream'
         },
         keepalive: true
       });
@@ -37,10 +35,10 @@ class Lib {
       }
 
       const data = await response.json();
-      console.log(`[Lib] Upload Success: ${data.url}`);
+      console.log(`[Lib] Success: ${data.url}`);
       return data.url;
     } catch (error) {
-      console.error('[Lib] Critical Upload Error:', error);
+      console.error('[Lib] Binary Upload Error:', error);
       throw error;
     }
   }
