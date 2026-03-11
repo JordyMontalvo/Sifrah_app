@@ -12,36 +12,45 @@ const SERVER = getServerURL();
 
 class Lib {
   async upload(file, fileName, dir) {
-    try {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
       const safeFileName = fileName.replace(/[^a-zA-Z0-9._-]/g, '_');
-      console.log(`[Lib] Binary Upload Start: ${safeFileName} (${file.size} bytes)`);
-
-      // Enviamos metadatos por cabeceras Y por query params para seguridad extrema
-      const url = `${SERVER}/api/auxi/bunny-upload?fileName=${encodeURIComponent(safeFileName)}&dir=${encodeURIComponent(dir)}`;
       
-      const response = await fetch(url, {
-        method: 'POST',
-        body: file, 
-        headers: {
-          'x-file-name': safeFileName,
-          'x-dir': dir,
-          'Content-Type': file.type || 'application/octet-stream'
-        },
-        keepalive: true
-      });
+      reader.onload = async () => {
+        try {
+          const base64Data = reader.result.split(',')[1];
+          console.log(`[Lib] Safe-Mode Upload: ${safeFileName} (${file.size} bytes)`);
 
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`Upload failed (${response.status}): ${errorText}`);
-      }
+          const response = await fetch(`${SERVER}/api/auxi/bunny-upload`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              fileName: safeFileName,
+              dir: dir,
+              fileData: base64Data,
+              mimeType: file.type
+            }),
+          });
 
-      const data = await response.json();
-      console.log(`[Lib] Success: ${data.url}`);
-      return data.url;
-    } catch (error) {
-      console.error('[Lib] Binary Upload Error:', error);
-      throw error;
-    }
+          if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`Upload error ${response.status}: ${errorText}`);
+          }
+
+          const data = await response.json();
+          console.log(`[Lib] Upload Success: ${data.url}`);
+          resolve(data.url);
+        } catch (e) {
+          console.error('[Lib] Safe-Mode Critical Error:', e);
+          reject(e);
+        }
+      };
+
+      reader.onerror = (err) => reject(new Error('Error leyendo archivo: ' + err));
+      reader.readAsDataURL(file);
+    });
   }
   copy(id) {
     const el = document.querySelector(`#${id}`)
