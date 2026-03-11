@@ -14,9 +14,9 @@ class Lib {
   async upload(file, fileName, dir) {
     try {
       const formData = new FormData();
-      formData.append('file', file);
       formData.append('fileName', fileName);
       formData.append('dir', dir);
+      formData.append('file', file);
 
       const response = await axios.post(`${SERVER}/api/auxi/bunny-upload`, formData, {
         headers: {
