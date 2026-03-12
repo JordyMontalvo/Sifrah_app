@@ -13,38 +13,41 @@ const SERVER = getServerURL();
 class Lib {
   async upload(file, fileName, dir) {
     const safeFileName = fileName.replace(/[^a-zA-Z0-9._-]/g, '_');
-    console.log(`[App] Uploading: ${safeFileName} (${file.size} bytes)`);
+    console.log(`[App] Upload start: ${safeFileName} | size: ${file.size} | type: ${file.type}`);
 
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
+    try {
+      // Leer como ArrayBuffer (sin FileReader)
+      const arrayBuffer = await file.arrayBuffer();
+      console.log(`[App] ArrayBuffer ready: ${arrayBuffer.byteLength} bytes`);
 
-      reader.onload = async () => {
-        try {
-          const base64Data = reader.result.split(',')[1];
+      // Convertir a Base64 en bloques
+      const uint8 = new Uint8Array(arrayBuffer);
+      let binary = '';
+      const CHUNK = 8192;
+      for (let i = 0; i < uint8.length; i += CHUNK) {
+        binary += String.fromCharCode(...uint8.subarray(i, i + CHUNK));
+      }
+      const base64Data = btoa(binary);
+      console.log(`[App] Base64 ready: ${base64Data.length} chars`);
 
-          const res = await fetch(`${SERVER}/api/auxi/bunny-upload`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ fileName: safeFileName, dir, fileData: base64Data })
-          });
+      const res = await fetch(`${SERVER}/api/auxi/bunny-upload`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ fileName: safeFileName, dir, fileData: base64Data })
+      });
 
-          if (!res.ok) {
-            const errText = await res.text();
-            throw new Error(`Server error (${res.status}): ${errText}`);
-          }
+      if (!res.ok) {
+        const errText = await res.text();
+        throw new Error(`Server error (${res.status}): ${errText}`);
+      }
 
-          const data = await res.json();
-          console.log(`[App] SUCCESS: ${data.url}`);
-          resolve(data.url);
-        } catch (err) {
-          console.error('[App] Upload Error:', err.message);
-          reject(err);
-        }
-      };
-
-      reader.onerror = () => reject(new Error('Error al leer el archivo'));
-      reader.readAsDataURL(file);
-    });
+      const data = await res.json();
+      console.log(`[App] SUCCESS: ${data.url}`);
+      return data.url;
+    } catch (err) {
+      console.error('[App] Upload FAILED:', err.message, err);
+      throw err;
+    }
   }
   copy(id) {
     const el = document.querySelector(`#${id}`)
