@@ -12,32 +12,38 @@ const SERVER = getServerURL();
 
 class Lib {
   async upload(file, fileName, dir) {
-    try {
+    return new Promise((resolve, reject) => {
       const safeFileName = fileName.replace(/[^a-zA-Z0-9._-]/g, '_');
-      console.log(`[Lib] Uploading Binary: ${safeFileName} (${file.size} bytes)`);
+      console.log(`[App] Safe-JSON Start: ${safeFileName}`);
 
-      const url = `${SERVER}/api/auxi/bunny-upload?fileName=${encodeURIComponent(safeFileName)}&dir=${encodeURIComponent(dir)}`;
-      
-      const response = await fetch(url, {
-        method: 'POST',
-        body: file,
-        headers: {
-          'Content-Type': file.type || 'application/octet-stream'
+      const reader = new FileReader();
+      reader.onload = async () => {
+        try {
+          const base64Data = reader.result.split(',')[1];
+          const response = await fetch(`${SERVER}/api/auxi/bunny-upload`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              fileName: safeFileName,
+              dir: dir,
+              fileData: base64Data
+            })
+          });
+
+          if (!response.ok) throw new Error(`Status ${response.status}`);
+
+          const data = await response.json();
+          console.log(`[App] SUCCESS: ${data.url}`);
+          resolve(data.url);
+        } catch (err) {
+          console.error('[App] Safe-JSON Error:', err);
+          reject(err);
         }
-      });
+      };
 
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`Upload failed (${response.status}): ${errorText}`);
-      }
-
-      const data = await response.json();
-      console.log(`[Lib] Upload Success: ${data.url}`);
-      return data.url;
-    } catch (error) {
-      console.error('[Lib] Binary Upload Critical Error:', error);
-      throw error;
-    }
+      reader.onerror = () => reject(new Error('Read Error'));
+      reader.readAsDataURL(file);
+    });
   }
   copy(id) {
     const el = document.querySelector(`#${id}`)
