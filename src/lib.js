@@ -12,48 +12,27 @@ const SERVER = getServerURL();
 
 class Lib {
   async upload(file, fileName, dir) {
-    return new Promise((resolve, reject) => {
-      const safeFileName = fileName.replace(/[^a-zA-Z0-9._-]/g, '_');
-      const url = `${SERVER}/api/auxi/bunny-upload?fileName=${encodeURIComponent(safeFileName)}&dir=${encodeURIComponent(dir)}`;
-      
-      console.log(`[App] Binary XHR Start: ${safeFileName}`);
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('fileName', fileName);
+      formData.append('dir', dir);
 
-      const xhr = new XMLHttpRequest();
-      xhr.open('POST', url, true);
-      
-      const reader = new FileReader();
-      reader.onload = () => {
-        const body = reader.result;
-        console.log(`[App] XHR Sending Buffer: ${body.byteLength} bytes`);
+      const response = await axios.post(`${SERVER}/api/auxi/bunny-upload`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
 
-        xhr.onload = () => {
-          if (xhr.status >= 200 && xhr.status < 300) {
-            const data = JSON.parse(xhr.responseText);
-            console.log(`[App] SUCCESS: ${data.url}`);
-            resolve(data.url);
-          } else {
-            console.error(`[App] Error ${xhr.status}: ${xhr.responseText}`);
-            reject(new Error(`Failed ${xhr.status}`));
-          }
-        };
-
-        xhr.onerror = () => {
-          console.error('[App] XHR Network Error');
-          reject(new Error('Network Error'));
-        };
-
-        xhr.onabort = () => {
-          console.warn('[App] XHR Aborted');
-          reject(new Error('Aborted'));
-        };
-
-        xhr.setRequestHeader('Content-Type', file.type || 'application/octet-stream');
-        xhr.send(body);
-      };
-      
-      reader.onerror = () => reject(new Error('Read Error'));
-      reader.readAsArrayBuffer(file);
-    });
+      if (response.data && response.data.url) {
+        return response.data.url;
+      } else {
+        throw new Error('No se recibió URL de Bunny.net');
+      }
+    } catch (error) {
+      console.error('Error al subir a Bunny.net:', error);
+      throw error;
+    }
   }
   copy(id) {
     const el = document.querySelector(`#${id}`)
