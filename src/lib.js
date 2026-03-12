@@ -12,38 +12,35 @@ const SERVER = getServerURL();
 
 class Lib {
   async upload(file, fileName, dir) {
-    return new Promise((resolve, reject) => {
-      const safeFileName = fileName.replace(/[^a-zA-Z0-9._-]/g, '_');
-      console.log(`[App] Safe-JSON Start: ${safeFileName}`);
+    const safeFileName = fileName.replace(/[^a-zA-Z0-9._-]/g, '_');
+    console.log(`[App] Direct CDN Upload: ${safeFileName} (${file.size} bytes)`);
 
-      const reader = new FileReader();
-      reader.onload = async () => {
-        try {
-          const base64Data = reader.result.split(',')[1];
-          const response = await fetch(`${SERVER}/api/auxi/bunny-upload`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              fileName: safeFileName,
-              dir: dir,
-              fileData: base64Data
-            })
-          });
-
-          if (!response.ok) throw new Error(`Status ${response.status}`);
-
-          const data = await response.json();
-          console.log(`[App] SUCCESS: ${data.url}`);
-          resolve(data.url);
-        } catch (err) {
-          console.error('[App] Safe-JSON Error:', err);
-          reject(err);
-        }
-      };
-
-      reader.onerror = () => reject(new Error('Read Error'));
-      reader.readAsDataURL(file);
+    // Paso 1: Pedir URL de subida al servidor
+    const metaRes = await fetch(`${SERVER}/api/auxi/bunny-upload-url`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ fileName: safeFileName, dir })
     });
+
+    if (!metaRes.ok) throw new Error(`No se pudo obtener URL de subida`);
+
+    const { uploadUrl, publicUrl } = await metaRes.json();
+    console.log(`[App] Uploading to CDN: ${uploadUrl}`);
+
+    // Paso 2: Subir el archivo DIRECTAMENTE a Bunny (Heroku no toca el archivo)
+    const uploadRes = await fetch(uploadUrl, {
+      method: 'PUT',
+      headers: {
+        'AccessKey': process.env.VUE_APP_BUNNY_KEY,
+        'Content-Type': file.type || 'application/octet-stream'
+      },
+      body: file
+    });
+
+    if (!uploadRes.ok) throw new Error(`Bunny CDN error: ${uploadRes.status}`);
+
+    console.log(`[App] CDN Upload SUCCESS: ${publicUrl}`);
+    return publicUrl;
   }
   copy(id) {
     const el = document.querySelector(`#${id}`)
