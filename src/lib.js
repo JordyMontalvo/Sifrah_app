@@ -13,24 +13,29 @@ const SERVER = getServerURL();
 class Lib {
   async upload(file, fileName, dir) {
     try {
-      const formData = new FormData();
-      formData.append('file', file);
-      formData.append('fileName', fileName);
-      formData.append('dir', dir);
+      const safeFileName = fileName.replace(/[^a-zA-Z0-9._-]/g, '_');
+      console.log(`[Lib] Uploading Binary: ${safeFileName} (${file.size} bytes)`);
 
-      const response = await axios.post(`${SERVER}/api/auxi/bunny-upload`, formData, {
+      const url = `${SERVER}/api/auxi/bunny-upload?fileName=${encodeURIComponent(safeFileName)}&dir=${encodeURIComponent(dir)}`;
+      
+      const response = await fetch(url, {
+        method: 'POST',
+        body: file,
         headers: {
-          'Content-Type': 'multipart/form-data'
+          'Content-Type': file.type || 'application/octet-stream'
         }
       });
 
-      if (response.data && response.data.url) {
-        return response.data.url;
-      } else {
-        throw new Error('No se recibió URL de Bunny.net');
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Upload failed (${response.status}): ${errorText}`);
       }
+
+      const data = await response.json();
+      console.log(`[Lib] Upload Success: ${data.url}`);
+      return data.url;
     } catch (error) {
-      console.error('Error al subir a Bunny.net:', error);
+      console.error('[Lib] Binary Upload Critical Error:', error);
       throw error;
     }
   }
