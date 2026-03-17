@@ -136,7 +136,6 @@ export default {
       activeCategory: "Todos",
       loading: true,
       tabs: ["Todos", "Nuevos", "Favoritos", "Descargados"],
-      categories: ["Todos", "Bienvenida", "Prospección", "Presentación", "Seguimiento", "Liderazgo", "Producto", "Mentalidad"],
       currentAudio: null,
       isPlaying: false,
       currentTime: 0,
@@ -147,6 +146,10 @@ export default {
     };
   },
   computed: {
+    categories() {
+      const dynamicCats = [...new Set(this.audios.map(a => a.category).filter(Boolean))];
+      return ["Todos", ...dynamicCats];
+    },
     session() {
       return this.$store.state.session;
     },
