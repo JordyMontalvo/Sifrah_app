@@ -220,13 +220,18 @@ export default {
       });
     },
     async startReading() {
-      const url = this.book.pdfUrl || this.book.url;
-      if (!url) return;
+      const originalUrl = this.book.pdfUrl || this.book.url;
+      if (!originalUrl) return;
       
       this.loadingPdf = true;
       try {
         await this.loadPdfScripts();
-        this.pdfDoc = await window.pdfjsLib.getDocument(url).promise;
+        
+        // Proxy URL to bypass CORS (Backend is on Heroku)
+        const BACKEND_URL = 'https://sifrah-server-0920254d8662.herokuapp.com/api';
+        const proxyUrl = `${BACKEND_URL}/pdf-proxy?url=${encodeURIComponent(originalUrl)}`;
+
+        this.pdfDoc = await window.pdfjsLib.getDocument(proxyUrl).promise;
         this.pages = this.pdfDoc.numPages;
         this.showPdf = true;
         this.loadingPdf = false;
@@ -237,7 +242,7 @@ export default {
         });
       } catch (err) {
         console.error("Reader Error:", err);
-        alert("No se pudo cargar el PDF. Revisa que el enlace sea accesible.");
+        alert("No se pudo cargar el PDF. Revisa que el enlace sea accesible o prueba recargando.");
         this.loadingPdf = false;
       }
     },
