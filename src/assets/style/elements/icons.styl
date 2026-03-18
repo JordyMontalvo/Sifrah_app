@@ -66,6 +66,10 @@
   padding-top 6px
   @media (min-width: d-break)
     bottom 16px
+    body.book-reader-open &
+      bottom 40px
+      right 40px
+      z-index 2100 /* Ensure it's above the reader but positioned relative to it */
 
 
 

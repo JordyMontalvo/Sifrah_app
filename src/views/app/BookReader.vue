@@ -107,6 +107,12 @@ export default {
       return url;
     }
   },
+  mounted() {
+    document.body.classList.add('book-reader-open');
+  },
+  destroyed() {
+    document.body.classList.remove('book-reader-open');
+  },
   watch: {
     book: {
       immediate: true,
@@ -139,9 +145,14 @@ export default {
 
 @media (min-width: 1024px) {
   .book-reader-overlay {
-    position: absolute;
-    z-index: 50; /* Lower than sidebar (100) */
+    position: fixed;
+    top: 0;
+    left: 300px;   /* Sidebar width */
+    right: 0;
+    bottom: 0;
+    z-index: 50;   /* Lower than sidebar (100) */
     padding-bottom: 0;
+    border-radius: 0; /* Make it fill the space completely */
   }
 }
 
