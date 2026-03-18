@@ -1,79 +1,145 @@
 <template>
-  <transition name="fade">
-    <div v-if="active" class="book-reader-overlay">
-      <!-- Top Bar -->
-      <header class="reader-header">
-        <button class="icon-btn close-btn" @click="$emit('close')" title="Cerrar">
-          <i class="fas fa-arrow-left"></i>
-        </button>
-        <div class="header-right">
-          <button class="icon-btn"><i class="fas fa-search"></i></button>
-          <button class="icon-btn"><i class="fas fa-share-alt"></i></button>
-          <button class="icon-btn"><i class="fas fa-download"></i></button>
-        </div>
-      </header>
-
-      <!-- Main Content -->
-      <main class="reader-body" :class="{ 'reading': showPdf }">
-        <div v-if="!showPdf" class="book-display">
-          <div class="book-cover-container">
-            <img :src="book.image || defaultImage" alt="Cover" class="reader-cover" />
-          </div>
-          <h2 class="reader-title">{{ book.title }}</h2>
-          <p class="reader-subtitle">{{ book.author }}</p>
-          <button class="read-now-btn" @click="showPdf = true" v-if="book.pdfUrl || book.url">
-            Comenzar Lectura
-          </button>
-        </div>
+  <transition name="reader-anim">
+    <div v-if="active" class="book-reader-overlay" :class="{ 'dark-mode': darkMode }">
+      <!-- Layout Container -->
+      <div class="reader-layout" :class="{ 'sidebar-open': sidebarOpen }">
         
-        <div v-else class="pdf-container">
-          <iframe 
-            :src="pdfViewerUrl" 
-            class="pdf-iframe" 
-            frameborder="0"
-            allowfullscreen
-          ></iframe>
-          <button class="back-to-info" @click="showPdf = false">
-            <i class="fas fa-info-circle"></i> Ver Portada
-          </button>
-        </div>
-      </main>
-
-      <!-- Bottom Controls Card -->
-      <div class="reader-controls-container">
-        <div class="reader-card">
-          <!-- Index / Progress Header -->
-          <div class="card-header">
-            <div class="index-selector">
-              <span>Índice</span>
-              <i class="fas fa-chevron-down"></i>
+        <!-- Sidebar (Thumbnails / Table of Contents) -->
+        <aside class="reader-sidebar">
+          <div class="sidebar-header">
+            <h3>Contenido</h3>
+            <button class="close-sidebar-btn" @click="sidebarOpen = false">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+          <div class="sidebar-content">
+            <div class="chapter-list">
+              <div 
+                v-for="(chap, idx) in chapters" 
+                :key="idx" 
+                class="chapter-item"
+                :class="{ active: currentChapter === idx }"
+                @click="jumpToChapter(idx)"
+              >
+                <div class="chap-num">{{ idx + 1 }}</div>
+                <div class="chap-info">
+                  <span class="chap-title">{{ chap.title }}</span>
+                  <span class="chap-page">Pág. {{ chap.page }}</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="thumbnail-grid" v-if="showThumbnails">
+              <div v-for="n in 12" :key="n" class="thumb-item">
+                <div class="thumb-placeholder">{{ n }}</div>
+              </div>
             </div>
           </div>
+        </aside>
 
-          <!-- Progress Slider -->
-          <div class="progress-section">
-            <input 
-              type="range" 
-              class="reader-slider" 
-              v-model="progress" 
-              min="0" 
-              max="100"
-            />
-            <span class="progress-percent">{{ progress }}%</span>
+        <!-- Main Workspace -->
+        <div class="reader-main">
+          <!-- Top Bar -->
+          <header class="reader-header">
+            <div class="header-left">
+              <button class="icon-btn" @click="$emit('close')" title="Volver">
+                <i class="fas fa-arrow-left"></i>
+              </button>
+              <button class="icon-btn menu-toggle" @click="sidebarOpen = !sidebarOpen">
+                <i class="fas fa-bars"></i>
+              </button>
+              <h2 class="document-title">{{ book.title || 'Documento' }}</h2>
+            </div>
+            
+            <div class="header-center desk-only">
+              <div class="zoom-controls">
+                <button @click="zoomOut"><i class="fas fa-minus"></i></button>
+                <span class="zoom-val">{{ zoom }}%</span>
+                <button @click="zoomIn"><i class="fas fa-plus"></i></button>
+              </div>
+              <div class="layout-toggles">
+                <button class="active"><i class="fas fa-file"></i></button>
+                <button><i class="fas fa-columns"></i></button>
+              </div>
+            </div>
+
+            <div class="header-right">
+              <button class="icon-btn desk-only"><i class="fas fa-share-alt"></i></button>
+              <button class="icon-btn desk-only"><i class="fas fa-download"></i></button>
+              <button class="icon-btn" @click="toggleSettings"><i class="fas fa-ellipsis-v"></i></button>
+            </div>
+          </header>
+
+          <!-- Viewer Content -->
+          <main class="reader-body" :class="{ 'view-info': !showPdf }">
+            <!-- Cover View (Initial State) -->
+            <div v-if="!showPdf" class="book-cover-view">
+              <div class="cover-glow"></div>
+              <img :src="book.image || defaultImage" alt="Cover" class="large-cover" />
+              <div class="book-details">
+                <h1 class="book-h1">{{ book.title }}</h1>
+                <p class="book-author-p">{{ book.author }}</p>
+                <button class="start-read-btn" @click="startReading">
+                  <i class="fas fa-book-open"></i> Continuar Lectura
+                </button>
+              </div>
+            </div>
+            
+            <!-- Real PDF Viewer -->
+            <div v-else class="pdf-workspace">
+              <iframe 
+                :src="pdfViewerUrl" 
+                class="pdf-view-frame" 
+                frameborder="0"
+                allowfullscreen
+              ></iframe>
+              <button class="overlay-close-btn" @click="showPdf = false" title="Cerrar Lector">
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+          </main>
+
+          <!-- Floating Control Card (Image 2 Redesign) -->
+          <div class="floating-controls-wrap" v-if="showPdf">
+            <div class="reader-glass-card">
+              <!-- Card Top: Index Selector -->
+              <div class="card-row card-header-row" @click="toggleIndexList">
+                <div class="index-label">
+                  <span class="label-text">Índice</span>
+                  <i class="fas fa-chevron-down" :class="{ rotate: indexListVisible }"></i>
+                </div>
+                <div class="percent-label">{{ progress }}%</div>
+              </div>
+
+              <!-- Card Middle: Progress Slider -->
+              <div class="card-row slider-row">
+                <input 
+                  type="range" 
+                  class="modern-slider" 
+                  v-model="progress" 
+                  min="0" 
+                  max="100"
+                />
+              </div>
+
+              <!-- Card Info: Page Counter -->
+              <div class="card-row page-counter-row">
+                <span class="page-num">{{ currentPage }} / {{ pages }}</span>
+              </div>
+
+              <!-- Card Bottom: Toolbar -->
+              <div class="card-row toolbar-row">
+                <button class="tool-btn" title="Marcador"><i class="far fa-bookmark"></i></button>
+                <button class="tool-btn" title="Buscar"><i class="fas fa-search"></i></button>
+                <button class="tool-btn" @click="sidebarOpen = true" title="Tabla de Contenidos">
+                  <i class="fas fa-bars"></i>
+                </button>
+                <button class="tool-btn" @click="darkMode = !darkMode" title="Modo Oscuro">
+                  <i class="fas" :class="darkMode ? 'fa-sun' : 'fa-moon'"></i>
+                </button>
+              </div>
+            </div>
           </div>
-
-          <!-- Page Indicator -->
-          <div class="page-indicator">
-            {{ Math.floor(progress * pages / 100) || 1 }} / {{ pages }}
-          </div>
-
-          <!-- Bottom Toolbar -->
-          <footer class="card-footer">
-            <button class="footer-icon"><i class="far fa-bookmark"></i></button>
-            <button class="footer-icon"><i class="fas fa-search"></i></button>
-            <button class="footer-icon"><i class="fas fa-bars"></i></button>
-            <button class="footer-icon"><i class="fas fa-sun"></i></button>
-          </footer>
         </div>
       </div>
     </div>
@@ -94,33 +160,72 @@ export default {
       progress: 6,
       pages: 100,
       showPdf: false,
-      defaultImage: "https://via.placeholder.com/300x450?text=Libro"
+      sidebarOpen: false,
+      darkMode: false,
+      zoom: 100,
+      indexListVisible: false,
+      showThumbnails: false,
+      currentChapter: 0,
+      defaultImage: "https://via.placeholder.com/300x450?text=Libro",
+      chapters: [
+        { title: "Introducción", page: 1 },
+        { title: "Capítulo 1: El Comienzo", page: 12 },
+        { title: "Capítulo 2: Profundizando", page: 34 },
+        { title: "Capítulo 3: La Verdad", page: 56 },
+        { title: "Capítulo 4: Conclusión", page: 89 }
+      ]
     };
   },
   computed: {
+    currentPage() {
+      return Math.floor(this.progress * this.pages / 100) || 1;
+    },
     pdfViewerUrl() {
-      const url = this.book.pdfUrl || this.book.url;
+      let url = this.book.pdfUrl || this.book.url;
       if (!url) return '';
-      // For a better mobile experience, we can use Google Docs Viewer as a proxy if needed,
-      // but a direct iframe usually works better for private/secure PDFs if the browser supports it.
-      // We'll use the direct URL for now.
+      // Enhance with theme or page if possible (depends on viewer)
       return url;
     }
   },
-  mounted() {
-    document.body.classList.add('book-reader-open');
-  },
-  destroyed() {
-    document.body.classList.remove('book-reader-open');
+  methods: {
+    startReading() {
+      this.showPdf = true;
+    },
+    zoomIn() {
+      if (this.zoom < 200) this.zoom += 10;
+    },
+    zoomOut() {
+      if (this.zoom > 50) this.zoom -= 10;
+    },
+    jumpToChapter(idx) {
+      const chap = this.chapters[idx];
+      this.currentChapter = idx;
+      this.progress = Math.round((chap.page / this.pages) * 100);
+      if (window.innerWidth < 1024) this.sidebarOpen = false;
+    },
+    toggleIndexList() {
+      this.indexListVisible = !this.indexListVisible;
+    },
+    toggleSettings() {
+      // Logic for more settings
+    }
   },
   watch: {
     book: {
       immediate: true,
-      handler(newBook) {
-        if (newBook && newBook.pages) {
-          this.pages = parseInt(newBook.pages.toString().replace(/\D/g, '')) || 100;
+      handler(nb) {
+        if (nb && nb.pages) {
+          this.pages = parseInt(nb.pages.toString().replace(/\D/g, '')) || 100;
         }
-        this.showPdf = false; // Reset view when book changes
+        this.showPdf = false;
+        this.sidebarOpen = false;
+      }
+    },
+    active(val) {
+      if (val) {
+        document.body.style.overflow = 'hidden';
+      } else {
+        document.body.style.overflow = '';
       }
     }
   }
@@ -128,269 +233,376 @@ export default {
 </script>
 
 <style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
 .book-reader-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 2000;
-  background: linear-gradient(180deg, #ffffff 0%, #fff0f5 100%);
-  display: flex;
-  flex-direction: column;
-  color: #1a1a1a;
-  font-family: 'Poppins', sans-serif;
-  padding-bottom: 80px; /* Space for the footer-Dashboard on mobile */
+  top: 0; left: 0; right: 0; bottom: 0;
+  z-index: 9999;
+  background: #f8f9fa;
+  font-family: 'Inter', sans-serif;
+  color: #1a1a1b;
+  overflow: hidden;
+  transition: background 0.3s ease;
 }
 
-@media (min-width: 1024px) {
-  .book-reader-overlay {
-    position: fixed;
-    top: 0;
-    left: 300px;   /* Sidebar width */
-    right: 0;
-    bottom: 0;
-    z-index: 50;   /* Lower than sidebar (100) */
-    padding-bottom: 0;
-    border-radius: 0; /* Make it fill the space completely */
-  }
+.book-reader-overlay.dark-mode {
+  background: #0f0f10;
+  color: #e4e4e7;
 }
+
+/* Layout */
+.reader-layout {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.reader-sidebar {
+  width: 300px;
+  background: #ffffff;
+  border-right: 1px solid #e5e7eb;
+  transform: translateX(-100%);
+  transition: transform 0.4s ease;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+}
+
+.dark-mode .reader-sidebar {
+  background: #18181b;
+  border-right-color: #27272a;
+}
+
+.sidebar-open .reader-sidebar {
+  transform: translateX(0);
+}
+
+.reader-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+/* Sidebar Elements */
+.sidebar-header {
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.dark-mode .sidebar-header { border-bottom-color: #27272a; }
+
+.chapter-list {
+  flex: 1;
+  padding: 10px;
+  overflow-y: auto;
+}
+
+.chapter-item {
+  display: flex;
+  padding: 15px;
+  border-radius: 12px;
+  cursor: pointer;
+  margin-bottom: 5px;
+  transition: background 0.2s;
+}
+
+.chapter-item:hover { background: #f3f4f6; }
+.dark-mode .chapter-item:hover { background: #27272a; }
+
+.chapter-item.active {
+  background: #fff1f2;
+  color: #e11d48;
+}
+
+.chap-num {
+  width: 24px;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.chap-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.chap-title { font-weight: 500; font-size: 14px; }
+.chap-page { font-size: 12px; color: #71717a; }
 
 /* Header */
 .reader-header {
+  height: 64px;
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding: 20px;
+  justify-content: space-between;
+  padding: 0 16px;
+  background: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.dark-mode .reader-header {
+  background: #0f0f10;
+  border-bottom-color: #27272a;
+}
+
+.header-left { display: flex; align-items: center; gap: 8px; }
+
+.document-title {
+  font-size: 16px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
 }
 
 .icon-btn {
-  background: none;
+  background: transparent;
   border: none;
-  font-size: 20px;
-  color: #333;
-  cursor: pointer;
-  padding: 8px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
+  color: inherit;
+  font-size: 18px;
 }
 
-.header-right {
+.icon-btn:hover { background: #f3f4f6; }
+.dark-mode .icon-btn:hover { background: #18181b; }
+
+.header-center { display: flex; align-items: center; gap: 20px; }
+
+.zoom-controls {
   display: flex;
-  gap: 10px;
+  align-items: center;
+  background: #f3f4f6;
+  padding: 4px 12px;
+  border-radius: 20px;
+  gap: 12px;
 }
 
-/* Main Content */
+.dark-mode .zoom-controls { background: #18181b; }
+
+.zoom-controls button {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  color: inherit;
+}
+
+.zoom-val { font-size: 13px; font-weight: 600; min-width: 45px; text-align: center; }
+
+/* Main Viewer */
 .reader-body {
   flex: 1;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.book-cover-view {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  position: relative;
+}
+
+.cover-glow {
+  position: absolute;
+  width: 300px;
+  height: 450px;
+  background: #e11d48;
+  filter: blur(100px);
+  opacity: 0.15;
+  z-index: 0;
+}
+
+.large-cover {
+  width: 240px;
+  border-radius: 8px;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+  z-index: 1;
+  transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.large-cover:hover { transform: scale(1.05) rotate(2deg); }
+
+.book-details { margin-top: 30px; text-align: center; z-index: 1; }
+.book-h1 { font-size: 28px; font-weight: 800; margin-bottom: 5px; }
+.book-author-p { font-size: 16px; color: #71717a; margin-bottom: 30px; }
+
+.start-read-btn {
+  background: #e11d48;
+  color: white;
+  border: none;
+  padding: 14px 40px;
+  border-radius: 30px;
+  font-weight: 700;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 10px 30px rgba(225, 29, 72, 0.3);
+  transition: all 0.3s;
+}
+
+.start-read-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 15px 40px rgba(225, 29, 72, 0.4);
+}
+
+/* PDF Workspace */
+.pdf-workspace {
+  width: 100%;
+  height: 100%;
+  background: #525659;
+}
+
+.pdf-view-frame {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+.overlay-close-btn {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  width: 36px;
+  height: 36px;
+  background: rgba(0,0,0,0.5);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 10;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 10px;
-  overflow: hidden;
-  text-align: center;
-  max-width: 1200px;
-  margin: 0 auto;
-  width: 100%;
 }
 
-.reader-body.reading {
-  align-items: stretch;
-  max-width: none;
-}
-
-.book-display {
-  width: 100%;
-  max-width: 400px;
-}
-
-.book-cover-container {
-  margin-bottom: 30px;
-  perspective: 1000px;
-}
-
-.reader-cover {
-  width: 70%;
-  max-width: 250px;
-  aspect-ratio: 2 / 3;
-  object-fit: contain;
-  background-color: #f5f5f5;
-  border-radius: 8px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-  transition: transform 0.3s ease;
-}
-
-.reader-title {
-  font-size: 22px;
-  font-weight: 700;
-  margin: 0 0 10px 0;
-  line-height:1.2;
-}
-
-.reader-subtitle {
-  font-size: 14px;
-  color: #666;
-  margin: 0 0 25px 0;
-}
-
-.read-now-btn {
-  background: #E91E63;
-  color: white;
-  border: none;
-  padding: 12px 30px;
-  border-radius: 25px;
-  font-weight: 600;
-  font-size: 16px;
-  cursor: pointer;
-  box-shadow: 0 10px 20px rgba(233, 30, 99, 0.2);
-  transition: transform 0.2s;
-}
-
-.read-now-btn:active {
-  transform: scale(0.95);
-}
-
-/* PDF Viewer */
-.pdf-container {
-  width: 100%;
-  height: 100%;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-}
-
-.pdf-iframe {
-  width: 100%;
-  flex: 1;
-  border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-  background: white;
-}
-
-.back-to-info {
+/* Floating Redesigned Card (Image 2) */
+.floating-controls-wrap {
   position: absolute;
-  top: 10px;
-  right: 10px;
-  background: rgba(255,255,255,0.9);
-  border: 1px solid #ddd;
-  padding: 5px 12px;
-  border-radius: 15px;
-  font-size: 11px;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  max-width: 480px;
+  z-index: 1000;
+}
+
+.reader-glass-card {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 28px;
+  padding: 18px 24px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+}
+
+.dark-mode .reader-glass-card {
+  background: rgba(24, 24, 27, 0.85);
+  border-color: rgba(63, 63, 70, 0.5);
+}
+
+.card-row { margin-bottom: 12px; width: 100%; }
+.card-row:last-child { margin-bottom: 0; }
+
+.card-header-row { 
+  display: flex; 
+  justify-content: space-between; 
+  align-items: center; 
   cursor: pointer;
-  z-index: 5;
+  padding: 2px 0;
 }
 
-/* Bottom Controls */
-.reader-controls-container {
-  padding: 20px;
-  padding-bottom: 40px;
+.index-label { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 17px; }
+.index-label i { font-size: 14px; transition: transform 0.3s; color: #71717a; }
+.index-label i.rotate { transform: rotate(180deg); }
+
+.percent-label { color: #71717a; font-size: 14px; font-weight: 500; }
+
+.modern-slider {
   width: 100%;
-  max-width: 600px;
-  margin: 0 auto;
-}
-
-@media (min-width: 1024px) {
-  .reader-header {
-    max-width: 1200px;
-    margin: 0 auto;
-    width: 100%;
-  }
-
-  .reader-body:not(.reading) .reader-cover {
-    max-width: 300px;
-  }
-}
-
-.reader-card {
-  background: white;
-  border-radius: 24px;
-  box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.05), 0 10px 30px rgba(0, 0, 0, 0.1);
-  padding: 20px;
-}
-
-.card-header {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 20px;
-}
-
-.index-selector {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  font-weight: 600;
-  font-size: 16px;
-  cursor: pointer;
-}
-
-.progress-section {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  margin-bottom: 10px;
-}
-
-.reader-slider {
-  flex: 1;
   appearance: none;
-  height: 6px;
+  height: 4px;
   background: #f1f1f1;
-  border-radius: 3px;
+  border-radius: 2px;
   outline: none;
 }
 
-.reader-slider::-webkit-slider-thumb {
+.dark-mode .modern-slider { background: #3f3f46; }
+
+.modern-slider::-webkit-slider-thumb {
   appearance: none;
-  width: 22px;
-  height: 22px;
+  width: 24px;
+  height: 24px;
   background: white;
-  border: 4px solid #E91E63;
+  border: 5px solid #e11d48;
   border-radius: 50%;
   cursor: pointer;
-  box-shadow: 0 4px 10px rgba(233, 30, 99, 0.3);
+  box-shadow: 0 4px 12px rgba(225, 29, 72, 0.3);
 }
 
-.progress-percent {
-  font-size: 14px;
-  color: #666;
-  min-width: 30px;
-}
+.page-counter-row { font-size: 15px; color: #a1a1aa; font-weight: 500; }
 
-.page-indicator {
-  font-size: 14px;
-  color: #999;
-  margin-bottom: 20px;
-}
-
-.card-footer {
+.toolbar-row {
   display: flex;
   justify-content: space-around;
-  border-top: 1px solid #f5f5f5;
-  padding-top: 15px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(0,0,0,0.05);
 }
 
-.footer-icon {
-  background: none;
+.dark-mode .toolbar-row { border-top-color: rgba(255,255,255,0.05); }
+
+.tool-btn {
+  background: transparent;
   border: none;
   font-size: 20px;
-  color: #333;
+  color: #3f3f46;
+  opacity: 0.7;
   cursor: pointer;
-  opacity: 0.8;
-  transition: opacity 0.2s;
+  transition: all 0.2s;
 }
 
-.footer-icon:hover {
-  opacity: 1;
+.dark-mode .tool-btn { color: #a1a1aa; }
+
+.tool-btn:hover { opacity: 1; transform: scale(1.1); color: #e11d48; }
+
+/* Responsive Adjustments */
+@media (max-width: 1024px) {
+  .desk-only { display: none; }
+  .reader-sidebar {
+    position: fixed;
+    height: 100%;
+    width: 85%;
+    max-width: 320px;
+  }
 }
 
 /* Animations */
-.fade-enter-active, .fade-leave-active {
-  transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+.reader-anim-enter-active, .reader-anim-leave-active {
+  transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
 }
-.fade-enter, .fade-leave-to {
+.reader-anim-enter, .reader-anim-leave-to {
   opacity: 0;
-  transform: translateY(100%);
+  transform: translateY(40px) scale(0.98);
 }
 </style>
+>
