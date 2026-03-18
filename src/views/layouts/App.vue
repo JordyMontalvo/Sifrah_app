@@ -10,7 +10,7 @@
       <router-view />
     </div>
 
-    <header v-if="$route.path !== '/audios'">
+    <header>
       <!--<h3 class="slogan">
         <span v-if="country == 'Perú'"       style="font-size: 28px;">🇵🇪</span>
         <span v-if="country == 'Bolivia'"    style="font-size: 28px;">🇧🇴</span>
@@ -380,7 +380,7 @@
       </div>
 
       <div class="content">
-        <header v-if="$route.path !== '/audios' || !isMobile">
+        <header v-if="($route.path !== '/audios' && $route.path !== '/libros') || !isMobile">
           <p style="font-weight: bold; font-size: 20px">{{ $route.path === '/audios' ? 'Audio' : title }}</p>
           <div
           style="

@@ -67,7 +67,7 @@
                 <div class="shortcut-icon"><i class="fas fa-headphones"></i></div>
                 <span>Audios</span>
               </router-link>
-              <router-link to="/tools" class="shortcut-item">
+              <router-link to="/libros" class="shortcut-item">
                 <div class="shortcut-icon"><i class="fas fa-book"></i></div>
                 <span>Libros</span>
               </router-link>

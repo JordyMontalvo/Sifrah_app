@@ -38,6 +38,7 @@ class API {
     SharedStore,
     Materials,
     Audios,
+    Books,
   }) {
     this.Profile = new Profile();
     this.Password = new Password();
@@ -59,6 +60,7 @@ class API {
     this.SharedStore = new SharedStore();
     this.Materials = new Materials();
     this.Audios = new Audios();
+    this.Books = new Books();
   }
 
   register(data) {
@@ -314,6 +316,15 @@ class Audios {
   }
 }
 
+class Books {
+  GET() {
+    return axios.get('/app/books');
+  }
+  GET_CONFIG() {
+    return axios.get('/app/config');
+  }
+}
+
 export default new API({
   Profile,
   Password,
@@ -335,4 +346,5 @@ export default new API({
   SharedStore,
   Materials,
   Audios,
+  Books,
 });
