@@ -139,7 +139,7 @@
                 <button class="tool-btn" @click="showSearch = !showSearch"><i class="fas fa-search"></i></button>
                 <button class="tool-btn" @click="sidebarOpen = true"><i class="fas fa-list-ul"></i></button>
                 <button class="tool-btn" @click="darkMode = !darkMode">
-                  <i :class="darkMode ? 'fas fa-moon' : 'fas fa-sun'"></i>
+                  <i :class="darkMode ? 'fas fa-sun' : 'fas fa-moon'"></i>
                 </button>
               </div>
             </div>
@@ -158,6 +158,7 @@ const PDFJS_WORKER_URL = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105
 export default {
   props: {
     active: Boolean,
+    isBookmarked: Boolean,
     book: {
       type: Object,
       default: () => ({})
@@ -174,7 +175,6 @@ export default {
       zoom: 1.0,
       loadingPdf: false,
       renderedPages: [],
-      isBookmarked: false,
       showSearch: false,
       pdfDoc: null,
       observer: null,
@@ -324,7 +324,7 @@ export default {
       }
     },
     toggleBookmark() {
-      this.isBookmarked = !this.isBookmarked;
+      this.$emit('toggle-bookmark');
     },
     toggleSettings() {}
   },
@@ -395,8 +395,17 @@ export default {
 .reader-main { flex: 1; display: flex; flex-direction: column; min-width: 0; }
 
 .reader-header {
+  position: relative;
   height: 60px; display: flex; align-items: center; justify-content: space-between;
   padding: 0 16px; background: #fff; border-bottom: 1px solid #e2e8f0;
+}
+.header-center {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  z-index: 10;
 }
 .dark-mode .reader-header { background: #1a1a1c; border-bottom-color: #27272a; }
 

@@ -41,6 +41,7 @@
     color: #333;
     cursor: pointer;
     margin-top: 4px;
+    margin-left: -5px; /* Move slightly to the left */
 }
 
 .header-title {
@@ -171,9 +172,11 @@
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.book-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+@media (min-width: 768px) {
+    .book-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    }
 }
 
 .book-cover {
@@ -208,8 +211,10 @@
     transition: all 0.2s ease;
 }
 
-.bookmark-btn:hover {
-    transform: scale(1.1);
+@media (min-width: 768px) {
+    .bookmark-btn:hover {
+        transform: scale(1.1);
+    }
 }
 
 .bookmark-btn i.active {

@@ -75,6 +75,8 @@
       <BookReader 
         :active="readerActive" 
         :book="selectedBook" 
+        :is-bookmarked="selectedBook ? isFavorite(selectedBook._id) : false"
+        @toggle-bookmark="toggleFavorite(selectedBook._id)"
         @close="readerActive = false"
       />
 

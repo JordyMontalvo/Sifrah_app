@@ -37,6 +37,7 @@
     color: #333;
     cursor: pointer;
     margin-top: 4px;
+    margin-left: 6px; /* Moved 6px to the right */
 }
 
 .header-title {
@@ -44,7 +45,7 @@
     font-weight: 700;
     margin: 0;
     flex-grow: 1;
-    margin-left: 15px;
+    margin-left: 3px; /* Reduced by 1px to 3px as requested */
 }
 
 .header-actions {
@@ -322,8 +323,10 @@
     transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-.mini-player:hover {
-    transform: translateY(-2px) scale(1.01);
+@media (min-width: 768px) {
+    .mini-player:hover {
+        transform: translateY(-2px) scale(1.01);
+    }
 }
 
 .player-content {
