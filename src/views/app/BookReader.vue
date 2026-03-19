@@ -3,6 +3,9 @@
     <div v-if="active" class="book-reader-overlay" :class="{ 'dark-mode': darkMode }">
       <!-- Layout Container -->
       <div class="reader-layout" :class="{ 'sidebar-open': sidebarOpen }">
+        <button class="back-circle-btn" @click="closeReader" title="Volver">
+          <i class="fas fa-arrow-left"></i>
+        </button>
         
         <!-- Sidebar (Thumbnails / Chapters) -->
         <aside class="reader-sidebar" v-if="sidebarOpen">
@@ -474,6 +477,32 @@ export default {
 .cover-glow { position: absolute; width: 300px; height: 300px; background: #e11d48; filter: blur(100px); opacity: 0.1; }
 .start-read-btn { background: #e11d48; color: #fff; border: none; padding: 14px 40px; border-radius: 30px; font-weight: 800; margin-top: 10px; cursor: pointer; transition: 0.3s; z-index: 10; }
 .start-read-btn:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(225, 29, 72, 0.3); }
+
+/* Back Button Overlay */
+.back-circle-btn {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  width: 40px;
+  height: 40px;
+  background: #fff;
+  border: none;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  z-index: 10005;
+  color: #1a1a1c;
+  transition: all 0.3s ease;
+}
+.back-circle-btn:hover { transform: scale(1.1); box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25); }
+.dark-mode .back-circle-btn { background: #27272a; color: #fff; }
+
+@media (max-width: 767px) {
+  .back-circle-btn { top: 10px; left: 10px; width: 36px; height: 36px; }
+}
 
 /* Animations */
 .reader-anim-enter-active, .reader-anim-leave-active { transition: 0.5s cubic-bezier(0.165, 0.84, 0.44, 1); }
