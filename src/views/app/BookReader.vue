@@ -139,7 +139,7 @@
                 <button class="tool-btn" @click="showSearch = !showSearch"><i class="fas fa-search"></i></button>
                 <button class="tool-btn" @click="sidebarOpen = true"><i class="fas fa-list-ul"></i></button>
                 <button class="tool-btn" @click="darkMode = !darkMode">
-                  <i :class="darkMode ? 'fas fa-sun' : 'fas fa-moon'"></i>
+                  <i :class="darkMode ? 'fas fa-moon' : 'fas fa-sun'"></i>
                 </button>
               </div>
             </div>
@@ -473,8 +473,9 @@ export default {
 .book-details { width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; margin-top: 20px; z-index: 10; }
 .book-h1 { margin-bottom: 5px; font-size: 32px; font-weight: 700; color: #1a1a1c; margin-top: 15px; }
 .book-author-p { margin-bottom: 25px; font-size: 18px; color: #666; }
-.large-cover { width: 180px; border-radius: 4px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); z-index: 5; }
-.cover-glow { position: absolute; width: 300px; height: 300px; background: #e11d48; filter: blur(100px); opacity: 0.1; }
+.large-cover { width: 280px; border-radius: 6px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); z-index: 5; transition: width 0.3s; }
+@media (max-width: 767px) { .large-cover { width: 220px; } }
+.cover-glow { position: absolute; width: 400px; height: 400px; background: #e11d48; filter: blur(100px); opacity: 0.1; }
 .start-read-btn { background: #e11d48; color: #fff; border: none; padding: 14px 40px; border-radius: 30px; font-weight: 800; margin-top: 10px; cursor: pointer; transition: 0.3s; z-index: 10; }
 .start-read-btn:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(225, 29, 72, 0.3); }
 
