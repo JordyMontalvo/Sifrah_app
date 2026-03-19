@@ -42,7 +42,7 @@
               <button class="icon-btn menu-toggle" @click="sidebarOpen = !sidebarOpen">
                 <i class="fas fa-bars"></i>
               </button>
-              <h2 class="document-title">{{ book.title || 'Documento' }}</h2>
+              <h2 class="document-title" v-if="showPdf">{{ book.title || 'Documento' }}</h2>
             </div>
             
             <div class="header-center desk-only">
@@ -335,6 +335,12 @@ export default {
     active(val) {
       if (!val) this.cleanupPdf();
       document.body.style.overflow = val ? 'hidden' : '';
+      if (val) {
+        document.body.classList.add('book-reader-open');
+        this.darkMode = false; // Always start in day mode
+      } else {
+        document.body.classList.remove('book-reader-open');
+      }
     }
   },
   beforeDestroy() {
@@ -353,6 +359,19 @@ export default {
   color: #1a1a1c;
   overflow: hidden;
   transition: all 0.3s;
+}
+
+@media (min-width: 768px) {
+  .book-reader-overlay {
+    left: 300px;
+  }
+}
+
+@media (max-width: 767px) {
+  .book-reader-overlay {
+    position: fixed;
+    left: 0;
+  }
 }
 
 .book-reader-overlay.dark-mode {
@@ -448,9 +467,12 @@ export default {
 
 /* Cover State UI */
 .book-cover-view { width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; }
-.large-cover { width: 200px; border-radius: 4px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); z-index: 5; }
+.book-details { width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; margin-top: 20px; z-index: 10; }
+.book-h1 { margin-bottom: 5px; font-size: 32px; font-weight: 700; color: #1a1a1c; margin-top: 15px; }
+.book-author-p { margin-bottom: 25px; font-size: 18px; color: #666; }
+.large-cover { width: 180px; border-radius: 4px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); z-index: 5; }
 .cover-glow { position: absolute; width: 300px; height: 300px; background: #e11d48; filter: blur(100px); opacity: 0.1; }
-.start-read-btn { background: #e11d48; color: #fff; border: none; padding: 14px 40px; border-radius: 30px; font-weight: 800; margin-top: 30px; cursor: pointer; transition: 0.3s; z-index: 10; }
+.start-read-btn { background: #e11d48; color: #fff; border: none; padding: 14px 40px; border-radius: 30px; font-weight: 800; margin-top: 10px; cursor: pointer; transition: 0.3s; z-index: 10; }
 .start-read-btn:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(225, 29, 72, 0.3); }
 
 /* Animations */

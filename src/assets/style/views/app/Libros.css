@@ -9,6 +9,10 @@
     position: relative; /* For absolute BookReader on desktop */
 }
 
+.libros-view.no-padding {
+    padding: 0 !important;
+}
+
 /* Header */
 .libros-header {
     padding: 20px 8px 10px 8px;
@@ -276,7 +280,7 @@
         padding: 32px;
         background: #fdfdfd;
         box-sizing: border-box;
-        min-height: auto !important;
+        min-height: 100vh !important;
     }
 
     .libros-header {

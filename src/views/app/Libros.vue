@@ -1,6 +1,6 @@
 <template>
   <App :session="session" title="Libros">
-    <div class="libros-view">
+    <div class="libros-view" :class="{ 'no-padding': readerActive }">
       <!-- Header -->
       <header class="libros-header">
         <div class="header-top">
