@@ -129,7 +129,30 @@
         </div>
 
         <div class="control-group">
-          <label>Imagen del Retrato:</label>
+          <label><i class="fas fa-images"></i> Imágenes Subidas:</label>
+          <div class="layers-list" v-if="portraitLayers.length > 0">
+            <div 
+              v-for="(layer, index) in portraitLayers" 
+              :key="index"
+              class="layer-item"
+              :class="{ active: index === activeLayerIndex }"
+              @click="activeLayerIndex = index; updateCanvas()"
+            >
+              <div class="layer-info">
+                <span class="layer-number">#{{ index + 1 }}</span>
+                <span class="layer-name">Imagen {{ index + 1 }}</span>
+              </div>
+              <div class="layer-actions">
+                <button @click.stop="removeLayer(index)" class="btn-remove-layer" title="Eliminar">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div v-else class="no-layers-msg">
+            <p>No hay imágenes subidas aún.</p>
+          </div>
+          
           <div class="image-upload-section">
             <input 
               type="file" 
@@ -140,16 +163,28 @@
               id="portrait-upload"
             />
             <label for="portrait-upload" class="upload-button">
-              <i class="fas fa-upload"></i> 
-              {{ portraitImage ? 'Cambiar Imagen' : 'Subir Imagen' }}
+              <i class="fas fa-plus-circle"></i> Agregar Foto
             </label>
-            <button 
-              v-if="portraitImage" 
-              @click="removePortrait"
-              class="remove-button"
-            >
-              <i class="fas fa-times"></i> Eliminar
-            </button>
+          </div>
+          
+          <div class="active-layer-settings" v-if="activeLayerIndex !== -1 && portraitLayers[activeLayerIndex]">
+            <label>Forma de la imagen #{{ activeLayerIndex + 1 }}:</label>
+            <div class="shape-toggle">
+              <button 
+                @click="updateLayerShape('circle')" 
+                class="shape-btn"
+                :class="{ active: portraitLayers[activeLayerIndex].shape === 'circle' }"
+              >
+                <i class="far fa-circle"></i> Círculo
+              </button>
+              <button 
+                @click="updateLayerShape('square')" 
+                class="shape-btn"
+                :class="{ active: portraitLayers[activeLayerIndex].shape === 'square' }"
+              >
+                <i class="far fa-square"></i> Rectángulo
+              </button>
+            </div>
           </div>
         </div>
 
@@ -215,7 +250,9 @@ export default {
       // Posición y tamaño del retrato circular (centro aproximado del flyer)
       portraitX: 360,
       portraitY: 500,
-      portraitSize: 280,
+      portraitWidth: 280,
+      portraitHeight: 280,
+      portraitSize: 280, // Mantener para compatibilidad circular
       // Posición y estilo del texto del nombre (debajo de EMPRESARIO)
       textX: 360,
       textY: 1050, // Más abajo, debajo de EMPRESARIO
@@ -229,15 +266,18 @@ export default {
         { name: 'Source Serif Bold', value: 'Source Serif Pro', weight: '700', label: 'Source Serif Variable bold' }
       ],
       // Estado de interacción
+      activeLayerIndex: -1,
+      portraitLayers: [],
       isDragging: false,
       isDraggingText: false,
       isResizing: false,
       selectedHandle: null,
       dragStartX: 0,
-      dragStartY: 0,
-      initialPortraitX: 0,
-      initialPortraitY: 0,
-      initialPortraitSize: 0,
+       dragStartY: 0,
+      initialLayerX: 0,
+      initialLayerY: 0,
+      initialLayerWidth: 0,
+      initialLayerHeight: 0,
       initialTextX: 0,
       initialTextY: 0,
       showInstructions: true,
@@ -251,6 +291,7 @@ export default {
       currentFlyer: null,
       selectedCategory: '',
       categories: [],
+      portraitShape: 'circle', // 'circle' o 'square'
     };
   },
   computed: {
@@ -350,8 +391,8 @@ export default {
       this.currentFlyer = null;
       this.selectedFlyerId = '';
       this.nombreSocio = '';
-      this.portraitImage = null;
-      this.portraitImageObj = null;
+      this.portraitLayers = [];
+      this.activeLayerIndex = -1;
       this.showInstructions = true;
     },
     
@@ -413,11 +454,9 @@ export default {
         this.baseImage = img;
         this.canvasWidth = img.width;
         this.canvasHeight = img.height;
-        // Posiciones iniciales basadas en el tamaño de la imagen
-        this.portraitX = img.width / 2;
-        this.portraitY = img.height * 0.4; // Aproximadamente 40% desde arriba
+        // Posiciones iniciales para el texto
         this.textX = img.width / 2;
-        this.textY = img.height * 0.82; // Debajo de EMPRESARIO (aproximadamente 82% desde arriba)
+        this.textY = img.height * 0.82; 
         this.updateCanvas();
       };
       img.onerror = () => {
@@ -437,26 +476,62 @@ export default {
 
       const reader = new FileReader();
       reader.onload = (e) => {
-        this.portraitImage = e.target.result;
         const img = new Image();
         img.onload = () => {
-          this.portraitImageObj = img;
+          // Crear nueva capa
+          const newLayer = {
+            src: e.target.result,
+            obj: img,
+            x: this.canvasWidth / 2,
+            y: this.canvasHeight * 0.4,
+            width: 280,
+            height: 280,
+            shape: 'square' // Por defecto cuadrado para testimonios
+          };
+          this.portraitLayers.push(newLayer);
+          this.activeLayerIndex = this.portraitLayers.length - 1;
           this.updateCanvas();
         };
         img.src = e.target.result;
       };
       reader.readAsDataURL(file);
-    },
-    removePortrait() {
-      this.portraitImage = null;
-      this.portraitImageObj = null;
+      
+      // Limpiar input para permitir subir la misma imagen si se desea
       if (this.$refs.fileInput) {
         this.$refs.fileInput.value = '';
       }
+    },
+    removeLayer(index) {
+      this.portraitLayers.splice(index, 1);
+      if (this.activeLayerIndex === index) {
+        this.activeLayerIndex = this.portraitLayers.length - 1;
+      } else if (this.activeLayerIndex > index) {
+        this.activeLayerIndex--;
+      }
       this.updateCanvas();
     },
+    updateLayerShape(shape) {
+      if (this.activeLayerIndex === -1) return;
+      this.portraitLayers[this.activeLayerIndex].shape = shape;
+      this.updateCanvas();
+    },
+    removePortrait() {
+      if (this.activeLayerIndex !== -1) {
+        this.removeLayer(this.activeLayerIndex);
+      }
+    },
     adjustSize(delta) {
-      this.portraitSize = Math.max(150, Math.min(450, this.portraitSize + delta));
+      if (this.activeLayerIndex === -1) return;
+      const layer = this.portraitLayers[this.activeLayerIndex];
+      
+      if (layer.shape === 'circle') {
+        const newSize = Math.max(150, Math.min(450, layer.width + delta));
+        layer.width = newSize;
+        layer.height = newSize;
+      } else {
+        layer.width = Math.max(100, Math.min(800, layer.width + delta));
+        layer.height = Math.max(100, Math.min(800, layer.height + delta));
+      }
       this.updateCanvas();
     },
     getCanvasCoordinates(event) {
@@ -476,10 +551,18 @@ export default {
         y: (clientY - rect.top) * scaleY
       };
     },
-    isPointInCircle(x, y, centerX, centerY, radius) {
-      const dx = x - centerX;
-      const dy = y - centerY;
-      return dx * dx + dy * dy <= radius * radius;
+    isPointInSquare(x, y, centerX, centerY, width, height) {
+      const rw = width / 2;
+      const rh = height / 2;
+      return x >= centerX - rw && x <= centerX + rw &&
+             y >= centerY - rh && y <= centerY + rh;
+    },
+    isPointInPortrait(x, y, layer) {
+      if (layer.shape === 'circle') {
+        return this.isPointInCircle(x, y, layer.x, layer.y, layer.width / 2);
+      } else {
+        return this.isPointInSquare(x, y, layer.x, layer.y, layer.width, layer.height);
+      }
     },
     getFontFamily() {
       const selectedFontObj = this.availableFonts.find(f => f.value === this.selectedFont);
@@ -535,17 +618,30 @@ export default {
       return x >= left && x <= right && y >= top && y <= bottom;
     },
     getHandleAt(x, y) {
-      if (!this.portraitImageObj) return null;
+      if (this.activeLayerIndex === -1) return null;
+      const layer = this.portraitLayers[this.activeLayerIndex];
+      if (!layer.obj) return null;
       
-      const radius = this.portraitSize / 2;
-      // Área táctil más grande en móvil para facilitar el toque
+      const rw = layer.width / 2;
+      const rh = layer.height / 2;
+      
       const touchArea = this.isMobile ? this.handleSize * 2 : this.handleSize;
+      
       const handles = [
-        { name: 'top-left', x: this.portraitX - radius, y: this.portraitY - radius },
-        { name: 'top-right', x: this.portraitX + radius, y: this.portraitY - radius },
-        { name: 'bottom-left', x: this.portraitX - radius, y: this.portraitY + radius },
-        { name: 'bottom-right', x: this.portraitX + radius, y: this.portraitY + radius }
+        { name: 'top-left', x: layer.x - rw, y: layer.y - rh },
+        { name: 'top-right', x: layer.x + rw, y: layer.y - rh },
+        { name: 'bottom-left', x: layer.x - rw, y: layer.y + rh },
+        { name: 'bottom-right', x: layer.x + rw, y: layer.y + rh }
       ];
+
+      if (layer.shape === 'square') {
+        handles.push(
+          { name: 'top-center', x: layer.x, y: layer.y - rh },
+          { name: 'bottom-center', x: layer.x, y: layer.y + rh },
+          { name: 'left-center', x: layer.x - rw, y: layer.y },
+          { name: 'right-center', x: layer.x + rw, y: layer.y }
+        );
+      }
       
       for (const handle of handles) {
         const dx = x - handle.x;
@@ -558,15 +654,28 @@ export default {
       return null;
     },
     drawHandles(ctx) {
-      if (!this.portraitImageObj) return;
+      if (this.activeLayerIndex === -1) return;
+      const layer = this.portraitLayers[this.activeLayerIndex];
+      if (!layer.obj) return;
       
-      const radius = this.portraitSize / 2;
+      const rw = layer.width / 2;
+      const rh = layer.height / 2;
+      
       const handles = [
-        { x: this.portraitX - radius, y: this.portraitY - radius },
-        { x: this.portraitX + radius, y: this.portraitY - radius },
-        { x: this.portraitX - radius, y: this.portraitY + radius },
-        { x: this.portraitX + radius, y: this.portraitY + radius }
+        { x: layer.x - rw, y: layer.y - rh },
+        { x: layer.x + rw, y: layer.y - rh },
+        { x: layer.x - rw, y: layer.y + rh },
+        { x: layer.x + rw, y: layer.y + rh }
       ];
+
+      if (layer.shape === 'square') {
+        handles.push(
+          { x: layer.x, y: layer.y - rh },
+          { x: layer.x, y: layer.y + rh },
+          { x: layer.x - rw, y: layer.y },
+          { x: layer.x + rw, y: layer.y }
+        );
+      }
       
       ctx.save();
       handles.forEach(handle => {
@@ -585,7 +694,6 @@ export default {
       
       // Primero verificar si se hace clic en el texto del nombre
       if (this.nombreSocio && this.isPointInText(coords.x, coords.y, this.textX, this.textY, this.nombreSocio)) {
-        // Iniciar movimiento del texto
         this.isDraggingText = true;
         this.dragStartX = coords.x;
         this.dragStartY = coords.y;
@@ -595,29 +703,36 @@ export default {
         return;
       }
       
-      // Si hay imagen de retrato, verificar interacción con ella
-      if (!this.portraitImageObj) return;
-      
+      // Verificar interacción con handles de la capa activa
       const handle = this.getHandleAt(coords.x, coords.y);
-      
       if (handle) {
-        // Iniciar redimensionamiento
         this.isResizing = true;
         this.selectedHandle = handle;
         this.dragStartX = coords.x;
         this.dragStartY = coords.y;
-        this.initialPortraitX = this.portraitX;
-        this.initialPortraitY = this.portraitY;
-        this.initialPortraitSize = this.portraitSize;
+        const layer = this.portraitLayers[this.activeLayerIndex];
+        this.initialLayerX = layer.x;
+        this.initialLayerY = layer.y;
+        this.initialLayerWidth = layer.width;
+        this.initialLayerHeight = layer.height;
         event.preventDefault();
-      } else if (this.isPointInCircle(coords.x, coords.y, this.portraitX, this.portraitY, this.portraitSize / 2)) {
-        // Iniciar movimiento
-        this.isDragging = true;
-        this.dragStartX = coords.x;
-        this.dragStartY = coords.y;
-        this.initialPortraitX = this.portraitX;
-        this.initialPortraitY = this.portraitY;
-        event.preventDefault();
+        return;
+      }
+
+      // Buscar si se clicó en alguna de las capas (empezando por la de más arriba)
+      for (let i = this.portraitLayers.length - 1; i >= 0; i--) {
+        const layer = this.portraitLayers[i];
+        if (this.isPointInPortrait(coords.x, coords.y, layer)) {
+          this.activeLayerIndex = i;
+          this.isDragging = true;
+          this.dragStartX = coords.x;
+          this.dragStartY = coords.y;
+          this.initialLayerX = layer.x;
+          this.initialLayerY = layer.y;
+          this.updateCanvas();
+          event.preventDefault();
+          return;
+        }
       }
     },
     handleMouseMove(event) {
@@ -627,56 +742,67 @@ export default {
       const coords = this.getCanvasCoordinates(event);
       
       if (this.isDraggingText) {
-        // Mover el texto
         const dx = coords.x - this.dragStartX;
         const dy = coords.y - this.dragStartY;
         this.textX = this.initialTextX + dx;
         this.textY = this.initialTextY + dy;
         this.updateCanvas();
-      } else if (this.isDragging) {
-        // Mover la imagen
+      } else if (this.isDragging && this.activeLayerIndex !== -1) {
         const dx = coords.x - this.dragStartX;
         const dy = coords.y - this.dragStartY;
-        this.portraitX = this.initialPortraitX + dx;
-        this.portraitY = this.initialPortraitY + dy;
+        const layer = this.portraitLayers[this.activeLayerIndex];
+        layer.x = this.initialLayerX + dx;
+        layer.y = this.initialLayerY + dy;
         this.updateCanvas();
-      } else if (this.isResizing && this.selectedHandle) {
-        // Redimensionar la imagen desde las esquinas
-        const dx = coords.x - this.dragStartX;
-        const dy = coords.y - this.dragStartY;
-        
-        // Calcular la distancia desde el centro para mantener proporción circular
-        const centerX = this.initialPortraitX;
-        const centerY = this.initialPortraitY;
-        const currentDistance = Math.sqrt(
-          Math.pow(coords.x - centerX, 2) + Math.pow(coords.y - centerY, 2)
-        );
-        
-        // El nuevo tamaño es el doble de la distancia desde el centro
-        let newSize = currentDistance * 2;
-        
-        // Limitar el tamaño
-        newSize = Math.max(150, Math.min(450, newSize));
-        this.portraitSize = newSize;
-        
-        // Mantener el centro en la misma posición al redimensionar
-        // (el centro no cambia, solo el tamaño)
-        
+      } else if (this.isResizing && this.activeLayerIndex !== -1) {
+        const centerX = this.initialLayerX;
+        const centerY = this.initialLayerY;
+        const layer = this.portraitLayers[this.activeLayerIndex];
+
+        const distWidth = Math.abs(coords.x - centerX) * 2;
+        const distHeight = Math.abs(coords.y - centerY) * 2;
+
+        if (this.selectedHandle.includes('center')) {
+          if (this.selectedHandle === 'left-center' || this.selectedHandle === 'right-center') {
+            layer.width = Math.max(100, Math.min(1000, distWidth));
+            if (layer.shape === 'circle') layer.height = layer.width;
+          } else {
+            layer.height = Math.max(100, Math.min(1000, distHeight));
+            if (layer.shape === 'circle') layer.width = layer.height;
+          }
+        } else {
+          if (layer.shape === 'circle') {
+            const newSize = Math.max(150, Math.min(450, Math.max(distWidth, distHeight)));
+            layer.width = newSize;
+            layer.height = newSize;
+          } else {
+            layer.width = Math.max(100, Math.min(1000, distWidth));
+            layer.height = Math.max(100, Math.min(1000, distHeight));
+          }
+        }
         this.updateCanvas();
-      } else if (this.portraitImageObj) {
-        // Cambiar cursor cuando está sobre la imagen o handles
+      } else {
+        // Cambiar cursor según interacción posible
         const handle = this.getHandleAt(coords.x, coords.y);
         if (handle) {
-          canvas.style.cursor = 'nwse-resize';
-        } else if (this.isPointInCircle(coords.x, coords.y, this.portraitX, this.portraitY, this.portraitSize / 2)) {
-          canvas.style.cursor = 'move';
-        } else if (this.nombreSocio && this.isPointInText(coords.x, coords.y, this.textX, this.textY, this.nombreSocio)) {
-          canvas.style.cursor = 'move';
+          if (handle.includes('center')) {
+            canvas.style.cursor = (handle === 'left-center' || handle === 'right-center') ? 'ew-resize' : 'ns-resize';
+          } else canvas.style.cursor = 'nwse-resize';
         } else {
-          canvas.style.cursor = 'default';
+          let foundLayer = false;
+          for (let i = this.portraitLayers.length - 1; i >= 0; i--) {
+            if (this.isPointInPortrait(coords.x, coords.y, this.portraitLayers[i])) {
+              canvas.style.cursor = 'move';
+              foundLayer = true;
+              break;
+            }
+          }
+          if (!foundLayer && this.nombreSocio && this.isPointInText(coords.x, coords.y, this.textX, this.textY, this.nombreSocio)) {
+            canvas.style.cursor = 'move';
+          } else if (!foundLayer) {
+            canvas.style.cursor = 'default';
+          }
         }
-      } else if (this.nombreSocio && this.isPointInText(coords.x, coords.y, this.textX, this.textY, this.nombreSocio)) {
-        canvas.style.cursor = 'move';
       }
     },
     handleMouseUp() {
@@ -690,12 +816,9 @@ export default {
       }
     },
     handleTouchStart(event) {
-      event.preventDefault(); // Prevenir scroll en móvil
+      event.preventDefault();
       const coords = this.getCanvasCoordinates(event);
-      
-      // Primero verificar si se toca el texto del nombre
       if (this.nombreSocio && this.isPointInText(coords.x, coords.y, this.textX, this.textY, this.nombreSocio)) {
-        // Iniciar movimiento del texto
         this.isDraggingText = true;
         this.dragStartX = coords.x;
         this.dragStartY = coords.y;
@@ -704,65 +827,74 @@ export default {
         return;
       }
       
-      // Si hay imagen de retrato, verificar interacción con ella
-      if (!this.portraitImageObj) return;
-      
       const handle = this.getHandleAt(coords.x, coords.y);
-      
       if (handle) {
-        // Iniciar redimensionamiento
         this.isResizing = true;
         this.selectedHandle = handle;
         this.dragStartX = coords.x;
         this.dragStartY = coords.y;
-        this.initialPortraitX = this.portraitX;
-        this.initialPortraitY = this.portraitY;
-        this.initialPortraitSize = this.portraitSize;
-      } else if (this.isPointInCircle(coords.x, coords.y, this.portraitX, this.portraitY, this.portraitSize / 2)) {
-        // Iniciar movimiento
-        this.isDragging = true;
-        this.dragStartX = coords.x;
-        this.dragStartY = coords.y;
-        this.initialPortraitX = this.portraitX;
-        this.initialPortraitY = this.portraitY;
+        const layer = this.portraitLayers[this.activeLayerIndex];
+        this.initialLayerX = layer.x;
+        this.initialLayerY = layer.y;
+        this.initialLayerWidth = layer.width;
+        this.initialLayerHeight = layer.height;
+        return;
+      }
+
+      for (let i = this.portraitLayers.length - 1; i >= 0; i--) {
+        const layer = this.portraitLayers[i];
+        if (this.isPointInPortrait(coords.x, coords.y, layer)) {
+          this.activeLayerIndex = i;
+          this.isDragging = true;
+          this.dragStartX = coords.x;
+          this.dragStartY = coords.y;
+          this.initialLayerX = layer.x;
+          this.initialLayerY = layer.y;
+          this.updateCanvas();
+          return;
+        }
       }
     },
     handleTouchMove(event) {
-      event.preventDefault(); // Prevenir scroll en móvil
-      const canvas = this.$refs.canvas;
-      if (!canvas) return;
-      
+      event.preventDefault();
       const coords = this.getCanvasCoordinates(event);
       
       if (this.isDraggingText) {
-        // Mover el texto
         const dx = coords.x - this.dragStartX;
         const dy = coords.y - this.dragStartY;
         this.textX = this.initialTextX + dx;
         this.textY = this.initialTextY + dy;
         this.updateCanvas();
-      } else if (this.isDragging) {
-        // Mover la imagen
+      } else if (this.isDragging && this.activeLayerIndex !== -1) {
         const dx = coords.x - this.dragStartX;
         const dy = coords.y - this.dragStartY;
-        this.portraitX = this.initialPortraitX + dx;
-        this.portraitY = this.initialPortraitY + dy;
+        const layer = this.portraitLayers[this.activeLayerIndex];
+        layer.x = this.initialLayerX + dx;
+        layer.y = this.initialLayerY + dy;
         this.updateCanvas();
-      } else if (this.isResizing && this.selectedHandle) {
-        // Redimensionar la imagen desde las esquinas
-        const centerX = this.initialPortraitX;
-        const centerY = this.initialPortraitY;
-        const currentDistance = Math.sqrt(
-          Math.pow(coords.x - centerX, 2) + Math.pow(coords.y - centerY, 2)
-        );
-        
-        // El nuevo tamaño es el doble de la distancia desde el centro
-        let newSize = currentDistance * 2;
-        
-        // Limitar el tamaño
-        newSize = Math.max(150, Math.min(450, newSize));
-        this.portraitSize = newSize;
-        
+      } else if (this.isResizing && this.activeLayerIndex !== -1) {
+        const centerX = this.initialLayerX;
+        const centerY = this.initialLayerY;
+        const layer = this.portraitLayers[this.activeLayerIndex];
+        const distWidth = Math.abs(coords.x - centerX) * 2;
+        const distHeight = Math.abs(coords.y - centerY) * 2;
+
+        if (this.selectedHandle.includes('center')) {
+          if (this.selectedHandle === 'left-center' || this.selectedHandle === 'right-center') {
+            layer.width = Math.max(100, Math.min(1000, distWidth));
+          } else {
+            layer.height = Math.max(100, Math.min(1000, distHeight));
+          }
+        } else {
+          if (layer.shape === 'circle') {
+             const newSize = Math.max(150, Math.min(450, Math.max(distWidth, distHeight)));
+             layer.width = newSize;
+             layer.height = newSize;
+          } else {
+            layer.width = Math.max(100, Math.min(1000, distWidth));
+            layer.height = Math.max(100, Math.min(1000, distHeight));
+          }
+        }
         this.updateCanvas();
       }
     },
@@ -780,88 +912,66 @@ export default {
       if (!canvas) return;
 
       const ctx = canvas.getContext('2d');
-      
-      // Establecer tamaño del canvas
       canvas.width = this.canvasWidth;
       canvas.height = this.canvasHeight;
-
-      // Limpiar canvas
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // Dibujar imagen base del flyer
+      // 1. Dibujar imagen base
       ctx.drawImage(this.baseImage, 0, 0, this.canvasWidth, this.canvasHeight);
 
-      // Dibujar retrato circular si existe
-      if (this.portraitImageObj) {
+      // 2. Dibujar todas las capas de imágenes
+      this.portraitLayers.forEach((layer) => {
+        if (!layer.obj) return;
         ctx.save();
-        
-        // Crear un path circular para el clipping
         ctx.beginPath();
-        ctx.arc(this.portraitX, this.portraitY, this.portraitSize / 2, 0, Math.PI * 2);
-        ctx.clip();
-        
-        // Dibujar la imagen del retrato dentro del círculo
-        const size = this.portraitSize;
-        const x = this.portraitX - size / 2;
-        const y = this.portraitY - size / 2;
-        
-        // Intentar hacer un crop centrado de la imagen
-        const imgAspect = this.portraitImageObj.width / this.portraitImageObj.height;
-        let drawWidth = size;
-        let drawHeight = size;
-        let drawX = x;
-        let drawY = y;
-        
-        if (imgAspect > 1) {
-          // Imagen más ancha que alta
-          drawHeight = size;
-          drawWidth = size * imgAspect;
-          drawX = x - (drawWidth - size) / 2;
+        if (layer.shape === 'circle') {
+          ctx.arc(layer.x, layer.y, layer.width / 2, 0, Math.PI * 2);
         } else {
-          // Imagen más alta que ancha
-          drawWidth = size;
-          drawHeight = size / imgAspect;
-          drawY = y - (drawHeight - size) / 2;
+          ctx.rect(layer.x - layer.width / 2, layer.y - layer.height / 2, layer.width, layer.height);
         }
-        
-        ctx.drawImage(
-          this.portraitImageObj,
-          drawX, drawY, drawWidth, drawHeight
-        );
-        
+        ctx.clip();
+
+        const x = layer.x - layer.width / 2;
+        const y = layer.y - layer.height / 2;
+        const imgAspect = layer.obj.width / layer.obj.height;
+        const containerAspect = layer.width / layer.height;
+
+        let drawW, drawH, drawX, drawY;
+        if (imgAspect > containerAspect) {
+          drawH = layer.height;
+          drawW = layer.height * imgAspect;
+          drawX = x - (drawW - layer.width) / 2;
+          drawY = y;
+        } else {
+          drawW = layer.width;
+          drawH = layer.width / imgAspect;
+          drawX = x;
+          drawY = y - (drawH - layer.height) / 2;
+        }
+        ctx.drawImage(layer.obj, drawX, drawY, drawW, drawH);
         ctx.restore();
-        
-        // Dibujar handles de redimensionamiento solo si showHandles es true
-        if (showHandles) {
-          this.drawHandles(ctx);
-        }
+      });
+
+      // 3. Dibujar handles solo para la capa activa
+      if (showHandles && this.activeLayerIndex !== -1) {
+        this.drawHandles(ctx);
       }
 
-      // Dibujar nombre del socio con la tipografía seleccionada
+      // 4. Dibujar nombre del socio
       if (this.nombreSocio) {
         ctx.save();
-        // Usar la tipografía seleccionada
         ctx.font = this.getFontString();
         ctx.fillStyle = this.textColor;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        
-        // Agregar glow blanco sutil primero (efecto de resplandor similar al flyer)
         ctx.shadowColor = 'rgba(255, 255, 255, 0.6)';
         ctx.shadowBlur = 12;
-        ctx.shadowOffsetX = 0;
-        ctx.shadowOffsetY = 0;
         ctx.fillText(this.nombreSocio, this.textX, this.textY);
-        
-        // Agregar sombra negra para contraste
         ctx.shadowColor = 'rgba(0, 0, 0, 0.7)';
         ctx.shadowBlur = 6;
         ctx.shadowOffsetX = 2;
         ctx.shadowOffsetY = 2;
-        
-        // Dibujar el texto principal
         ctx.fillText(this.nombreSocio, this.textX, this.textY);
-        
         ctx.restore();
       }
     },
@@ -1074,6 +1184,74 @@ export default {
   margin-top 12px
   text-align center
 
+.active-layer-settings
+  margin-top 20px
+  padding-top 15px
+  border-top 1px dashed #ddd
+
+.layers-list
+  display flex
+  flex-direction column
+  gap 10px
+  margin-bottom 15px
+
+.layer-item
+  display flex
+  align-items center
+  justify-content space-between
+  padding 10px 15px
+  background #f8f9fa
+  border 1px solid #dee2e6
+  border-radius 8px
+  cursor pointer
+  transition all 0.2s ease
+
+  &:hover
+    background #f1f3f5
+    border-color #9f00ad
+
+  &.active
+    background #f3e5f5
+    border-color #9f00ad
+    box-shadow 0 0 0 2px rgba(159, 0, 173, 0.1)
+
+.layer-info
+  display flex
+  align-items center
+  gap 10px
+
+.layer-number
+  font-weight bold
+  color #9f00ad
+  font-size 14px
+
+.layer-name
+  font-size 14px
+  color #333
+
+.btn-remove-layer
+  background none
+  border none
+  color #e53935
+  cursor pointer
+  padding 5px
+  font-size 16px
+  transition transform 0.2s ease
+
+  &:hover
+    transform scale(1.2)
+    color #c62828
+
+.no-layers-msg
+  text-align center
+  padding 15px
+  background #f8f9fa
+  border 1px dashed #ddd
+  border-radius 8px
+  margin-bottom 15px
+  color #666
+  font-size 13px
+
 .preview-img
   max-width 200px
   max-height 200px
@@ -1081,6 +1259,43 @@ export default {
   border 3px solid #9f00ad
   object-fit cover
   box-shadow 0 4px 12px rgba(0, 0, 0, 0.2)
+
+.shape-control
+  margin-top 15px
+
+.shape-toggle
+  display flex
+  gap 10px
+  margin-top 8px
+
+.shape-btn
+  flex 1
+  padding 8px 12px
+  background-color #f3e5f5
+  color #9f00ad
+  border 2px solid #9f00ad
+  border-radius 6px
+  font-size 13px
+  font-weight 600
+  cursor pointer
+  transition all 0.3s ease
+  display flex
+  align-items center
+  justify-content center
+  gap 8px
+
+  &:hover
+    background-color #9f00ad
+    color white
+    transform translateY(-1px)
+
+  &.active
+    background-color #9f00ad
+    color white
+    box-shadow 0 4px 12px rgba(159, 0, 173, 0.3)
+
+  i
+    font-size 14px
 
 .portrait-controls, .name-controls
   display flex
