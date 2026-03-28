@@ -457,7 +457,9 @@ export default {
         // Posiciones iniciales para el texto
         this.textX = img.width / 2;
         this.textY = img.height * 0.82; 
-        this.updateCanvas();
+        this.$nextTick(() => {
+          this.updateCanvas();
+        });
       };
       img.onerror = () => {
         console.error('Error al cargar la imagen base');
@@ -550,6 +552,11 @@ export default {
         x: (clientX - rect.left) * scaleX,
         y: (clientY - rect.top) * scaleY
       };
+    },
+    isPointInCircle(x, y, centerX, centerY, radius) {
+      const dx = x - centerX;
+      const dy = y - centerY;
+      return dx * dx + dy * dy <= radius * radius;
     },
     isPointInSquare(x, y, centerX, centerY, width, height) {
       const rw = width / 2;
