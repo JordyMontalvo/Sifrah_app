@@ -1,4 +1,7 @@
 module.exports = {
+  transpileDependencies: [
+    '@sentry'
+  ],
   devServer: {
     proxy: {
       '/api': {
