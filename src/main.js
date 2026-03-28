@@ -4,6 +4,9 @@ import router from "./router";
 import store from "./store";
 import api from "./api";
 import GAuth from "vue-google-oauth2";
+import * as Sentry from "@sentry/vue";
+import { BrowserTracing } from "@sentry/tracing";
+
 
 Vue.config.productionTip = false;
 
@@ -14,6 +17,22 @@ const gauthOption = {
   prompt: "select_account",
 };
 Vue.use(GAuth, gauthOption);
+
+Sentry.init({
+  Vue,
+  dsn: "https://9af376f4cdcbfb9a945fc2668bc6addd@o4511123210436608.ingest.us.sentry.io/4511123448070144",
+  integrations: [
+    new BrowserTracing({
+      routingInstrumentation: Sentry.vueRouterInstrumentation(router),
+      tracingOrigins: ["localhost", /^\//],
+    }),
+  ],
+  // Set tracesSampleRate to 1.0 to capture 100%
+  // of transactions for performance monitoring.
+  // We recommend adjusting this value in production
+  tracesSampleRate: 1.0,
+});
+
 
 // Global Mixin para logout y scroll
 Vue.mixin({

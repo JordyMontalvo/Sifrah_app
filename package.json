@@ -7,6 +7,8 @@
     "build": "vue-cli-service build"
   },
   "dependencies": {
+    "@sentry/tracing": "^7.120.4",
+    "@sentry/vue": "^10.46.0",
     "axios": "^0.19.2",
     "chart.js": "^2.9.4",
     "core-js": "^2.6.5",
