@@ -141,13 +141,6 @@
               </div>
             </div>
             <div v-else>
-          <div v-if="upgradeMode" class="affiliation-alert">
-            <b>Estás realizando un UPGRADE de plan.</b><br />
-            Solo puedes elegir <b>{{ maxUpgradeProducts }}</b> productos
-            adicionales.<br />
-            Solo pagarás la diferencia: <b>S/. {{ upgradeDifference }}</b> y
-            obtendrás <b>{{ upgradePoints }}</b> puntos extra.
-          </div>
               <!-- Paso 1: Selección de productos -->
               <div v-if="step === 1">
 
@@ -205,8 +198,8 @@
                 <div class="cart-button-container-mobile">
                   <div class="cart-info-left">
                     <div class="cart-price-info">
-                      <span class="total-price">Monto: S/ {{ upgradeMode ? upgradeDifference : (selec_plan ? selec_plan.amount : 0) }}.00</span>
-                      <span class="total-items">Puntos: {{ upgradeMode ? upgradePoints : (selec_plan ? selec_plan.affiliation_points : 0) }} pts</span>
+                      <span class="total-price">Monto: S/ {{ selec_plan ? selec_plan.amount : 0 }}.00</span>
+                      <span class="total-items">Puntos: {{ selec_plan ? selec_plan.affiliation_points : 0 }} pts</span>
                     </div>
                   </div>
                   <button @click="openCartDetailModal" class="cart-square-btn">
@@ -301,10 +294,10 @@
                       </div>
                      
                       <!-- Controles de cantidad -->
-                      <div v-if="upgradeMode ? upgradeProducts[i].total > 0 : products[i].total > 0" class="product-quantity-controls">
+                      <div v-if="products[i].total > 0" class="product-quantity-controls">
                         <button class="qty-control-btn" @click.stop="less(i)">-</button>
                         <span class="qty-display">
-                          {{ upgradeMode ? upgradeProducts[i].total : products[i].total }}
+                          {{ products[i].total }}
                         </span>
                         <button
                           class="qty-control-btn"
@@ -315,11 +308,7 @@
                               const itemWeight = (productName.includes('VIGORPROST') || productName.includes('VIGORPF')) 
                                 ? 0.5 
                                 : (Number(product.weight) || 1);
-                              if (upgradeMode) {
-                                return validationTotalItems + itemWeight > maxUpgradeProducts;
-                              } else {
-                                return validationTotalItems + itemWeight > (selec_plan ? selec_plan.max_products : 0);
-                              }
+                              return validationTotalItems + itemWeight > (selec_plan ? selec_plan.max_products : 0);
                             })()
                           "
                         >
@@ -336,11 +325,7 @@
                             const itemWeight = (productName.includes('VIGORPROST') || productName.includes('VIGORPF')) 
                               ? 0.5 
                               : (Number(product.weight) || 1);
-                            if (upgradeMode) {
-                              return validationTotalItems + itemWeight > maxUpgradeProducts;
-                            } else {
-                              return validationTotalItems + itemWeight > (selec_plan ? selec_plan.max_products : 0);
-                            }
+                            return validationTotalItems + itemWeight > (selec_plan ? selec_plan.max_products : 0);
                           })()
                         "
                       >
@@ -364,7 +349,7 @@
 
                 <div class="cart-items-container">
                   <div 
-                    v-for="(product, idx) in (upgradeMode ? upgradeProducts : products) || []"
+                    v-for="(product, idx) in products || []"
                     v-if="product.total > 0"
                     :key="product.id || idx"
                     class="cart-item"
@@ -396,7 +381,7 @@
                     </div>
                   </div>
 
-                  <div v-if="(upgradeMode ? totalUpgradeProducts : total) === 0" class="empty-cart">
+                  <div v-if="total === 0" class="empty-cart">
                     <i class="fas fa-shopping-cart"></i>
                     <p>Tu carrito está vacío</p>
                     <span>Agrega productos para comenzar</span>
@@ -412,11 +397,11 @@
                     </div>
                     <div class="summary-row">
                       <span>Puntos:</span>
-                      <span>{{ upgradeMode ? upgradePoints : (selec_plan ? selec_plan.affiliation_points : 0) }}.00</span>
+                      <span>{{ selec_plan ? selec_plan.affiliation_points : 0 }}.00</span>
                     </div>
                     <div class="summary-row total-row">
                       <span>Total:</span>
-                      <span>S/ {{ upgradeMode ? upgradeDifference : (selec_plan ? selec_plan.amount : 0) }}.00</span>
+                      <span>S/ {{ selec_plan ? selec_plan.amount : 0 }}.00</span>
                     </div>
                   </div>
                 </div>
@@ -425,8 +410,7 @@
                   <button 
                       class="pay-btn"
                       :disabled="
-                       (upgradeMode ? validationTotalItems : validationTotalItems) !==
-                       (upgradeMode ? maxUpgradeProducts : (selec_plan ? selec_plan.max_products : 0))
+                       validationTotalItems !== (selec_plan ? selec_plan.max_products : 0)
                       "
                     @click="handleGoToStep2"
                   >
@@ -482,11 +466,7 @@
                             const itemWeight = (productName.includes('VIGORPROST') || productName.includes('VIGORPF')) 
                               ? 0.5 
                               : (Number(item.weight) || 1);
-                            if (upgradeMode) {
-                              return validationTotalItems + itemWeight > maxUpgradeProducts;
-                            } else {
-                              return validationTotalItems + itemWeight > (selec_plan ? selec_plan.max_products : 0);
-                            }
+                            return validationTotalItems + itemWeight > (selec_plan ? selec_plan.max_products : 0);
                           })()
                         "
                       >+</button>
@@ -515,11 +495,11 @@
                   </div>
                   <div class="summary-row">
                     <span>Puntos:</span>
-                    <span>{{ upgradeMode ? upgradePoints : (selec_plan ? selec_plan.affiliation_points : 0) }}.00</span>
+                    <span>{{ selec_plan ? selec_plan.affiliation_points : 0 }}.00</span>
                   </div>
                   <div class="summary-row total-row">
                     <span>Total:</span>
-                    <span>S/ {{ upgradeMode ? upgradeDifference : (selec_plan ? selec_plan.amount : 0) }}.00</span>
+                    <span>S/ {{ selec_plan ? selec_plan.amount : 0 }}.00</span>
                   </div>
                 </div>
               </div>
@@ -528,7 +508,7 @@
                   <button class="go-to-pay-btn" @click="handleGoToStep2"
                     :disabled="
                      validationTotalItems !==
-                     (upgradeMode ? maxUpgradeProducts : (selec_plan ? selec_plan.max_products : 0))
+                     (selec_plan ? selec_plan.max_products : 0)
                     "
                 >
                   Ir a Pagar
@@ -598,7 +578,7 @@
                 v-if="
                   step === 1 &&
                  validationTotalItems ===
-                   (upgradeMode ? maxUpgradeProducts : (selec_plan ? selec_plan.max_products : 0))
+                   (selec_plan ? selec_plan.max_products : 0)
                 "
               class="afiliarme-mobile-btn"
             >
@@ -613,7 +593,7 @@
               <h4 class="section-title">Confirma tu afiliación</h4>
               <div class="summary-section confirm-summary">
                 <div
-                  v-for="product in upgradeMode ? upgradeProducts : products"
+                  v-for="product in products"
                   v-if="product.total > 0"
                   class="summary-item"
                 >
@@ -630,19 +610,13 @@
                 <div class="summary-total">
                   <span>Total productos:</span>
                   <span
-                    >{{ upgradeMode ? maxUpgradeProducts : total }} /
-                    {{
-                      upgradeMode ? maxUpgradeProducts : (selec_plan ? selec_plan.max_products : 0)
-                    }}</span
+                    >{{ total }} /
+                    {{ selec_plan ? selec_plan.max_products : 0 }}</span
                   >
                 </div>
                 <div class="summary-total">
                   <span>Total a pagar:</span>
-                  <span>S/. {{ upgradeMode ? upgradeDifference : (selec_plan ? selec_plan.amount : 0) }}</span>
-                </div>
-                <div class="summary-total" v-if="upgradeMode">
-                  <span>Puntos extra:</span>
-                  <span>{{ upgradePoints }}</span>
+                  <span>S/. {{ selec_plan ? selec_plan.amount : 0 }}</span>
                 </div>
               </div>
               <div class="pay-section">
@@ -742,47 +716,7 @@
                 class="invoice-link"
               >
                 Boleta {{ i + 1 }}
-                <span v-if="affiliation.type === 'upgrade'" class="tag-upgrade"
-                  >Upgrade</span
-                >
               </a>
-              <div
-                v-if="affiliation.type === 'upgrade'"
-                class="upgrade-details-block"
-              >
-                <div><b>Upgrade de plan</b></div>
-                <div>
-                  Plan anterior:
-                  <b>{{
-                    affiliation.previousPlan && affiliation.previousPlan.name
-                  }}</b>
-                </div>
-                <div>
-                  Diferencia pagada:
-                  <b
-                    >S/
-                    {{
-                      affiliation.difference && affiliation.difference.amount
-                    }}</b
-                  >
-                </div>
-                <div>
-                  Productos adicionales:
-                  <span
-                    v-if="
-                      affiliation.difference && affiliation.difference.products
-                    "
-                  >
-                    {{
-                      affiliation.difference.products
-                        .filter((p) => p.total > 0)
-                        .map((p) => `${p.total} ${p.name}`)
-                        .join(", ")
-                    }}
-                  </span>
-                  <span v-else>N/A</span>
-                </div>
-              </div>
             </div>
           </div>
       </div>
@@ -839,13 +773,6 @@ export default {
       voucher_number: null,
       selectError: "",
       showPendingModal: false,
-      upgradeMode: false,
-      previousPlan: null,
-      previousProducts: [],
-      maxUpgradeProducts: 0,
-      upgradeDifference: 0,
-      upgradePoints: 0,
-      upgradeProducts: [],
              affiliation: null,
        showRedirectMessage: false, // Controla si mostrar el mensaje de redirección
        // Nuevas propiedades para la selección de productos
@@ -962,71 +889,31 @@ export default {
       // Mostrar trofeo solo si la afiliación master fue aprobada o el usuario ya es master
       return this.isMasterPlanApproved;
     },
-    totalUpgradeProducts() {
-      // Total de peso seleccionados en upgrade
-      if (!this.upgradeProducts) return 0;
-      return this.upgradeProducts.reduce(
-        (a, b) => a + (Number(b.total) || 0) * (Number(b.weight) || 1),
-        0
-      );
-    },
-    
     // Total de items para mostrar en el resumen (VIGORPROST cuenta como 0.5)
     displayTotalItems() {
-      if (this.upgradeMode) {
-        if (!this.upgradeProducts) return 0;
-        return this.upgradeProducts.reduce((total, product) => {
-          if (!product.total || product.total <= 0) return total;
-          const productName = (product.name || '').toUpperCase();
-          // VIGORPROST cuenta como 0.5 items solo en la visualización
-          if (productName.includes('VIGORPROST') || productName.includes('VIGORPF')) {
-            return total + (product.total * 0.5);
-          }
-          return total + product.total;
-        }, 0);
-      } else {
-        if (!this.products) return 0;
-        return this.products.reduce((total, product) => {
-          if (!product.total || product.total <= 0) return total;
-          const productName = (product.name || '').toUpperCase();
-          // VIGORPROST cuenta como 0.5 items solo en la visualización
-          if (productName.includes('VIGORPROST') || productName.includes('VIGORPF')) {
-            return total + (product.total * 0.5);
-          }
-          return total + product.total;
-        }, 0);
-      }
+      if (!this.products) return 0;
+      return this.products.reduce((total, product) => {
+        if (!product.total || product.total <= 0) return total;
+        const productName = (product.name || '').toUpperCase();
+        if (productName.includes('VIGORPROST') || productName.includes('VIGORPF')) {
+          return total + (product.total * 0.5);
+        }
+        return total + product.total;
+      }, 0);
     },
     
     // Total de items para validaciones (VIGORPROST cuenta como 0.5)
     validationTotalItems() {
-      if (this.upgradeMode) {
-        if (!this.upgradeProducts) return 0;
-        return this.upgradeProducts.reduce((total, product) => {
-          if (!product.total || product.total <= 0) return total;
-          const productName = (product.name || '').toUpperCase();
-          // VIGORPROST cuenta como 0.5 items en las validaciones
-          if (productName.includes('VIGORPROST') || productName.includes('VIGORPF')) {
-            return total + (product.total * 0.5);
-          }
-          // Para otros productos, usar el peso normal
-          const weight = Number(product.weight) || 1;
-          return total + (product.total * weight);
-        }, 0);
-      } else {
-        if (!this.products) return 0;
-        return this.products.reduce((total, product) => {
-          if (!product.total || product.total <= 0) return total;
-          const productName = (product.name || '').toUpperCase();
-          // VIGORPROST cuenta como 0.5 items en las validaciones
-          if (productName.includes('VIGORPROST') || productName.includes('VIGORPF')) {
-            return total + (product.total * 0.5);
-          }
-          // Para otros productos, usar el peso normal
-          const weight = Number(product.weight) || 1;
-          return total + (product.total * weight);
-        }, 0);
-      }
+      if (!this.products) return 0;
+      return this.products.reduce((total, product) => {
+        if (!product.total || product.total <= 0) return total;
+        const productName = (product.name || '').toUpperCase();
+        if (productName.includes('VIGORPROST') || productName.includes('VIGORPF')) {
+          return total + (product.total * 0.5);
+        }
+        const weight = Number(product.weight) || 1;
+        return total + (product.total * weight);
+      }, 0);
     },
 
     // Nuevas propiedades computadas para el catálogo de productos
@@ -1062,11 +949,7 @@ export default {
     cartItems() {
       if (!this.products) return [];
       
-      if (this.upgradeMode) {
-        return this.upgradeProducts.filter(product => product.total > 0);
-      } else {
-        return this.products.filter(product => product.total > 0);
-      }
+      return this.products.filter(product => product.total > 0);
     },
 
 
@@ -1075,7 +958,6 @@ export default {
     selec_plan() {
       if (!this.selec_plan) return;
       this.reset_totals();
-      this.checkUpgradeMode();
     },
   },
   async created() {
@@ -1151,11 +1033,6 @@ export default {
       this.affiliations = data.affiliations || [];
       await this.loadAffiliationBanners();
 
-      // Llamar checkUpgradeMode después de que todo esté cargado
-      if (this.selec_plan) {
-        this.checkUpgradeMode();
-      }
-
       // Set congrats state
       if (
         this.plan == "master" ||
@@ -1228,7 +1105,7 @@ export default {
     async syncStateFromStore() {
       
       // IMPORTANTE: Permitir que usuarios afiliados accedan libremente
-      // Ellos pueden querer acceder para hacer upgrade o ver historial
+      // Ellos pueden querer acceder para ver historial
       
       try {
         // Hacer llamada al API para obtener datos necesarios para la afiliación
@@ -1288,11 +1165,6 @@ export default {
         this.affiliation = data.affiliation || null;
         this.affiliations = data.affiliations || [];
         await this.loadAffiliationBanners();
-        
-        // Llamar checkUpgradeMode después de que todo esté cargado
-        if (this.selec_plan) {
-          this.checkUpgradeMode();
-        }
         
         // Set congrats state
         if (
@@ -1385,45 +1257,24 @@ export default {
     },
 
     increaseQuantity(item) {
-      if (this.upgradeMode) {
-        const productIndex = this.upgradeProducts.findIndex(p => p.id === item.id);
-        if (productIndex !== -1) {
-          this.more(productIndex);
-        }
-      } else {
-        const productIndex = this.products.findIndex(p => p.id === item.id);
-        if (productIndex !== -1) {
-          this.more(productIndex);
-        }
+      const productIndex = this.products.findIndex(p => p.id === item.id);
+      if (productIndex !== -1) {
+        this.more(productIndex);
       }
     },
 
     decreaseQuantity(item) {
-      if (this.upgradeMode) {
-        const productIndex = this.upgradeProducts.findIndex(p => p.id === item.id);
-        if (productIndex !== -1) {
-          this.less(productIndex);
-        }
-      } else {
-        const productIndex = this.products.findIndex(p => p.id === item.id);
-        if (productIndex !== -1) {
-          this.less(productIndex);
-        }
+      const productIndex = this.products.findIndex(p => p.id === item.id);
+      if (productIndex !== -1) {
+        this.less(productIndex);
       }
     },
 
     removeFromCart(index) {
       if (this.cartItems[index]) {
-        if (this.upgradeMode) {
-          const productIndex = this.upgradeProducts.findIndex(p => p.id === this.cartItems[index].id);
-          if (productIndex !== -1) {
-            this.upgradeProducts[productIndex].total = 0;
-          }
-        } else {
-          const productIndex = this.products.findIndex(p => p.id === this.cartItems[index].id);
-          if (productIndex !== -1) {
-            this.products[productIndex].total = 0;
-          }
+        const productIndex = this.products.findIndex(p => p.id === this.cartItems[index].id);
+        if (productIndex !== -1) {
+          this.products[productIndex].total = 0;
         }
       }
     },
@@ -1480,88 +1331,24 @@ export default {
       this.product = this.products[i];
     },
 
-    checkUpgradeMode() {
-      if (!this.products) return;
-      
-      if (
-        this.affiliation &&
-        this.affiliation.status === "approved" &&
-        this.selec_plan &&
-        this.selec_plan.amount > this.affiliation.plan.amount
-      ) {
-        this.upgradeMode = true;
-        this.previousPlan = this.affiliation.plan;
-        this.previousProducts = this.affiliation.products || [];
-        this.maxUpgradeProducts =
-          this.selec_plan.max_products - (this.previousPlan.max_products || 0);
-        this.upgradeDifference =
-          this.selec_plan.amount - this.previousPlan.amount;
-        this.upgradePoints =
-          (this.selec_plan.affiliation_points || 0) -
-          (this.previousPlan.affiliation_points || 0);
-        // No máximo individual, solo el global
-        this.upgradeProducts = this.products.map((p) => ({ ...p, total: 0 }));
-      } else {
-        this.upgradeMode = false;
-        this.previousPlan = null;
-        this.previousProducts = [];
-        this.maxUpgradeProducts = this.selec_plan ? this.selec_plan.max_products : 0;
-        this.upgradeDifference = this.selec_plan ? this.selec_plan.amount : 0;
-        this.upgradePoints = this.selec_plan ? this.selec_plan.affiliation_points : 0;
-        this.upgradeProducts = this.products.map((p) => ({
-          ...p,
-          max: p.max,
-          total: 0,
-        }));
-      }
-    },
     more(idx) {
-      if (this.upgradeMode) {
-        if (!this.upgradeProducts || !this.upgradeProducts[idx]) return;
-        const product = this.upgradeProducts[idx];
-        
-        // Calcular el peso del producto (VIGORPROST = 0.5, otros usan weight normal)
-        const productName = (product.name || '').toUpperCase();
-        const itemWeight = (productName.includes('VIGORPROST') || productName.includes('VIGORPF')) 
-          ? 0.5 
-          : (Number(product.weight) || 1);
-        
-        const currentTotal = this.validationTotalItems;
-        const nextTotal = currentTotal + itemWeight;
-        if (nextTotal > this.maxUpgradeProducts) return;
-        this.upgradeProducts[idx].total += 1;
-      } else {
-        if (!this.products || !this.products[idx]) return;
-        const product = this.products[idx];
-        
-        // Calcular el peso del producto (VIGORPROST = 0.5, otros usan weight normal)
-        const productName = (product.name || '').toUpperCase();
-        const itemWeight = (productName.includes('VIGORPROST') || productName.includes('VIGORPF')) 
-          ? 0.5 
-          : (Number(product.weight) || 1);
-        
-        if (isNaN(itemWeight) || itemWeight <= 0) return;
-        
-        // Calcular el total actual usando validationTotalItems
-        const currentTotal = this.validationTotalItems;
-        const newTotal = currentTotal + itemWeight;
-        
-        if (newTotal > this.selec_plan.max_products) return;
-        product.total += 1;
-      }
+      if (!this.products || !this.products[idx]) return;
+      const product = this.products[idx];
+      const productName = (product.name || '').toUpperCase();
+      const itemWeight = (productName.includes('VIGORPROST') || productName.includes('VIGORPF'))
+        ? 0.5
+        : (Number(product.weight) || 1);
+      if (isNaN(itemWeight) || itemWeight <= 0) return;
+      const currentTotal = this.validationTotalItems;
+      const newTotal = currentTotal + itemWeight;
+      if (newTotal > this.selec_plan.max_products) return;
+      product.total += 1;
     },
     less(idx) {
-      if (this.upgradeMode) {
-        if (!this.upgradeProducts || !this.upgradeProducts[idx]) return;
-        if (this.upgradeProducts[idx].total > 0) {
-          this.upgradeProducts[idx].total -= 1;
-        }
-      } else {
-        if (!this.products || !this.products[idx]) return;
-        const product = this.products[idx];
-        if (product.total == 0) return;
-        product.total -= 1;
-      }
+      if (!this.products || !this.products[idx]) return;
+      const product = this.products[idx];
+      if (product.total == 0) return;
+      product.total -= 1;
     },
 
     change(e) {
@@ -1592,7 +1379,7 @@ export default {
     },
 
     async POST() {
-      let products = this.upgradeMode ? this.upgradeProducts : this.products;
+      let products = this.products;
       if (!products) {
         this.error = "No hay productos disponibles";
         return;
@@ -1619,7 +1406,7 @@ export default {
 
       // Lógica de saldo y método de pago
       const saldoTotal = (this.balance || 0) + (this._balance || 0);
-      const totalPagar = this.upgradeMode ? this.upgradeDifference : (this.selec_plan ? this.selec_plan.amount : 0);
+      const totalPagar = this.selec_plan ? this.selec_plan.amount : 0;
       const restante = check ? totalPagar - saldoTotal : totalPagar;
       const saldoCubreTodo = check && saldoTotal >= totalPagar;
       const saldoParcial = check && saldoTotal < totalPagar && saldoTotal > 0;
@@ -1720,17 +1507,10 @@ export default {
       if (this.showCartDetailModal) {
         this.closeCartDetailModal();
       }
-      if (this.upgradeMode) {
-        const total = this.validationTotalItems;
-        if (total !== this.maxUpgradeProducts) {
-          this.selectError = `Debes seleccionar exactamente ${this.maxUpgradeProducts} items adicionales para tu upgrade. Actualmente tienes ${total.toFixed(1)} items.`;
-          return;
-        }
-      } else {
-        if (!this.selec_plan) {
-          this.selectError = "Debes seleccionar un plan";
-          return;
-        }
+      if (!this.selec_plan) {
+        this.selectError = "Debes seleccionar un plan";
+        return;
+      }
         
         // Validar que se hayan seleccionado productos
         const selectedProducts = this.products.filter(p => p.total > 0);
@@ -1755,11 +1535,10 @@ export default {
           this.selectError = `Debes seleccionar exactamente ${this.selec_plan.max_products} items para continuar. Actualmente tienes ${validationTotal.toFixed(1)} items.`;
           return;
         }
-      }
       this.selectError = "";
       
       // Preparar los productos del carrito para checkout
-      const productsForCart = (this.upgradeMode ? this.upgradeProducts : this.products)
+      const productsForCart = this.products
         .filter(product => product.total > 0)
         .map(product => ({
           ...product,
@@ -1768,12 +1547,8 @@ export default {
         }));
       
       // Calcular el precio total y los puntos de afiliación
-      const affiliationTotal = this.upgradeMode 
-        ? this.upgradeDifference 
-        : (this.selec_plan ? this.selec_plan.amount : 0);
-      const affiliationPoints = this.upgradeMode
-        ? this.upgradePoints
-        : (this.selec_plan ? this.selec_plan.affiliation_points : 0);
+      const affiliationTotal = this.selec_plan ? this.selec_plan.amount : 0;
+      const affiliationPoints = this.selec_plan ? this.selec_plan.affiliation_points : 0;
       
       // Guardar los productos en el store para que checkout pueda acceder a ellos
       this.$store.commit('setCartItems', productsForCart);
@@ -1800,19 +1575,11 @@ export default {
     //   try {
     //     const response = await api.mercadopagoPreference({
     //       description: `Afiliación ${this.selec_plan ? this.selec_plan.name : ''}`,
-    //       price: this.upgradeMode ? this.upgradeDifference : this.selec_plan.amount,
+    //       price: this.selec_plan.amount,
     //       quantity: 1,
-    //       payer_email: "test_user_116744135@testuser.com" // email de test comprador
+    //       payer_email: "test_user_116744135@testuser.com"
     //     });
-    //     const data = response.data;
-    //     if (data.ok && data.data && data.data.init_point) {
-    //       window.location.href = data.data.init_point;
-    //     } else {
-    //       this.error = data.msg || "Error al iniciar pago con Mercado Pago";
-    //     }
-    //   } catch (err) {
-    //     this.error = err.message || "Error al conectar con Mercado Pago";
-    //   }
+    //   } catch (err) {}
     // },
   },
 };

@@ -186,7 +186,7 @@ export default {
           this.$router.push('/affiliation');
         }
         // IMPORTANTE: NO redirigir usuarios afiliados desde afiliación
-        // Ellos pueden querer acceder para hacer upgrade o ver historial
+        // Ellos pueden querer acceder para ver historial
       }
     }
   }
