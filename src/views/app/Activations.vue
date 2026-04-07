@@ -19,6 +19,24 @@
               </router-link>
             </h4>
 
+            <div class="period-filter-wrap" v-if="activations && activations.length">
+              <label class="period-filter-label" for="period-filter-select">Período</label>
+              <select
+                id="period-filter-select"
+                class="period-filter-select"
+                v-model="periodFilter"
+              >
+                <option value="">Todos (agrupado por mes)</option>
+                <option
+                  v-for="opt in periodOptions"
+                  :key="opt.key"
+                  :value="opt.key"
+                >
+                  {{ opt.label }} ({{ opt.key }})
+                </option>
+              </select>
+            </div>
+
             <div class="scroll">
               <table class="activations-table">
                 <thead>
@@ -33,8 +51,18 @@
                     <th>Boleta</th>
                   </tr>
                 </thead>
-                <tbody>
-                  <tr v-for="activation in activations" :key="activation.id">
+                <tbody v-if="periodFilter && !filteredActivations.length">
+                  <tr>
+                    <td colspan="8" class="activations-empty-msg">
+                      No hay compras en este período.
+                    </td>
+                  </tr>
+                </tbody>
+                <tbody v-else-if="periodFilter">
+                  <tr
+                    v-for="activation in filteredActivations"
+                    :key="activation.id"
+                  >
                     <td>{{ activation.date | date }}</td>
                     <td>{{ activation.date | period }}</td>
                     <td>
@@ -91,6 +119,72 @@
                     </td>
                   </tr>
                 </tbody>
+                <template v-else>
+                  <tbody
+                    v-for="group in groupedActivations"
+                    :key="group.key"
+                  >
+                    <tr class="period-group-header">
+                      <td colspan="8">{{ group.label }}</td>
+                    </tr>
+                    <tr v-for="activation in group.items" :key="activation.id">
+                      <td>{{ activation.date | date }}</td>
+                      <td>{{ activation.date | period }}</td>
+                      <td>
+                        <div class="product-chips">
+                          <span
+                            v-for="product in activation.products"
+                            v-if="product.total != 0"
+                            class="product-chip"
+                            :key="product.name"
+                          >
+                            {{ product.name }}
+                            <span class="product-chip-total"
+                              >x{{ product.total }}</span
+                            >
+                          </span>
+                        </div>
+                      </td>
+                      <td>{{ activation.price | price }}</td>
+                      <td>{{ activation.points }}</td>
+                      <td>
+                        <a :href="activation.voucher" target="_blank">
+                          <img :src="activation.voucher" class="voucher-img" />
+                        </a>
+                      </td>
+                      <td>
+                        <span :class="['status-badge', activation.status]">
+                          <span
+                            v-if="activation.status === 'pending'"
+                            class="status-icon"
+                            >⏳</span
+                          >
+                          <span
+                            v-else-if="activation.status === 'approved'"
+                            class="status-icon"
+                            >✔️</span
+                          >
+                          <span
+                            v-else-if="activation.status === 'rejected'"
+                            class="status-icon"
+                            >❌</span
+                          >
+                          {{ activation.status | status }}
+                        </span>
+                      </td>
+                      <td>
+                        <a
+                          :href="`${INVOICE_ROOT}?id=${activation.id}`"
+                          target="_blank"
+                          class="invoice-link-btn"
+                          v-if="activation.status == 'approved'"
+                        >
+                          <span class="invoice-icon">🧾</span> Boleta
+                        </a>
+                      </td>
+                    </tr>
+                  </tbody>
+                </template>
               </table>
             </div>
           </div>
@@ -119,6 +213,8 @@ export default {
       // arr: [0,0,0],
       loading: true,
       INVOICE_ROOT,
+      /** '' = todos (vista agrupada por mes); 'YYYY-MM' = solo ese período */
+      periodFilter: "",
     };
   },
   computed: {
@@ -133,6 +229,68 @@ export default {
     showMasterTrophy() {
       // Mostrar trofeo si el plan es master
       return this.isMasterPlan;
+    },
+    periodOptions() {
+      if (!this.activations || !this.activations.length) return [];
+      const keys = [
+        ...new Set(
+          this.activations.map((a) => this.periodKeyFromDate(a.date)).filter(Boolean)
+        ),
+      ];
+      keys.sort((a, b) => (a < b ? 1 : a > b ? -1 : 0));
+      return keys.map((k) => ({
+        key: k,
+        label: this.monthLabelFromKey(k),
+      }));
+    },
+    filteredActivations() {
+      if (!this.activations || !this.periodFilter) return [];
+      return this.activations.filter(
+        (a) => this.periodKeyFromDate(a.date) === this.periodFilter
+      );
+    },
+    groupedActivations() {
+      if (!this.activations || this.periodFilter) return [];
+      const map = new Map();
+      for (const a of this.activations) {
+        const k = this.periodKeyFromDate(a.date);
+        if (!k) continue;
+        if (!map.has(k)) map.set(k, []);
+        map.get(k).push(a);
+      }
+      const keys = [...map.keys()].sort().reverse();
+      return keys.map((k) => ({
+        key: k,
+        label: this.monthLabelFromKey(k),
+        items: map.get(k).sort((a, b) => new Date(b.date) - new Date(a.date)),
+      }));
+    },
+  },
+  methods: {
+    periodKeyFromDate(val) {
+      if (!val) return "";
+      const d = new Date(val);
+      if (isNaN(d.getTime())) return "";
+      return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+    },
+    monthLabelFromKey(key) {
+      const MONTHS_ES = [
+        "Enero",
+        "Febrero",
+        "Marzo",
+        "Abril",
+        "Mayo",
+        "Junio",
+        "Julio",
+        "Agosto",
+        "Septiembre",
+        "Octubre",
+        "Noviembre",
+        "Diciembre",
+      ];
+      if (!key || !/^\d{4}-\d{2}$/.test(key)) return key || "";
+      const [y, m] = key.split("-").map(Number);
+      return `${MONTHS_ES[m - 1] || ""} ${y}`;
     },
   },
   filters: {

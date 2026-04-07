@@ -85,6 +85,44 @@
   overflow-x auto
   margin-top 18px
 
+.period-filter-wrap
+  display flex
+  flex-wrap wrap
+  align-items center
+  gap 12px
+  margin 8px 0 16px 0
+  padding 12px 16px
+  background #fff
+  border-radius 12px
+  box-shadow 0 1px 8px rgba(0,0,0,0.06)
+
+.period-filter-label
+  font-weight 600
+  color #444
+  font-size 15px
+
+.period-filter-select
+  flex 1
+  min-width 220px
+  max-width 420px
+  padding 10px 14px
+  border-radius 10px
+  border 1.5px solid #d209b644
+  font-size 15px
+  color #333
+  background #fff
+  cursor pointer
+  &:focus
+    outline none
+    border-color #d209b6
+    box-shadow 0 0 0 2px rgba(210, 9, 182, 0.15)
+
+.activations-empty-msg
+  text-align center
+  color #888
+  font-style italic
+  padding 24px !important
+
 .activations-table
   width 100%
   border-collapse separate
@@ -94,6 +132,16 @@
   box-shadow 0 2px 12px rgba(0,0,0,0.07)
   min-width 900px
   overflow hidden
+
+  tr.period-group-header td
+    background linear-gradient(90deg, #9f00ad18, #d209b612)
+    color #7b1fa2
+    font-weight 700
+    font-size 1.05rem
+    letter-spacing 0.02em
+    border-bottom 2px solid #d209b655
+  tbody tr.period-group-header:hover td
+    background linear-gradient(90deg, #9f00ad22, #d209b618)
 
   thead tr
     background #d209b6
