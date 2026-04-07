@@ -24,6 +24,7 @@
                 <thead>
                   <tr>
                     <th>Fecha</th>
+                    <th>Periodo</th>
                     <th>Productos</th>
                     <th>Monto</th>
                     <th>Puntos</th>
@@ -35,6 +36,7 @@
                 <tbody>
                   <tr v-for="activation in activations" :key="activation.id">
                     <td>{{ activation.date | date }}</td>
+                    <td>{{ activation.date | period }}</td>
                     <td>
                       <div class="product-chips">
                         <span
@@ -137,6 +139,15 @@ export default {
     date(val) {
       return new Date(val).toLocaleDateString();
       // return new Date(val).toLocaleString()
+    },
+    period(val) {
+      if (!val) return "-";
+      const d = new Date(val);
+      if (isNaN(d.getTime())) return "-";
+      // Ej: "abril de 2026" (es-PE) -> "Abril 2026"
+      const raw = d.toLocaleDateString("es-PE", { month: "long", year: "numeric" });
+      const normalized = raw.replace(/\s+de\s+/gi, " ").trim();
+      return normalized.charAt(0).toUpperCase() + normalized.slice(1);
     },
     price(val) {
       return `S/. ${val}`;
