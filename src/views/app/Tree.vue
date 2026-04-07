@@ -184,7 +184,13 @@
                   </div>
                   <div class="info-item">
                     <span class="info-label">Estado:</span>
-                    <span class="info-value">{{ selec_node.activated ? 'Activado' : 'No activado' }}</span>
+                    <span class="info-value">
+                      {{
+                        (selec_node.activated || selec_node._activated)
+                          ? 'Activado'
+                          : 'No activado'
+                      }}
+                    </span>
                   </div>
                   <div class="info-item">
                     <span class="info-label">Afiliado:</span>
@@ -537,7 +543,13 @@
                 </div>
                 <div class="info-item">
                   <span class="info-label">Estado:</span>
-                  <span class="info-value">{{ selec_node.activated ? 'Activado' : 'No activado' }}</span>
+                  <span class="info-value">
+                    {{
+                      (selec_node.activated || selec_node._activated)
+                        ? 'Activado'
+                        : 'No activado'
+                    }}
+                  </span>
                 </div>
                 <div class="info-item">
                   <span class="info-label">Afiliado:</span>
@@ -860,22 +872,13 @@ export default {
     // },
     // Métodos para la vista de frontales
     getMembershipClass(child) {
-      const rank = child._rank || child.rank || 'none';
-      const membershipMap = {
-        'none'   :       'Ninguno',
-       'active'       :     'ACTIVO',
-       'star'         :     'BRONCE',
-       'master'       :     'PLATA',
-       'silver'       :     'PLATA',
-       'gold'         :    'ORO',
-       'RUBI'         :    'DIAMANTE RUBI',
-       'sapphire'     :      'ZAFIRO',
-       'DIAMANTE'     :     'DIAMANTE ESTRELLA',
-       'DOBLE DIAMANTE'    :'DIAMANTE DOS ESTRELLAS',
-      'TRIPLE DIAMANTE' : 'DIAMANTE TRES ESTRELLAS',
-     'DIAMANTE ESTRELLA'  :'DIAMANTE CBM',
-    };
-      return membershipMap[rank] || 'bronze';
+      const rank = (child && (child._rank || child.rank)) || 'none'
+      // Clases disponibles en Tree.styl: bronze / silver / gold / ruby
+      if (rank === 'gold') return 'gold'
+      if (rank === 'silver' || rank === 'master') return 'silver'
+      if (rank === 'star' || rank === 'active') return 'bronze'
+      if (rank === 'RUBI' || rank === 'DIAMANTE' || rank === 'DOBLE DIAMANTE' || rank === 'TRIPLE DIAMANTE' || rank === 'DIAMANTE ESTRELLA' || rank === 'sapphire') return 'ruby'
+      return 'bronze'
     },
     
     getMembershipText(child) {
@@ -898,14 +901,15 @@ export default {
     },
     
     getStatusClass(child) {
-      // Simular estado activo/inactivo basado en puntos o activación
-      const isActive = (child.points && child.points > 0) || child.activated;
-      return isActive ? 'status-active' : 'status-inactive';
+      // Debe coincidir con el cierre: activo si activated (full) o _activated (simple)
+      const isActive = !!(child && (child.activated || child._activated))
+      return isActive ? 'status-active' : 'status-inactive'
     },
     
     getStatusText(child) {
-      const isActive = (child.points && child.points > 0) || child.activated;
-      return isActive ? 'ACTIVO' : 'INACTIVO';
+      // Debe coincidir con el cierre: activo si activated (full) o _activated (simple)
+      const isActive = !!(child && (child.activated || child._activated))
+      return isActive ? 'ACTIVO' : 'INACTIVO'
     },
     
          async openUserDetail(child) {
