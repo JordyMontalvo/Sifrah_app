@@ -861,40 +861,62 @@ export default {
     // Métodos para la vista de frontales
     getMembershipClass(child) {
       const rank = child._rank || child.rank || 'none';
-      const membershipMap = {
-        'none'   :       'Ninguno',
-       'active'       :     'ACTIVO',
-       'star'         :     'BRONCE',
-       'master'       :     'PLATA',
-       'silver'       :     'PLATA',
-       'gold'         :    'ORO',
-       'RUBI'         :    'DIAMANTE RUBI',
-       'sapphire'     :      'ZAFIRO',
-       'DIAMANTE'     :     'DIAMANTE ESTRELLA',
-       'DOBLE DIAMANTE'    :'DIAMANTE DOS ESTRELLAS',
-      'TRIPLE DIAMANTE' : 'DIAMANTE TRES ESTRELLAS',
-     'DIAMANTE ESTRELLA'  :'DIAMANTE CBM',
-    };
-      return membershipMap[rank] || 'bronze';
+      const classMap = {
+        // Formato antiguo (MongoDB legacy)
+        'none'            : '',
+        'active'          : '',
+        'star'            : 'bronze',
+        'master'          : 'silver',
+        'silver'          : 'silver',
+        'gold'            : 'gold',
+        'RUBI'            : 'ruby',
+        'sapphire'        : 'sapphire',
+        'DIAMANTE'        : 'diamond',
+        'DOBLE DIAMANTE'  : 'double-diamond',
+        'TRIPLE DIAMANTE' : 'triple-diamond',
+        'DIAMANTE ESTRELLA': 'diamond-star',
+        // Formato nuevo (Go engine)
+        'ACTIVO'           : '',
+        'BRONCE'           : 'bronze',
+        'PLATA'            : 'silver',
+        'ORO'              : 'gold',
+        'RUBÍ'             : 'ruby',
+        'ESMERALDA'        : 'emerald',
+        'DIAMANTE IMPERIAL': 'diamond-imperial',
+        'EMBAJADOR SIFRAH' : 'ambassador',
+        'DIAMANTE CORONA'  : 'ambassador',
+      };
+      return rank in classMap ? classMap[rank] : 'bronze';
     },
     
     getMembershipText(child) {
       const rank = child._rank || child.rank || 'none';
-      const membershipMap = {
-        'none'   :       'Ninguno',
-       'active'       :     'ACTIVO',
-       'star'         :     'BRONCE',
-       'master'       :     'PLATA',
-       'silver'       :     'PLATA',
-       'gold'         :    'ORO',
-       'RUBI'         :    'DIAMANTE RUBI',
-       'sapphire'     :      'ZAFIRO',
-       'DIAMANTE'     :     'DIAMANTE ESTRELLA',
-       'DOBLE DIAMANTE'    :'DIAMANTE DOS ESTRELLAS',
-      'TRIPLE DIAMANTE' : 'DIAMANTE TRES ESTRELLAS',
-     'DIAMANTE ESTRELLA'  :'DIAMANTE CBM',
+      const textMap = {
+        // Formato antiguo (MongoDB legacy)
+        'none'            : 'Ninguno',
+        'active'          : 'ACTIVO',
+        'star'            : 'BRONCE',
+        'master'          : 'PLATA',
+        'silver'          : 'PLATA',
+        'gold'            : 'ORO',
+        'RUBI'            : 'RUBÍ',
+        'sapphire'        : 'ZAFIRO',
+        'DIAMANTE'        : 'DIAMANTE',
+        'DOBLE DIAMANTE'  : 'DOBLE DIAMANTE',
+        'TRIPLE DIAMANTE' : 'TRIPLE DIAMANTE',
+        'DIAMANTE ESTRELLA': 'DIAMANTE ESTRELLA',
+        // Formato nuevo (Go engine)
+        'ACTIVO'           : 'ACTIVO',
+        'BRONCE'           : 'BRONCE',
+        'PLATA'            : 'PLATA',
+        'ORO'              : 'ORO',
+        'RUBÍ'             : 'RUBÍ',
+        'ESMERALDA'        : 'ESMERALDA',
+        'DIAMANTE IMPERIAL': 'DIAMANTE IMPERIAL',
+        'EMBAJADOR SIFRAH' : 'EMBAJADOR SIFRAH',
+        'DIAMANTE CORONA'  : 'DIAMANTE CORONA',
       };
-      return membershipMap[rank] || 'Bronce';
+      return textMap[rank] !== undefined ? textMap[rank] : (rank || 'BRONCE');
     },
     
     getStatusClass(child) {
