@@ -135,25 +135,6 @@
                   </svg>
                 </div>
               </div>
-              <div class="stat-card">
-                <div class="stat-header">
-                  <span class="dash-card-title">Total de Personas</span>
-                </div>
-                <div class="stat-row-item">
-                  <span class="dash-card-value">{{ n_affiliates_total || 0 }}</span>
-                </div>
-                <div class="stat-icon-premium">
-                  <!-- Team Silhouettes SVG -->
-                  <svg viewBox="0 0 100 80" class="team-stat-svg" fill="#E91E63">
-                    <circle cx="50" cy="30" r="15" />
-                    <path d="M20 70c0-15 10-25 30-25s30 10 30 25H20z" />
-                    <circle cx="25" cy="40" r="10" opacity="0.6" />
-                    <path d="M5 70c0-10 5-18 20-18s20 8 20 18H5z" opacity="0.6" />
-                    <circle cx="75" cy="40" r="10" opacity="0.6" />
-                    <path d="M55 70c0-10 5-18 20-18s20 8 20 18H55z" opacity="0.6" />
-                  </svg>
-                </div>
-              </div>
             </div>
           </div>
         </div>
