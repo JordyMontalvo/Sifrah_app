@@ -1,9 +1,6 @@
 <template>
   <div id="app">
     <AppInitializer>
-      <button @click="throwError" style="position:fixed; bottom:20px; right:20px; z-index:9999; padding:10px; background:red; color:white; border-radius:5px; border:none; cursor:pointer;">
-        Test Sentry Error
-      </button>
       <router-view/>
     </AppInitializer>
 
@@ -18,11 +15,6 @@ export default {
   components: {
     AppInitializer
   },
-  methods: {
-    throwError() {
-      throw new Error("Sentry Test Error from Sifrah App");
-    }
-  }
 };
 
 </script>
