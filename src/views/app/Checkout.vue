@@ -80,13 +80,13 @@
                     </div>
                     <div class="transaction-item">
                       <span class="label">Puntos:</span>
-                      <span class="value">{{ cartPoints.toFixed(2) }}</span>
+                      <span class="value">{{ orderSummaryPoints.toFixed(2) }}</span>
                     </div>
                   </div>
                   <div class="transaction-row total">
                     <div class="transaction-item">
                       <span class="label">Total:</span>
-                      <span class="value">S/ {{ finalTotal.toFixed(2) }}</span>
+                      <span class="value">S/ {{ orderSummaryTotal.toFixed(2) }}</span>
                     </div>
                   </div>
                 </div>
@@ -776,6 +776,9 @@ export default {
       pay_method: "",
       showConfirmation: false,
       orderNumber: '',
+      /** Totales congelados al confirmar (el carrito se vacía y finalTotal pasaría a 0) */
+      confirmedOrderTotal: null,
+      confirmedCartPoints: null,
       
       // Datos de facturación
       billingData: {
@@ -991,7 +994,27 @@ export default {
       const minutes = String(now.getMinutes()).padStart(2, '0');
       const seconds = String(now.getSeconds()).padStart(2, '0');
       return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-    }
+    },
+
+    orderSummaryTotal() {
+      if (
+        (this.showConfirmation || this.activationSuccess) &&
+        this.confirmedOrderTotal != null
+      ) {
+        return this.confirmedOrderTotal;
+      }
+      return this.finalTotal;
+    },
+
+    orderSummaryPoints() {
+      if (
+        (this.showConfirmation || this.activationSuccess) &&
+        this.confirmedCartPoints != null
+      ) {
+        return this.confirmedCartPoints;
+      }
+      return this.cartPoints;
+    },
   },
   
   methods: {
@@ -1258,9 +1281,26 @@ export default {
     },
     
     goToDashboard() {
+      this.showConfirmation = false;
+      this.confirmedOrderTotal = null;
+      this.confirmedCartPoints = null;
       // Limpiar estado de afiliación al ir al dashboard
       this.$store.commit('clearAffiliationCheckout');
       this.$router.push('/dashboard');
+    },
+
+    async refreshWalletFromServer(session) {
+      try {
+        const { data } = await api.Activation.GET(session);
+        if (data) {
+          this.balance = data.balance || 0;
+          this._balance = data._balance || 0;
+          this.$store.commit('SET_BALANCE', this.balance);
+          this.$store.commit('SET__BALANCE', this._balance);
+        }
+      } catch (e) {
+        console.warn('No se pudo refrescar el saldo:', e);
+      }
     },
     
     async loadOffices() {
@@ -1670,6 +1710,8 @@ export default {
     async submitActivation() {
       this.activationError = null;
       this.activationSuccess = false;
+      this.confirmedOrderTotal = null;
+      this.confirmedCartPoints = null;
       this.sending = true;
 
       try {
@@ -1864,9 +1906,12 @@ export default {
           }
           
           // Éxito en la afiliación
-          this.orderNumber = data.orderNumber || 'N/A';
+          this.confirmedOrderTotal = this.finalTotal;
+          this.confirmedCartPoints = this.cartPoints;
+          this.orderNumber = data.orderNumber || data.id || 'N/A';
           this.activationSuccess = true;
           this.showConfirmation = true;
+          await this.refreshWalletFromServer(session);
           this.$store.commit('setCartItems', []); // Limpiar el carrito en el store
           this.$store.commit('clearAffiliationCheckout'); // Limpiar el estado de afiliación
         } else {
@@ -1878,9 +1923,12 @@ export default {
           }
 
           // Éxito en la activación
-          this.orderNumber = data.orderNumber || 'N/A'; // Suponiendo que la API devuelve un número de orden
+          this.confirmedOrderTotal = this.finalTotal;
+          this.confirmedCartPoints = this.cartPoints;
+          this.orderNumber = data.orderNumber || data.id || 'N/A';
           this.activationSuccess = true;
           this.showConfirmation = true;
+          await this.refreshWalletFromServer(session);
           this.$store.commit('setCartItems', []); // Limpiar el carrito en el store
           this.$store.commit('clearAffiliationCheckout'); // Limpiar el estado de afiliación
         }

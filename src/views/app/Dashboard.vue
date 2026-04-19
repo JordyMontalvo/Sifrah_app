@@ -690,8 +690,12 @@ export default {
     this.ins = data.ins;
     this.insVirtual = data.insVirtual;
     this.outs = data.outs ? data.outs.toFixed(2) : "0.00";
-    this.balance = data.balance ? data.balance.toFixed(2) : "0.00";
-    this._balance = data._balance ? data._balance.toFixed(2) : "0.00";
+    const balNum = Number(data.balance) || 0;
+    const vbalNum = Number(data._balance) || 0;
+    this.balance = balNum.toFixed(2);
+    this._balance = vbalNum.toFixed(2);
+    this.$store.commit("SET_BALANCE", balNum);
+    this.$store.commit("SET__BALANCE", vbalNum);
     this.team = data.team;
     this.rank = data.rank || "";
     this.points = data.points;
