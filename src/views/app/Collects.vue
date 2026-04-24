@@ -22,6 +22,7 @@
             <tr>
               <th>Fecha</th>
               <th>Cuenta</th>
+              <th>Descripción</th>
               <th>Monto</th>
               <th>Oficina</th>
               <th>Estado</th>
@@ -41,6 +42,7 @@
                   <span class="collects-cci">CCI: {{ collect.ink }}</span>
                 </div>
               </td>
+              <td>{{ collect.desc || '—' }}</td>
               <td class="collects-amount">S/. {{ collect.amount }}</td>
               <td>{{ collect.office }}</td>
               <td>
