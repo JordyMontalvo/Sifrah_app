@@ -41,6 +41,8 @@ import SharedStore from './views/app/SharedStore.vue'
 import ShareStore from './views/app/ShareStore.vue'
 import Audios from './views/app/Audios.vue'
 import Libros from './views/app/Libros.vue'
+import Agenda from './views/app/Agenda.vue'
+
 
 Vue.use(Router)
 
@@ -269,6 +271,11 @@ const routes = [
   {
     path: '/libros',
     component: Libros,
+    meta: { requiresAuth: true, requiresAffiliation: true }
+  },
+  {
+    path: '/agenda',
+    component: Agenda,
     meta: { requiresAuth: true, requiresAffiliation: true }
   }
 ]
