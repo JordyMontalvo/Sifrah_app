@@ -473,161 +473,77 @@
         &:hover
           text-decoration underline
           
+  // Iconos sociales (Login/Register) - estilo tipo "burbujas" blancas con sombra
   .social-icons
     display flex
     justify-content center
-    gap 10px
+    gap 14px
     margin-top 15px
-    
-    // Responsive
-    @media (max-width: 768px)
-      margin-top 12px
-      gap 8px
-      
-    @media (max-width: 480px)
-      margin-top 10px
-      gap 6px
-      
-    @media (max-width: 375px)
-      margin-top 8px
-      gap 5px
-    
+
+  // En Login/Register los iconos vienen como <a class="fab fa-... social-icon facebook">
+  // FontAwesome pinta el ícono en el ::before del <a>, por eso estilamos el propio <a>
   .social-icon
-    width 40px
-    height 40px
+    width 68px
+    height 68px
     border-radius 50%
-    display flex
+    display inline-flex
     align-items center
     justify-content center
     text-decoration none
-    transition all 0.3s ease
-    
-    // Responsive
-    @media (max-width: 768px)
-      width 35px
-      height 35px
-      
-    @media (max-width: 480px)
-      width 32px
-      height 32px
-      
-    @media (max-width: 375px)
-      width 30px
-      height 30px
-    
-    i
-      font-size 18px
-      color white
-      
-      // Responsive
-      @media (max-width: 768px)
-        font-size 16px
-        
-      @media (max-width: 480px)
-        font-size 14px
-        
-      @media (max-width: 375px)
-        font-size 12px
-      
-    &.facebook
-      background #d209b66e
-      
-    &.tiktok
-      background #d209b66e
-      
-    &.whatsapp
-      background #d209b66e
-      
-    &.youtube
-      background #d209b66e
-      
-    &.instagram
-      background #d209b66e
-      
+    background #fff
+    box-shadow 0 10px 22px rgba(0,0,0,0.14)
+    transition transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease
+    font-size 30px
+    line-height 1
+
     &:hover
       transform translateY(-2px)
-      box-shadow 0 4px 12px rgba(0,0,0,0.2)
+      box-shadow 0 14px 28px rgba(0,0,0,0.18)
+
+    // Colores por red (solo el ícono)
+    &.facebook
+      color #1877F2
+
+    &.youtube
+      color #FF0000
+
+    &.tiktok
+      color #111111
+
+    &.whatsapp
+      color #25D366
+
+    &.instagram
+      color #E4405F
+
+    // Responsive
+    @media (max-width: 768px)
+      width 58px
+      height 58px
+      font-size 26px
+
+    @media (max-width: 480px)
+      width 52px
+      height 52px
+      font-size 24px
+
+    @media (max-width: 375px)
+      width 48px
+      height 48px
+      font-size 22px
 
 
   .social
-    // Margin top adicional para móvil en registro
-    @media (max-width: 768px)
-      margin-left: 15px;
-    
-    @media (max-width: 480px)
-      margin-left: 15px;
-      
-    @media (max-width: 375px)
-      margin-top -30px 
-      margin-left: 15px;
-    
+    display flex
+    justify-content center
+    gap 14px
+    margin-top 15px
+
+    // Evitar padding heredado que deformaba el círculo
     a
-      padding 12px
-      Top 4.15px
-      Left 1.25px
+      padding 0
 
-      // color c-main-light-green
-      // color c-main-purple
-      
-      color  #fff;
-
-  .social-icon-register {
-  
-  margin-right: 10px; /* Espaciado entre íconos */
-  display: inline-block; /* Asegura que los íconos se alineen correctamente */
-  width: 26px; /* Ajusta el tamaño según sea necesario */
-  height: 26px; /* Ajusta el tamaño según sea necesario */
-  border-radius: 8px; /* Bordes redondeados */
-  }
-
-  .facebook {
-    background: #d209b66e;
-     /* Fondo específico para Facebook */
-  }
-
-  .instagram {
-    background: #d209b66e; /* Fondo específico para Instagram */
-  }
-
-  .youtube {
-    background: #d209b66e; /* Fondo específico para YouTube */
-  }
-
-  .tiktok {
-    background: #d209b66e;/* Fondo específico para TikTok */
-  }
-
-  .whatsapp {
-    background: #d209b66e;/* Fondo específico para WhatsApp */
-  }
-  .social-icon {
-  margin-right: 10px; /* Espaciado entre íconos */
-  display: inline-block; /* Asegura que los íconos se alineen correctamente */
-  width: 40px; /* Ajusta el tamaño según sea necesario */
-  height: 40px; /* Ajusta el tamaño según sea necesario */
-  border-radius: 13px; /* Bordes redondeados */
-}
-
-.facebook {
-  background: #d209b66e;
-   /* Fondo específico para Facebook */
-}
-
-.instagram {
-  background: #d209b66e; /* Fondo específico para Instagram */
-}
-
-.youtube {
-  background: #d209b66e; /* Fondo específico para YouTube */
-}
-
-.tiktok {
-  background:#d209b66e; /* Fondo específico para TikTok */
-}
-
-.whatsapp {
-  background: #d209b66e; /* Fondo específico para WhatsApp */
-}
+  // Limpieza: reglas antiguas que forzaban fondo morado y bordes cuadrados
   // >header
   //   flex 1
   //   text-align center
