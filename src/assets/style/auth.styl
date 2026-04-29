@@ -70,7 +70,7 @@
       content ''
       position absolute !important
       top 10% !important
-      left 50% !important
+      left 55% !important
       transform translate(-50%, -50%) !important
       width 120px !important
       height 120px !important
@@ -100,7 +100,7 @@
         
       &::after
         top 5% !important
-        left 25% !important
+        left 30% !important
         width 60px !important
         height 60px !important
         
@@ -108,7 +108,23 @@
         height 85vh !important
         top 15vh !important
         border-radius 40px 40px 0 0 !important
-        padding-top 60px !important
+        // En registro móvil dejamos más aire debajo de las pestañas
+        // para que el primer campo no quede pegado a la barra superior.
+        padding-top 32px !important
+
+        // Evitar que el formulario se suba por el margin-top negativo global
+        // y por eso quede recortado detrás de la barra de tabs.
+        .content
+          .form
+            margin-top 0 !important
+            justify-content flex-start !important
+
+      // Refuerzo extra: asegurar que el margin-top negativo global no
+      // recorte el primer campo (DNI) en móvil.
+      .content
+        .form
+          margin-top 0 !important
+          justify-content flex-start !important
         
       // Mostrar pestañas solo en registro móvil
       .auth-tabs
@@ -134,19 +150,49 @@
           transition all 0.3s ease !important
           
           &.active
-            color #9F00AD !important
-            border-bottom 2px solid #FFD900 !important
+            color #e91e63 !important
+            border-bottom 4px solid #e91e63 !important
+            background-color transparent !important
             
           &:hover
-            color #9F00AD !important
+            color #e91e63 !important
+
+      // Alinear anchos en móvil: filas dobles y campos simples
+      // deben encajar dentro del mismo bloque visual.
+      @media (max-width: 480px)
+        .form-field
+          .input-container
+            width 95% !important
+            max-width 350px !important
+            margin 0 auto !important
+
+        .form-row
+          .form-field
+            .input-container
+              width 100% !important
+              max-width 100% !important
+
+        .input-container
+          .input-register-new
+            width 100% !important
+            max-width 100% !important
+
+      @media (max-width: 375px)
+        .form-field
+          .input-container
+            max-width 320px !important
   .welcome-title-form
     text-align center
     margin 25px 0 60px 0
     
     h1
       font-size 32px
-      font-weight bold
-      color #9f00ad
+      font-weight 900
+      color #111111
+      background linear-gradient(90deg, #111111 33%, #111111 25%, #e91e63 70%)
+      -webkit-background-clip text
+      background-clip text
+      -webkit-text-fill-color transparent
       margin 0
       font-family 'Open Sans', sans-serif
       
@@ -175,8 +221,12 @@
     
     h1
       font-size 32px
-      font-weight bold
-      color #9f00ad
+      font-weight 900
+      color #111111
+      background linear-gradient(90deg, #111111 33%, #111111 25%, #e91e63 70%)
+      -webkit-background-clip text
+      background-clip text
+      -webkit-text-fill-color transparent
       margin 0
       font-family 'Open Sans', sans-serif
       
@@ -227,12 +277,16 @@
       width 90%
       max-width 400px
       gap 10px
+      align-items stretch
       
       .form-field
-        max-width 180px
+        flex 1 1 0
+        min-width 0
+        max-width none
         
       .input-register-new
-        max-width 180px
+        width 100%
+        max-width 100%
         border-radius 10px !important
         
     @media (max-width: 480px)
@@ -240,40 +294,46 @@
       gap 8px
       width 95%
       max-width 350px
+      align-items stretch
       
       .form-field
-        flex 1
-        max-width 48%
+        flex 1 1 0
+        min-width 0
+        max-width none
         
       .input-register-new
+        width 100%
         max-width 100%
         border-radius 10px !important
-        font-size 12px
-        padding 5px 6px
-        height 32px
+        font-size 14px
+        padding 8px 10px
+        height 42px
         
     @media (max-width: 375px)
       gap 6px
       width 95%
       max-width 300px
+      align-items stretch
       
       .form-field
-        flex 1
-        max-width 47%
+        flex 1 1 0
+        min-width 0
+        max-width none
         
       .input-register-new
+        width 100%
         max-width 100%
         border-radius 10px !important
-        font-size 11px
-        padding 4px 5px
-        height 28px
+        font-size 13px
+        padding 7px 9px
+        height 40px
       
   .input-register-new
     width 80%
     max-width 509px
     padding 10px 16px
     height 45px
-    border 2px solid #d209b6
+    border 2px solid #e91e63
     border-radius 10px
     font-size 14px
     font-family 'Open Sans', sans-serif
@@ -299,20 +359,20 @@
     @media (max-width: 480px)
       width 95%
       max-width 350px
-      padding 6px 8px
-      margin-bottom 4px
+      padding 8px 10px
+      margin-bottom 8px
       font-size 14px
       border-radius 10px !important
-      height 30px
+      height 42px
       
     @media (max-width: 375px)
       width 95%
       max-width 320px
-      padding 4px 5px
+      padding 7px 9px
       margin-bottom 8px
-      font-size 12px
+      font-size 13px
       border-radius 10px !important
-      height 30px
+      height 40px
       
     &::placeholder
       color #999
@@ -323,7 +383,7 @@
       
   .select-field
     appearance none
-    background-image url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23d209b6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e")
+    background-image url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23e91e63' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e")
     background-repeat no-repeat
     background-position right 12px center
     background-size 16px
@@ -375,7 +435,7 @@
   .checkbox-input
     width 16px
     height 16px
-    border 2px solid #d209b6
+    border 2px solid #e91e63
     border-radius 0
     background white
     cursor pointer
@@ -390,7 +450,7 @@
     max-width 509px
     height 50px
     padding 15px
-    background #d209b6
+    background #e91e63
     color white
     border none
     border-radius 0
@@ -467,7 +527,7 @@
         font-size 11px
       
       a
-        color #d209b6
+        color #e91e63
         text-decoration none
         
         &:hover
@@ -537,7 +597,6 @@
     display flex
     justify-content center
     gap 14px
-    margin-top 15px
 
     // Evitar padding heredado que deformaba el círculo
     a

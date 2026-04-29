@@ -99,7 +99,7 @@ export default {
   top: 0;
   left: 60%;
   display: flex;
-  background-color: #9f00ad; /* fondo base */
+  background-color: transparent;
   border-radius: 0;
   width: fit-content;
   z-index: 1000;
@@ -142,12 +142,13 @@ export default {
   height: 70px; /* Altura fija */
   padding: 12px 0; /* Espaciado interno */
   text-decoration: none;
-  color: white;
+  color: #111111;
   font-weight: bold;
-  background-color: transparent;
+  background-color: #ffffff;
   display: flex; /* Para centrar el texto */
   align-items: center; /* Centrar verticalmente */
   justify-content: center;
+  border: 1px solid #e5e5e5;
   /* Centrar horizontalmente */
 }
 .tab:first-child.active {
@@ -157,8 +158,9 @@ export default {
   border-bottom-right-radius: 0;
 }
 .tab.active {
-  background-color: #FFD900;
-  color: #9F00AD;
+  background-color: #111111;
+  color: #ffffff;
+  border-color: #111111;
 }
 
 .form {
@@ -253,7 +255,7 @@ export default {
     display: block !important;
     position: absolute;
     top: 150px;
-    left: 50%;
+    left: 55%;
     transform: translateX(-50%);
     z-index: 1000;
     text-align: center;

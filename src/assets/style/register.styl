@@ -5,7 +5,7 @@ input[type="checkbox"]:checked
 
 .register-button
   // Color de fondo normal
-  background #9f00ad
+  background #e91e63
   width 460px // Ancho del botón
   height 50px // Altura del botón
   color white // Color del texto
@@ -17,7 +17,7 @@ input[type="checkbox"]:checked
   transition all 0.3s ease // Transición suave para el hover
 
   &:hover
-    background #d209b6 // Color de fondo al hacer hover
+    background #cf1658 // Color de fondo al hacer hover
 
 .tab-login
   font-size 15px
@@ -59,7 +59,28 @@ input[type="checkbox"]:checked
 
 @media (max-width: 1024px)
   .register-button
-    margin-left 15px
+    margin-left 0
+    margin-right 0
+    margin 8px auto
+    display block
+
+@media (max-width: 768px)
+  .register-button
+    width 90%
+    max-width 400px
+    margin 8px auto
+
+@media (max-width: 480px)
+  .register-button
+    width 95%
+    max-width 350px
+    margin 8px auto
+
+@media (max-width: 375px)
+  .register-button
+    width 95%
+    max-width 320px
+    margin 8px auto
 
 .alert-message
   background-color #fee
@@ -77,19 +98,22 @@ input[type="checkbox"]:checked
 .input-container
   position relative
   display block
-  width 100%
+  width 80%
+  max-width 509px
   margin 0
+  margin-left auto
+  margin-right auto
   padding 0
 
 // Iconos dentro de los campos
 .input-icon
   position absolute
-  right 12px
+  right 18px
   top 50%
   transform translateY(-50%)
   pointer-events none
-  color #9f00ad82
-  font-size 20px
+  color #e91e6382
+  font-size 23px
   z-index 10
   margin 0
   padding 0
@@ -105,7 +129,7 @@ input[type="checkbox"]:checked
   transition color 0.3s ease
   
   &:hover
-    color #d209b6
+    color #e91e63
 
 // Ocultar icono nativo del input date y dar funcionalidad al icono personalizado
 .date-input
@@ -124,7 +148,7 @@ input[type="checkbox"]:checked
   transition color 0.3s ease
   
   &:hover
-    color #d209b6
+    color #e91e63
 
 // Icono de contraseña con cursor pointer
 .show-icon
@@ -133,16 +157,17 @@ input[type="checkbox"]:checked
   transition color 0.3s ease
 
   &:hover
-    color #d209b6
+    color #e91e63
 
 // Iconos que se desbordan - posicionamiento específico
 .overflow-icon
   position absolute
-  margin-left -30px
-  top 15px
+  right 18px
+  top 50%
+  transform translateY(-50%)
   pointer-events auto
-  color #9f00ad82
-  font-size 20px
+  color #e91e6382
+  font-size 23px
   z-index 10
 
 // Ajustar padding de inputs para dar espacio al icono
@@ -151,55 +176,120 @@ input[type="checkbox"]:checked
   box-sizing border-box
   width 100%
 
+// En filas de 2 columnas, el contenedor debe ocupar su columna
+.form-row
+  .input-container
+    width 100%
+    max-width 250px
+
 // Responsive para iconos
 @media (min-width: 1110px) and (max-width: 1199px)
   .input-icon
-    right 13px
-    font-size 21px
+    right 16px
+    font-size 24px
   
   .input-container .input-register-new
     padding-right 43px
+  
+  .input-container
+    width 80%
+    max-width 509px
+  
+  .form-row
+    .input-container
+      width 100%
+      max-width 250px
 
 @media (min-width: 1200px)
   .input-icon
-    right 12px
-    font-size 20px
+    right 18px
+    font-size 23px
   
   .input-container .input-register-new
     padding-right 40px
+  
+  .input-container
+    width 80%
+    max-width 509px
+  
+  .form-row
+    .input-container
+      width 100%
+      max-width 250px
 
 @media (min-width: 769px) and (max-width: 1109px)
   .input-icon
     right 14px
-    font-size 20px
+    font-size 23px
   
   .input-container .input-register-new
     padding-right 42px
+  
+  .input-container
+    width 90%
+    max-width 400px
+  
+  .form-row
+    .input-container
+      width 100%
+      max-width 180px
 
 @media (max-width: 768px)
   .input-icon
-    right 10px
-    font-size 18px
-    top 35% // Mover icono más arriba
+    right 14px
+    font-size 21px
+    top 50%
+    transform translateY(-50%)
   
   .overflow-icon
-    top 10px // Mover iconos overflow más arriba
+    top 50%
+    transform translateY(-50%)
+    font-size 21px
+    right 14px
   
   .input-container .input-register-new
     padding-right 35px
+  
+  .input-container
+    width 90%
+    max-width 400px
+  
+  .form-row
+    .input-container
+      width 100%
+      max-width 180px
 
 @media (max-width: 480px)
   .input-icon
-    right 8px
-    font-size 17px
-    top 30% // Mover icono aún más arriba
+    right 12px
+    font-size 20px
+    top 50%
+    transform translateY(-50%)
   
   .overflow-icon
-    top 5px // Mover iconos overflow aún más arriba
+    top 50%
+    transform translateY(-50%)
+    font-size 20px
+    right 12px
+
+@media (max-width: 375px)
+  .input-icon
+    right 10px
+  
+  .overflow-icon
+    right 10px
   
   .input-container .input-register-new
     padding-right 30px
-    width: 334px
+  
+  .input-container
+    width 95%
+    max-width 350px
+  
+  .form-row
+    .input-container
+      width 100%
+      max-width 100%
     
 // Ocultar título del formulario en móvil
 @media (max-width: 768px)
