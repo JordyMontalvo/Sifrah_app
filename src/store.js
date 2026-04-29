@@ -44,6 +44,7 @@ export default new Vuex.Store({
     network: false,
     commissions: false,
     education: false,
+    universidad: false,
   },
   mutations: {
     SET_SESSION: (state, session) => {
@@ -255,6 +256,7 @@ export default new Vuex.Store({
       state.network = false
       state.commissions = false
       state.education = false
+      state.universidad = false
     },
     SET_BUYS: (state) => {
       state.resume = false
@@ -262,6 +264,7 @@ export default new Vuex.Store({
       state.network = false
       state.commissions = false
       state.education = false
+      state.universidad = false
     },
     SET_NETWORK: (state) => {
       state.resume = false
@@ -269,6 +272,7 @@ export default new Vuex.Store({
       state.network = !state.network
       state.commissions = false
       state.education = false
+      state.universidad = false
     },
     SET_COMMISSIONS: (state) => {
       state.resume = false
@@ -276,6 +280,7 @@ export default new Vuex.Store({
       state.network = false
       state.commissions = !state.commissions
       state.education = false
+      state.universidad = false
     },
     SET_EDUCATION: (state) => {
       state.resume = false
@@ -283,6 +288,15 @@ export default new Vuex.Store({
       state.network = false
       state.commissions = false
       state.education = !state.education
+      state.universidad = false
+    },
+    SET_UNIVERSIDAD: (state) => {
+      state.resume = false
+      state.buys = false
+      state.network = false
+      state.commissions = false
+      state.education = false
+      state.universidad = !state.universidad
     },
     CLEAR_MENU_STATES: (state) => {
       state.resume = false
@@ -290,6 +304,7 @@ export default new Vuex.Store({
       state.network = false
       state.commissions = false
       state.education = false
+      state.universidad = false
     },
   },
   actions: {

@@ -81,7 +81,7 @@
       <button class="login-button" v-show="!sending" @click="submit">
         Iniciar sesión
       </button>
-      <button class="button" v-show="sending" disabled>
+      <button class="login-button" v-show="sending" disabled>
         Validando datos ...
       </button>
       <br /><br />

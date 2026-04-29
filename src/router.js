@@ -42,6 +42,7 @@ import ShareStore from './views/app/ShareStore.vue'
 import Audios from './views/app/Audios.vue'
 import Libros from './views/app/Libros.vue'
 import Agenda from './views/app/Agenda.vue'
+import UniversidadSifrah from './views/app/UniversidadSifrah.vue'
 
 
 Vue.use(Router)
@@ -211,6 +212,11 @@ const routes = [
   {
     path: '/tools',
     component: Tools,
+    meta: { requiresAuth: true, requiresAffiliation: true }
+  },
+  {
+    path: '/universidad-sifrah',
+    component: UniversidadSifrah,
     meta: { requiresAuth: true, requiresAffiliation: true }
   },
   {

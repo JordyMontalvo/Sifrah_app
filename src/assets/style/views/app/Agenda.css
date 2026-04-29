@@ -1,5 +1,5 @@
 /* Variable Definitions */
-:root {
+:global(:root) {
   --agenda-primary: #0046a0;
   --agenda-secondary: #ff4081;
   --agenda-bg: #f8f9fa;
@@ -105,8 +105,10 @@
 }
 
 .grid-day-num.active {
-  background: var(--agenda-secondary);
+  background: rgb(255 152 0 / 0%);
+  color: #fff;
   font-weight: bold;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.18);
 }
 
 .grid-day-num.today {

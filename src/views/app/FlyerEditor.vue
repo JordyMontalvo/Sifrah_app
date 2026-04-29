@@ -23,7 +23,7 @@ export default {
   data() {
     return {
       loading: true,
-      title: "EDITOR DE FLYER",
+      title: "Editor de Flyer",
     };
   },
   computed: {
