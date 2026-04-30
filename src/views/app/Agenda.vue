@@ -63,7 +63,7 @@
                   <p><i class="far fa-clock"></i> {{ event.start }} - {{ event.end }}</p>
                   <p v-if="event.location"><i class="fas fa-map-marker-alt"></i> {{ event.location }}</p>
                 </div>
-                <div class="event-more-btn">
+                <div class="event-more-btn" @click.stop="openEventModal(event)" style="cursor: pointer; padding: 10px;">
                   <i class="fas fa-ellipsis-h"></i>
                 </div>
 
@@ -77,10 +77,53 @@
           <div v-if="filteredEvents.length === 0" class="empty-agenda">
             <i class="fas fa-calendar-day"></i>
             <p>No tienes eventos programados para este día.</p>
-            <button class="btn-primary">Añadir Recordatorio</button>
           </div>
         </div>
       </main>
+
+      <!-- Event Detail Modal -->
+      <div v-if="showModal && selectedEvent" class="event-modal-overlay" @click.self="closeEventModal">
+        <div class="event-modal-card">
+          <button class="modal-close-btn" @click="closeEventModal">
+            <i class="fas fa-times"></i>
+          </button>
+          
+          <div class="modal-header" :style="{ backgroundColor: selectedEvent.color }">
+            <i :class="getTypeIcon(selectedEvent.type)" class="modal-type-icon"></i>
+            <span class="modal-type-badge">{{ selectedEvent.type }}</span>
+          </div>
+          
+          <div class="modal-body">
+            <h2 class="modal-title">{{ selectedEvent.title }}</h2>
+            
+            <div class="modal-details">
+              <div class="detail-item">
+                <i class="far fa-calendar-alt"></i>
+                <span style="text-transform: capitalize;">{{ formatDate(selectedEvent.date) }}</span>
+              </div>
+              <div class="detail-item">
+                <i class="far fa-clock"></i>
+                <span>{{ selectedEvent.start }} - {{ selectedEvent.end }}</span>
+              </div>
+              <div class="detail-item" v-if="selectedEvent.location">
+                <i class="fas fa-map-marker-alt"></i>
+                <span>{{ selectedEvent.location }} ({{ selectedEvent.modality }})</span>
+              </div>
+            </div>
+            
+            <div class="modal-description" v-if="selectedEvent.description">
+              <h3>Descripción</h3>
+              <p>{{ selectedEvent.description }}</p>
+            </div>
+            
+            <div class="modal-actions" v-if="selectedEvent.link">
+              <a :href="selectedEvent.link" target="_blank" class="btn-primary is-fullwidth" :style="{ backgroundColor: selectedEvent.color }">
+                Unirse al Evento
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </App>
 </template>
@@ -100,7 +143,9 @@ export default {
       currentDate: new Date(),
       selectedDate: new Date(),
       daysShort: ['D', 'L', 'M', 'M', 'J', 'V', 'S'],
-      events: []
+      events: [],
+      showModal: false,
+      selectedEvent: null
     };
   },
   async mounted() {
@@ -195,6 +240,29 @@ export default {
       };
       return colors[type] || "#718096";
     },
+    getTypeIcon(type) {
+      const icons = {
+        "Presentación": "fas fa-video",
+        "Taller": "fas fa-graduation-cap",
+        "Capacitación": "fas fa-users",
+        "Reunión": "fas fa-handshake",
+        "Lanzamiento": "fas fa-rocket"
+      };
+      return icons[type] || "fas fa-calendar";
+    },
+    formatDate(dateStr) {
+      if (!dateStr) return "-";
+      const d = new Date(dateStr + "T00:00:00");
+      return isNaN(d) ? dateStr : d.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+    },
+    openEventModal(event) {
+      this.selectedEvent = event;
+      this.showModal = true;
+    },
+    closeEventModal() {
+      this.showModal = false;
+      this.selectedEvent = null;
+    },
     toggleCalendar() {
       this.isExpanded = !this.isExpanded;
     },
@@ -241,5 +309,147 @@ export default {
 
 .btn-primary:active {
   transform: scale(0.98);
+}
+
+/* Event Detail Modal */
+.event-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+  backdrop-filter: blur(4px);
+}
+
+.event-modal-card {
+  background: white;
+  width: 100%;
+  max-width: 450px;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  position: relative;
+  animation: modalPop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes modalPop {
+  0% { transform: scale(0.9); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.modal-close-btn {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: rgba(0, 0, 0, 0.2);
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  cursor: pointer;
+  z-index: 2;
+  transition: all 0.2s;
+}
+
+.modal-close-btn:hover {
+  background: rgba(0, 0, 0, 0.4);
+  transform: scale(1.1);
+}
+
+.modal-header {
+  padding: 40px 24px;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.modal-type-icon {
+  font-size: 2.5rem;
+  opacity: 0.9;
+}
+
+.modal-type-badge {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.modal-body {
+  padding: 24px;
+}
+
+.modal-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0 0 20px 0;
+  line-height: 1.3;
+}
+
+.modal-details {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 24px;
+  background: #f8fafc;
+  padding: 16px;
+  border-radius: 12px;
+}
+
+.detail-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #475569;
+  font-size: 0.95rem;
+}
+
+.detail-item i {
+  color: #94a3b8;
+  width: 20px;
+  text-align: center;
+  font-size: 1.1rem;
+}
+
+.modal-description h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #334155;
+  margin: 0 0 8px 0;
+}
+
+.modal-description p {
+  color: #64748b;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.modal-actions {
+  margin-top: 24px;
+}
+
+.btn-primary.is-fullwidth {
+  width: 100%;
+  display: block;
+  text-align: center;
+  text-decoration: none;
+  font-size: 1.05rem;
+  padding: 14px;
 }
 </style>
