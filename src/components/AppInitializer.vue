@@ -202,13 +202,7 @@ export default {
           localStorage.clear();
           api.logout(session);
           
-          import('sweetalert2').then(Swal => {
-            Swal.default.fire({
-              icon: 'info',
-              title: 'Sesión expirada',
-              text: 'Tu sesión ha caducado por inactividad. Por favor, vuelve a iniciar sesión.'
-            });
-          });
+          alert('Tu sesión ha caducado por inactividad. Por favor, vuelve a iniciar sesión.');
           
           this.$router.push('/login');
         }
