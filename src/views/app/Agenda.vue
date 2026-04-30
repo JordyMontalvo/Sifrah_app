@@ -191,8 +191,8 @@ export default {
     monthOptions() {
       const options = [];
       const d = new Date();
-      d.setMonth(d.getMonth() - 12);
-      for(let i=0; i<24; i++) {
+      // Empezar desde el mes actual y generar los próximos 12 meses
+      for(let i=0; i<12; i++) {
         const value = `${d.getFullYear()}-${d.getMonth()}`;
         const label = d.toLocaleString('es-ES', { month: 'long' }).charAt(0).toUpperCase() + d.toLocaleString('es-ES', { month: 'long' }).slice(1) + " " + d.getFullYear();
         options.push({ value, label });
