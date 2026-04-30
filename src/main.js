@@ -11,6 +11,16 @@ import { Integrations } from "@sentry/tracing";
 
 Vue.config.productionTip = false;
 
+// Deshabilitar todos los logs en producción
+if (process.env.NODE_ENV === 'production') {
+  console.log = () => {};
+  console.warn = () => {};
+  console.error = () => {};
+  console.info = () => {};
+  console.debug = () => {};
+}
+
+
 const gauthOption = {
   clientId:
     "511469100162-s6f2f9qbkr533hbvaoevbr6m0mhfdrvk.apps.googleusercontent.com",
