@@ -49,37 +49,58 @@
 
     </section>
 
-    <hr v-if="!loading" style="margin: 30px 0; border: 0; border-top: 1px solid #ddd;">
-
-    <h4 v-if="!loading">DISPOSITIVOS CONECTADOS</h4>
-    
-    <section v-if="!loading">
-      <div v-if="sessions.length === 0" style="color: #888;">
-        No hay otras sesiones activas.
-      </div>
-      <div v-for="sess in sessions" :key="sess._id" class="box" style="margin-bottom: 15px; padding: 15px; border-radius: 8px; border: 1px solid #eee;">
-        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-          <div>
-            <div style="font-weight: 600; font-size: 1.1rem; color: #2c3e50;">
-              <i class="fas" :class="sess.os === 'MacOS' || sess.os === 'iOS' ? 'fa-apple' : sess.os === 'Windows' ? 'fa-windows' : sess.os === 'Android' ? 'fa-android' : 'fa-laptop'" style="margin-right: 8px;"></i>
-              {{ sess.os }} - {{ sess.browser }}
-            </div>
-            <div style="font-size: 0.9rem; color: #7f8c8d; margin-top: 5px;">
-              <i class="fas fa-map-marker-alt" style="margin-right: 5px;"></i> IP: {{ sess.ip }}
-            </div>
-            <div style="font-size: 0.85rem; color: #95a5a6; margin-top: 3px;">
-              <i class="far fa-clock" style="margin-right: 5px;"></i> Iniciado: {{ new Date(sess.created_at).toLocaleString() }}
-            </div>
+    <!-- DISPOSITIVOS CONECTADOS -->
+    <div v-if="!loading" class="devices-section">
+      <div class="devices-header">
+        <div class="devices-title-group">
+          <div class="devices-title-icon">
+            <i class="fas fa-shield-alt"></i>
           </div>
           <div>
-            <span v-if="sess.is_current" class="tag is-success" style="font-weight: 600; color: #fff; background: #2ecc71; padding: 4px 8px; border-radius: 4px; font-size: 0.8rem;">Este dispositivo</span>
-            <button v-else @click="closeSession(sess._id)" class="button is-danger is-small" style="background: #e74c3c; color: white; border: none; border-radius: 4px; cursor: pointer;">
-              <i class="fas fa-sign-out-alt" style="margin-right: 5px;"></i> Cerrar sesión
-            </button>
+            <h4 class="devices-title">Dispositivos Conectados</h4>
+            <p class="devices-subtitle">{{ sessions.length }} sesión{{ sessions.length !== 1 ? 'es' : '' }} activa{{ sessions.length !== 1 ? 's' : '' }}</p>
           </div>
         </div>
       </div>
-    </section>
+
+      <div v-if="sessions.length === 0" class="no-sessions">
+        <i class="fas fa-check-circle no-sessions-icon"></i>
+        <p>No hay otras sesiones activas</p>
+      </div>
+
+      <div v-for="sess in sessions" :key="sess._id" class="device-card" :class="{ 'device-current': sess.is_current }">
+        <!-- OS Icon -->
+        <div class="device-icon-wrapper" :class="osClass(sess.os)">
+          <i class="fab" :class="osIcon(sess.os)"></i>
+        </div>
+
+        <!-- Info -->
+        <div class="device-info">
+          <div class="device-name">
+            {{ sess.os }}
+            <span class="device-browser">· {{ sess.browser }}</span>
+          </div>
+          <div class="device-meta">
+            <span class="device-meta-item">
+              <i class="fas fa-network-wired"></i> {{ sess.ip }}
+            </span>
+            <span class="device-meta-item">
+              <i class="far fa-clock"></i> {{ formatDate(sess.created_at) }}
+            </span>
+          </div>
+        </div>
+
+        <!-- Badge / Action -->
+        <div class="device-action">
+          <span v-if="sess.is_current" class="badge-current">
+            <i class="fas fa-circle pulse-dot"></i> Activo
+          </span>
+          <button v-else class="btn-close-session" @click="closeSession(sess._id)">
+            <i class="fas fa-power-off"></i>
+          </button>
+        </div>
+      </div>
+    </div>
 
   </App>
 </template>
@@ -144,30 +165,36 @@ export default {
     await this.fetchSessions();
   },
   methods: {
+    osIcon(os) {
+      if (os === 'MacOS' || os === 'iOS') return 'fa-apple'
+      if (os === 'Windows') return 'fa-windows'
+      if (os === 'Android') return 'fa-android'
+      if (os === 'Linux') return 'fa-linux'
+      return 'fa-globe'
+    },
+    osClass(os) {
+      if (os === 'MacOS' || os === 'iOS') return 'os-apple'
+      if (os === 'Windows') return 'os-windows'
+      if (os === 'Android') return 'os-android'
+      if (os === 'Linux') return 'os-linux'
+      return 'os-other'
+    },
+    formatDate(dateStr) {
+      if (!dateStr) return 'Desconocido'
+      const d = new Date(dateStr)
+      return d.toLocaleDateString('es-PE', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })
+    },
     async UPDATE() {
-
       const { name, lastName, dni, relation, phone } = this
-
       if (!name) return
       if (!lastName) return
       if (!dni) return
       if (!relation) return
       if (!phone) return
 
-      // UPDATE Person
       this.sending = true
-
-      const { data } = await api.Security.POST(this.session, {
-        name,
-        lastName,
-        dni,
-        relation,
-        phone,
-      });
-
+      const { data } = await api.Security.POST(this.session, { name, lastName, dni, relation, phone });
       this.sending = false
-
-      // success
       this.success = true
       this.state = 'exists'
     },
@@ -177,17 +204,14 @@ export default {
         if (data && !data.error) {
           this.sessions = data.sessions || [];
         }
-      } catch (e) {
-        console.error("Error fetching sessions", e);
-      }
+      } catch (e) {}
     },
     async closeSession(sessionId) {
-      if (confirm('¿Estás seguro de que deseas cerrar la sesión en ese dispositivo?')) {
+      if (confirm('¿Cerrar la sesión en este dispositivo?')) {
         try {
           const { data } = await api.Sessions.DELETE(this.session, sessionId);
           if (!data.error) {
             this.sessions = this.sessions.filter(s => String(s._id) !== String(sessionId));
-            alert('Sesión cerrada exitosamente');
           } else {
             alert(data.error);
           }
@@ -199,3 +223,196 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+/* ── Devices Section ── */
+.devices-section {
+  margin-top: 28px;
+}
+
+.devices-header {
+  margin-bottom: 16px;
+}
+
+.devices-title-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.devices-title-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.devices-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin: 0;
+  padding: 0;
+  border: none;
+  letter-spacing: 0.5px;
+}
+
+.devices-subtitle {
+  font-size: 0.78rem;
+  color: #8e9aaf;
+  margin: 2px 0 0 0;
+}
+
+/* ── No Sessions ── */
+.no-sessions {
+  text-align: center;
+  padding: 32px 16px;
+  color: #a0aec0;
+}
+.no-sessions-icon {
+  font-size: 2.5rem;
+  color: #48bb78;
+  margin-bottom: 10px;
+  display: block;
+}
+.no-sessions p {
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+/* ── Device Card ── */
+.device-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: #fff;
+  border: 1.5px solid #f0f0f5;
+  border-radius: 16px;
+  padding: 14px 16px;
+  margin-bottom: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+
+.device-card:hover {
+  box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+  transform: translateY(-1px);
+}
+
+.device-current {
+  border-color: #667eea;
+  background: linear-gradient(135deg, #f5f7ff 0%, #fff 100%);
+}
+
+/* ── OS Icon ── */
+.device-icon-wrapper {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  flex-shrink: 0;
+  color: white;
+}
+
+.os-apple   { background: linear-gradient(135deg, #434343, #000000); }
+.os-windows { background: linear-gradient(135deg, #0078d4, #00b4d8); }
+.os-android { background: linear-gradient(135deg, #3ddc84, #00897b); }
+.os-linux   { background: linear-gradient(135deg, #ffa726, #ef6c00); }
+.os-other   { background: linear-gradient(135deg, #a29bfe, #6c5ce7); }
+
+/* ── Device Info ── */
+.device-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.device-name {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: #1a1a2e;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.device-browser {
+  font-weight: 400;
+  color: #8e9aaf;
+  font-size: 0.85rem;
+}
+
+.device-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.device-meta-item {
+  font-size: 0.75rem;
+  color: #a0aec0;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* ── Badge & Close Button ── */
+.device-action {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+}
+
+.badge-current {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: linear-gradient(135deg, #56ab2f, #a8e063);
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 5px 10px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+
+.pulse-dot {
+  font-size: 0.5rem;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.3; }
+}
+
+.btn-close-session {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: none;
+  background: linear-gradient(135deg, #ff6b6b, #ee0979);
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 3px 10px rgba(238,9,121,0.3);
+}
+
+.btn-close-session:hover {
+  transform: scale(1.12);
+  box-shadow: 0 6px 18px rgba(238,9,121,0.45);
+}
+</style>
