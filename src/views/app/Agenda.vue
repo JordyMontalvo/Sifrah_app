@@ -4,10 +4,14 @@
       <!-- Calendar Header (Month + Weekly Strip) -->
       <aside :class="['agenda-header', { expanded: isExpanded }]">
         <div class="header-controls">
-          <button class="month-toggle" @click="toggleCalendar">
-            {{ currentMonthName }} {{ currentYear }}
-            <i :class="['fas', isExpanded ? 'fa-chevron-up' : 'fa-chevron-down']"></i>
-          </button>
+          <div class="month-toggle-select" @click="isExpanded = true">
+            <select v-model="selectedMonthYearValue">
+              <option v-for="opt in monthOptions" :key="opt.value" :value="opt.value">
+                {{ opt.label }}
+              </option>
+            </select>
+            <i class="fas fa-chevron-down"></i>
+          </div>
           <div class="agenda-actions">
             <i class="fas fa-search"></i>
             <i class="fas fa-plus-circle"></i>
@@ -21,10 +25,10 @@
               {{ day }}
             </div>
             <div 
-              v-for="n in calendarDays" 
-              :key="'day-' + n.date" 
-              :class="['grid-day-num', { active: n.isSelected, today: n.isToday }]"
-              @click="selectDay(n)"
+              v-for="(n, i) in calendarDays" 
+              :key="'day-' + i" 
+              :class="['grid-day-num', { active: n.isSelected, today: n.isToday, 'has-events': n.hasEvents, 'is-empty': n.empty }]"
+              @click="n.empty ? null : selectDay(n)"
             >
               {{ n.num }}
             </div>
@@ -184,17 +188,55 @@ export default {
     currentYear() {
       return this.selectedDate.getFullYear();
     },
+    monthOptions() {
+      const options = [];
+      const d = new Date();
+      d.setMonth(d.getMonth() - 12);
+      for(let i=0; i<24; i++) {
+        const value = `${d.getFullYear()}-${d.getMonth()}`;
+        const label = d.toLocaleString('es-ES', { month: 'long' }).charAt(0).toUpperCase() + d.toLocaleString('es-ES', { month: 'long' }).slice(1) + " " + d.getFullYear();
+        options.push({ value, label });
+        d.setMonth(d.getMonth() + 1);
+      }
+      return options;
+    },
+    selectedMonthYearValue: {
+      get() {
+        return `${this.selectedDate.getFullYear()}-${this.selectedDate.getMonth()}`;
+      },
+      set(val) {
+        const [year, month] = val.split('-');
+        const newDate = new Date(this.selectedDate);
+        newDate.setFullYear(parseInt(year), parseInt(month), 1);
+        this.selectedDate = newDate;
+      }
+    },
     calendarDays() {
-      // Mock calendar days for the current month
-      return Array.from({ length: 30 }, (_, i) => {
-        const d = i + 1;
-        return {
+      const year = this.selectedDate.getFullYear();
+      const month = this.selectedDate.getMonth();
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
+      
+      const firstDay = new Date(year, month, 1).getDay(); // 0 is Sunday
+      
+      const days = [];
+      
+      for (let i = 0; i < firstDay; i++) {
+        days.push({ empty: true });
+      }
+      
+      for (let d = 1; d <= daysInMonth; d++) {
+        const hasEvents = this.events.some(e => e.day === d && e.month === month && e.year === year);
+        
+        days.push({
+          empty: false,
           num: d,
           date: d,
           isSelected: d === this.selectedDate.getDate(),
-          isToday: d === new Date().getDate()
-        };
-      });
+          isToday: d === new Date().getDate() && month === new Date().getMonth() && year === new Date().getFullYear(),
+          hasEvents: hasEvents
+        });
+      }
+      return days;
     },
     weekDays() {
       // Generate a week strip around the selected date
@@ -503,5 +545,69 @@ export default {
 
 .mt-3 {
   margin-top: 16px;
+}
+
+.month-toggle-select {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+.month-toggle-select select {
+  background: transparent;
+  border: none;
+  color: white;
+  padding: 8px 30px 8px 16px;
+  font-weight: 600;
+  font-size: 1rem;
+  appearance: none;
+  outline: none;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.month-toggle-select select option {
+  color: #1e293b;
+  font-weight: 500;
+}
+
+.month-toggle-select i {
+  position: absolute;
+  right: 12px;
+  color: white;
+  pointer-events: none;
+  font-size: 0.85rem;
+}
+
+.grid-day-num.is-empty {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.grid-day-num.has-events {
+  position: relative;
+  font-weight: 700;
+}
+
+.grid-day-num.has-events::after {
+  content: '';
+  position: absolute;
+  bottom: 2px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 5px;
+  height: 5px;
+  background-color: #fb8c00;
+  border-radius: 50%;
+  box-shadow: 0 0 4px rgba(251, 140, 0, 0.5);
+}
+
+.grid-day-num.active.has-events::after {
+  background-color: white;
+  box-shadow: none;
 }
 </style>
