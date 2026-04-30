@@ -39,6 +39,7 @@ class API {
     Materials,
     Audios,
     Books,
+    Agenda,
   }) {
     this.Profile = new Profile();
     this.Password = new Password();
@@ -61,6 +62,7 @@ class API {
     this.Materials = new Materials();
     this.Audios = new Audios();
     this.Books = new Books();
+    this.Agenda = new Agenda();
   }
 
   register(data) {
@@ -325,6 +327,12 @@ class Books {
   }
 }
 
+class Agenda {
+  GET() {
+    return axios.get('/app/agenda');
+  }
+}
+
 export default new API({
   Profile,
   Password,
@@ -347,4 +355,5 @@ export default new API({
   Materials,
   Audios,
   Books,
+  Agenda,
 });

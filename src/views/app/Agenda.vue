@@ -87,6 +87,7 @@
 
 <script>
 import App from "@/views/layouts/App";
+import api from "@/api";
 
 export default {
   name: "Agenda",
@@ -99,50 +100,11 @@ export default {
       currentDate: new Date(),
       selectedDate: new Date(),
       daysShort: ['D', 'L', 'M', 'M', 'J', 'V', 'S'],
-      events: [
-        { 
-          id: 1, 
-          day: 27, 
-          time: '08:00', 
-          start: '08:00', 
-          end: '09:30', 
-          title: 'Capacitación de Ventas', 
-          location: 'Zoom Premium', 
-          color: '#fb8c00' 
-        },
-        { 
-          id: 2, 
-          day: 27, 
-          time: '10:00', 
-          start: '10:15', 
-          end: '11:00', 
-          title: 'Presentación de Oportunidad', 
-          location: 'Oficina Central', 
-          color: '#2196f3',
-          isCurrent: true 
-        },
-        { 
-          id: 3, 
-          day: 27, 
-          time: '12:30', 
-          start: '12:30', 
-          end: '13:30', 
-          title: 'Almuerzo con Diamantes', 
-          location: 'Restaurante El Salto', 
-          color: '#4caf50' 
-        },
-        { 
-          id: 4, 
-          day: 28, 
-          time: '09:00', 
-          start: '09:00', 
-          end: '10:30', 
-          title: 'Taller de Liderazgo', 
-          location: 'Virtual', 
-          color: '#e91e63' 
-        }
-      ]
+      events: []
     };
+  },
+  async mounted() {
+    await this.fetchEvents();
   },
   computed: {
     session() {
@@ -185,10 +147,54 @@ export default {
       return days;
     },
     filteredEvents() {
-      return this.events.filter(e => e.day === this.selectedDate.getDate());
+      return this.events.filter(e => 
+        e.day === this.selectedDate.getDate() &&
+        e.month === this.selectedDate.getMonth() &&
+        e.year === this.selectedDate.getFullYear()
+      );
     }
   },
   methods: {
+    async fetchEvents() {
+      try {
+        const { data } = await api.Agenda.GET();
+        if (data && data.events) {
+          this.events = data.events.map(e => {
+            const d = new Date(e.date + "T00:00:00");
+            const [hours, minutes] = (e.time || "00:00").split(':');
+            const endHour = String((parseInt(hours) + 1) % 24).padStart(2, '0');
+            const endStr = `${endHour}:${minutes}`;
+            
+            return {
+              id: e.id,
+              day: d.getDate(),
+              month: d.getMonth(),
+              year: d.getFullYear(),
+              time: e.time,
+              start: e.time,
+              end: endStr,
+              title: e.title,
+              location: e.link || e.modality,
+              color: this.getTypeColor(e.type),
+              isCurrent: false,
+              ...e
+            };
+          });
+        }
+      } catch (err) {
+        console.error("Error loading agenda", err);
+      }
+    },
+    getTypeColor(type) {
+      const colors = {
+        "Presentación": "#6b46c1",
+        "Taller": "#3182ce",
+        "Capacitación": "#38a169",
+        "Reunión": "#dd6b20",
+        "Lanzamiento": "#e53e3e"
+      };
+      return colors[type] || "#718096";
+    },
     toggleCalendar() {
       this.isExpanded = !this.isExpanded;
     },
