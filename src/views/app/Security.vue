@@ -49,6 +49,38 @@
 
     </section>
 
+    <hr v-if="!loading" style="margin: 30px 0; border: 0; border-top: 1px solid #ddd;">
+
+    <h4 v-if="!loading">DISPOSITIVOS CONECTADOS</h4>
+    
+    <section v-if="!loading">
+      <div v-if="sessions.length === 0" style="color: #888;">
+        No hay otras sesiones activas.
+      </div>
+      <div v-for="sess in sessions" :key="sess._id" class="box" style="margin-bottom: 15px; padding: 15px; border-radius: 8px; border: 1px solid #eee;">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+          <div>
+            <div style="font-weight: 600; font-size: 1.1rem; color: #2c3e50;">
+              <i class="fas" :class="sess.os === 'MacOS' || sess.os === 'iOS' ? 'fa-apple' : sess.os === 'Windows' ? 'fa-windows' : sess.os === 'Android' ? 'fa-android' : 'fa-laptop'" style="margin-right: 8px;"></i>
+              {{ sess.os }} - {{ sess.browser }}
+            </div>
+            <div style="font-size: 0.9rem; color: #7f8c8d; margin-top: 5px;">
+              <i class="fas fa-map-marker-alt" style="margin-right: 5px;"></i> IP: {{ sess.ip }}
+            </div>
+            <div style="font-size: 0.85rem; color: #95a5a6; margin-top: 3px;">
+              <i class="far fa-clock" style="margin-right: 5px;"></i> Iniciado: {{ new Date(sess.created_at).toLocaleString() }}
+            </div>
+          </div>
+          <div>
+            <span v-if="sess.is_current" class="tag is-success" style="font-weight: 600; color: #fff; background: #2ecc71; padding: 4px 8px; border-radius: 4px; font-size: 0.8rem;">Este dispositivo</span>
+            <button v-else @click="closeSession(sess._id)" class="button is-danger is-small" style="background: #e74c3c; color: white; border: none; border-radius: 4px; cursor: pointer;">
+              <i class="fas fa-sign-out-alt" style="margin-right: 5px;"></i> Cerrar sesión
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
   </App>
 </template>
 
@@ -75,6 +107,7 @@ export default {
       alert: null,
 
       success: false,
+      sessions: [],
     }
   },
   computed: {
@@ -108,6 +141,7 @@ export default {
       this.phone = data.security.phone
     }
 
+    await this.fetchSessions();
   },
   methods: {
     async UPDATE() {
@@ -137,6 +171,31 @@ export default {
       this.success = true
       this.state = 'exists'
     },
+    async fetchSessions() {
+      try {
+        const { data } = await api.Sessions.GET(this.session);
+        if (data && !data.error) {
+          this.sessions = data.sessions || [];
+        }
+      } catch (e) {
+        console.error("Error fetching sessions", e);
+      }
+    },
+    async closeSession(sessionId) {
+      if (confirm('¿Estás seguro de que deseas cerrar la sesión en ese dispositivo?')) {
+        try {
+          const { data } = await api.Sessions.DELETE(this.session, sessionId);
+          if (!data.error) {
+            this.sessions = this.sessions.filter(s => s._id !== sessionId);
+            alert('Sesión cerrada exitosamente');
+          } else {
+            alert(data.error);
+          }
+        } catch (e) {
+          alert('Error al cerrar la sesión');
+        }
+      }
+    }
   },
 };
 </script>

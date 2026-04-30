@@ -17,7 +17,9 @@ export default {
   name: 'AppInitializer',
   data() {
     return {
-      initialized: false
+      initialized: false,
+      inactivityTimer: null,
+      INACTIVITY_TIMEOUT_MS: 15 * 60 * 1000 // 15 minutos
     }
   },
   async created() {
@@ -142,12 +144,17 @@ export default {
       }
       
       this.initialized = true;
+      this.setupInactivityTimeout();
       console.log('AppInitializer: Inicialización completada');
       
     } catch (error) {
       console.error('AppInitializer: Error durante la inicialización:', error);
       this.initialized = true; // Continuar aunque haya error
     }
+  },
+  
+  beforeDestroy() {
+    this.clearInactivityTimeout();
   },
   
   // También verificar cuando cambie la ruta
@@ -163,6 +170,50 @@ export default {
   },
   
   methods: {
+    setupInactivityTimeout() {
+      const EVENTS = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart'];
+      this.resetTimeout = this.resetTimeout.bind(this);
+      
+      EVENTS.forEach(event => {
+        window.addEventListener(event, this.resetTimeout, { passive: true });
+      });
+      
+      this.startTimeout();
+    },
+    clearInactivityTimeout() {
+      const EVENTS = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart'];
+      EVENTS.forEach(event => {
+        window.removeEventListener(event, this.resetTimeout);
+      });
+      if (this.inactivityTimer) clearTimeout(this.inactivityTimer);
+    },
+    resetTimeout() {
+      this.startTimeout();
+    },
+    startTimeout() {
+      if (this.inactivityTimer) clearTimeout(this.inactivityTimer);
+      
+      this.inactivityTimer = setTimeout(() => {
+        const session = this.$store.state.session || localStorage.getItem('session');
+        if (session && this.$route.path !== '/login') {
+          console.log('AppInitializer: Timeout de inactividad, cerrando sesión');
+          // Logout user
+          this.$store.dispatch('clearState');
+          localStorage.clear();
+          api.logout(session);
+          
+          import('sweetalert2').then(Swal => {
+            Swal.default.fire({
+              icon: 'info',
+              title: 'Sesión expirada',
+              text: 'Tu sesión ha caducado por inactividad. Por favor, vuelve a iniciar sesión.'
+            });
+          });
+          
+          this.$router.push('/login');
+        }
+      }, this.INACTIVITY_TIMEOUT_MS);
+    },
     checkAndRedirect() {
       const session = this.$store.state.session || localStorage.getItem('session');
       

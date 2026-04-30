@@ -44,6 +44,7 @@ class API {
     this.Profile = new Profile();
     this.Password = new Password();
     this.Security = new Security();
+    this.Sessions = new Sessions();
     this.Afiliation = new Afiliation();
     this.Activation = new Activation();
     this.Promo = new Promo();
@@ -205,6 +206,14 @@ class Security {
   }
   POST(session, data) {
     return axios.post(`/app/security?session=${session}`, data);
+  }
+}
+class Sessions {
+  GET(session) {
+    return axios.get(`/app/sessions?session=${session}`);
+  }
+  DELETE(session, session_id_to_delete) {
+    return axios.post(`/app/sessions?session=${session}`, { action: 'delete', session_id_to_delete });
   }
 }
 
