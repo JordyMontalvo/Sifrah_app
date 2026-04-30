@@ -116,10 +116,32 @@
               <p>{{ selectedEvent.description }}</p>
             </div>
             
-            <div class="modal-actions" v-if="selectedEvent.link">
-              <a :href="selectedEvent.link" target="_blank" class="btn-primary is-fullwidth" :style="{ backgroundColor: selectedEvent.color }">
-                Unirse al Evento
+            <div class="modal-actions">
+              <!-- Virtual -->
+              <a v-if="selectedEvent.modality === 'Virtual' && selectedEvent.link" 
+                 :href="selectedEvent.link" target="_blank" 
+                 class="btn-primary is-fullwidth" :style="{ backgroundColor: selectedEvent.color }">
+                Unirse al Evento Virtual
               </a>
+              
+              <!-- Mixta -->
+              <div v-if="selectedEvent.modality === 'Mixta'">
+                <div class="modality-notice mixta-notice" :style="{ color: selectedEvent.color }">
+                  <i class="fas fa-info-circle"></i> 
+                  <span>Este evento es de modalidad mixta. Puedes asistir presencialmente o unirte de forma virtual.</span>
+                </div>
+                <a v-if="selectedEvent.link" 
+                   :href="selectedEvent.link" target="_blank" 
+                   class="btn-primary is-fullwidth mt-3" :style="{ backgroundColor: selectedEvent.color }">
+                  Unirse Virtualmente
+                </a>
+              </div>
+              
+              <!-- Presencial -->
+              <div v-if="selectedEvent.modality === 'Presencial'" class="modality-notice presencial-notice">
+                <i class="fas fa-building"></i> 
+                <span>Evento 100% Presencial. Te esperamos en la ubicación indicada.</span>
+              </div>
             </div>
           </div>
         </div>
@@ -451,5 +473,35 @@ export default {
   text-decoration: none;
   font-size: 1.05rem;
   padding: 14px;
+}
+
+.modality-notice {
+  padding: 14px;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  line-height: 1.4;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.modality-notice i {
+  font-size: 1.2rem;
+  margin-top: 2px;
+}
+
+.mixta-notice {
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+}
+
+.presencial-notice {
+  background-color: #f0fdf4;
+  color: #166534;
+  border: 1px solid #bbf7d0;
+}
+
+.mt-3 {
+  margin-top: 16px;
 }
 </style>
