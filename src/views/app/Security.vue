@@ -186,7 +186,7 @@ export default {
         try {
           const { data } = await api.Sessions.DELETE(this.session, sessionId);
           if (!data.error) {
-            this.sessions = this.sessions.filter(s => s._id !== sessionId);
+            this.sessions = this.sessions.filter(s => String(s._id) !== String(sessionId));
             alert('Sesión cerrada exitosamente');
           } else {
             alert(data.error);

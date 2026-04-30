@@ -70,6 +70,14 @@ export default {
             // Esperar a que el store se actualice
             await this.$nextTick();
             
+          } else if (data && data.error && data.msg === 'invalid session') {
+             console.error('AppInitializer: Invalid session detected. Logging out.');
+             this.$store.dispatch('clearState');
+             localStorage.clear();
+             this.initialized = true;
+             alert('Tu sesión ha sido cerrada desde otro dispositivo o ha expirado.');
+             this.$router.push('/login');
+             return;
           } else {
              console.warn('AppInitializer: No se pudieron obtener datos frescos, usando caché local');
              throw new Error('API Error or no data');
