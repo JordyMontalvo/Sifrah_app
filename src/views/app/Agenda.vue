@@ -62,10 +62,15 @@
               <div class="event-time-col">{{ event.time }}</div>
               
               <div class="event-card" :style="{ borderLeftColor: event.color }">
-                <div class="event-info">
+                <div class="event-main">
+                  <div class="event-icon" :style="{ backgroundColor: event.color + '1A', color: event.color }">
+                    <i :class="getTypeIcon(event.type)"></i>
+                  </div>
+                  <div class="event-info">
                   <h3>{{ event.title }}</h3>
                   <p><i class="far fa-clock"></i> {{ event.start }} - {{ event.end }}</p>
-                  <p v-if="event.location"><i class="fas fa-map-marker-alt"></i> {{ event.location }}</p>
+                    <p v-if="eventLocationLine(event)"><i class="fas fa-map-marker-alt"></i> {{ eventLocationLine(event) }}</p>
+                  </div>
                 </div>
                 <div class="event-more-btn" @click.stop="openEventModal(event)" style="cursor: pointer; padding: 10px;">
                   <i class="fas fa-ellipsis-h"></i>
@@ -92,9 +97,13 @@
             <i class="fas fa-times"></i>
           </button>
           
-          <div class="modal-header" :style="{ backgroundColor: selectedEvent.color }">
-            <i :class="getTypeIcon(selectedEvent.type)" class="modal-type-icon"></i>
-            <span class="modal-type-badge">{{ selectedEvent.type }}</span>
+          <div class="modal-header">
+            <div class="modal-header-top">
+              <div class="modal-icon-chip">
+                <i :class="getTypeIcon(selectedEvent.type)" class="modal-type-icon"></i>
+              </div>
+              <span class="modal-type-badge">{{ selectedEvent.type }}</span>
+            </div>
           </div>
           
           <div class="modal-body">
@@ -109,9 +118,13 @@
                 <i class="far fa-clock"></i>
                 <span>{{ selectedEvent.start }} - {{ selectedEvent.end }}</span>
               </div>
-              <div class="detail-item" v-if="selectedEvent.location">
-                <i class="fas fa-map-marker-alt"></i>
-                <span>{{ selectedEvent.location }} ({{ selectedEvent.modality }})</span>
+              <div class="detail-item" v-if="selectedEvent.link || selectedEvent.location">
+                <i class="fas fa-video"></i>
+                <span>
+                  {{ selectedEvent.location || 'Enlace del evento' }}
+                  <span v-if="selectedEvent.link" class="detail-link">{{ selectedEvent.link }}</span>
+                  <span v-if="selectedEvent.modality"> ({{ selectedEvent.modality }})</span>
+                </span>
               </div>
             </div>
             
@@ -124,20 +137,22 @@
               <!-- Virtual -->
               <a v-if="selectedEvent.modality === 'Virtual' && selectedEvent.link" 
                  :href="selectedEvent.link" target="_blank" 
-                 class="btn-primary is-fullwidth" :style="{ backgroundColor: selectedEvent.color }">
-                Unirse al Evento Virtual
+                 class="btn-primary is-fullwidth modal-cta">
+                <i class="fas fa-video"></i>
+                <span>Unirse al Evento</span>
               </a>
               
-              <!-- Mixta -->
-              <div v-if="selectedEvent.modality === 'Mixta'">
+              <!-- Mixto/Mixta -->
+              <div v-if="selectedEvent.modality === 'Mixto' || selectedEvent.modality === 'Mixta'">
                 <div class="modality-notice mixta-notice" :style="{ color: selectedEvent.color }">
                   <i class="fas fa-info-circle"></i> 
                   <span>Este evento es de modalidad mixta. Puedes asistir presencialmente o unirte de forma virtual.</span>
                 </div>
                 <a v-if="selectedEvent.link" 
                    :href="selectedEvent.link" target="_blank" 
-                   class="btn-primary is-fullwidth mt-3" :style="{ backgroundColor: selectedEvent.color }">
-                  Unirse Virtualmente
+                   class="btn-primary is-fullwidth mt-3 modal-cta">
+                  <i class="fas fa-video"></i>
+                  <span>Unirse al Evento</span>
                 </a>
               </div>
               
@@ -264,26 +279,41 @@ export default {
     }
   },
   methods: {
+    eventLocationLine(event) {
+      if (!event) return "";
+      const modality = event.modality || "";
+      const link = event.link || "";
+      if (modality && link) return `${modality} - ${link}`;
+      return modality || link || "";
+    },
+    parseEventDate(dateStr) {
+      if (!dateStr) return null;
+      // Soportar "YYYY-MM-DD" y también ISO con hora ("YYYY-MM-DDTHH:mm:ssZ")
+      const s = String(dateStr);
+      const d = s.includes("T") ? new Date(s) : new Date(s + "T00:00:00");
+      if (!isNaN(d)) return d;
+      const fallback = new Date(s);
+      return isNaN(fallback) ? null : fallback;
+    },
     async fetchEvents() {
       try {
         const { data } = await api.Agenda.GET();
         if (data && data.events) {
           this.events = data.events.map(e => {
-            const d = new Date(e.date + "T00:00:00");
+            const d = this.parseEventDate(e.date);
             const [hours, minutes] = (e.time || "00:00").split(':');
             const endHour = String((parseInt(hours) + 1) % 24).padStart(2, '0');
             const endStr = `${endHour}:${minutes}`;
             
             return {
               id: e.id,
-              day: d.getDate(),
-              month: d.getMonth(),
-              year: d.getFullYear(),
+              day: d ? d.getDate() : null,
+              month: d ? d.getMonth() : null,
+              year: d ? d.getFullYear() : null,
               time: e.time,
               start: e.time,
               end: endStr,
               title: e.title,
-              location: e.link || e.modality,
               color: this.getTypeColor(e.type),
               isCurrent: false,
               ...e
@@ -316,7 +346,7 @@ export default {
     },
     formatDate(dateStr) {
       if (!dateStr) return "-";
-      const d = new Date(dateStr + "T00:00:00");
+      const d = this.parseEventDate(dateStr);
       return isNaN(d) ? dateStr : d.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
     },
     openEventModal(event) {
@@ -411,7 +441,7 @@ export default {
   position: absolute;
   top: 15px;
   right: 15px;
-  background: rgba(0, 0, 0, 0.2);
+  background: rgba(0, 0, 0, 0.35);
   border: none;
   width: 32px;
   height: 32px;
@@ -423,34 +453,71 @@ export default {
   cursor: pointer;
   z-index: 2;
   transition: all 0.2s;
+  backdrop-filter: blur(6px);
 }
 
 .modal-close-btn:hover {
-  background: rgba(0, 0, 0, 0.4);
+  background: rgba(0, 0, 0, 0.55);
   transform: scale(1.1);
 }
 
 .modal-header {
-  padding: 40px 24px;
+  padding: 28px 24px;
   color: white;
+  background:
+    radial-gradient(900px 220px at 85% 25%, rgba(255, 45, 140, 0.32) 0%, rgba(255, 45, 140, 0) 60%),
+    linear-gradient(135deg, #0b0b10 0%, #1a0b14 55%, #0b0b10 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.modal-header::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 46%;
+  background-image: radial-gradient(rgba(255, 45, 140, 0.55) 1px, rgba(255, 45, 140, 0) 1px);
+  background-size: 8px 8px;
+  opacity: 0.55;
+  pointer-events: none;
+  mask-image: linear-gradient(270deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 70%);
+}
+
+.modal-header-top {
+  position: relative;
+  z-index: 1;
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 10px;
+  align-items: center;
+  gap: 12px;
+}
+
+.modal-icon-chip {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #ff2d8c 0%, #b01268 100%);
+  box-shadow: 0 10px 28px rgba(255, 45, 140, 0.25);
+  flex-shrink: 0;
 }
 
 .modal-type-icon {
-  font-size: 2.5rem;
-  opacity: 0.9;
+  font-size: 1.4rem;
+  opacity: 1;
 }
 
 .modal-type-badge {
-  background: rgba(255, 255, 255, 0.2);
-  padding: 4px 12px;
-  border-radius: 20px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  letter-spacing: 0.5px;
+  background: rgba(255, 45, 140, 0.16);
+  border: 1px solid rgba(255, 45, 140, 0.35);
+  color: rgba(255, 255, 255, 0.92);
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  font-weight: 700;
 }
 
 .modal-body {
@@ -463,16 +530,20 @@ export default {
   color: #1e293b;
   margin: 0 0 20px 0;
   line-height: 1.3;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
 }
 
 .modal-details {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 0;
   margin-bottom: 24px;
   background: #f8fafc;
-  padding: 16px;
-  border-radius: 12px;
+  padding: 0;
+  border-radius: 14px;
+  border: 1px solid rgba(15, 23, 42, 0.06);
+  overflow: hidden;
 }
 
 .detail-item {
@@ -481,15 +552,39 @@ export default {
   gap: 12px;
   color: #475569;
   font-size: 0.95rem;
+  padding: 14px 14px;
+  border-bottom: 1px solid rgba(15, 23, 42, 0.06);
+}
+
+.detail-item:last-child {
+  border-bottom: none;
 }
 
 .detail-item i {
-  color: #94a3b8;
-  width: 20px;
+  color: #ff2d8c;
+  width: 22px;
   text-align: center;
   font-size: 1.1rem;
 }
 
+.detail-link {
+  color: #c21874;
+  font-weight: 700;
+  word-break: break-all;
+}
+
+.modal-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: linear-gradient(90deg, #b01268 0%, #ff2d8c 100%);
+  box-shadow: 0 12px 30px rgba(176, 18, 104, 0.25);
+}
+
+.modal-cta i {
+  font-size: 1.05rem;
+}
 .modal-description h3 {
   font-size: 1rem;
   font-weight: 600;
@@ -551,8 +646,8 @@ export default {
   position: relative;
   display: inline-flex;
   align-items: center;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(0, 0, 0, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.18);
   border-radius: 20px;
   cursor: pointer;
 }
@@ -568,6 +663,7 @@ export default {
   outline: none;
   cursor: pointer;
   font-family: inherit;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.18);
 }
 
 .month-toggle-select select option {
@@ -601,13 +697,13 @@ export default {
   transform: translateX(-50%);
   width: 5px;
   height: 5px;
-  background-color: #fb8c00;
+  background-color: rgba(255, 255, 255, 0.85);
   border-radius: 50%;
-  box-shadow: 0 0 4px rgba(251, 140, 0, 0.5);
+  box-shadow: 0 0 6px rgba(255, 255, 255, 0.25);
 }
 
 .grid-day-num.active.has-events::after {
-  background-color: white;
+  background-color: var(--agenda-primary);
   box-shadow: none;
 }
 </style>
