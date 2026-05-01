@@ -121,7 +121,7 @@
               <div class="detail-item" v-if="selectedEvent.link || selectedEvent.location">
                 <i class="fas fa-video"></i>
                 <span>
-                  <span class="detail-label">{{ selectedEvent.location || 'Enlace del evento' }}</span>
+                  {{ selectedEvent.location || 'Enlace del evento' }}
                   <span v-if="selectedEvent.link" class="detail-link">{{ selectedEvent.link }}</span>
                   <span v-if="selectedEvent.modality"> ({{ selectedEvent.modality }})</span>
                 </span>
@@ -550,7 +550,7 @@ export default {
 .detail-item {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
   color: #475569;
   font-size: 0.95rem;
   padding: 14px 14px;
@@ -572,24 +572,20 @@ export default {
   color: #c21874;
   font-weight: 700;
   word-break: break-all;
-  margin-left: 8px;
-}
-
-.detail-label {
-  display: inline-block;
 }
 
 .modal-cta {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  gap: 14px;
   background: linear-gradient(90deg, #b01268 0%, #ff2d8c 100%);
   box-shadow: 0 12px 30px rgba(176, 18, 104, 0.25);
 }
 
 .modal-cta i {
   font-size: 1.05rem;
+  margin-right: 2px;
 }
 .modal-description h3 {
   font-size: 1rem;
