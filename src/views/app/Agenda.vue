@@ -61,15 +61,11 @@
             <div v-for="event in filteredEvents" :key="event.id" class="event-row">
               <div class="event-time-col">{{ event.time }}</div>
               
-              <div class="event-card" :style="{ borderLeftColor: '#e91e63' }">
+              <div class="event-card" :style="eventCardStyle(event)">
                 <div class="event-main">
                   <div
                     class="event-icon"
-                    :style="{
-                      backgroundColor: '#e91e631A',
-                      color: '#e91e63',
-                      boxShadow: '0 10px 26px rgba(233, 30, 99, 0.28)'
-                    }"
+                    :style="eventIconStyle(event)"
                   >
                     <i :class="getModalityIcon(event.modality)"></i>
                   </div>
@@ -286,12 +282,51 @@ export default {
     }
   },
   methods: {
+    getModalityTheme(modality) {
+      const m = (modality || "").toString().toLowerCase();
+      // Virtual: fucsia
+      if (m === "virtual") {
+        return {
+          main: "#e91e63",
+          bg: "#e91e631A",
+          shadow: "0 10px 26px rgba(233, 30, 99, 0.28)"
+        };
+      }
+      // Presencial: morado
+      if (m === "presencial") {
+        return {
+          main: "#7c3aed",
+          bg: "#7c3aed1A",
+          shadow: "0 10px 26px rgba(124, 58, 237, 0.28)"
+        };
+      }
+      // Default (incluye Mixto/Mixta)
+      return {
+        main: "#e91e63",
+        bg: "#e91e631A",
+        shadow: "0 10px 26px rgba(233, 30, 99, 0.28)"
+      };
+    },
+    eventIconStyle(event) {
+      const t = this.getModalityTheme(event && event.modality);
+      return {
+        backgroundColor: t.bg,
+        color: t.main,
+        boxShadow: t.shadow
+      };
+    },
+    eventCardStyle(event) {
+      const t = this.getModalityTheme(event && event.modality);
+      return {
+        borderLeftColor: t.main
+      };
+    },
     getModalityIcon(modality) {
       const m = (modality || "").toString().toLowerCase();
       if (m === "virtual") return "fas fa-video";
       if (m === "presencial") return "fas fa-users";
       // Mixto / Mixta (compat)
-      if (m === "mixto" || m === "mixta") return "fas fa-camera";
+      if (m === "mixto" || m === "mixta") return "fas fa-exchange-alt";
       return "fas fa-video";
     },
     eventLocationLine(event) {
