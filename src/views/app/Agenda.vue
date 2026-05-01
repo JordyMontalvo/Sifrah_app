@@ -300,6 +300,14 @@ export default {
           shadow: "0 10px 26px rgba(124, 58, 237, 0.28)"
         };
       }
+      // Mixto/Mixta: híbrido (entre fucsia y morado)
+      if (m === "mixto" || m === "mixta") {
+        return {
+          main: "#c026d3",
+          bg: "#c026d31A",
+          shadow: "0 10px 26px rgba(192, 38, 211, 0.28)"
+        };
+      }
       // Default (incluye Mixto/Mixta)
       return {
         main: "#e91e63",
