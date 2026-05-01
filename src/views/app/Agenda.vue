@@ -472,6 +472,19 @@ export default {
   overflow: hidden;
 }
 
+.modal-header::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #ff2d8c 0%, #b01268 55%, #ff2d8c 100%);
+  opacity: 0.95;
+  pointer-events: none;
+  z-index: 2;
+}
+
 .modal-header::after {
   content: '';
   position: absolute;
