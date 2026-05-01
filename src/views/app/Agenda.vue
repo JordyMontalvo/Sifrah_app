@@ -578,14 +578,14 @@ export default {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 14px;
+  gap: 18px;
   background: linear-gradient(90deg, #b01268 0%, #ff2d8c 100%);
   box-shadow: 0 12px 30px rgba(176, 18, 104, 0.25);
 }
 
 .modal-cta i {
   font-size: 1.05rem;
-  margin-right: 2px;
+  margin-right: 0;
 }
 .modal-description h3 {
   font-size: 1rem;
