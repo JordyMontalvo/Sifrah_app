@@ -61,7 +61,7 @@
             <div v-for="event in filteredEvents" :key="event.id" class="event-row">
               <div class="event-time-col">{{ event.time }}</div>
               
-              <div class="event-card" :style="{ '--event-color': event.color }">
+              <div class="event-card" :style="{ borderLeftColor: event.color }">
                 <div class="event-main">
                   <div class="event-icon" :style="{ backgroundColor: event.color + '1A', color: event.color }">
                     <i :class="getTypeIcon(event.type)"></i>

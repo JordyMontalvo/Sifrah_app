@@ -201,20 +201,8 @@
   align-items: center;
   position: relative;
   transition: transform 0.2s;
-  border-left: none;
+  border-left: 7px solid #ccc;
   border: 1px solid rgba(15, 23, 42, 0.06);
-}
-
-.event-card::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 10px;
-  bottom: 10px;
-  width: 11px;
-  background: var(--event-color, #ccc);
-  border-radius: 999px;
-  opacity: 0.95;
 }
 
 .event-card:hover {
