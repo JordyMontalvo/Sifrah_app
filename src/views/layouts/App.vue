@@ -1593,6 +1593,13 @@ export default {
   animation: slideUp 0.3s ease;
   overflow-y: auto;
   padding-top: 0;
+  -ms-overflow-style: none; /* IE/Edge legacy */
+  scrollbar-width: none; /* Firefox */
+}
+
+.mobile-tabs-menu::-webkit-scrollbar {
+  width: 0;
+  height: 0;
 }
 
 .mobile-tabs-header {
