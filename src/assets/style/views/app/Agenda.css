@@ -201,23 +201,20 @@
   align-items: center;
   position: relative;
   transition: transform 0.2s;
-  overflow: hidden;
+  border-left: none;
   border: 1px solid rgba(15, 23, 42, 0.06);
 }
 
 .event-card::before {
-  content: "";
+  content: '';
   position: absolute;
   left: 0;
   top: 10px;
   bottom: 10px;
-  width: 18px;
-  border: 10px solid var(--event-accent, #ccc);
-  border-right: 0;
+  width: 11px;
+  background: var(--event-color, #ccc);
   border-radius: 999px;
-  background: transparent;
-  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.06);
-  pointer-events: none;
+  opacity: 0.95;
 }
 
 .event-card:hover {
@@ -229,7 +226,6 @@
   align-items: center;
   gap: 14px;
   min-width: 0;
-  padding-left: 22px;
 }
 
 .event-icon {
