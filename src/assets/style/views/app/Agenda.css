@@ -208,13 +208,13 @@
 .event-card::before {
   content: "";
   position: absolute;
-  left: 10px;
-  top: 12px;
-  bottom: 12px;
+  left: 0;
+  top: 10px;
+  bottom: 10px;
   width: 10px;
-  border-radius: 999px;
+  border-radius: 0 999px 999px 0;
   background: var(--event-accent, #ccc);
-  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.10);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
   pointer-events: none;
 }
 
@@ -227,7 +227,7 @@
   align-items: center;
   gap: 14px;
   min-width: 0;
-  padding-left: 16px;
+  padding-left: 14px;
 }
 
 .event-icon {
