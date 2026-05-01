@@ -211,10 +211,12 @@
   left: 0;
   top: 10px;
   bottom: 10px;
-  width: 10px;
-  border-radius: 0 999px 999px 0;
-  background: var(--event-accent, #ccc);
-  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
+  width: 18px;
+  border: 10px solid var(--event-accent, #ccc);
+  border-right: 0;
+  border-radius: 999px;
+  background: transparent;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.06);
   pointer-events: none;
 }
 
@@ -227,7 +229,7 @@
   align-items: center;
   gap: 14px;
   min-width: 0;
-  padding-left: 14px;
+  padding-left: 22px;
 }
 
 .event-icon {
