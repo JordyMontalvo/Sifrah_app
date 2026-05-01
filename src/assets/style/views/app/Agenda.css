@@ -1,10 +1,10 @@
 /* Variable Definitions */
 :global(:root) {
-  --agenda-primary: #7b145c;
-  --agenda-secondary: #c21874;
+  --agenda-primary: #e91e63;
+  --agenda-secondary: #c2185b;
   --agenda-bg: #f8f9fa;
   --agenda-glass: rgba(255, 255, 255, 0.8);
-  --agenda-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+  --agenda-shadow: 0 10px 28px rgba(233, 30, 99, 0.18);
   --agenda-accent: #4caf50;
   --agenda-card-bg: #ffffff;
   --agenda-text-main: #2c3e50;
@@ -23,7 +23,7 @@
 
 /* Header Styles */
 .agenda-header {
-  background: linear-gradient(180deg, #5f0c41 0%, #b01268 100%);
+  background: linear-gradient(180deg, #e91e63 0%, #c2185b 100%);
   color: white;
   padding: 20px;
   border-radius: 0 0 24px 24px;
@@ -31,7 +31,7 @@
   position: sticky;
   top: 0;
   z-index: 100;
-  box-shadow: 0 10px 30px rgba(123, 20, 92, 0.28);
+  box-shadow: 0 12px 32px rgba(233, 30, 99, 0.35);
 }
 
 .header-controls {
@@ -214,7 +214,7 @@
   transition: transform 0.2s;
   border: 1px solid rgba(15, 23, 42, 0.06);
   /* `border` resetea el borde izquierdo; forzamos el grosor del acento */
-  border-left: 8px solid #ccc;
+  border-left: 8px solid var(--agenda-primary);
 }
 
 .event-card:hover {
