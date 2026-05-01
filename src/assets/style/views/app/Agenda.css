@@ -201,8 +201,21 @@
   align-items: center;
   position: relative;
   transition: transform 0.2s;
-  border-left: 11px solid #ccc;
+  overflow: hidden;
   border: 1px solid rgba(15, 23, 42, 0.06);
+}
+
+.event-card::before {
+  content: "";
+  position: absolute;
+  left: 10px;
+  top: 12px;
+  bottom: 12px;
+  width: 10px;
+  border-radius: 999px;
+  background: var(--event-accent, #ccc);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.10);
+  pointer-events: none;
 }
 
 .event-card:hover {
@@ -214,6 +227,7 @@
   align-items: center;
   gap: 14px;
   min-width: 0;
+  padding-left: 16px;
 }
 
 .event-icon {
