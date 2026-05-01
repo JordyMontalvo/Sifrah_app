@@ -64,7 +64,7 @@
               <div class="event-card" :style="{ borderLeftColor: event.color }">
                 <div class="event-main">
                   <div class="event-icon" :style="{ backgroundColor: event.color + '1A', color: event.color }">
-                    <i :class="getTypeIcon(event.type)"></i>
+                    <i :class="getModalityIcon(event.modality)"></i>
                   </div>
                   <div class="event-info">
                   <h3>{{ event.title }}</h3>
@@ -100,7 +100,7 @@
           <div class="modal-header">
             <div class="modal-header-top">
               <div class="modal-icon-chip">
-                <i :class="getTypeIcon(selectedEvent.type)" class="modal-type-icon"></i>
+                <i :class="getModalityIcon(selectedEvent.modality)" class="modal-type-icon"></i>
               </div>
               <span class="modal-type-badge">{{ selectedEvent.type }}</span>
             </div>
@@ -279,6 +279,14 @@ export default {
     }
   },
   methods: {
+    getModalityIcon(modality) {
+      const m = (modality || "").toString().toLowerCase();
+      if (m === "virtual") return "fas fa-video";
+      if (m === "presencial") return "fas fa-users";
+      // Mixto / Mixta (compat)
+      if (m === "mixto" || m === "mixta") return "fas fa-camera";
+      return "fas fa-video";
+    },
     eventLocationLine(event) {
       if (!event) return "";
       const modality = event.modality || "";
