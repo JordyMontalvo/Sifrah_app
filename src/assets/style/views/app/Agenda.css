@@ -163,7 +163,7 @@
 
 .timeline-labels {
   display: flex;
-  padding: 0 10px 15px;
+  padding: 0 0 15px;
   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
   margin-bottom: 20px;
   color: var(--agenda-text-muted);
@@ -171,9 +171,16 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 1px;
+  align-items: center;
 }
 
-.label-time { width: 60px; }
+.label-time {
+  width: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  text-align: left;
+}
 
 /* Event Items */
 .event-row {
@@ -187,7 +194,11 @@
   font-size: 0.85rem;
   color: var(--agenda-text-muted);
   font-weight: 500;
-  padding-top: 5px;
+  padding-top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  text-align: left;
 }
 
 .event-card {
@@ -201,8 +212,9 @@
   align-items: center;
   position: relative;
   transition: transform 0.2s;
-  border-left: 7px solid #ccc;
   border: 1px solid rgba(15, 23, 42, 0.06);
+  /* `border` resetea el borde izquierdo; forzamos el grosor del acento */
+  border-left: 8px solid #ccc;
 }
 
 .event-card:hover {
@@ -248,6 +260,10 @@
   align-items: center;
   gap: 8px;
   line-height: 1.25;
+}
+
+.event-info p + p {
+  margin-top: 2px;
 }
 
 .event-info p i {
