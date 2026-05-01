@@ -121,7 +121,7 @@
               <div class="detail-item" v-if="selectedEvent.link || selectedEvent.location">
                 <i class="fas fa-video"></i>
                 <span>
-                  {{ selectedEvent.location || 'Enlace del evento' }}
+                  <span class="detail-label">{{ selectedEvent.location || 'Enlace del evento' }}</span>
                   <span v-if="selectedEvent.link" class="detail-link">{{ selectedEvent.link }}</span>
                   <span v-if="selectedEvent.modality"> ({{ selectedEvent.modality }})</span>
                 </span>
@@ -572,6 +572,11 @@ export default {
   color: #c21874;
   font-weight: 700;
   word-break: break-all;
+  margin-left: 8px;
+}
+
+.detail-label {
+  display: inline-block;
 }
 
 .modal-cta {
