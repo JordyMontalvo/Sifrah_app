@@ -550,7 +550,7 @@ export default {
 .detail-item {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 16px;
   color: #475569;
   font-size: 0.95rem;
   padding: 14px 14px;
