@@ -63,7 +63,14 @@
               
               <div class="event-card" :style="{ borderLeftColor: event.color }">
                 <div class="event-main">
-                  <div class="event-icon" :style="{ backgroundColor: event.color + '1A', color: event.color }">
+                  <div
+                    class="event-icon"
+                    :style="{
+                      backgroundColor: '#e91e631A',
+                      color: '#e91e63',
+                      boxShadow: '0 10px 26px rgba(233, 30, 99, 0.28)'
+                    }"
+                  >
                     <i :class="getModalityIcon(event.modality)"></i>
                   </div>
                   <div class="event-info">
