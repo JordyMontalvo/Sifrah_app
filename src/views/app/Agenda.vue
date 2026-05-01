@@ -614,6 +614,13 @@ export default {
   padding: 14px;
 }
 
+.btn-primary.is-fullwidth.modal-cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+}
+
 .modality-notice {
   padding: 14px;
   border-radius: 10px;
