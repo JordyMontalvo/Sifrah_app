@@ -239,6 +239,11 @@
   flex-shrink: 0;
 }
 
+.event-icon.is-mixta {
+  gap: 8px;
+  font-size: 1.05rem;
+}
+
 .event-info {
   min-width: 0;
 }

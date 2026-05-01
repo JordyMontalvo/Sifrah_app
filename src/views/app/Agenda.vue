@@ -65,9 +65,14 @@
                 <div class="event-main">
                   <div
                     class="event-icon"
+                    :class="{ 'is-mixta': isMixta(event.modality) }"
                     :style="eventIconStyle(event)"
                   >
-                    <i :class="getModalityIcon(event.modality)"></i>
+                    <template v-if="isMixta(event.modality)">
+                      <i class="fas fa-user-friends"></i>
+                      <i class="fas fa-video"></i>
+                    </template>
+                    <i v-else :class="getModalityIcon(event.modality)"></i>
                   </div>
                   <div class="event-info">
                   <h3>{{ event.title }}</h3>
@@ -282,6 +287,10 @@ export default {
     }
   },
   methods: {
+    isMixta(modality) {
+      const m = (modality || "").toString().toLowerCase();
+      return m === "mixto" || m === "mixta";
+    },
     getModalityTheme(modality) {
       const m = (modality || "").toString().toLowerCase();
       // Virtual: fucsia
@@ -334,7 +343,7 @@ export default {
       if (m === "virtual") return "fas fa-video";
       if (m === "presencial") return "fas fa-users";
       // Mixto / Mixta (compat)
-      if (m === "mixto" || m === "mixta") return "fas fa-exchange-alt";
+      if (m === "mixto" || m === "mixta") return "fas fa-video";
       return "fas fa-video";
     },
     eventLocationLine(event) {
