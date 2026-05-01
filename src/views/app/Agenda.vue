@@ -466,7 +466,7 @@ export default {
   min-height: 140px;
   color: white;
   background:
-    radial-gradient(900px 220px at 85% 25%, rgba(255, 45, 140, 0.32) 0%, rgba(255, 45, 140, 0) 60%),
+    radial-gradient(900px 220px at 85% 25%, rgba(233, 30, 99, 0.34) 0%, rgba(233, 30, 99, 0) 60%),
     linear-gradient(135deg, #0b0b10 0%, #1a0b14 55%, #0b0b10 100%);
   position: relative;
   overflow: hidden;
@@ -479,7 +479,7 @@ export default {
   right: 0;
   bottom: 0;
   height: 3px;
-  background: linear-gradient(90deg, #ff2d8c 0%, #b01268 55%, #ff2d8c 100%);
+  background: linear-gradient(90deg, #e91e63 0%, #b01268 55%, #e91e63 100%);
   opacity: 0.95;
   pointer-events: none;
   z-index: 2;
@@ -492,7 +492,7 @@ export default {
   right: 0;
   bottom: 0;
   width: 46%;
-  background-image: radial-gradient(rgba(255, 45, 140, 0.55) 1px, rgba(255, 45, 140, 0) 1px);
+  background-image: radial-gradient(rgba(233, 30, 99, 0.55) 1px, rgba(233, 30, 99, 0) 1px);
   background-size: 8px 8px;
   opacity: 0.55;
   pointer-events: none;
@@ -514,8 +514,8 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #ff2d8c 0%, #b01268 100%);
-  box-shadow: 0 10px 28px rgba(255, 45, 140, 0.25);
+  background: linear-gradient(135deg, #e91e63 0%, #b01268 100%);
+  box-shadow: 0 10px 28px rgba(233, 30, 99, 0.26);
   flex-shrink: 0;
 }
 
@@ -525,8 +525,8 @@ export default {
 }
 
 .modal-type-badge {
-  background: rgba(255, 45, 140, 0.16);
-  border: 1px solid rgba(255, 45, 140, 0.35);
+  background: rgba(233, 30, 99, 0.16);
+  border: 1px solid rgba(233, 30, 99, 0.35);
   color: #e91e63;
   padding: 6px 14px;
   border-radius: 999px;
@@ -575,7 +575,7 @@ export default {
 }
 
 .detail-item i {
-  color: #ff2d8c;
+  color: #e91e63;
   width: 22px;
   text-align: center;
   font-size: 1.1rem;
@@ -592,7 +592,7 @@ export default {
   align-items: center;
   justify-content: center;
   gap: 18px;
-  background: linear-gradient(90deg, #b01268 0%, #ff2d8c 100%);
+  background: linear-gradient(90deg, #b01268 0%, #e91e63 100%);
   box-shadow: 0 12px 30px rgba(176, 18, 104, 0.25);
 }
 
