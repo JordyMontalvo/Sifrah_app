@@ -93,11 +93,19 @@
 
 .grid-day-num {
   text-align: center;
-  padding: 10px 0;
+  /* Evita “saltos” al cambiar a .active (p.ej. por font-weight/box-shadow) */
+  height: 40px;
+  padding: 0;
+  box-sizing: border-box;
+  border: 1px solid transparent;
   border-radius: 10px;
   font-size: 0.9rem;
   cursor: pointer;
   transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
 }
 
 .grid-day-num:hover {
