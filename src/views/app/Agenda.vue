@@ -462,7 +462,8 @@ export default {
 }
 
 .modal-header {
-  padding: 28px 24px;
+  padding: 44px 24px;
+  min-height: 140px;
   color: white;
   background:
     radial-gradient(900px 220px at 85% 25%, rgba(255, 45, 140, 0.32) 0%, rgba(255, 45, 140, 0) 60%),
@@ -494,8 +495,8 @@ export default {
 }
 
 .modal-icon-chip {
-  width: 44px;
-  height: 44px;
+  width: 58px;
+  height: 58px;
   border-radius: 14px;
   display: flex;
   align-items: center;
@@ -506,17 +507,17 @@ export default {
 }
 
 .modal-type-icon {
-  font-size: 1.4rem;
+  font-size: 1.75rem;
   opacity: 1;
 }
 
 .modal-type-badge {
   background: rgba(255, 45, 140, 0.16);
   border: 1px solid rgba(255, 45, 140, 0.35);
-  color: rgba(255, 255, 255, 0.92);
+  color: #e91e63;
   padding: 6px 14px;
   border-radius: 999px;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   font-weight: 700;
 }
 
