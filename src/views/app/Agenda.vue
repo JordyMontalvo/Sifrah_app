@@ -76,11 +76,11 @@
                   </div>
                   <div class="event-info">
                   <h3>{{ event.title }}</h3>
-                  <p><i class="far fa-clock"></i> {{ event.start }} - {{ event.end }}</p>
-                    <p v-if="eventLocationLine(event)"><i class="fas fa-map-marker-alt"></i> {{ eventLocationLine(event) }}</p>
+                  <p><i class="far fa-clock"></i><span class="event-info-line">{{ event.start }} - {{ event.end }}</span></p>
+                    <p v-if="eventLocationLine(event)"><i class="fas fa-map-marker-alt"></i><span class="event-info-line">{{ eventLocationLine(event) }}</span></p>
                   </div>
                 </div>
-                <div class="event-more-btn" @click.stop="openEventModal(event)" style="cursor: pointer; padding: 10px;">
+                <div class="event-more-btn" @click.stop="openEventModal(event)">
                   <i class="fas fa-ellipsis-h"></i>
                 </div>
 
