@@ -459,7 +459,7 @@
             <div class="info-content-horizontal">
               <div class="info-text-side">
                 <span class="dash-card-title">Bono Ahorro</span>
-                <span class="dash-card-value-magenta">S/ {{ (ins_ahorro || 0).toLocaleString('es-PE', { minimumFractionDigits: 2 }) }}</span>
+                <span class="dash-card-value-magenta">S/ {{ (sifrahBalance || 0).toLocaleString('es-PE', { minimumFractionDigits: 2 }) }}</span>
                 <span class="dash-card-subtitle">Canjéalo por productos</span>
               </div>
               <div class="piggy-bank-container">
@@ -548,7 +548,7 @@ export default {
       provisionalRank: "",
       travelBonusText: null,
 
-      ins_ahorro: 0,
+      sifrahBalance: 0,
       op: 1,
       op2: 0,
       op3: 0,
@@ -692,6 +692,7 @@ export default {
     this.outs = data.outs ? data.outs.toFixed(2) : "0.00";
     const balNum = Number(data.balance) || 0;
     const vbalNum = Number(data._balance) || 0;
+    this.sifrahBalance = Number(data.sifrahBalance) || 0;
     this.balance = balNum.toFixed(2);
     this._balance = vbalNum.toFixed(2);
     this.$store.commit("SET_BALANCE", balNum);
