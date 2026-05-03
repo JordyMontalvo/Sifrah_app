@@ -237,6 +237,8 @@
     font-weight: 500;
     text-transform: capitalize;
     color: #fff;
+    /* Cualquier categoría nueva del admin debe verse; antes solo había fondo en clases fijas */
+    background-color: #E91E63;
     box-shadow: 0 2px 8px rgba(233, 30, 99, 0.25);
     display: inline-flex;
     align-items: center;

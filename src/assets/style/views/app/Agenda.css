@@ -240,7 +240,7 @@
   transition: transform 0.2s;
   border: 1px solid rgba(15, 23, 42, 0.06);
   /* `border` resetea el borde izquierdo; forzamos el grosor del acento */
-  border-left: 8px solid #ccc;
+  border-left: 6px solid #ccc;
   box-sizing: border-box;
 }
 

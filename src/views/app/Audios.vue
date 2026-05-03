@@ -178,6 +178,17 @@ export default {
     }
   },
   methods: {
+    /** Clase CSS única por categoría (evita espacios que parten la clase en dos tokens). */
+    slugAudioCategory(name) {
+      const s = (name || "")
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .trim()
+        .replace(/\s+/g, "-")
+        .replace(/[^a-z0-9-]/g, "");
+      return s || "categoria";
+    },
     isRecent(date) {
       if (!date) return false;
       const created = new Date(date);
@@ -243,7 +254,7 @@ export default {
         if (res.data && res.data.audios) {
           this.audios = res.data.audios.map(a => ({
             ...a,
-            categoryClass: (a.category || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+            categoryClass: this.slugAudioCategory(a.category),
           }));
         }
       } catch (err) {
