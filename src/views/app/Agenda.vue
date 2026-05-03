@@ -13,8 +13,57 @@
             <i class="fas fa-chevron-down"></i>
           </div>
           <div class="agenda-actions">
-            <i class="fas fa-search"></i>
-            <i class="fas fa-plus-circle"></i>
+            <button
+              type="button"
+              class="agenda-icon-btn"
+              aria-label="Buscar evento por título"
+              @click.stop="toggleEventSearch"
+            >
+              <i class="fas fa-search"></i>
+            </button>
+            <i class="fas fa-plus-circle" aria-hidden="true"></i>
+          </div>
+        </div>
+
+        <!-- Barra de búsqueda compacta (debajo del mes / encima del calendario) -->
+        <div v-show="showEventSearch" class="agenda-inline-search-wrap">
+          <div class="agenda-inline-search-row">
+            <i class="fas fa-search agenda-inline-search-glyph" aria-hidden="true"></i>
+            <input
+              ref="eventSearchInput"
+              v-model="eventSearchQuery"
+              type="search"
+              class="agenda-inline-search-input"
+              placeholder="Buscar por título…"
+              autocomplete="off"
+              @keydown.esc.prevent="closeEventSearch"
+            />
+            <button
+              type="button"
+              class="agenda-inline-search-dismiss"
+              aria-label="Cerrar búsqueda"
+              @click="closeEventSearch"
+            >
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+          <div
+            v-if="eventSearchQuery.trim()"
+            class="agenda-inline-search-dropdown"
+          >
+            <template v-if="eventSearchResults.length">
+              <button
+                v-for="ev in eventSearchResults"
+                :key="ev.id"
+                type="button"
+                class="agenda-inline-search-hit"
+                @click="goToEventFromSearch(ev)"
+              >
+                <span class="agenda-inline-hit-title">{{ ev.title }}</span>
+                <span class="agenda-inline-hit-date">{{ formatSearchResultDate(ev) }}</span>
+              </button>
+            </template>
+            <p v-else class="agenda-inline-search-noresult">Sin coincidencias.</p>
           </div>
         </div>
 
@@ -58,7 +107,12 @@
 
         <div class="events-timeline">
           <transition-group name="fade-slide" tag="div">
-            <div v-for="event in filteredEvents" :key="event.id" class="event-row">
+            <div
+              v-for="event in filteredEvents"
+              :key="event.id"
+              class="event-row"
+              :data-event-id="String(event.id)"
+            >
               <div class="event-time-col">{{ event.time }}</div>
               
               <div class="event-card" :style="eventCardStyle(event)">
@@ -194,7 +248,9 @@ export default {
       daysShort: ['D', 'L', 'M', 'M', 'J', 'V', 'S'],
       events: [],
       showModal: false,
-      selectedEvent: null
+      selectedEvent: null,
+      showEventSearch: false,
+      eventSearchQuery: ""
     };
   },
   async mounted() {
@@ -273,7 +329,10 @@ export default {
           nameShort: names[d.getDay()],
           num: d.getDate(),
           date: d.toISOString(),
-          isSelected: d.getDate() === this.selectedDate.getDate()
+          isSelected:
+            d.getDate() === this.selectedDate.getDate() &&
+            d.getMonth() === this.selectedDate.getMonth() &&
+            d.getFullYear() === this.selectedDate.getFullYear()
         });
       }
       return days;
@@ -284,6 +343,25 @@ export default {
         e.month === this.selectedDate.getMonth() &&
         e.year === this.selectedDate.getFullYear()
       );
+    },
+    eventSearchResults() {
+      const q = (this.eventSearchQuery || "").trim().toLowerCase();
+      if (!q) return [];
+      return this.events
+        .filter(
+          (e) =>
+            e.title &&
+            e.day != null &&
+            e.month != null &&
+            e.year != null &&
+            String(e.title).toLowerCase().includes(q)
+        )
+        .sort((a, b) => {
+          const da = new Date(a.year, a.month, a.day);
+          const db = new Date(b.year, b.month, b.day);
+          return da - db;
+        })
+        .slice(0, 40);
     }
   },
   methods: {
@@ -433,9 +511,52 @@ export default {
         newDate.setDate(day.num);
       } else {
         const d = new Date(day.date);
-        newDate.setDate(d.getDate());
+        newDate.setFullYear(d.getFullYear(), d.getMonth(), d.getDate());
       }
       this.selectedDate = newDate;
+    },
+    toggleEventSearch() {
+      if (this.showEventSearch) {
+        this.closeEventSearch();
+        return;
+      }
+      this.showEventSearch = true;
+      this.eventSearchQuery = "";
+      this.$nextTick(() => {
+        const el = this.$refs.eventSearchInput;
+        if (el && typeof el.focus === "function") el.focus();
+      });
+    },
+    closeEventSearch() {
+      this.showEventSearch = false;
+      this.eventSearchQuery = "";
+    },
+    formatSearchResultDate(ev) {
+      if (ev.day == null || ev.month == null || ev.year == null) return "";
+      const d = new Date(ev.year, ev.month, ev.day);
+      return d.toLocaleDateString("es-ES", {
+        weekday: "short",
+        day: "numeric",
+        month: "short",
+        year: "numeric"
+      });
+    },
+    goToEventFromSearch(ev) {
+      if (!ev || ev.day == null || ev.month == null || ev.year == null) return;
+      this.selectedDate = new Date(ev.year, ev.month, ev.day);
+      this.isExpanded = false;
+      this.closeEventSearch();
+      this.$nextTick(() => {
+        const root = this.$el;
+        if (!root || !ev.id) return;
+        const id = String(ev.id);
+        const safe =
+          typeof CSS !== "undefined" && CSS.escape ? CSS.escape(id) : id.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
+        const row = root.querySelector(`[data-event-id="${safe}"]`);
+        if (row) {
+          row.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+      });
     }
   }
 };
