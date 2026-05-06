@@ -142,31 +142,32 @@ export default {
   methods: {
     async fetchData() {
       try {
-        // Obtener datos del dashboard para el saldo
-        const { data: dashData } = await api.dashboard(this.session);
-        if (dashData.error) {
-          if (dashData.msg === "invalid session") this.$router.push("/login");
+        this.loading = true;
+        // Ejecutar dashboard (para el saldo) y productos en paralelo
+        const [dashResponse, productsResponse] = await Promise.all([
+          api.dashboard(this.session),
+          api.Activation.GET(this.session, { type: 'savings_bonus' })
+        ]);
+
+        const dashData = dashResponse.data;
+        if (dashData && !dashData.error) {
+          this.sifrahBalance = Number(dashData.sifrahBalance) || 0;
+        } else if (dashData && dashData.msg === "invalid session") {
+          this.$router.push("/login");
           return;
         }
-        this.sifrahBalance = Number(dashData.sifrahBalance) || 0;
 
-        // Obtener catálogo de productos
-        const { data: productsData } = await api.Activation.GET(this.session);
-        if (productsData.products) {
-          // Filtrar productos habilitados para Bono Ahorro
-          this.featuredProducts = productsData.products
-            .filter(p => p.is_savings_bonus)
-            .map(p => ({
-              id: p.id,
-              name: p.name,
-              sub: p.subdescription || p.type,
-              // Usar precio de ahorro si existe, sino el precio regular
-              price: p.savings_price || p.price,
-              // Usar imagen de ahorro si existe, sino la regular
-              img: p.savings_img || p.img,
-              description: p.savings_description || p.description,
-              type: p.type
-            }));
+        const productsData = productsResponse.data;
+        if (productsData && productsData.products) {
+          this.featuredProducts = productsData.products.map(p => ({
+            id: p.id,
+            name: p.name,
+            sub: p.subdescription || p.type,
+            price: p.savings_price || p.price,
+            img: p.savings_img || p.img,
+            description: p.savings_description || p.description,
+            type: p.type
+          }));
         }
       } catch (e) {
         console.error("Error fetching savings data:", e);
