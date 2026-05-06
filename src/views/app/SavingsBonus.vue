@@ -73,8 +73,8 @@
         </div>
 
         <div class="products-grid">
-          <div v-for="product in featuredProducts" :key="product.id" class="product-card">
-            <div class="info-icon">i</div>
+          <div v-for="product in filteredProducts" :key="product.id" class="product-card">
+            <div class="info-icon" @click="showProductDetail(product)">i</div>
             <div class="product-image">
               <img :src="product.img" :alt="product.name" />
             </div>
@@ -108,7 +108,6 @@ export default {
       loading: true,
       searchTerm: "",
       selectedCategory: "Todos",
-      categories: ["Todos", "Productos SIFRAH", "Bienestar", "Hogar", "Tecnología", "Herramientas", "Promociones"],
       visualCategories: [
         { name: "Productos SIFRAH", icon: "fas fa-leaf", color: "#e3f2fd" },
         { name: "Bienestar", icon: "fas fa-heart", color: "#f3e5f5" },
@@ -118,22 +117,24 @@ export default {
         { name: "Electrodomésticos", icon: "fas fa-blender", color: "#f1f8e9" },
         { name: "Promociones", icon: "fas fa-tag", color: "#fffde7" },
       ],
-      featuredProducts: [
-        { id: 1, name: "DETOX-POTE", sub: "Pote 300gr", price: 80, img: "https://via.placeholder.com/150" },
-        { id: 2, name: "REJUVENECE-POTE", sub: "Pote 300gr", price: 80, img: "https://via.placeholder.com/150" },
-        { id: 3, name: "IMPULZE-SACHET", sub: "Caja x30 sobres", price: 85, img: "https://via.placeholder.com/150" },
-        { id: 4, name: "LA TRADICIÓN-SACHET", sub: "Caja x25 sobres", price: 85, img: "https://via.placeholder.com/150" },
-        { id: 5, name: "FREIDORA DE AIRE", sub: "Capacidad 4L", price: 450, img: "https://via.placeholder.com/150" },
-        { id: 6, name: "SMARTPHONE", sub: "128GB - 6GB RAM", price: 1200, img: "https://via.placeholder.com/150" },
-        { id: 7, name: "LICUADORA", sub: "Modelo Pro 500W", price: 220, img: "https://via.placeholder.com/150" },
-        { id: 8, name: "SMARTWATCH", sub: "Pantalla táctil", price: 180, img: "https://via.placeholder.com/150" },
-      ],
+      featuredProducts: [],
     };
   },
   computed: {
     session() { return this.$store.state.session; },
     office_id() { return this.$store.state.office_id; },
     title() { return "Bono Ahorro"; },
+    filteredProducts() {
+      return this.featuredProducts.filter(p => {
+        const matchesSearch = p.name.toLowerCase().includes(this.searchTerm.toLowerCase());
+        const matchesCategory = this.selectedCategory === "Todos" || p.type === this.selectedCategory;
+        return matchesSearch && matchesCategory;
+      });
+    },
+    categories() {
+      const cats = new Set(this.featuredProducts.map(p => p.type));
+      return ["Todos", ...Array.from(cats).filter(Boolean)];
+    }
   },
   async created() {
     await this.fetchData();
@@ -141,14 +142,34 @@ export default {
   methods: {
     async fetchData() {
       try {
-        const { data } = await api.dashboard(this.session);
-        if (data.error) {
-          if (data.msg === "invalid session") this.$router.push("/login");
+        // Obtener datos del dashboard para el saldo
+        const { data: dashData } = await api.dashboard(this.session);
+        if (dashData.error) {
+          if (dashData.msg === "invalid session") this.$router.push("/login");
           return;
         }
-        this.sifrahBalance = Number(data.sifrahBalance) || 0;
+        this.sifrahBalance = Number(dashData.sifrahBalance) || 0;
+
+        // Obtener catálogo de productos
+        const { data: productsData } = await api.Activation.GET(this.session);
+        if (productsData.products) {
+          // Filtrar productos habilitados para Bono Ahorro
+          this.featuredProducts = productsData.products
+            .filter(p => p.is_savings_bonus)
+            .map(p => ({
+              id: p.id,
+              name: p.name,
+              sub: p.subdescription || p.type,
+              // Usar precio de ahorro si existe, sino el precio regular
+              price: p.savings_price || p.price,
+              // Usar imagen de ahorro si existe, sino la regular
+              img: p.savings_img || p.img,
+              description: p.savings_description || p.description,
+              type: p.type
+            }));
+        }
       } catch (e) {
-        console.error("Error fetching savings balance:", e);
+        console.error("Error fetching savings data:", e);
       } finally {
         this.loading = false;
       }
