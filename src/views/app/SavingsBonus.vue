@@ -45,6 +45,28 @@
           <i class="fas fa-search"></i>
           <input type="text" placeholder="Buscar productos..." v-model="searchTerm" />
         </div>
+
+        <!-- Catalog Tabs -->
+        <div class="catalog-tabs">
+          <button 
+            :class="{ active: activeCatalogTab === 'bonus' }" 
+            @click="activeCatalogTab = 'bonus'"
+          >
+            <i class="fas fa-piggy-bank"></i> Tienda Bono
+          </button>
+          <button 
+            :class="{ active: activeCatalogTab === 'sifrah' }" 
+            @click="activeCatalogTab = 'sifrah'"
+          >
+            <i class="fas fa-leaf"></i> Productos SIFRAH
+          </button>
+          <button 
+            :class="{ active: activeCatalogTab === 'all' }" 
+            @click="activeCatalogTab = 'all'"
+          >
+            <i class="fas fa-th-large"></i> Todos
+          </button>
+        </div>
         <div class="category-filters">
           <button v-for="cat in categories" :key="cat" 
                   :class="{ active: selectedCategory === cat }"
@@ -106,8 +128,10 @@ export default {
     return {
       sifrahBalance: 0,
       loading: true,
-      searchTerm: "",
       selectedCategory: "Todos",
+      searchTerm: "",
+      featuredProducts: [],
+      activeCatalogTab: "bonus", // 'bonus', 'sifrah', 'all'
       visualCategories: [
         { name: "Productos SIFRAH", icon: "fas fa-leaf", color: "#e3f2fd" },
         { name: "Bienestar", icon: "fas fa-heart", color: "#f3e5f5" },
@@ -117,7 +141,6 @@ export default {
         { name: "Electrodomésticos", icon: "fas fa-blender", color: "#f1f8e9" },
         { name: "Promociones", icon: "fas fa-tag", color: "#fffde7" },
       ],
-      featuredProducts: [],
     };
   },
   computed: {
@@ -125,14 +148,32 @@ export default {
     office_id() { return this.$store.state.office_id; },
     title() { return "Bono Ahorro"; },
     filteredProducts() {
-      return this.featuredProducts.filter(p => {
-        const matchesSearch = p.name.toLowerCase().includes(this.searchTerm.toLowerCase());
+      // 1. Filtrar por pestaña de catálogo
+      let baseProducts = this.featuredProducts;
+      if (this.activeCatalogTab === 'bonus') {
+        baseProducts = baseProducts.filter(p => p.catalog_type === 'savings');
+      } else if (this.activeCatalogTab === 'sifrah') {
+        baseProducts = baseProducts.filter(p => p.catalog_type === 'both' || p.catalog_type === 'sifrah');
+      }
+
+      // 2. Filtrar por búsqueda y categoría
+      return baseProducts.filter(p => {
+        const matchesSearch = p.name.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+          p.type.toLowerCase().includes(this.searchTerm.toLowerCase());
         const matchesCategory = this.selectedCategory === "Todos" || p.type === this.selectedCategory;
         return matchesSearch && matchesCategory;
       });
     },
     categories() {
-      const cats = new Set(this.featuredProducts.map(p => p.type));
+      // Las categorías deben ser dinámicas según la pestaña activa
+      let baseProducts = this.featuredProducts;
+      if (this.activeCatalogTab === 'bonus') {
+        baseProducts = baseProducts.filter(p => p.catalog_type === 'savings');
+      } else if (this.activeCatalogTab === 'sifrah') {
+        baseProducts = baseProducts.filter(p => p.catalog_type === 'both' || p.catalog_type === 'sifrah');
+      }
+      
+      const cats = new Set(baseProducts.map(p => p.type));
       return ["Todos", ...Array.from(cats).filter(Boolean)];
     }
   },
@@ -143,10 +184,10 @@ export default {
     async fetchData() {
       try {
         this.loading = true;
-        // Ejecutar dashboard (para el saldo) y productos en paralelo
+        // Ejecutar dashboard (para el saldo) y la nueva API dedicada de productos en paralelo
         const [dashResponse, productsResponse] = await Promise.all([
           api.dashboard(this.session),
-          api.Activation.GET(this.session, { type: 'savings_bonus' })
+          api.SavingsBonus.GET(this.session)
         ]);
 
         const dashData = dashResponse.data;
@@ -159,15 +200,8 @@ export default {
 
         const productsData = productsResponse.data;
         if (productsData && productsData.products) {
-          this.featuredProducts = productsData.products.map(p => ({
-            id: p.id,
-            name: p.name,
-            sub: p.subdescription || p.type,
-            price: p.savings_price || p.price,
-            img: p.savings_img || p.img,
-            description: p.savings_description || p.description,
-            type: p.type
-          }));
+          // La API ya devuelve los productos formateados y filtrados
+          this.featuredProducts = productsData.products;
         }
       } catch (e) {
         console.error("Error fetching savings data:", e);
@@ -338,6 +372,42 @@ export default {
     font-size 14px
     &::placeholder
       color #b2bec3
+
+.catalog-tabs
+  display flex
+  gap 10px
+  margin-top 20px
+  width 100%
+  overflow-x auto
+  padding-bottom 10px
+  
+  &::-webkit-scrollbar
+    display none
+
+  button
+    flex-shrink 0
+    padding 10px 20px
+    border-radius 12px
+    border 1px solid #eee
+    background white
+    color #636e72
+    font-size 14px
+    font-weight 600
+    display flex
+    align-items center
+    gap 8px
+    transition 0.3s
+    cursor pointer
+    box-shadow 0 2px 5px rgba(0,0,0,0.02)
+    
+    i
+      font-size 15px
+      
+    &.active
+      background #e91e63
+      color white
+      border-color #e91e63
+      box-shadow 0 4px 12px rgba(233, 30, 99, 0.25)
 
 .category-filters
   display flex

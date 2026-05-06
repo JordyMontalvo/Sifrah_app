@@ -64,6 +64,7 @@ class API {
     this.Audios = new Audios();
     this.Books = new Books();
     this.Agenda = new Agenda();
+    this.SavingsBonus = new SavingsBonus();
   }
 
   register(data) {
@@ -342,6 +343,15 @@ class Agenda {
   }
 }
 
+class SavingsBonus {
+  GET(session) {
+    return axios.get(`/app/savings-bonus?session=${session}`);
+  }
+  POST(session, data) {
+    return axios.post(`/app/savings-bonus?session=${session}`, data);
+  }
+}
+
 export default new API({
   Profile,
   Password,
@@ -365,4 +375,5 @@ export default new API({
   Audios,
   Books,
   Agenda,
+  SavingsBonus,
 });
