@@ -130,7 +130,7 @@ export default {
       selectedCategory: "Todos",
       searchTerm: "",
       featuredProducts: [],
-      activeCatalogTab: "bonus", // 'bonus', 'sifrah', 'all'
+      activeCatalogTab: "all", // 'bonus', 'sifrah', 'all'
       visualCategories: [
         { name: "Todos", icon: "fas fa-th", color: "#f1f2f6" },
         { name: "Productos SIFRAH", icon: "fas fa-leaf", color: "#e3f2fd" },
