@@ -189,68 +189,73 @@ export default {
 
 .hero-grid
   display grid
-  grid-template-columns 2fr 1fr
-  gap 20px
-  margin-bottom 30px
+  grid-template-columns 2.5fr 1fr
+  gap 15px
+  margin-bottom 25px
 
   @media (max-width m-break)
     grid-template-columns 1fr
 
 .promo-banner
   background linear-gradient(135deg, #ff4b91 0%, #ff80b5 100%)
-  border-radius 24px
-  padding 30px
+  border-radius 20px
+  padding 20px 35px
   display flex
   align-items center
   justify-content space-between
   color white
   overflow hidden
   position relative
-  box-shadow 0 10px 20px rgba(233, 30, 99, 0.2)
+  box-shadow 0 8px 15px rgba(233, 30, 99, 0.15)
+  min-height 160px
 
   .banner-content
     flex 1
     z-index 1
     h2
-      font-size 32px
+      font-size 26px
       font-weight 800
-      margin-bottom 12px
-      line-height 1.2
+      margin-bottom 8px
+      line-height 1.1
     p
-      font-size 16px
+      font-size 14px
       opacity 0.9
+      max-width 300px
 
   .banner-image
-    flex 0 0 40%
+    flex 0 0 35%
     text-align right
+    display flex
+    justify-content flex-end
     img
-      max-width 180%
+      max-width 130%
       height auto
-      transform translate(10%, 10%)
-      filter drop-shadow(0 10px 15px rgba(0,0,0,0.1))
+      transform translateY(10%)
+      filter drop-shadow(0 8px 12px rgba(0,0,0,0.1))
 
 .balance-card
   background #301050 // Dark purple
-  border-radius 24px
-  padding 30px
+  border-radius 20px
+  padding 20px
   color white
   display flex
   flex-direction column
-  justify-content center
-  box-shadow 0 10px 20px rgba(48, 16, 80, 0.2)
+  justify-content space-between
+  box-shadow 0 8px 15px rgba(48, 16, 80, 0.15)
+  min-height 160px
 
   .balance-label
-    font-size 14px
+    font-size 13px
     opacity 0.8
-    margin-bottom 8px
+    margin-bottom 4px
 
   .balance-amount
-    font-size 36px
+    font-size 30px
     font-weight 800
-    margin-bottom 8px
+    margin-bottom 4px
     display flex
     align-items center
-    gap 8px
+    gap 6px
     
     .currency
       font-size 24px
@@ -260,16 +265,17 @@ export default {
       font-size 24px
 
   .balance-note
-    font-size 12px
+    font-size 11px
     opacity 0.7
-    margin-bottom 20px
+    margin-bottom 12px
 
   .history-btn
-    background rgba(255, 255, 255, 0.9)
+    background white
     color #301050
     border none
-    border-radius 12px
-    padding 12px
+    border-radius 10px
+    padding 10px
+    font-size 13px
     font-weight 700
     cursor pointer
     display flex
