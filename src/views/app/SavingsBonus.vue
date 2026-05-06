@@ -67,23 +67,22 @@
             <i class="fas fa-th-large"></i> Todos
           </button>
         </div>
-        <div class="category-filters">
-          <button v-for="cat in categories" :key="cat" 
-                  :class="{ active: selectedCategory === cat }"
-                  @click="selectedCategory = cat">
-            {{ cat }}
-          </button>
-        </div>
       </div>
 
-      <!-- Visual Categories Icons -->
+      <!-- Visual Categories Icons (Primary Filters) -->
       <div class="visual-categories">
-        <div v-for="cat in visualCategories" :key="cat.name" class="cat-item">
-          <div class="cat-icon-wrapper" :style="{ backgroundColor: cat.color }">
+        <div 
+          v-for="cat in visualCategories" 
+          :key="cat.name" 
+          class="cat-item"
+          :class="{ active: selectedCategory === cat.name }"
+          @click="selectCategory(cat.name)"
+        >
+          <div class="cat-icon-wrapper" :style="{ backgroundColor: selectedCategory === cat.name ? '#e91e63' : cat.color }">
             <img v-if="cat.img" :src="cat.img" :alt="cat.name" />
-            <i v-else :class="cat.icon"></i>
+            <i v-else :class="cat.icon" :style="{ color: selectedCategory === cat.name ? 'white' : '#2d3436' }"></i>
           </div>
-          <span>{{ cat.name }}</span>
+          <span :class="{ 'active-text': selectedCategory === cat.name }">{{ cat.name }}</span>
         </div>
       </div>
 
@@ -133,11 +132,12 @@ export default {
       featuredProducts: [],
       activeCatalogTab: "bonus", // 'bonus', 'sifrah', 'all'
       visualCategories: [
+        { name: "Todos", icon: "fas fa-th", color: "#f1f2f6" },
         { name: "Productos SIFRAH", icon: "fas fa-leaf", color: "#e3f2fd" },
         { name: "Bienestar", icon: "fas fa-heart", color: "#f3e5f5" },
         { name: "Hogar", icon: "fas fa-home", color: "#fff3e0" },
-        { name: "Tecnología", icon: "fas fa-laptop", color: "#e8f5e9" },
-        { name: "Herramientas", icon: "fas fa-tools", color: "#fbe9e7" },
+        { name: "Tecnología", icon: "fas fa-laptop", color: "#e0f2f1" },
+        { name: "Herramientas", icon: "fas fa-tools", color: "#efebe9" },
         { name: "Electrodomésticos", icon: "fas fa-blender", color: "#f1f8e9" },
         { name: "Promociones", icon: "fas fa-tag", color: "#fffde7" },
       ],
@@ -208,6 +208,9 @@ export default {
       } finally {
         this.loading = false;
       }
+    },
+    selectCategory(cat) {
+      this.selectedCategory = cat;
     },
     redeem(product) {
       console.log("Redeeming product:", product.name);
@@ -458,9 +461,10 @@ export default {
     transition 0.3s
     box-shadow 0 4px 10px rgba(0,0,0,0.03)
     
-    &:hover
-      transform translateY(-5px)
-      box-shadow 0 10px 20px rgba(0,0,0,0.08)
+    &.active
+      background #fff0f3
+      box-shadow 0 8px 20px rgba(233, 30, 99, 0.1)
+      transform translateY(-2px)
 
     .cat-icon-wrapper
       width 60px
@@ -471,6 +475,7 @@ export default {
       justify-content center
       font-size 24px
       color #2d3436
+      transition 0.3s
       
       img
         width 35px
@@ -482,6 +487,10 @@ export default {
       font-weight 600
       color #2d3436
       text-align center
+      transition 0.3s
+      &.active-text
+        color #e91e63
+        font-weight 800
 
 .featured-section
   .section-header
