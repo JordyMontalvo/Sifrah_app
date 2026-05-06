@@ -198,64 +198,64 @@ export default {
 
 .promo-banner
   background linear-gradient(135deg, #ff4b91 0%, #ff80b5 100%)
-  border-radius 20px
-  padding 20px 35px
+  border-radius 18px
+  padding 15px 30px
   display flex
   align-items center
   justify-content space-between
   color white
   overflow hidden
   position relative
-  box-shadow 0 8px 15px rgba(233, 30, 99, 0.15)
-  min-height 160px
+  box-shadow 0 6px 12px rgba(233, 30, 99, 0.12)
+  min-height 130px
 
   .banner-content
     flex 1
     z-index 1
     h2
-      font-size 26px
+      font-size 22px
       font-weight 800
-      margin-bottom 8px
+      margin-bottom 4px
       line-height 1.1
     p
-      font-size 14px
+      font-size 13px
       opacity 0.9
-      max-width 300px
+      max-width 280px
 
   .banner-image
-    flex 0 0 35%
+    flex 0 0 30%
     text-align right
     display flex
     justify-content flex-end
     img
-      max-width 130%
+      max-width 110%
       height auto
       transform translateY(10%)
-      filter drop-shadow(0 8px 12px rgba(0,0,0,0.1))
+      filter drop-shadow(0 6px 10px rgba(0,0,0,0.1))
 
 .balance-card
   background #301050 // Dark purple
-  border-radius 20px
-  padding 20px
+  border-radius 18px
+  padding 15px
   color white
   display flex
   flex-direction column
   justify-content space-between
-  box-shadow 0 8px 15px rgba(48, 16, 80, 0.15)
-  min-height 160px
+  box-shadow 0 6px 12px rgba(48, 16, 80, 0.12)
+  min-height 130px
 
   .balance-label
-    font-size 13px
+    font-size 12px
     opacity 0.8
-    margin-bottom 4px
+    margin-bottom 2px
 
   .balance-amount
-    font-size 30px
+    font-size 26px
     font-weight 800
-    margin-bottom 4px
+    margin-bottom 2px
     display flex
     align-items center
-    gap 6px
+    gap 5px
     
     .currency
       font-size 24px
@@ -265,17 +265,17 @@ export default {
       font-size 24px
 
   .balance-note
-    font-size 11px
+    font-size 10px
     opacity 0.7
-    margin-bottom 12px
+    margin-bottom 8px
 
   .history-btn
     background white
     color #301050
     border none
-    border-radius 10px
-    padding 10px
-    font-size 13px
+    border-radius 8px
+    padding 8px
+    font-size 12px
     font-weight 700
     cursor pointer
     display flex
