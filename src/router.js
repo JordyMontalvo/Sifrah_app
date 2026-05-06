@@ -43,6 +43,9 @@ import Audios from './views/app/Audios.vue'
 import Libros from './views/app/Libros.vue'
 import Agenda from './views/app/Agenda.vue'
 import UniversidadSifrah from './views/app/UniversidadSifrah.vue'
+import SavingsBonus from './views/app/SavingsBonus.vue'
+import MyRedemptions from './views/app/MyRedemptions.vue'
+import BonusHistory from './views/app/BonusHistory.vue'
 
 
 Vue.use(Router)
@@ -282,6 +285,21 @@ const routes = [
   {
     path: '/agenda',
     component: Agenda,
+    meta: { requiresAuth: true, requiresAffiliation: true }
+  },
+  {
+    path: '/savings-bonus',
+    component: SavingsBonus,
+    meta: { requiresAuth: true, requiresAffiliation: true }
+  },
+  {
+    path: '/my-redemptions',
+    component: MyRedemptions,
+    meta: { requiresAuth: true, requiresAffiliation: true }
+  },
+  {
+    path: '/bonus-history',
+    component: BonusHistory,
     meta: { requiresAuth: true, requiresAffiliation: true }
   }
 ]
