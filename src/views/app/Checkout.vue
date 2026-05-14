@@ -597,7 +597,7 @@
                   </div>
                 </div>
 
-                <div v-show="!(check && remaining == 0)" class="payment-methods">
+                <div v-show="needsExternalPayment" class="payment-methods">
                   <div class="payment-method">
                     <input 
                       type="radio" 
@@ -673,7 +673,7 @@
                 
                 
                 <!-- Campos de Pago con Comprobante - Fuera del contenedor de métodos -->
-                <div v-if="pay_method === 'bank'" class="voucher-payment-fields">
+                <div v-if="needsExternalPayment && pay_method === 'bank'" class="voucher-payment-fields">
                   <div class="form-field-simple">
                     <label>Número de Operación/Voucher</label>
                     <input v-model="voucherNumber" type="text" placeholder="Número de Operación/Voucher" @input="onlyNumbers($event, 'voucherNumber')" required />
@@ -966,7 +966,11 @@ export default {
     },
     
     canProcessOrder() {
-      return this.cartItems.length > 0 && ((this.check && this.remaining === 0) || this.pay_method);
+      return this.cartItems.length > 0 && (!this.needsExternalPayment || this.pay_method);
+    },
+
+    needsExternalPayment() {
+      return !this.check || this.remaining > 0;
     },
     
     selectedOffice() {
@@ -1717,13 +1721,16 @@ export default {
       try {
         const session = this.$store.state.session;
         const isAffiliationCheckout = this.$store.state.isAffiliationCheckout;
+        const needsExternalPayment = this.needsExternalPayment;
+        const isBankPayment = needsExternalPayment && this.pay_method === 'bank';
+        const effectivePayMethod = needsExternalPayment ? this.pay_method : 'balance';
         
         // Determinar el directorio según el tipo de checkout
         const uploadDir = isAffiliationCheckout ? 'affiliations' : 'activations';
         
         let voucherUrl = null;
         let voucherUrl2 = null;
-        if (this.pay_method === 'bank') {
+        if (isBankPayment) {
           if (this.voucherFile) {
             voucherUrl = await lib.upload(this.voucherFile, this.voucherFile.name, uploadDir);
           }
@@ -1745,7 +1752,7 @@ export default {
         const payload = {
           products: productsToActivate,
           deliveryMethod: this.deliveryMethod,
-          pay_method: this.pay_method,
+          pay_method: effectivePayMethod,
           orderTotal: this.finalTotal, // El total final con delivery
           orderPoints: this.cartPoints,
           check: this.check, // Añadir el estado del checkbox de usar saldo
@@ -1762,9 +1769,9 @@ export default {
 
           // Datos del voucher (si aplica) - ahora con soporte para dos imágenes
           voucher: voucherUrl,
-          bank: this.selectedBank ? this.getBankInfo(this.selectedBank).name : null,
-          bank_info: this.selectedBank ? this.getBankInfo(this.selectedBank) : null,
-          voucher_number: this.voucherNumber,
+          bank: isBankPayment && this.selectedBank ? this.getBankInfo(this.selectedBank).name : null,
+          bank_info: isBankPayment && this.selectedBank ? this.getBankInfo(this.selectedBank) : null,
+          voucher_number: isBankPayment ? this.voucherNumber : null,
         };
         
         // Solo agregar voucher2 si existe
@@ -1843,7 +1850,7 @@ export default {
         }
 
         // Validar método de pago si el saldo no cubre el total
-        if (!this.check || this.remaining > 0) {
+        if (needsExternalPayment) {
           if (!payload.pay_method) {
             this.activationError = 'Por favor, selecciona un método de pago.';
             this.sending = false;
@@ -1851,7 +1858,7 @@ export default {
           }
         }
 
-        if (payload.pay_method === 'bank' && (!payload.bank || !payload.voucher_number || !payload.voucher)) {
+        if (isBankPayment && (!payload.bank || !payload.voucher_number || !payload.voucher)) {
           this.activationError = 'Para transferencia, selecciona un banco, ingresa el número de operación y sube el voucher.';
           this.sending = false;
           return;
@@ -1888,10 +1895,10 @@ export default {
             voucher: voucherUrl,
             office: officeId,
             check: this.check,
-            pay_method: this.pay_method,
-            bank: this.selectedBank ? this.getBankInfo(this.selectedBank).name : null,
+            pay_method: effectivePayMethod,
+            bank: isBankPayment && this.selectedBank ? this.getBankInfo(this.selectedBank).name : null,
             date: this.paymentDate || new Date().toISOString().split('T')[0],
-            voucher_number: this.voucherNumber,
+            voucher_number: isBankPayment ? this.voucherNumber : null,
           };
           
           // Solo agregar voucher2 si existe
