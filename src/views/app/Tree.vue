@@ -2,54 +2,70 @@
   <App :session="session" :office_id="office_id">
     <!-- Selector de modo - aparece primero -->
     <div v-if="!selectedMode" class="mode-selector">
-        <h2 class="mode-title" :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }">SELECCIONAR MODO</h2>
-        <div class="cards-container" :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }">
-          <div class="card" :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }" @click="selectMode('red')">
-            <p class="card-text" :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }">Red</p>
-            <div class="card-icon">
-              <!-- Nueva imagen de red jerárquica -->
-              <img src="@/assets/img/red-hierarchy.svg" alt="Red" :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }" style="width: 160px; height: 160px; object-fit: contain;">
-            </div>
-          </div>
-          <div class="card" :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }" @click="selectMode('frontales')">
-            <p class="card-text" :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }">Frontales</p>
-            <div class="card-icon">
-              <!-- Nueva imagen de frontales -->
-              <img src="@/assets/img/frontales-hierarchy.svg" alt="Frontales" :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }" style="width: 160px; height: 160px; object-fit: contain;">
-            </div>
-          </div>
-          <div class="card" :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }" @click="selectMode('niveles')">
-            <p class="card-text" :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }">Niveles</p>
-            <div class="card-icon">
-              <!-- Nueva imagen de niveles -->
-              <img src="@/assets/img/niveles-hierarchy.svg" alt="Niveles" :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }" style="width: 160px; height: 160px; object-fit: contain;">
-            </div>
-          </div>
-          <div class="card" :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }" @click="selectMode('actividad')">
-            <p class="card-text" :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }">Actividad</p>
-            <div class="card-icon">
-              <!-- Nueva imagen de actividad -->
-              <img src="@/assets/img/actividad-hierarchy.svg" alt="Actividad" :class="{ 'mobile': isMobile, 'mobile-small': isMobileSmall }" style="width: 160px; height: 160px; object-fit: contain;">
-            </div>
-          </div>
-        </div>
-        <div class="buttons-container">
-          <div class="top-buttons">
-            <button class="btn btn-green">Periodos Históricos</button>
-            <button class="btn btn-green">Recuperar Historial</button>
-          </div>
-          <div class="bottom-button">
-            <button class="btn btn-orange" @click="goToRedMap">MAPA DE LA RED</button>
-          </div>
+      <header class="mode-selector-header">
+        <h2 class="mode-title">Seleccionar modo</h2>
+        <p class="mode-subtitle">Explora y gestiona tu red de manera inteligente</p>
+      </header>
 
+      <div class="mode-cards-row">
+        <button type="button" class="mode-card" @click="selectMode('red')">
+          <div class="mode-card-icon">
+            <img src="@/assets/img/red-hierarchy.svg" alt="" aria-hidden="true">
+          </div>
+          <h3 class="mode-card-title">Red</h3>
+          <p class="mode-card-desc">Visualiza tu estructura de red.</p>
+        </button>
+
+        <button type="button" class="mode-card" @click="selectMode('frontales')">
+          <div class="mode-card-icon">
+            <img src="@/assets/img/frontales-hierarchy.svg" alt="" aria-hidden="true">
+          </div>
+          <h3 class="mode-card-title">Frontales</h3>
+          <p class="mode-card-desc">Gestiona tus equipos frontales.</p>
+        </button>
+
+        <button type="button" class="mode-card" @click="selectMode('niveles')">
+          <div class="mode-card-icon">
+            <img src="@/assets/img/niveles-hierarchy.svg" alt="" aria-hidden="true">
+          </div>
+          <h3 class="mode-card-title">Niveles</h3>
+          <p class="mode-card-desc">Consulta los niveles de tu red.</p>
+        </button>
+      </div>
+
+      <button type="button" class="mode-card mode-card--wide" @click="goToPeriodosHistoricos">
+        <div class="mode-card-icon mode-card-icon--calendar">
+          <i class="fas fa-calendar-alt" aria-hidden="true"></i>
+        </div>
+        <div class="mode-card-body">
+          <h3 class="mode-card-title">Períodos históricos</h3>
+          <p class="mode-card-desc">Consulta el historial de tu red</p>
+        </div>
+        <i class="fas fa-chevron-right mode-card-chevron" aria-hidden="true"></i>
+      </button>
+
+      <div class="mode-info-banner" role="status">
+        <div class="mode-info-icon">
+          <i class="fas fa-info" aria-hidden="true"></i>
+        </div>
+        <div class="mode-info-text">
+          <strong>Información en tiempo real</strong>
+          <p>Los datos se actualizan automáticamente para que siempre tengas una visión clara y precisa de tu negocio.</p>
+        </div>
+        <div class="mode-info-decoration" aria-hidden="true">
+          <span class="mode-info-chart mode-info-chart--line"></span>
+          <span class="mode-info-chart mode-info-chart--bars">
+            <span></span><span></span><span></span>
+          </span>
         </div>
       </div>
+    </div>
 
     <!-- Vista de Red - árbol de afiliados -->
     <div v-if="selectedMode === 'red'">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
         <h4>EQUIPO</h4>
-        <button @click="$router.push('/tree')" style="padding: 8px 16px; background: #00bcd4; border: none; border-radius: 6px; color: white;">
+        <button @click="$router.push('/tree')" class="btn-volver">
           Volver al selector
         </button>
       </div>
@@ -361,17 +377,6 @@
       </div>
     </div>
     
-    <div v-if="selectedMode === 'actividad'">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-        <h3 style="color: #666;">Vista "{{ selectedMode }}" en construcción 🚧</h3>
-        <button @click="$router.push('/tree')" style="padding: 8px 16px; background: #00bcd4; border: none; border-radius: 6px; color: white;">
-          Volver al selector
-        </button>
-      </div>
-      <div style="text-align:center; margin-top:20px;">
-        <p>Esta funcionalidad estará disponible próximamente</p>
-      </div>
-    </div>
    <!-- vista frontales-->
    <div v-if="selectedMode === 'frontales'">
      <div class="frontales-header">
@@ -818,7 +823,7 @@ export default {
         this.selectedMode = 'niveles';
         this.loadHierarchyStats();
       } else if (path === '/tree/actividad') {
-        this.selectedMode = 'actividad';
+        this.$router.replace('/tree');
       } else {
         // Si es /tree sin parámetros, mostrar selector
         this.selectedMode = null;
@@ -981,9 +986,8 @@ export default {
 // Verifica que total_points esté presente
     },
     
-    goToRedMap() {
-      // Redirigir a la vista de red
-      this.selectMode('red');
+    goToPeriodosHistoricos() {
+      this.$router.push('/closeds');
     },
          async loadHierarchyStats() {
       this.loading = true;

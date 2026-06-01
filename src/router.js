@@ -184,8 +184,7 @@ const routes = [
   },
   {
     path: '/tree/actividad',
-    component: Tree,
-    meta: { requiresAuth: true, requiresAffiliation: true }
+    redirect: '/tree'
   },
   {
     path: '/bonuses',
