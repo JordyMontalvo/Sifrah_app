@@ -138,8 +138,12 @@ class API {
     return axios.post("/email/password-reset", data);
   }
 
-  validateEmail(email) {
-    return axios.post("/auth/validate-email", { email });
+  validateEmail(data) {
+    return axios.post("/auth/validate-email", data);
+  }
+
+  reactivateRequest(data) {
+    return axios.post("/auth/reactivate-request", data);
   }
 
   sendContactEmail(data) {

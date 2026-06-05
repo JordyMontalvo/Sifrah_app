@@ -146,6 +146,7 @@
 <script>
 import Auth from "@/views/layouts/Auth";
 import api from "@/api";
+import Swal from "sweetalert2";
 
 export default {
   components: { Auth },
@@ -299,6 +300,10 @@ export default {
         this.sending = false;
 
         if (data.error) {
+          if (data.code === 'ACCOUNT_ELIMINATED') {
+            this.showReactivationModal(data.dni);
+            return;
+          }
           this.alert = data.msg;
           return;
         }
@@ -429,6 +434,58 @@ export default {
         this.sending = false;
         this.alert = "Error en el servidor. Intente nuevamente.";
         console.error("Error en login:", error);
+      }
+    },
+    async showReactivationModal(dni) {
+      const { value: formValues } = await Swal.fire({
+        title: 'Cuenta Eliminada',
+        html: `
+          <p style="font-size: 14px; margin-bottom: 15px;">Tu cuenta ha sido eliminada por inactividad. Puedes solicitar una reactivación al administrador.</p>
+          <div style="text-align: left; margin-bottom: 10px;">
+            <label style="font-size: 12px; font-weight: bold; color: #555;">Motivo de reactivación (Obligatorio)</label>
+            <textarea id="swal-reason" class="swal2-textarea" style="margin: 5px 0; width: 100%; box-sizing: border-box;" placeholder="Explica brevemente por qué deseas volver..."></textarea>
+          </div>
+          <div style="text-align: left;">
+            <label style="font-size: 12px; font-weight: bold; color: #555;">Nuevo Patrocinador (Opcional)</label>
+            <input id="swal-sponsor" class="swal2-input" style="margin: 5px 0; width: 100%; box-sizing: border-box; text-transform: uppercase;" placeholder="Código del patrocinador">
+            <small style="font-size: 11px; color: #888;">Déjalo en blanco si deseas mantener tu posición anterior o si no tienes uno.</small>
+          </div>
+        `,
+        focusConfirm: false,
+        showCancelButton: true,
+        confirmButtonText: 'Enviar Solicitud',
+        cancelButtonText: 'Cancelar',
+        confirmButtonColor: '#e91e63',
+        preConfirm: () => {
+          const reason = document.getElementById('swal-reason').value;
+          const sponsor = document.getElementById('swal-sponsor').value;
+          if (!reason || reason.trim() === '') {
+            Swal.showValidationMessage('El motivo es obligatorio');
+            return false;
+          }
+          return { reason, sponsor_code: sponsor };
+        }
+      });
+
+      if (formValues) {
+        this.sending = true;
+        try {
+          const { data } = await api.reactivateRequest({
+            dni,
+            reason: formValues.reason,
+            sponsor_code: formValues.sponsor_code
+          });
+          
+          this.sending = false;
+          if (data.error) {
+            Swal.fire('Error', data.msg, 'error');
+          } else {
+            Swal.fire('Solicitud Enviada', data.msg, 'success');
+          }
+        } catch (error) {
+          this.sending = false;
+          Swal.fire('Error', 'Hubo un problema al enviar la solicitud', 'error');
+        }
       }
     },
     reset(name) {
