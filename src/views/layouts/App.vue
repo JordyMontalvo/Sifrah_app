@@ -221,7 +221,7 @@
             <i class="fas fa-user-plus"></i> Afiliación
           </router-link>
           <router-link to="/activations" @click.native="closeAllMenus" v-if="affiliated">
-            <i class="fas fa-history"></i> Historial Bono
+            <i class="fas fa-history"></i> Historial
           </router-link>
         </div>
 
@@ -574,7 +574,7 @@
             </router-link>
             <router-link to="/activations" v-if="affiliated" @click.native="handleNavigationClickAndClose" class="mobile-submenu-item">
               <i class="fas fa-history"></i>
-              <span>Historial Bono</span>
+              <span>Historial</span>
             </router-link>
           </div>
 

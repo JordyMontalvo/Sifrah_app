@@ -169,6 +169,13 @@ class API {
     return axios.get(`/app/delivery${queryString}`);
   }
 
+  getBoleta({ session, admin_session, id, type }) {
+    const params = new URLSearchParams({ id, type: type || 'activation' })
+    if (admin_session) params.append('admin_session', admin_session)
+    else if (session) params.append('session', session)
+    return axios.get(`/app/boleta?${params.toString()}`)
+  }
+
   // Obtener departamentos desde la base de datos
   getDepartments() {
     return axios.get('/app/delivery?type=departments');

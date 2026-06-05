@@ -15,7 +15,7 @@ export default {
   computed: {
     session() { return this.$store.state.session; },
     office_id() { return this.$store.state.office_id; },
-    title() { return "Historial Bono"; }
+    title() { return "Historial"; }
   }
 };
 </script>

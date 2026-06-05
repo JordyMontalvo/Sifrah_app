@@ -153,28 +153,27 @@
   
   .tabs
     display flex
-    gap 0
-    border-bottom 2px solid #e0e0e0
+    gap 10px
+    border-bottom none
     
     .tab
-      padding 12px 24px
+      padding 10px 24px
       background transparent
       border none
-      border-bottom 3px solid transparent
       color #757575
       font-size 16px
       font-weight 500
       cursor pointer
       transition all 0.3s ease
       position relative
-      bottom -2px
+      border-radius 20px
       
       &:hover
         color #9f00ad
         
       &.active
-        color #9f00ad
-        border-bottom-color #ffd700
+        background #d209b6
+        color white !important
         font-weight bold
         
   .view-network-btn

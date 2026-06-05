@@ -67,6 +67,9 @@
                     <td>{{ activation.date | period }}</td>
                     <td>
                       <div class="product-chips">
+                        <span v-if="activation.type === 'affiliation' && activation.plan && activation.plan.name" class="product-chip" style="background: #fbf0fa; color: #D209B6;">
+                          {{ activation.plan.name }}
+                        </span>
                         <span
                           v-for="product in activation.products"
                           v-if="product.total != 0"
@@ -108,14 +111,13 @@
                       </span>
                     </td>
                     <td>
-                      <a
-                        :href="`${INVOICE_ROOT}?id=${activation.id}`"
-                        target="_blank"
+                      <router-link
+                        :to="`/boleta?id=${activation.id}${activation.type === 'affiliation' ? '&type=affiliation' : ''}`"
                         class="invoice-link-btn"
                         v-if="activation.status == 'approved'"
                       >
                         <span class="invoice-icon">🧾</span> Boleta
-                      </a>
+                      </router-link>
                     </td>
                   </tr>
                 </tbody>
@@ -132,6 +134,9 @@
                       <td>{{ activation.date | period }}</td>
                       <td>
                         <div class="product-chips">
+                          <span v-if="activation.type === 'affiliation' && activation.plan && activation.plan.name" class="product-chip" style="background: #fbf0fa; color: #D209B6;">
+                            {{ activation.plan.name }}
+                          </span>
                           <span
                             v-for="product in activation.products"
                             v-if="product.total != 0"
@@ -173,14 +178,13 @@
                         </span>
                       </td>
                       <td>
-                        <a
-                          :href="`${INVOICE_ROOT}?id=${activation.id}`"
-                          target="_blank"
+                        <router-link
+                          :to="`/boleta?id=${activation.id}${activation.type === 'affiliation' ? '&type=affiliation' : ''}`"
                           class="invoice-link-btn"
                           v-if="activation.status == 'approved'"
                         >
                           <span class="invoice-icon">🧾</span> Boleta
-                        </a>
+                        </router-link>
                       </td>
                     </tr>
                   </tbody>
@@ -317,30 +321,59 @@ export default {
     },
   },
   async created() {
-    // GET data
-    const { data } = await api.Activations.GET(this.session);
+    try {
+      // GET data
+      const [activationsRes, affiliationsRes] = await Promise.all([
+        api.Activations.GET(this.session),
+        api.Afiliation.GET(this.session)
+      ]);
 
-    this.loading = false;
+      const data = activationsRes.data;
+      const affiliationsData = affiliationsRes.data || {};
 
-    // error
-    if (data.error && data.msg == "invalid session")
-      this.$router.push("/login");
-    if (data.error && data.msg == "unverified user")
-      this.$router.push("/verify");
+      this.loading = false;
 
-    // success
-    this.$store.commit("SET_NAME", data.name);
-    this.$store.commit("SET_LAST_NAME", data.lastName);
-    this.$store.commit("SET_AFFILIATED", data.affiliated);
-    this.$store.commit("SET_ACTIVATED", data.activated);
-    this.$store.commit("SET__ACTIVATED", data._activated);
-    this.$store.commit("SET_PLAN", data.plan);
-    this.$store.commit("SET_COUNTRY", data.country);
-    this.$store.commit("SET_PHOTO", data.photo);
-    this.$store.commit("SET_TREE", data.tree);
+      // error
+      if (data.error && data.msg == "invalid session")
+        this.$router.push("/login");
+      if (data.error && data.msg == "unverified user")
+        this.$router.push("/verify");
 
-    this.activations = data.activations.reverse();
-    // this.arr         = data.arr
+      // success
+      this.$store.commit("SET_NAME", data.name);
+      this.$store.commit("SET_LAST_NAME", data.lastName);
+      this.$store.commit("SET_AFFILIATED", data.affiliated);
+      this.$store.commit("SET_ACTIVATED", data.activated);
+      this.$store.commit("SET__ACTIVATED", data._activated);
+      this.$store.commit("SET_PLAN", data.plan);
+      this.$store.commit("SET_COUNTRY", data.country);
+      this.$store.commit("SET_PHOTO", data.photo);
+      this.$store.commit("SET_TREE", data.tree);
+
+      const activationsList = data.activations || [];
+      const affiliationsList = affiliationsData.affiliations || [];
+      
+      const normalizedAffiliations = affiliationsList.map(aff => {
+        return {
+          ...aff,
+          date: aff.date || aff.createdAt,
+          price: aff.price || aff.amount || (aff.plan ? aff.plan.amount : 0),
+          points: aff.points || (aff.plan ? aff.plan.affiliation_points : 0),
+          type: 'affiliation'
+        }
+      });
+
+      const history = [...activationsList, ...normalizedAffiliations].sort((a, b) => {
+        const dateA = new Date(a.date || 0).getTime();
+        const dateB = new Date(b.date || 0).getTime();
+        return dateB - dateA;
+      });
+
+      this.activations = history;
+    } catch (e) {
+      console.error(e);
+      this.loading = false;
+    }
   },
 };
 </script>

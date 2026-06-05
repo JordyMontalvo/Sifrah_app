@@ -46,6 +46,7 @@ import UniversidadSifrah from './views/app/UniversidadSifrah.vue'
 import SavingsBonus from './views/app/SavingsBonus.vue'
 import MyRedemptions from './views/app/MyRedemptions.vue'
 import BonusHistory from './views/app/BonusHistory.vue'
+import BoletaView from './views/app/BoletaView.vue'
 
 
 Vue.use(Router)
@@ -300,6 +301,11 @@ const routes = [
     path: '/bonus-history',
     component: BonusHistory,
     meta: { requiresAuth: true, requiresAffiliation: true }
+  },
+  {
+    path: '/boleta',
+    component: BoletaView,
+    meta: { requiresAuth: false }
   }
 ]
 
