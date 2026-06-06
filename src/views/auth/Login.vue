@@ -309,7 +309,16 @@ export default {
               icon: 'error',
               title: 'Cuenta Bloqueada',
               text: data.msg,
-              confirmButtonColor: '#e91e63'
+              confirmButtonColor: '#e91e63',
+              backdrop: `rgba(0,0,0,0.4)`,
+              showClass: {
+                popup: 'swal2-noanimation',
+                backdrop: 'swal2-noanimation'
+              },
+              hideClass: {
+                popup: '',
+                backdrop: ''
+              }
             });
             return;
           }
@@ -465,6 +474,15 @@ export default {
         confirmButtonText: 'Enviar Solicitud',
         cancelButtonText: 'Cancelar',
         confirmButtonColor: '#e91e63',
+        backdrop: `rgba(0,0,0,0.4)`,
+        showClass: {
+          popup: 'swal2-noanimation',
+          backdrop: 'swal2-noanimation'
+        },
+        hideClass: {
+          popup: '',
+          backdrop: ''
+        },
         preConfirm: () => {
           const reason = document.getElementById('swal-reason').value;
           const sponsor = document.getElementById('swal-sponsor').value;
@@ -487,13 +505,31 @@ export default {
           
           this.sending = false;
           if (data.error) {
-            Swal.fire('Error', data.msg, 'error');
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: data.msg,
+              showClass: { popup: 'swal2-noanimation', backdrop: 'swal2-noanimation' },
+              hideClass: { popup: '', backdrop: '' }
+            });
           } else {
-            Swal.fire('Solicitud Enviada', data.msg, 'success');
+            Swal.fire({
+              icon: 'success',
+              title: 'Solicitud Enviada',
+              text: data.msg,
+              showClass: { popup: 'swal2-noanimation', backdrop: 'swal2-noanimation' },
+              hideClass: { popup: '', backdrop: '' }
+            });
           }
         } catch (error) {
           this.sending = false;
-          Swal.fire('Error', 'Hubo un problema al enviar la solicitud', 'error');
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Hubo un problema al enviar la solicitud',
+            showClass: { popup: 'swal2-noanimation', backdrop: 'swal2-noanimation' },
+            hideClass: { popup: '', backdrop: '' }
+          });
         }
       }
     },
