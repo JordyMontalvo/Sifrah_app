@@ -304,6 +304,15 @@ export default {
             this.showReactivationModal(data.dni);
             return;
           }
+          if (data.code === 'ACCOUNT_BLOCKED') {
+            Swal.fire({
+              icon: 'error',
+              title: 'Cuenta Bloqueada',
+              text: data.msg,
+              confirmButtonColor: '#e91e63'
+            });
+            return;
+          }
           this.alert = data.msg;
           return;
         }
