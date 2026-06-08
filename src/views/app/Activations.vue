@@ -8,7 +8,7 @@
       
       <div v-else class="activations-bg">
         <h2 class="activations-title" v-if="!showMasterTrophy">
-          Historial de Activaciones
+          Historial de operaciones
         </h2>
         <section>
           <div></div>
@@ -42,8 +42,9 @@
                 <thead>
                   <tr>
                     <th>Fecha</th>
+                    <th>Tipo</th>
                     <th>Periodo</th>
-                    <th>Productos</th>
+                    <th>Detalle</th>
                     <th>Monto</th>
                     <th>Puntos</th>
                     <th>Voucher</th>
@@ -53,8 +54,8 @@
                 </thead>
                 <tbody v-if="periodFilter && !filteredActivations.length">
                   <tr>
-                    <td colspan="8" class="activations-empty-msg">
-                      No hay compras en este período.
+                    <td colspan="9" class="activations-empty-msg">
+                      No hay operaciones en este período.
                     </td>
                   </tr>
                 </tbody>
@@ -64,10 +65,33 @@
                     :key="activation.id"
                   >
                     <td>{{ activation.date | date }}</td>
-                    <td>{{ activation.date | period }}</td>
+                    <td>
+                      <span
+                        :class="[
+                          'operation-type-chip',
+                          activation.type === 'affiliation'
+                            ? 'affiliation'
+                            : 'activation',
+                        ]"
+                      >
+                        {{
+                          activation.type === "affiliation"
+                            ? "Afiliación"
+                            : "Recompra"
+                        }}
+                      </span>
+                    </td>
+                    <td>{{ periodLabel(activation) }}</td>
                     <td>
                       <div class="product-chips">
-                        <span v-if="activation.type === 'affiliation' && activation.plan && activation.plan.name" class="product-chip" style="background: #fbf0fa; color: #D209B6;">
+                        <span
+                          v-if="
+                            activation.type === 'affiliation' &&
+                            activation.plan &&
+                            activation.plan.name
+                          "
+                          class="product-chip affiliation-plan-chip"
+                        >
                           {{ activation.plan.name }}
                         </span>
                         <span
@@ -81,14 +105,30 @@
                             >x{{ product.total }}</span
                           >
                         </span>
+                        <span
+                          v-if="
+                            activation.type === 'affiliation' &&
+                            (!activation.products ||
+                              !activation.products.length) &&
+                            !(activation.plan && activation.plan.name)
+                          "
+                          class="product-chip affiliation-plan-chip"
+                        >
+                          Paquete de afiliación
+                        </span>
                       </div>
                     </td>
                     <td>{{ activation.price | price }}</td>
                     <td>{{ activation.points }}</td>
                     <td>
-                      <a :href="activation.voucher" target="_blank">
+                      <a
+                        v-if="activation.voucher"
+                        :href="activation.voucher"
+                        target="_blank"
+                      >
                         <img :src="activation.voucher" class="voucher-img" />
                       </a>
+                      <span v-else class="no-voucher">—</span>
                     </td>
                     <td>
                       <span :class="['status-badge', activation.status]">
@@ -127,14 +167,37 @@
                     :key="group.key"
                   >
                     <tr class="period-group-header">
-                      <td colspan="8">{{ group.label }}</td>
+                      <td colspan="9">{{ group.label }}</td>
                     </tr>
                     <tr v-for="activation in group.items" :key="activation.id">
                       <td>{{ activation.date | date }}</td>
-                      <td>{{ activation.date | period }}</td>
+                      <td>
+                        <span
+                          :class="[
+                            'operation-type-chip',
+                            activation.type === 'affiliation'
+                              ? 'affiliation'
+                              : 'activation',
+                          ]"
+                        >
+                          {{
+                            activation.type === "affiliation"
+                              ? "Afiliación"
+                              : "Recompra"
+                          }}
+                        </span>
+                      </td>
+                      <td>{{ periodLabel(activation) }}</td>
                       <td>
                         <div class="product-chips">
-                          <span v-if="activation.type === 'affiliation' && activation.plan && activation.plan.name" class="product-chip" style="background: #fbf0fa; color: #D209B6;">
+                          <span
+                            v-if="
+                              activation.type === 'affiliation' &&
+                              activation.plan &&
+                              activation.plan.name
+                            "
+                            class="product-chip affiliation-plan-chip"
+                          >
                             {{ activation.plan.name }}
                           </span>
                           <span
@@ -148,14 +211,29 @@
                               >x{{ product.total }}</span
                             >
                           </span>
+                          <span
+                            v-if="
+                              activation.type === 'affiliation' &&
+                              (!activation.products ||
+                                !activation.products.length)
+                            "
+                            class="product-chip affiliation-plan-chip"
+                          >
+                            Paquete de afiliación
+                          </span>
                         </div>
                       </td>
                       <td>{{ activation.price | price }}</td>
                       <td>{{ activation.points }}</td>
                       <td>
-                        <a :href="activation.voucher" target="_blank">
+                        <a
+                          v-if="activation.voucher"
+                          :href="activation.voucher"
+                          target="_blank"
+                        >
                           <img :src="activation.voucher" class="voucher-img" />
                         </a>
+                        <span v-else class="no-voucher">—</span>
                       </td>
                       <td>
                         <span :class="['status-badge', activation.status]">
@@ -238,7 +316,7 @@ export default {
       if (!this.activations || !this.activations.length) return [];
       const keys = [
         ...new Set(
-          this.activations.map((a) => this.periodKeyFromDate(a.date)).filter(Boolean)
+          this.activations.map((a) => this.periodKey(a)).filter(Boolean)
         ),
       ];
       keys.sort((a, b) => (a < b ? 1 : a > b ? -1 : 0));
@@ -250,14 +328,14 @@ export default {
     filteredActivations() {
       if (!this.activations || !this.periodFilter) return [];
       return this.activations.filter(
-        (a) => this.periodKeyFromDate(a.date) === this.periodFilter
+        (a) => this.periodKey(a) === this.periodFilter
       );
     },
     groupedActivations() {
       if (!this.activations || this.periodFilter) return [];
       const map = new Map();
       for (const a of this.activations) {
-        const k = this.periodKeyFromDate(a.date);
+        const k = this.periodKey(a);
         if (!k) continue;
         if (!map.has(k)) map.set(k, []);
         map.get(k).push(a);
@@ -266,16 +344,68 @@ export default {
       return keys.map((k) => ({
         key: k,
         label: this.monthLabelFromKey(k),
-        items: map.get(k).sort((a, b) => new Date(b.date) - new Date(a.date)),
+        items: map.get(k).sort(
+          (a, b) =>
+            new Date(b.approved_at || b.date) - new Date(a.approved_at || a.date)
+        ),
       }));
     },
   },
   methods: {
+    periodKey(item) {
+      if (item && item.period_key) return item.period_key;
+      return this.periodKeyFromDate(item && item.date);
+    },
     periodKeyFromDate(val) {
       if (!val) return "";
       const d = new Date(val);
       if (isNaN(d.getTime())) return "";
       return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+    },
+    periodLabel(item) {
+      if (item && item.period_label) return item.period_label;
+      if (!item || !item.date) return "-";
+      const d = new Date(item.date);
+      if (isNaN(d.getTime())) return "-";
+      const raw = d.toLocaleDateString("es-PE", {
+        month: "long",
+        year: "numeric",
+      });
+      const normalized = raw.replace(/\s+de\s+/gi, " ").trim();
+      return normalized.charAt(0).toUpperCase() + normalized.slice(1);
+    },
+    normalizeAffiliation(aff) {
+      return {
+        ...aff,
+        date: aff.date || aff.createdAt,
+        price: Number(aff.price || aff.amount || (aff.plan ? aff.plan.amount : 0)),
+        points: Number(
+          aff.points || (aff.plan ? aff.plan.affiliation_points : 0)
+        ),
+        voucher: aff.voucher || aff.voucher2 || null,
+        type: "affiliation",
+      };
+    },
+    mergeHistory(activationsList, affiliationsList) {
+      const acts = (activationsList || []).map((a) => ({
+        ...a,
+        type: a.type || "activation",
+      }));
+      const affs = (affiliationsList || []).map((a) =>
+        this.normalizeAffiliation(a)
+      );
+      const seen = new Set();
+      const merged = [];
+      for (const row of [...acts, ...affs]) {
+        const key = `${row.type || "activation"}:${row.id}`;
+        if (seen.has(key)) continue;
+        seen.add(key);
+        merged.push(row);
+      }
+      return merged.sort(
+        (a, b) =>
+          new Date(b.approved_at || b.date) - new Date(a.approved_at || a.date)
+      );
     },
     monthLabelFromKey(key) {
       const MONTHS_ES = [
@@ -322,24 +452,14 @@ export default {
   },
   async created() {
     try {
-      // GET data
-      const [activationsRes, affiliationsRes] = await Promise.all([
-        api.Activations.GET(this.session),
-        api.Afiliation.GET(this.session)
-      ]);
-
+      const activationsRes = await api.Activations.GET(this.session);
       const data = activationsRes.data;
-      const affiliationsData = affiliationsRes.data || {};
 
-      this.loading = false;
-
-      // error
       if (data.error && data.msg == "invalid session")
-        this.$router.push("/login");
+        return this.$router.push("/login");
       if (data.error && data.msg == "unverified user")
-        this.$router.push("/verify");
+        return this.$router.push("/verify");
 
-      // success
       this.$store.commit("SET_NAME", data.name);
       this.$store.commit("SET_LAST_NAME", data.lastName);
       this.$store.commit("SET_AFFILIATED", data.affiliated);
@@ -350,28 +470,28 @@ export default {
       this.$store.commit("SET_PHOTO", data.photo);
       this.$store.commit("SET_TREE", data.tree);
 
-      const activationsList = data.activations || [];
-      const affiliationsList = affiliationsData.affiliations || [];
-      
-      const normalizedAffiliations = affiliationsList.map(aff => {
-        return {
-          ...aff,
-          date: aff.date || aff.createdAt,
-          price: aff.price || aff.amount || (aff.plan ? aff.plan.amount : 0),
-          points: aff.points || (aff.plan ? aff.plan.affiliation_points : 0),
-          type: 'affiliation'
+      let activationsList = data.activations || [];
+      const hasAffiliations = activationsList.some(
+        (a) => a.type === "affiliation"
+      );
+
+      if (!hasAffiliations) {
+        try {
+          const affiliationsRes = await api.Afiliation.GET(this.session);
+          const affiliationsData = affiliationsRes.data || {};
+          activationsList = this.mergeHistory(
+            activationsList,
+            affiliationsData.affiliations || []
+          );
+        } catch (affErr) {
+          console.warn("No se pudieron cargar afiliaciones:", affErr);
         }
-      });
+      }
 
-      const history = [...activationsList, ...normalizedAffiliations].sort((a, b) => {
-        const dateA = new Date(a.date || 0).getTime();
-        const dateB = new Date(b.date || 0).getTime();
-        return dateB - dateA;
-      });
-
-      this.activations = history;
+      this.activations = activationsList;
     } catch (e) {
       console.error(e);
+    } finally {
       this.loading = false;
     }
   },
