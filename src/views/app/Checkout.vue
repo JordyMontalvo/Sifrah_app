@@ -1944,7 +1944,21 @@ export default {
 
       } catch (error) {
         console.error('Error en submitActivation:', error);
-        this.activationError = error.message || 'Error al procesar la orden. Intenta nuevamente.';
+        let errMsg = error.message || 'Error al procesar la orden. Intenta nuevamente.';
+        
+        // Manejar error nativo de navegadores móviles al perder permiso sobre el archivo temporal
+        if (errMsg.toLowerCase().includes('could not be read') || 
+            errMsg.toLowerCase().includes('permission problems') || 
+            errMsg.includes('NotReadableError')) {
+          errMsg = '⚠️ Por seguridad de tu celular, el navegador perdió acceso a la foto. Por favor vuelve a "Seleccionar archivo" e intenta Confirmar de nuevo inmediatamente.';
+          // Limpiar las variables de archivo para forzar a que lo seleccione de nuevo
+          this.voucherFile = null;
+          this.voucherPreview = null;
+          this.voucherFile2 = null;
+          this.voucherPreview2 = null;
+        }
+        
+        this.activationError = errMsg;
       } finally {
         this.sending = false;
       }
