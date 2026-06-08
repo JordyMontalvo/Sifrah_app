@@ -300,26 +300,8 @@ export default {
         this.sending = false;
 
         if (data.error) {
-          if (data.code === 'ACCOUNT_ELIMINATED') {
-            this.showReactivationModal(data.dni);
-            return;
-          }
           if (data.code === 'ACCOUNT_BLOCKED') {
-            Swal.fire({
-              icon: 'error',
-              title: 'Cuenta Bloqueada',
-              text: data.msg,
-              confirmButtonColor: '#e91e63',
-              backdrop: `rgba(0,0,0,0.4)`,
-              showClass: {
-                popup: 'swal2-noanimation',
-                backdrop: 'swal2-noanimation'
-              },
-              hideClass: {
-                popup: '',
-                backdrop: ''
-              }
-            });
+            this.showUnlockModal(data.dni, data.msg);
             return;
           }
           this.alert = data.msg;
@@ -454,19 +436,14 @@ export default {
         console.error("Error en login:", error);
       }
     },
-    async showReactivationModal(dni) {
+    async showUnlockModal(dni, msg) {
       const { value: formValues } = await Swal.fire({
-        title: 'Cuenta Eliminada',
+        title: 'Cuenta Bloqueada',
         html: `
-          <p style="font-size: 14px; margin-bottom: 15px;">Tu cuenta ha sido eliminada por inactividad. Puedes solicitar una reactivación al administrador.</p>
+          <p style="font-size: 14px; margin-bottom: 15px;">${msg}</p>
           <div style="text-align: left; margin-bottom: 10px;">
-            <label style="font-size: 12px; font-weight: bold; color: #555;">Motivo de reactivación (Obligatorio)</label>
-            <textarea id="swal-reason" class="swal2-textarea" style="margin: 5px 0; width: 100%; box-sizing: border-box;" placeholder="Explica brevemente por qué deseas volver..."></textarea>
-          </div>
-          <div style="text-align: left;">
-            <label style="font-size: 12px; font-weight: bold; color: #555;">Nuevo Patrocinador (Opcional)</label>
-            <input id="swal-sponsor" class="swal2-input" style="margin: 5px 0; width: 100%; box-sizing: border-box; text-transform: uppercase;" placeholder="Código del patrocinador">
-            <small style="font-size: 11px; color: #888;">Déjalo en blanco si deseas mantener tu posición anterior o si no tienes uno.</small>
+            <label style="font-size: 12px; font-weight: bold; color: #555;">Motivo para solicitar desbloqueo (Obligatorio)</label>
+            <textarea id="swal-reason" class="swal2-textarea" style="margin: 5px 0; width: 100%; box-sizing: border-box;" placeholder="Explica brevemente..."></textarea>
           </div>
         `,
         focusConfirm: false,
@@ -485,22 +462,21 @@ export default {
         },
         preConfirm: () => {
           const reason = document.getElementById('swal-reason').value;
-          const sponsor = document.getElementById('swal-sponsor').value;
           if (!reason || reason.trim() === '') {
             Swal.showValidationMessage('El motivo es obligatorio');
             return false;
           }
-          return { reason, sponsor_code: sponsor };
+          return { reason };
         }
       });
 
       if (formValues) {
         this.sending = true;
         try {
+          // Reutilizamos el endpoint reactivations pero solo enviando motivo
           const { data } = await api.reactivateRequest({
             dni,
-            reason: formValues.reason,
-            sponsor_code: formValues.sponsor_code
+            reason: formValues.reason
           });
           
           this.sending = false;
@@ -516,7 +492,7 @@ export default {
             Swal.fire({
               icon: 'success',
               title: 'Solicitud Enviada',
-              text: data.msg,
+              text: 'Tu solicitud de desbloqueo ha sido enviada al administrador.',
               showClass: { popup: 'swal2-noanimation', backdrop: 'swal2-noanimation' },
               hideClass: { popup: '', backdrop: '' }
             });
