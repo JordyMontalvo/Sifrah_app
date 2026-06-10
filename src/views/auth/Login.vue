@@ -191,9 +191,9 @@ export default {
   },
   filters: {
     alert(msg) {
-      // if (msg == 'user not found')   return 'El usuario no existe'
       if (msg == "dni not found") return "El documento no existe";
       if (msg == "invalid password") return "Contraseña incorrecta";
+      return msg;
     },
   },
   created() {
@@ -282,25 +282,48 @@ export default {
         alert("Error al iniciar sesión con Google");
       }
     },
+    applyUserToStore(userInfo) {
+      if (!userInfo) return;
+      if (userInfo.name) this.$store.commit("SET_NAME", userInfo.name);
+      if (userInfo.lastName) this.$store.commit("SET_LAST_NAME", userInfo.lastName);
+      if (userInfo.email) this.$store.commit("SET_EMAIL", userInfo.email);
+      if (userInfo.photo) this.$store.commit("SET_PHOTO", userInfo.photo);
+      if (userInfo.plan) this.$store.commit("SET_PLAN", userInfo.plan);
+      if (userInfo.total_points !== undefined) {
+        this.$store.commit("SET_TOTAL_POINTS", userInfo.total_points);
+      }
+      if (userInfo.affiliated !== undefined && userInfo.affiliated !== null) {
+        this.$store.commit("SET_AFFILIATED", userInfo.affiliated);
+      }
+      if (userInfo.tree !== undefined) this.$store.commit("SET_TREE", userInfo.tree);
+      if (userInfo.activated !== undefined) {
+        this.$store.commit("SET_ACTIVATED", userInfo.activated);
+      }
+      if (userInfo._activated !== undefined) {
+        this.$store.commit("SET__ACTIVATED", userInfo._activated);
+      }
+      if (userInfo.country) this.$store.commit("SET_COUNTRY", userInfo.country);
+      if (userInfo.balance !== undefined) {
+        this.$store.commit("SET_BALANCE", userInfo.balance);
+      }
+      if (userInfo._balance !== undefined) {
+        this.$store.commit("SET__BALANCE", userInfo._balance);
+      }
+    },
     async submit() {
       const { dni, password, office_id, path } = this;
 
-      // Validar campos
-      if (!dni) {
-        return (this.error.dni = true);
-      }
-      if (!password) {
-        return (this.error.password = true);
-      }
+      if (!dni) return (this.error.dni = true);
+      if (!password) return (this.error.password = true);
 
       this.sending = true;
+      this.alert = null;
 
       try {
         const { data } = await api.login({ dni, password, office_id });
-        this.sending = false;
 
         if (data.error) {
-          if (data.code === 'ACCOUNT_BLOCKED') {
+          if (data.code === "ACCOUNT_BLOCKED") {
             this.showUnlockModal(data.dni, data.msg);
             return;
           }
@@ -308,132 +331,38 @@ export default {
           return;
         }
 
-        // Establecer sesión primero
         this.$store.commit("SET_SESSION", data.session);
-        
-        // Si es usuario de oficina, establecer office_id
         if (office_id) {
           this.$store.commit("SET_OFFICE_ID", { office_id, path });
         }
 
-        // SOLUCIÓN: Si no tenemos información completa del usuario, hacer llamada adicional
+        this.applyUserToStore(data);
+
         if (data.affiliated === undefined || data.affiliated === null) {
           try {
-            // Hacer llamada al API de afiliación para obtener información completa
             const userData = await api.Afiliation.GET(data.session);
-            
-            if (userData.data.error) {
-              this.alert = "Error al obtener información del usuario";
-              return;
+            if (!userData.data.error) {
+              this.applyUserToStore(userData.data);
             }
-            
-            // Usar la información completa del usuario
-            const userInfo = userData.data;
-            
-            // Establecer información del usuario
-            if (userInfo.name) this.$store.commit("SET_NAME", userInfo.name);
-            if (userInfo.lastName) this.$store.commit("SET_LAST_NAME", userInfo.lastName);
-            if (userInfo.email) this.$store.commit("SET_EMAIL", userInfo.email);
-            if (userInfo.photo) this.$store.commit("SET_PHOTO", userInfo.photo);
-            if (userInfo.plan) this.$store.commit("SET_PLAN", userInfo.plan);
-            if (userInfo.total_points !== undefined) this.$store.commit("SET_TOTAL_POINTS", userInfo.total_points);
-            
-            // Establecer estado de afiliación y otros campos
-            this.$store.commit("SET_AFFILIATED", userInfo.affiliated);
-            
-            if (userInfo.tree !== undefined) this.$store.commit("SET_TREE", userInfo.tree);
-            if (userInfo.activated !== undefined) this.$store.commit("SET_ACTIVATED", userInfo.activated);
-            if (userInfo._activated !== undefined) this.$store.commit("SET__ACTIVATED", userInfo._activated);
-            if (userInfo.country) this.$store.commit("SET_COUNTRY", userInfo.country);
-            if (userInfo.balance !== undefined) this.$store.commit("SET_BALANCE", userInfo.balance);
-            if (userInfo._balance !== undefined) this.$store.commit("SET__BALANCE", userInfo._balance);
-            
           } catch (userError) {
-            this.alert = "Error al obtener información del usuario";
-            return;
+            console.warn("Login: no se pudo cargar perfil de afiliación", userError);
           }
-        } else {
-          // Si ya tenemos la información completa, usarla directamente
-          // Establecer información del usuario
-          if (data.name) this.$store.commit("SET_NAME", data.name);
-          if (data.lastName) this.$store.commit("SET_LAST_NAME", data.lastName);
-          if (data.email) this.$store.commit("SET_EMAIL", data.email);
-          if (data.photo) this.$store.commit("SET_PHOTO", data.photo);
-          if (data.plan) this.$store.commit("SET_PLAN", data.plan);
-          if (data.total_points !== undefined) this.$store.commit("SET_TOTAL_POINTS", data.total_points);
-          
-          // Establecer estado de afiliación y otros campos
-          this.$store.commit("SET_AFFILIATED", data.affiliated);
-          
-          if (data.tree !== undefined) this.$store.commit("SET_TREE", data.tree);
-          if (data.activated !== undefined) this.$store.commit("SET_ACTIVATED", data.activated);
-          if (data._activated !== undefined) this.$store.commit("SET__ACTIVATED", data._activated);
-          if (data.country) this.$store.commit("SET_COUNTRY", data.country);
-          if (data.balance !== undefined) this.$store.commit("SET_BALANCE", data.balance);
-          if (data._balance !== undefined) this.$store.commit("SET__BALANCE", data._balance);
         }
 
-        // IMPORTANTE: Esperar a que TODOS los valores del store se establezcan
-        console.log('Login: Estableciendo estado del store...');
-        
-        // Esperar múltiples ticks para asegurar que el store esté completamente actualizado
         await this.$nextTick();
-        await this.$nextTick();
-        await this.$nextTick();
-        
-        // Verificar que el estado se haya establecido correctamente
-        console.log('Login: Estado después de commit:', {
-          session: this.$store.state.session,
-          affiliated: this.$store.state.affiliated,
-          localStorage: {
-            session: localStorage.getItem('session'),
-            affiliated: localStorage.getItem('affiliated')
-          }
-        });
 
-        // Verificar que affiliated esté correctamente establecido
-        if (this.$store.state.affiliated === null || this.$store.state.affiliated === undefined) {
-          console.error('Login: ERROR - affiliated no se estableció correctamente');
-          console.log('Login: Reintentando establecer affiliated...');
-          // Intentar obtener el valor desde localStorage como fallback
-          const localAffiliated = localStorage.getItem('affiliated');
-          if (localAffiliated !== null) {
-            this.$store.commit("SET_AFFILIATED", localAffiliated === 'true');
-          }
-          await this.$nextTick();
-        }
-
-        // Verificación final del estado
-        const estadoFinal = {
-          session: this.$store.state.session,
-          affiliated: this.$store.state.affiliated,
-          localStorage: {
-            session: localStorage.getItem('session'),
-            affiliated: localStorage.getItem('affiliated')
-          }
-        };
-        
-        console.log('Login: Estado final antes de redirección:', estadoFinal);
-
-        // Redirigir según el tipo de usuario
         if (office_id) {
-          // Usuario de oficina
-          console.log('Login: Redirigiendo usuario de oficina a', `/${this.path}`);
           this.$router.push(`/${this.path}`);
+        } else if (this.$store.state.affiliated) {
+          this.$router.push("/dashboard");
         } else {
-          // Usuario normal - redirigir según afiliación
-          if (this.$store.state.affiliated) {
-            console.log('Login: Usuario afiliado, redirigiendo a /dashboard');
-            this.$router.push("/dashboard");
-          } else {
-            console.log('Login: Usuario no afiliado, redirigiendo a /affiliation');
-            this.$router.push("/affiliation");
-          }
+          this.$router.push("/affiliation");
         }
       } catch (error) {
-        this.sending = false;
         this.alert = "Error en el servidor. Intente nuevamente.";
         console.error("Error en login:", error);
+      } finally {
+        this.sending = false;
       }
     },
     async showUnlockModal(dni, msg) {
