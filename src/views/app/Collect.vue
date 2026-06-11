@@ -79,7 +79,8 @@
               />
             </div>
             <div class="collect-soft-balance">
-              <small>Total disponible: S/. {{ balance }}</small>
+              <small>Saldo disponible para retiro: S/. {{ balance }}</small>
+              <small class="collect-soft-hint">El Bono Ahorro no se puede retirar; solo canjear por productos.</small>
             </div>
             <div class="soft-form-group">
               <label>Monto a retirar</label>
@@ -192,7 +193,8 @@ export default {
     this.account = data.account;
     this.account_type = data.account_type;
     // this.ibk     = data.ibk
-    this.balance = data.balance.toFixed(2);
+    const available = Math.max(0, Number(data.balance) || 0);
+    this.balance = available.toFixed(2);
     // this.amount  = data.balance
   },
   methods: {
@@ -222,8 +224,8 @@ export default {
         return (this.error.amount = true);
       }
 
-      // validate amount
-      if (amount > balance) {
+      const available = Math.max(0, Number(balance) || 0);
+      if (amount > available) {
         return (this.alert = "amount exceeds the balance");
       }
 
@@ -408,6 +410,16 @@ export default {
   text-align: right;
   color: #888;
   font-size: 1.02rem;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: flex-end;
+}
+.collect-soft-hint {
+  color: #08385c;
+  font-size: 0.85rem;
+  max-width: 280px;
+  line-height: 1.3;
 }
 .soft-btn {
   width: 100%;
