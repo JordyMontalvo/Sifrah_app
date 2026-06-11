@@ -151,42 +151,16 @@
               </div>
               <div class="gauge-container">
                 <img
-                  v-if="historicalRankImage"
+                  v-if="hasCustomRankImage"
                   :src="historicalRankImage"
                   :alt="historicalRankLabel"
                   class="rank-history-image"
                 />
-                <svg v-else viewBox="0 0 100 60" class="gauge-svg">
-                  <defs>
-                    <linearGradient id="needleGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                      <stop offset="0%" style="stop-color:#4a4a4a;stop-opacity:1" />
-                      <stop offset="50%" style="stop-color:#2a2a2a;stop-opacity:1" />
-                      <stop offset="100%" style="stop-color:#4a4a4a;stop-opacity:1" />
-                    </linearGradient>
-                  </defs>
-                  <!-- Background Arc -->
-                  <path d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke="#f5f5f5" stroke-width="10" />
-                  
-                  <!-- Segments with gaps -->
-                  <!-- Segment 1: Pink -->
-                  <path d="M 12 45 A 38 38 0 0 1 28 18" fill="none" stroke="#f953c6" stroke-width="9" />
-                  <!-- Segment 2: Orange -->
-                  <path d="M 32 16 A 38 38 0 0 1 48 12" fill="none" stroke="#ff9800" stroke-width="9" />
-                  <!-- Segment 3: Bronze/Brown -->
-                  <path d="M 52 12 A 38 38 0 0 1 68 16" fill="none" stroke="#a08c35" stroke-width="9" />
-                  <!-- Segment 4: Dark Gray -->
-                  <path d="M 72 18 A 38 38 0 0 1 88 45" fill="none" stroke="#444" stroke-width="9" />
-
-                  <!-- Center decorative circle -->
-                  <circle cx="50" cy="50" r="2" fill="#ccc" />
-
-                  <!-- Needle -->
-                  <g class="needle" :style="{ transform: `rotate(${(historicalRankPercentage / 100) * 180 - 90}deg)` }">
-                    <path d="M 50 50 L 47 50 L 50 10 L 53 50 Z" fill="url(#needleGradient)" />
-                    <circle cx="50" cy="50" r="6" fill="#333" />
-                    <circle cx="50" cy="50" r="2" fill="#666" />
-                  </g>
-                </svg>
+                <RankGaugeIcon
+                  v-else
+                  :percentage="historicalRankPercentage"
+                  svg-class="gauge-svg"
+                />
               </div>
             </div>
           </div>
@@ -526,12 +500,14 @@ import App from "@/views/layouts/App";
 import api from "@/api";
 import Spinner from "@/components/Spinner.vue";
 import SkeletonLoader from "@/components/SkeletonLoader.vue";
+import RankGaugeIcon from "@/components/RankGaugeIcon.vue";
 
 export default {
   components: {
     App,
     Spinner,
     SkeletonLoader,
+    RankGaugeIcon,
   },
   data() {
     return {
@@ -606,6 +582,9 @@ export default {
         return "Activación Básica";
       }
       return this.formattedPlan;
+    },
+    hasCustomRankImage() {
+      return !!(this.historicalRankImage && String(this.historicalRankImage).trim());
     },
   },
   filters: {
@@ -720,7 +699,9 @@ export default {
     this.total_points = data.total_points;
     this.historicalRank = data.historicalRank || data.rank || "none";
     this.historicalRankLabel = data.historicalRankLabel || "Ninguno";
-    this.historicalRankImage = data.historicalRankImage || null;
+    this.historicalRankImage = data.historicalRankImage
+      ? String(data.historicalRankImage).trim() || null
+      : null;
     this.historicalRankPercentage = data.historicalRankPercentage || 0;
     this.travelBonusText = data.travelBonusText || 'Tu progreso hacia el Bono Viaje se actualizará próximamente. ¡Sigue trabajando para alcanzar tus objetivos!';
 
