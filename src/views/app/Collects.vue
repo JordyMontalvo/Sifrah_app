@@ -194,7 +194,7 @@ export default {
 .collects-bank,
 .collects-account,
 .collects-cci {
-  color: #ff9800;
+  color: #08385c;
   font-size: 0.98rem;
 }
 .collects-amount {
