@@ -691,7 +691,9 @@ export default {
     const vbalNum = Number(data._balance) || 0;
     this.sifrahBalance = Number(data.sifrahBalance) || 0;
     this.sifrahIns = Number(data.sifrahIns) || 0;
-    this.totalEarned = Number(data.totalEarned) ?? (Number(data.ins) || 0) + (Number(data.insVirtual) || 0) + (Number(data.sifrahIns) || 0);
+    this.totalEarned = data.totalEarned != null
+      ? Number(data.totalEarned)
+      : (Number(data.ins) || 0) + (Number(data.insVirtual) || 0) + (Number(data.sifrahIns) || 0);
     this.balance = balNum.toFixed(2);
     this._balance = vbalNum.toFixed(2);
     this.$store.commit("SET_BALANCE", balNum);

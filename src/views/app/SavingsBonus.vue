@@ -114,6 +114,7 @@
 <script>
 import App from "@/views/layouts/App";
 import api from "@/api";
+import Swal from "sweetalert2";
 
 export default {
   components: {
@@ -195,9 +196,13 @@ export default {
         }
 
         const productsData = productsResponse.data;
-        if (productsData && productsData.products) {
-          // La API ya devuelve los productos formateados y filtrados
-          this.featuredProducts = productsData.products;
+        if (productsData && !productsData.error) {
+          if (productsData.products) {
+            this.featuredProducts = productsData.products;
+          }
+          if (productsData.savingsBalance != null) {
+            this.sifrahBalance = Number(productsData.savingsBalance) || 0;
+          }
         }
       } catch (e) {
         console.error("Error fetching savings data:", e);
@@ -208,9 +213,52 @@ export default {
     selectCategory(cat) {
       this.selectedCategory = cat;
     },
-    redeem(product) {
-      console.log("Redeeming product:", product.name);
-      // Logic for redemption
+    async redeem(product) {
+      const price = Number(product.price) || 0;
+      if (price <= 0) return;
+
+      const { isConfirmed } = await Swal.fire({
+        title: "¿Confirmar canje?",
+        html: `Vas a canjear <strong>${product.name}</strong> por <strong>S/ ${price.toFixed(2)}</strong> de tu Bono Ahorro.<br><small>La solicitud quedará pendiente de aprobación.</small>`,
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonText: "Solicitar canje",
+        cancelButtonText: "Cancelar",
+      });
+
+      if (!isConfirmed) return;
+
+      try {
+        const { data } = await api.SavingsBonus.POST(this.session, {
+          products: [{ id: product.id, name: product.name, price, total: 1 }],
+          office: "central",
+          deliveryMethod: "pickup",
+          deliveryInfo: { officeId: "central" },
+        });
+
+        if (data.error) {
+          Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: data.msg || "No se pudo registrar el canje",
+          });
+          return;
+        }
+
+        await Swal.fire({
+          icon: "success",
+          title: "Solicitud enviada",
+          text: `Tu canje #${data.orderNumber || data.id} está pendiente de aprobación.`,
+        });
+        await this.fetchData();
+      } catch (e) {
+        console.error("Error en canje:", e);
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "No se pudo procesar el canje. Intenta de nuevo.",
+        });
+      }
     }
   }
 };
