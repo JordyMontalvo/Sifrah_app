@@ -102,7 +102,7 @@
                 <div class="stat-header">
                   <span class="dash-card-title">Saldo Ganado</span>
                 </div>
-                <span class="dash-card-value-magenta">S/ {{ Number(ins + insVirtual).toLocaleString('es-PE', { minimumFractionDigits: 2 }) }}</span>
+                <span class="dash-card-value-magenta">S/ {{ totalEarnedFormatted }}</span>
                 <div class="stat-icon-premium">
                   <!-- Money Bag SVG (EXACT Copy from Total Ganado) -->
                   <svg viewBox="0 0 100 110" class="money-bag-stat-svg">
@@ -189,7 +189,7 @@
             <div class="info-content-horizontal">
               <div class="info-text-side">
                 <span class="dash-card-title">Total Ganado</span>
-                <span class="dash-card-value-magenta">S/ {{ Number(ins + insVirtual).toLocaleString('es-PE', { minimumFractionDigits: 2 }) }}</span>
+                <span class="dash-card-value-magenta">S/ {{ totalEarnedFormatted }}</span>
                 <span class="dash-card-subtitle">Acumulado histórico</span>
               </div>
               <div class="money-bag-container">
@@ -532,6 +532,8 @@ export default {
       travelBonusText: null,
 
       sifrahBalance: 0,
+      sifrahIns: 0,
+      totalEarned: 0,
       op: 1,
       op2: 0,
       op3: 0,
@@ -585,6 +587,10 @@ export default {
     },
     hasCustomRankImage() {
       return !!(this.historicalRankImage && String(this.historicalRankImage).trim());
+    },
+    totalEarnedFormatted() {
+      const total = Number(this.totalEarned) || 0;
+      return total.toLocaleString("es-PE", { minimumFractionDigits: 2 });
     },
   },
   filters: {
@@ -684,6 +690,8 @@ export default {
     const balNum = Number(data.balance) || 0;
     const vbalNum = Number(data._balance) || 0;
     this.sifrahBalance = Number(data.sifrahBalance) || 0;
+    this.sifrahIns = Number(data.sifrahIns) || 0;
+    this.totalEarned = Number(data.totalEarned) ?? (Number(data.ins) || 0) + (Number(data.insVirtual) || 0) + (Number(data.sifrahIns) || 0);
     this.balance = balNum.toFixed(2);
     this._balance = vbalNum.toFixed(2);
     this.$store.commit("SET_BALANCE", balNum);
