@@ -80,7 +80,6 @@
             </div>
             <div class="collect-soft-balance">
               <small>Saldo disponible para retiro: S/. {{ balance }}</small>
-              <small class="collect-soft-hint">El Bono Ahorro no se puede retirar; solo canjear por productos.</small>
             </div>
             <div class="soft-form-group">
               <label>Monto a retirar</label>
@@ -410,16 +409,6 @@ export default {
   text-align: right;
   color: #888;
   font-size: 1.02rem;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  align-items: flex-end;
-}
-.collect-soft-hint {
-  color: #08385c;
-  font-size: 0.85rem;
-  max-width: 280px;
-  line-height: 1.3;
 }
 .soft-btn {
   width: 100%;
