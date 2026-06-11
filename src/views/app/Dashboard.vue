@@ -141,16 +141,22 @@
 
         <!-- New Info Cards Grid (8 Cards) -->
         <div class="new-dashboard-grid">
-          <!-- 1. Próximo Rango -->
+          <!-- 1. Rango Histórico -->
           <div class="info-card next-rank-card">
             <div class="info-content-horizontal">
               <div class="info-text-side">
-                <span class="dash-card-title">Próximo Rango</span>
-                <span class="dash-card-value">{{ provisionalRank | _rank }}</span>
-                <span class="dash-card-subtitle">{{ nextRankPercentage }}% de avance hacia {{ nextRankName | _rank }}</span>
+                <span class="dash-card-title">Rango Histórico</span>
+                <span class="dash-card-value">{{ historicalRankLabel }}</span>
+                <span class="dash-card-subtitle">Mayor rango alcanzado</span>
               </div>
               <div class="gauge-container">
-                <svg viewBox="0 0 100 60" class="gauge-svg">
+                <img
+                  v-if="historicalRankImage"
+                  :src="historicalRankImage"
+                  :alt="historicalRankLabel"
+                  class="rank-history-image"
+                />
+                <svg v-else viewBox="0 0 100 60" class="gauge-svg">
                   <defs>
                     <linearGradient id="needleGradient" x1="0%" y1="0%" x2="100%" y2="0%">
                       <stop offset="0%" style="stop-color:#4a4a4a;stop-opacity:1" />
@@ -175,7 +181,7 @@
                   <circle cx="50" cy="50" r="2" fill="#ccc" />
 
                   <!-- Needle -->
-                  <g class="needle" :style="{ transform: `rotate(${(nextRankPercentage / 100) * 180 - 90}deg)` }">
+                  <g class="needle" :style="{ transform: `rotate(${(historicalRankPercentage / 100) * 180 - 90}deg)` }">
                     <path d="M 50 50 L 47 50 L 50 10 L 53 50 Z" fill="url(#needleGradient)" />
                     <circle cx="50" cy="50" r="6" fill="#333" />
                     <circle cx="50" cy="50" r="2" fill="#666" />
@@ -543,9 +549,10 @@ export default {
       plans: null,
       total_points: null,
       n_affiliates_total: 0,
-      nextRankName: "",
-      nextRankPercentage: 0,
-      provisionalRank: "",
+      historicalRank: "",
+      historicalRankLabel: "Ninguno",
+      historicalRankImage: null,
+      historicalRankPercentage: 0,
       travelBonusText: null,
 
       sifrahBalance: 0,
@@ -614,7 +621,12 @@ export default {
       else if (v == "si") result = "Platino";
       else if (v == "gold") result = "Oro";
       else if (v == "sapphire") result = "Zafiro";
-      else if (v == "rubi" || v == "ruby") result = "Ruby";
+      else if (v == "rubi" || v == "ruby" || v == "rubí") result = "Ruby";
+      else if (v == "bronce") result = "Bronce";
+      else if (v == "plata") result = "Plata";
+      else if (v == "oro") result = "Oro";
+      else if (v == "esmeralda") result = "Esmeralda";
+      else if (v == "activo") result = "Activo";
       else if (v == "emerald") result = "Esmeralda";
       else if (v == "diamond" || v == "diamante") result = "Diamante";
       else if (v.includes("doble diamante")) result = "Doble diamante";
@@ -706,9 +718,10 @@ export default {
     this.directs = data.directs || [];
     this.frontals = data.frontals || [];
     this.total_points = data.total_points;
-    this.nextRankName = data.nextRankName || "";
-    this.nextRankPercentage = data.nextRankPercentage || 0;
-    this.provisionalRank = data.provisionalRank || "none";
+    this.historicalRank = data.historicalRank || data.rank || "none";
+    this.historicalRankLabel = data.historicalRankLabel || "Ninguno";
+    this.historicalRankImage = data.historicalRankImage || null;
+    this.historicalRankPercentage = data.historicalRankPercentage || 0;
     this.travelBonusText = data.travelBonusText || 'Tu progreso hacia el Bono Viaje se actualizará próximamente. ¡Sigue trabajando para alcanzar tus objetivos!';
 
     // Iniciar autoplay del banner si corresponde
