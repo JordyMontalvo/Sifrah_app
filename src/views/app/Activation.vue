@@ -180,6 +180,67 @@
                     </button>
                   </div>
 
+                  <!-- Promociones (solo usuarios activos) -->
+                  <div
+                    v-if="userIsActive && filteredPromotionProducts.length"
+                    class="promotions-store-section"
+                  >
+                    <h4 class="products-title promotions-title">
+                      <i class="fas fa-tags"></i> Promociones
+                    </h4>
+                    <p class="promotions-subtitle">Ofertas exclusivas para socios activos · sin puntos</p>
+                    <div class="products-catalog-grid promotions-grid">
+                      <div
+                        v-for="(product, i) in filteredPromotionProducts"
+                        :key="'promo-' + (product.id || i)"
+                        class="product-catalog-card product-catalog-card--promo"
+                        @click="openProductModal(product)"
+                      >
+                        <div class="card-corner"></div>
+                        <div class="points-badge promo-badge">Promo</div>
+                        <div
+                          v-if="product.promotion_remaining != null"
+                          class="stock-badge"
+                        >
+                          Quedan {{ product.promotion_remaining }}
+                        </div>
+                        <div class="product-image-container">
+                          <img
+                            :src="product.img"
+                            :alt="product.name"
+                            class="product-catalog-img"
+                          />
+                        </div>
+                        <div class="product-catalog-info">
+                          <h4 class="product-catalog-name">{{ product.name }}</h4>
+                          <div v-if="product.subdescription" class="product-catalog-info-text">
+                            {{ product.subdescription }}
+                          </div>
+                          <div class="product-catalog-price">
+                            Precio: <span class="price-amount">S/ {{ getProductPrice(product) }}</span>
+                          </div>
+                        </div>
+                        <div v-if="getProductQuantity(product) > 0" class="product-quantity-controls">
+                          <button @click.stop="decreaseQuantity(product)" class="qty-control-btn">-</button>
+                          <span class="quantity-display">{{ getProductQuantity(product) }}</span>
+                          <button @click.stop="addToCart(product)" class="qty-control-btn" :disabled="getProductQuantity(product) >= maxQtyForProduct(product)">+</button>
+                        </div>
+                        <div v-else class="add-to-cart-container">
+                          <button @click.stop="addToCart(product)" class="add-to-cart-btn">
+                            <i class="fas fa-shopping-cart"></i> Agregar
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div
+                    v-else-if="!userIsActive && hasPromotionProducts"
+                    class="notification is-warning is-light promotions-locked"
+                  >
+                    Las promociones están disponibles solo para socios <strong>activos</strong>.
+                  </div>
+
                   <!-- Grid de productos -->
                   <div class="products-catalog-grid">
                     <!-- Indicador de productos mostrados -->
@@ -200,7 +261,7 @@
                       <div class="card-corner"></div>
                       
                       <!-- Badge de puntos -->
-                      <div class="points-badge">
+                      <div v-if="!isPromotionProduct(product)" class="points-badge">
                         <i class="fas fa-star"></i>
                         {{ product.points }} pts
                       </div>
@@ -612,27 +673,60 @@ export default {
     },
 
 
+    userIsActive() {
+      return !!(this.$store.state.activated || this.$store.state._activated);
+    },
+
+    hasPromotionProducts() {
+      if (!this.products) return false;
+      return this.products.some((p) => this.isPromotionProduct(p));
+    },
+
     // Computed properties para el catálogo de productos
     catalogProducts() {
-      // Si está cargando o no hay productos, retornar array vacío
       if (this.loading || !this.products) {
         return [];
       }
-      
-      return this.products.filter(product => {
-        // Filtro por búsqueda
-        const matchesSearch = !this.searchTerm || 
+
+      return this.products.filter((product) => {
+        if (this.isPromotionProduct(product)) return false;
+
+        const matchesSearch =
+          !this.searchTerm ||
           product.name.toLowerCase().includes(this.searchTerm.toLowerCase());
-        
-        // Filtro por categoría
+
         let matchesCategory = true;
-        if (this.selectedCategories.length > 0 && !this.selectedCategories.includes("Todos")) {
+        if (
+          this.selectedCategories.length > 0 &&
+          !this.selectedCategories.includes("Todos")
+        ) {
           matchesCategory = this.selectedCategories.includes(product.type);
         }
-        
+
         return matchesSearch && matchesCategory;
       });
     },
+
+    filteredPromotionProducts() {
+      if (!this.userIsActive || !this.products) return [];
+
+      return this.products
+        .filter((product) => {
+          if (!this.isPromotionProduct(product)) return false;
+          return (
+            !this.searchTerm ||
+            product.name.toLowerCase().includes(this.searchTerm.toLowerCase())
+          );
+        })
+        .map((product) => {
+          const cartItem = this.cartItems.find((item) => item.id === product.id);
+          return {
+            ...product,
+            total: cartItem ? cartItem.total : 0,
+          };
+        });
+    },
+
 
     filteredCatalogProducts() {
       // Si está cargando o no hay productos, retornar array vacío
@@ -803,6 +897,26 @@ export default {
   },
 
   methods: {
+    isPromotionProduct(product) {
+      if (!product) return false;
+      return (
+        product.is_promotion === true ||
+        product.type === "Promoción" ||
+        product.catalog_type === "promotion"
+      );
+    },
+
+    maxQtyForProduct(product) {
+      if (
+        product &&
+        product.promotion_remaining != null &&
+        product.promotion_remaining > 0
+      ) {
+        return Math.min(10, product.promotion_remaining);
+      }
+      return 10;
+    },
+
     formatCategoryName(category) {
       // Convertir la primera letra a mayúscula y el resto a minúscula
       return category.charAt(0).toUpperCase() + category.slice(1).toLowerCase();
@@ -1158,13 +1272,14 @@ export default {
       body.classList.remove('product-modal-open');
     },
     addToCart(product) {
+      const max = this.maxQtyForProduct(product);
       const existingItem = this.cartItems.find(item => item.id === product.id);
       if (existingItem) {
+        if (existingItem.total >= max) return;
         existingItem.total += 1;
       } else {
         this.cartItems.push({ ...product, total: 1 });
       }
-      // Sincronizar con el store
       this.$store.commit('setCartItems', [...this.cartItems]);
     },
     removeFromCart(index) {

@@ -31,18 +31,18 @@
                       height="48"
                       rx="8"
                       fill="#fffbe6"
-                      stroke="#ff9800"
+                      stroke="#e91e63"
                       stroke-width="3"
                     />
                     <path
                       d="M20 12 Q32 32 44 12"
-                      stroke="#ff9800"
+                      stroke="#e91e63"
                       stroke-width="3"
                       fill="none"
                     />
                     <path
                       d="M20 52 Q32 32 44 52"
-                      stroke="#ff9800"
+                      stroke="#e91e63"
                       stroke-width="3"
                       fill="none"
                     />
@@ -52,7 +52,7 @@
                       cy="20"
                       rx="7"
                       ry="4"
-                      fill="#ff9800"
+                      fill="#e91e63"
                     />
                     <ellipse
                       class="sand-bottom"
@@ -60,7 +60,7 @@
                       cy="44"
                       rx="7"
                       ry="4"
-                      fill="#ff9800"
+                      fill="#e91e63"
                       opacity="0.2"
                     />
                     <rect
@@ -70,7 +70,7 @@
                       width="3"
                       height="24"
                       rx="1.5"
-                      fill="#ff9800"
+                      fill="#e91e63"
                     />
                   </g>
                 </svg>

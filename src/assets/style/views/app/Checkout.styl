@@ -43,7 +43,7 @@ body
     border-radius 4px
     transition all 0.8s cubic-bezier(0.4, 0, 0.2, 1)
     width calc((100% - 90px) * (var(--current-step, 1) / 3))
-    box-shadow 0 2px 12px rgba(255,140,0,0.25)
+    box-shadow 0 2px 12px rgba(233, 30, 99,0.25)
 
 .top-progress-bar .progress-step
   display flex
@@ -193,7 +193,7 @@ body
     font-size 1.3rem
     font-weight 700
     color #e91e63
-    text-shadow 0 1px 2px rgba(255, 140, 0, 0.1)
+    text-shadow 0 1px 2px rgba(233, 30, 99, 0.1)
   
   p
     margin 0
@@ -214,7 +214,7 @@ body
     margin 0
     font-size 1.5rem
     font-weight 700
-    color #ff9800
+    color #e91e63
     text-align center
     flex 1
 
@@ -234,8 +234,8 @@ body
   justify-content center
 
   &:hover
-    color #ff9800
-    background rgba(255, 152, 0, 0.1)
+    color #e91e63
+    background rgba(233, 30, 99, 0.1)
 
 .cart-scroll-info
   text-align center
@@ -324,13 +324,13 @@ body
 
 // Estilos específicos para los items de delivery
 .delivery-item
-  background linear-gradient(135deg, #ff8c00 0%, #ff9800 100%) !important
-  border-color #ff6b00 !important
+  background linear-gradient(135deg, #cf1658 0%, #e91e63 100%) !important
+  border-color #cf1658 !important
   color white !important
   
   &:hover
-    border-color #ff6b00 !important
-    box-shadow 0 6px 20px rgba(255, 107, 0, 0.3) !important
+    border-color #cf1658 !important
+    box-shadow 0 6px 20px rgba(207, 22, 88, 0.3) !important
     transform translateY(-2px) !important
   
   .cart-item-details
@@ -369,7 +369,7 @@ body
 
 // Estilo especial para delivery por agencia
 .agency-item
-  background linear-gradient(135deg, #2196f3 0%, #1976d2 100%) !important
+  background linear-gradient(135deg, #e91e63 0%, #cf1658 100%) !important
   border-color #1565c0 !important
   
   &:hover
@@ -377,7 +377,7 @@ body
     box-shadow 0 6px 20px rgba(21, 101, 192, 0.3) !important
 
 .order-summary
-  border-top 2px solid #ffe4d6
+  border-top 2px solid #f8bbd0
   padding-top 10px
   margin-top 0px
   margin-bottom 15px
@@ -439,19 +439,19 @@ body
         color #e91e63
 
   .delivery-row
-    background linear-gradient(135deg, rgba(255, 140, 0, 0.1) 0%, rgba(255, 140, 0, 0.05) 100%)
+    background linear-gradient(135deg, rgba(233, 30, 99, 0.1) 0%, rgba(233, 30, 99, 0.05) 100%)
     padding 12px 15px
     border-radius 8px
-    border-left 4px solid #ff8c00
+    border-left 4px solid #cf1658
     margin 8px 0
     
     span:first-child
-      color #ff8c00
+      color #cf1658
       font-weight 700
       font-size 1rem
     
     span:last-child
-      color #ff8c00
+      color #cf1658
       font-weight 700
       font-size 1.1rem
 
@@ -480,7 +480,7 @@ body
     &.total
       font-weight bold
       font-size 1.2rem
-      border-top 2px solid #ffe4d6
+      border-top 2px solid #f8bbd0
       padding-top 8px
       margin-top 8px
       
@@ -490,11 +490,11 @@ body
 
 .summary-details .concept-value
   font-weight 600
-  color #ff9800
+  color #e91e63
 
 .summary-details .points-value
   font-weight 600
-  color #ff9800
+  color #e91e63
 
 .summary-details .total-value
   font-weight 700
@@ -506,7 +506,7 @@ body
   padding 20px
   background #c285c75e
   border-radius 12px
-  border 1px solid rgba(255, 140, 0, 0.1)
+  border 1px solid rgba(233, 30, 99, 0.1)
   flex-shrink 0
   
   p
@@ -645,7 +645,7 @@ body
     font-size 0.95rem
 
 .refresh-btn
-  background #ff8c00
+  background #cf1658
   color white
   border none
   padding 8px 12px
@@ -655,7 +655,7 @@ body
   font-size 0.9rem
   
   &:hover
-    background #f57c00
+    background #cf1658
     transform translateY(-1px)
   
   i
@@ -715,7 +715,7 @@ body
     right 0
     width 60px
     height 60px
-    background radial-gradient(circle at 100% 0%, rgba(255, 140, 0, 0.1) 0%, transparent 70%)
+    background radial-gradient(circle at 100% 0%, rgba(233, 30, 99, 0.1) 0%, transparent 70%)
     border-radius 0 0 0 100%
 
 .pickup-section
@@ -858,7 +858,7 @@ body
     text-align center
     margin-bottom 18px
     padding-bottom 15px
-    border-bottom 1px solid #ffe4d6
+    border-bottom 1px solid #f8bbd0
     
     strong
       color #333
@@ -874,14 +874,14 @@ body
     padding 10px
     background #fafafa
     border-radius 6px
-    border-left 3px solid #ff8c00
+    border-left 3px solid #cf1658
     
     &:last-child
       margin-bottom 0
     
     .location-label
       font-weight 600
-      color #ff8c00
+      color #cf1658
       font-size 0.9rem
       min-width 70px
       margin-right 12px
@@ -954,7 +954,7 @@ body
     margin-bottom 8px
   
   .map-link
-    color #ff9800
+    color #e91e63
     text-decoration none
     font-weight 500
     
@@ -971,7 +971,7 @@ body
     color #666
 
 .map-link
-  color #ff9800
+  color #e91e63
   text-decoration none
   font-weight 500
   word-break break-all
@@ -995,7 +995,7 @@ body
   i
     font-size 3.5rem
     margin-bottom 20px
-    color #ff8c00
+    color #cf1658
     opacity 0.7
   
   p
@@ -1119,7 +1119,7 @@ body
     right 0
     width 60px
     height 60px
-    background linear-gradient(135deg, rgba(255, 140, 0, 0.1) 0%, transparent 100%)
+    background linear-gradient(135deg, rgba(233, 30, 99, 0.1) 0%, transparent 100%)
     border-radius 0 20px 0 60px
 
   .form-section
@@ -1171,13 +1171,13 @@ body
         
         &:hover
           border-color #e91e63
-          box-shadow 0 4px 16px rgba(255, 140, 0, 0.15)
+          box-shadow 0 4px 16px rgba(233, 30, 99, 0.15)
           transform translateY(-1px)
         
         &:focus
           outline none
           border-color #e91e63
-          box-shadow 0 6px 24px rgba(255,140,0,0.2)
+          box-shadow 0 6px 24px rgba(233, 30, 99,0.2)
           transform translateY(-2px)
           background-color #fff
       
@@ -1210,13 +1210,13 @@ body
     
     &:hover
       border-color #e91e63
-      box-shadow 0 4px 16px rgba(255, 140, 0, 0.15)
+      box-shadow 0 4px 16px rgba(233, 30, 99, 0.15)
       transform translateY(-1px)
     
     &:focus
       outline none
       border-color #e91e63
-      box-shadow 0 6px 24px rgba(255,140,0,0.2)
+      box-shadow 0 6px 24px rgba(233, 30, 99,0.2)
       transform translateY(-2px)
       background-color #fff
 
@@ -1407,7 +1407,7 @@ body
         &:focus
           outline none
           border-color #e91e63
-          box-shadow 0 6px 24px rgba(255,140,0,0.2)
+          box-shadow 0 6px 24px rgba(233, 30, 99,0.2)
           transform translateY(-2px)
           background-color #fff
       
@@ -1458,7 +1458,7 @@ body
         &:focus
           outline none
           border-color #e91e63
-          box-shadow 0 4px 16px rgba(255,140,0,0.15)
+          box-shadow 0 4px 16px rgba(233, 30, 99,0.15)
       
       i
         position absolute
@@ -1540,7 +1540,7 @@ body
     
     &:hover
       border-color #e91e63
-      background #fff8f0
+      background #fce4ec
     
     i
       margin-right 12px
@@ -1640,8 +1640,8 @@ body
     
     &:focus
       outline none
-      border-color #ff8c00
-      box-shadow 0 0 0 2px rgba(255, 140, 0, 0.1)
+      border-color #cf1658
+      box-shadow 0 0 0 2px rgba(233, 30, 99, 0.1)
     
     &::placeholder
       color #999
@@ -1702,7 +1702,7 @@ body
       span:first-child
         color #333
       span:last-child
-        color #ff8c00
+        color #cf1658
         font-weight 700
     
     // Estilos para Subtotal
@@ -1887,7 +1887,7 @@ body
       &.active
         .step-number
           border-color #e91e6333
-          box-shadow 0 4px 16px rgba(255,140,0,0.3)
+          box-shadow 0 4px 16px rgba(233, 30, 99,0.3)
           transform scale(1.05)
         
         .step-label
@@ -2022,7 +2022,7 @@ body
             height 30px
             border none
             border-radius 6px
-            background #ff8c00
+            background #cf1658
             color white
             font-weight bold
             cursor pointer
@@ -2209,8 +2209,8 @@ body
           border 2px solid #e8e8e8
           
           &:focus
-            border-color #ff8c00
-            box-shadow 0 0 0 3px rgba(255, 140, 0, 0.1)
+            border-color #cf1658
+            box-shadow 0 0 0 3px rgba(233, 30, 99, 0.1)
         
         i
           font-size 0.9rem
@@ -2226,8 +2226,8 @@ body
         cursor pointer
         
         &:focus
-          border-color #ff8c00
-          box-shadow 0 0 0 3px rgba(255, 140, 0, 0.1)
+          border-color #cf1658
+          box-shadow 0 0 0 3px rgba(233, 30, 99, 0.1)
     
     // Campos específicos para ubicación
     .department-field, .province-field
@@ -2390,7 +2390,7 @@ body
   
   .map-location-label
     font-weight 600
-    color #ff8c00
+    color #cf1658
     margin-bottom 5px
     font-size 0.9rem
   
@@ -2435,11 +2435,11 @@ body
   animation slideInUp 0.5s ease-out
 
 .zone-info-card
-  background linear-gradient(135deg, #fff3e0 0%, #ffecb3 100%)
-  border 2px solid #ff8c00
+  background linear-gradient(135deg, #fce4ec 0%, #f8bbd0 100%)
+  border 2px solid #cf1658
   border-radius 15px
   padding 25px
-  box-shadow 0 4px 20px rgba(255,140,0,0.15)
+  box-shadow 0 4px 20px rgba(233, 30, 99,0.15)
   position relative
   overflow hidden
   
@@ -2450,7 +2450,7 @@ body
     left 0
     right 0
     height 4px
-    background linear-gradient(90deg, #ff8c00 0%, #f57c00 100%)
+    background linear-gradient(90deg, #cf1658 0%, #cf1658 100%)
   
   h4
     color #e65100
@@ -2472,22 +2472,22 @@ body
         font-weight 600
   
   .price-highlight
-    background linear-gradient(135deg, #4caf50 0%, #2e7d32 100%)
+    background linear-gradient(135deg, #e91e63 0%, #ad1457 100%)
     color white
     padding 4px 12px
     border-radius 20px
     font-size 1.1rem
     font-weight 700
-    box-shadow 0 2px 8px rgba(76,175,80,0.3)
+    box-shadow 0 2px 8px rgba(233, 30, 99,0.3)
   
   .delivery-note
-    background rgba(76,175,80,0.1)
-    border-left 4px solid #4caf50
+    background rgba(233, 30, 99,0.1)
+    border-left 4px solid #e91e63
     padding 10px 15px
     margin-top 15px
     border-radius 8px
     font-size 0.9rem
-    color #2e7d32
+    color #ad1457
     font-weight 500
 
 // Animación para la información de zona
@@ -2512,11 +2512,11 @@ body
 
 // Estilos para la nueva card de delivery
 .delivery-card
-  background linear-gradient(135deg, #ff8c00 0%, #ff6b00 100%)
+  background linear-gradient(135deg, #cf1658 0%, #cf1658 100%)
   border-radius 16px
   margin 20px 0
   padding 0
-  box-shadow 0 8px 25px rgba(255, 140, 0, 0.25)
+  box-shadow 0 8px 25px rgba(233, 30, 99, 0.25)
   overflow hidden
   position relative
   
@@ -2761,7 +2761,7 @@ body
     font-weight 600
 
   .error-message
-    background #ffcccc
+    background #fce4ec
     color #cc0000
 
   .success-message
@@ -2988,7 +2988,7 @@ body
   padding 0
   
   .map-location-label
-    color #ff8c00
+    color #cf1658
     font-size 0.9rem
     font-weight 600
     margin-bottom 5px
@@ -2996,7 +2996,7 @@ body
     letter-spacing 0
     
   .map-link
-    color #ff8c00
+    color #cf1658
     text-decoration none
     font-weight 500
     font-size 0.85rem
@@ -3065,7 +3065,7 @@ body
       vertical-align middle
 
 .map-link
-  color #ff8c00
+  color #cf1658
   text-decoration none
   font-weight 500
   padding 0
@@ -3214,12 +3214,12 @@ body
         border 2px solid #e0e0e0
         
         &:hover
-          border-color #ff8c00
+          border-color #cf1658
           background #f8f9fa
         
         &.selected
-          border-color #ff8c00
-          background #fff8f0
+          border-color #cf1658
+          background #fce4ec
           
         .payment-option-content
           display flex
@@ -3228,7 +3228,7 @@ body
           
           .payment-icon
             font-size 1.2rem
-            color #ff8c00
+            color #cf1658
             
           .payment-text
             font-size 0.9rem
