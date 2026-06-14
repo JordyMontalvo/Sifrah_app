@@ -158,14 +158,14 @@ export default {
 }
 
 .boleta-state--loading {
-  color: #D209B6;
+  color: #e91e63;
 }
 
 .boleta-spinner {
   width: 56px;
   height: 56px;
   border: 5px solid #f9d8f5;
-  border-top-color: #D209B6;
+  border-top-color: #e91e63;
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }
@@ -200,7 +200,7 @@ export default {
 .boleta-retry-btn {
   margin-top: 16px;
   padding: 12px 28px;
-  background: #D209B6;
+  background: #e91e63;
   color: white;
   border: none;
   border-radius: 10px;
@@ -214,6 +214,6 @@ export default {
 }
 
 .boleta-retry-btn:hover {
-  background: #9F00AD;
+  background: #cf1658;
 }
 </style>

@@ -138,7 +138,7 @@ export default {
   font-size: 1.18rem;
   font-weight: 600;
   color: #fff;
-  background: #d209b666;
+  background: #e91e6366;
   border-radius: 18px;
   padding: 10px 28px;
   margin: 0 6px;
@@ -149,7 +149,7 @@ export default {
 }
 .tab:hover,
 .tab.router-link-exact-active {
-  background: #9f00ad;
+  background: #cf1658;
   color: #fff;
   box-shadow: 0 4px 16px rgba(255, 152, 0, 0.13);
   transform: translateY(-2px) scale(1.04);
@@ -169,7 +169,7 @@ export default {
   overflow: hidden;
 }
 .collects-table thead tr {
-  background: #d209b6;
+  background: #e91e63;
   color: #fff;
   position: sticky;
   top: 0;
@@ -182,13 +182,13 @@ export default {
   padding: 14px 12px;
   text-align: left;
   font-size: 15px;
-  border-bottom: 1.5px solid #d209b666;
+  border-bottom: 1.5px solid #e91e6366;
 }
 .collects-table tbody tr:nth-child(even) {
-  background: #d209b666;
+  background: #e91e6366;
 }
 .collects-table tbody tr:hover {
-  background: #d209b666;
+  background: #e91e6366;
   transition: background 0.2s;
 }
 .collects-bank,

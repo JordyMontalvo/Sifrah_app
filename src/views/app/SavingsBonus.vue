@@ -131,7 +131,7 @@ export default {
       visualCategories: [
         { name: "Todos", icon: "fas fa-th", color: "#f1f2f6" },
         { name: "Productos SIFRAH", icon: "fas fa-leaf", color: "#e3f2fd" },
-        { name: "Bienestar", icon: "fas fa-heart", color: "#f3e5f5" },
+        { name: "Bienestar", icon: "fas fa-heart", color: "#fce4ec" },
         { name: "Hogar", icon: "fas fa-home", color: "#fff3e0" },
         { name: "Tecnología", icon: "fas fa-laptop", color: "#e0f2f1" },
         { name: "Herramientas", icon: "fas fa-tools", color: "#efebe9" },

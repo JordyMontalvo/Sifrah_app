@@ -18,7 +18,7 @@
             @submit.prevent="validate"
           >
             <div class="transfer-soft-balance">
-              <small>Total disponible: S/. {{ balance }}</small>
+              <small>Total disponible: S/. {{ balanceDisplay }}</small>
             </div>
             <div class="soft-form-group">
               <label>Usuario receptor (DNI)</label>
@@ -81,7 +81,7 @@
                 <span v-if="error2" class="soft-alert">{{ error2 }}</span>
               </transition>
               <div class="transfer-soft-summary">
-                <small>Monto a enviar: S/. {{ amount }}</small
+                <small>Monto a enviar: S/. {{ amountDisplay }}</small
                 ><br />
                 <span
                   ><i>{{ desc }}</i></span
@@ -143,6 +143,7 @@ export default {
       show: false,
 
       end: false,
+      balance: 0,
     };
   },
   computed: {
@@ -151,6 +152,14 @@ export default {
     },
     office_id() {
       return this.$store.state.office_id;
+    },
+    balanceDisplay() {
+      const n = Number(this.balance);
+      return Number.isFinite(n) ? n.toFixed(2) : "0.00";
+    },
+    amountDisplay() {
+      const n = Number(this.amount);
+      return Number.isFinite(n) ? n.toFixed(2) : "0.00";
     },
   },
   async created() {
@@ -174,7 +183,7 @@ export default {
     this.$store.commit("SET_PHOTO", data.photo);
     this.$store.commit("SET_TREE", data.tree);
 
-    this.balance = data.balance;
+    this.balance = Number(data.balance) || 0;
   },
   methods: {
     async validate() {
@@ -269,7 +278,7 @@ export default {
   font-size: 1.18rem;
   font-weight: 600;
   color: #fff;
-  background: #9F00AD;
+  background: #cf1658;
   border-radius: 18px;
   padding: 10px 28px;
   margin: 0 6px;
@@ -280,7 +289,7 @@ export default {
 }
 .tab:hover,
 .tab.router-link-exact-active {
-  background: #d209b6;
+  background: #e91e63;
   color: #fff;
   box-shadow: 0 4px 16px rgba(255, 0, 221, 0.13);
   transform: translateY(-2px) scale(1.04);
@@ -289,7 +298,7 @@ export default {
   text-align: center;
   font-size: 1.3rem;
   font-weight: 700;
-  color: #9F00AD;
+  color: #e91e63;
   margin-bottom: 18px;
   letter-spacing: 1px;
 }
@@ -339,7 +348,7 @@ export default {
 }
 .soft-btn {
   width: 100%;
-  background: #d209b6;
+  background: #e91e63;
   color: #fff;
   border: none;
   border-radius: 22px;
@@ -360,7 +369,7 @@ export default {
   background: #fb8c00;
 }
 .soft-btn:hover:not(:disabled) {
-  background: #9F00AD;
+  background: #cf1658;
   box-shadow: 0 6px 24px rgba(255, 152, 0, 0.18);
   transform: translateY(-2px) scale(1.03);
 }

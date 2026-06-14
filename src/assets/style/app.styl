@@ -213,7 +213,7 @@ body, .app
         display flex
         align-items center
         justify-content: space-between;
-        color #9f00ad
+        color c-brand
         border-bottom: 2px solid #00796b;
         .social
           font-size 20px
@@ -229,24 +229,21 @@ body, .app
       display none
 
   .share-button
-    background-color: #D209B6;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    padding: 10px 20px;
-    cursor: pointer;
+    background-color: c-brand
+    color: #fff
+    border: none
+    border-radius: 5px
+    padding: 10px 20px
+    cursor: pointer
     display: flex
-    align-items: center;
-    justify-content: center;
-    font-size: 14px;
-    font-weight: bold;
-    /* margin-left: 10px; */
-    /* margin-left: 600px; */
-    /* position: relative; */
-    /* left: 400px; */
-    /* transform: translate(500px, 0); */
+    align-items: center
+    justify-content: center
+    font-size: 14px
+    font-weight: bold
+    transition background-color 0.2s ease
 
-    // Aumentar el margen izquierdo
+    &:hover
+      background-color: c-brand-hover
 .footer-register
   display flex
   color white

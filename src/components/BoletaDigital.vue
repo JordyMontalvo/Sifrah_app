@@ -20,7 +20,7 @@
         <div class="boleta-header">
           <div class="boleta-logo">
             <svg width="60" height="60" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect width="40" height="40" rx="10" fill="#D209B6"/>
+              <rect width="40" height="40" rx="10" fill="#e91e63"/>
               <path d="M24.2028 0.240206C23.9626 1.43345 23.73 1.94377 23.3022 2.22144C23.1746 2.304 22.8294 2.43908 22.5442 2.50662C21.5536 2.76178 21.3885 2.80681 21.3885 2.85934C21.3885 2.92689 21.7112 3.04696 22.4016 3.23458C23.4823 3.51976 23.745 3.78992 24.0527 4.99818C24.2403 5.70362 24.3378 5.92876 24.4279 5.84621C24.4504 5.8237 24.563 5.43345 24.6756 4.97567C24.9908 3.72989 25.2084 3.50475 26.3416 3.21957C27.0921 3.03946 27.3172 2.9494 27.3172 2.85934C27.3172 2.7843 26.7318 2.58917 26.3041 2.52163C25.5161 2.40906 24.9908 1.96628 24.8031 1.28336C24.4804 0.067598 24.3003 -0.240094 24.2028 0.240206Z" fill="white"/>
               <path d="M27.9476 4.16516C27.8275 4.64546 27.4523 5.05822 27.002 5.19331C26.6493 5.29837 26.6418 5.37342 26.9645 5.43346C27.3322 5.501 27.7525 5.88374 27.8425 6.23646C27.9026 6.44659 27.9626 6.52914 28.0677 6.52914C28.1727 6.52914 28.2328 6.44659 28.2928 6.23646C28.3829 5.89875 28.7881 5.51601 29.1333 5.44096C29.426 5.37342 29.396 5.29837 29.0433 5.1783C28.6906 5.05822 28.4504 4.81807 28.1953 4.31526L28.0076 3.94002L27.9476 4.16516Z" fill="white"/>
               <path d="M28.0677 7.70738C28.0677 7.78242 28.0977 8.04509 28.1352 8.29274C28.3604 9.76366 28.4729 11.9175 28.4129 13.8087C28.3904 14.6942 28.3529 15.5198 28.3378 15.6473C28.3228 15.7674 28.2853 16.1051 28.2628 16.3978C27.9476 19.8124 27.0621 23.6398 25.9514 26.4166C23.8275 31.6924 20.6906 35.5123 16.3078 38.1614C15.715 38.5216 15.2347 38.8443 15.2347 38.8894C15.2347 38.9419 15.3322 38.9494 15.4973 38.9269C15.82 38.8744 17.336 38.2064 17.336 38.1164C17.336 38.0789 17.3585 38.0563 17.396 38.0638C17.426 38.0714 17.5311 38.0338 17.6362 37.9738C17.9138 37.8162 18.3266 37.5835 18.7168 37.3809C18.9045 37.2759 19.0621 37.1708 19.0621 37.1333C19.0621 37.1032 19.0996 37.0732 19.1521 37.0732C19.2196 37.0732 19.9326 36.6305 20.3754 36.3078C20.9682 35.8725 22.4542 34.6417 22.8894 34.2139C26.169 31.0019 28.2853 26.8068 29.1108 21.8687C29.5836 19.0545 29.6737 16.0226 29.3735 13.1558C29.2609 12.0301 28.8181 9.39593 28.6305 8.7055C28.4129 7.93252 28.0677 7.30963 28.0677 7.70738Z" fill="white"/>
@@ -485,13 +485,13 @@ export default {
 }
 
 .boleta-btn--pdf {
-  background: #D209B6;
+  background: #e91e63;
   color: white;
   box-shadow: 0 4px 14px rgba(210, 9, 182, 0.35);
 }
 
 .boleta-btn--pdf:hover:not(:disabled) {
-  background: #9F00AD;
+  background: #cf1658;
   transform: translateY(-2px);
 }
 
@@ -534,14 +534,14 @@ export default {
   font-size: 52px;
   font-weight: 800;
   letter-spacing: 10px;
-  color: #D209B6;
+  color: #e91e63;
   margin: 0 0 20px;
 }
 
 .boleta-title {
   font-size: 36px;
   font-weight: 700;
-  color: #D209B6;
+  color: #e91e63;
   margin: 0 0 10px;
   text-align: center;
 }
@@ -555,7 +555,7 @@ export default {
 /* ===== DIVISORES ===== */
 .boleta-divider {
   height: 6px;
-  background: linear-gradient(90deg, #D209B6, #ff7bf2, #D209B6);
+  background: linear-gradient(90deg, #e91e63, #ff7bf2, #e91e63);
   margin: 0;
 }
 
@@ -596,7 +596,7 @@ export default {
   align-items: center;
   justify-content: center;
   font-size: 22px;
-  color: #D209B6;
+  color: #e91e63;
   flex-shrink: 0;
 }
 
@@ -640,7 +640,7 @@ export default {
   width: 56px;
   height: 56px;
   border-radius: 50%;
-  background: #D209B6;
+  background: #e91e63;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -652,7 +652,7 @@ export default {
 .boleta-section-title {
   font-size: 32px;
   font-weight: 800;
-  color: #D209B6;
+  color: #e91e63;
   margin: 0;
   letter-spacing: 2px;
 }
@@ -694,7 +694,7 @@ export default {
 .boleta-table-header {
   display: grid;
   grid-template-columns: 1fr 140px 200px 200px;
-  background: #D209B6;
+  background: #e91e63;
   color: white;
   font-size: 26px;
   font-weight: 700;
@@ -755,7 +755,7 @@ export default {
   align-items: center;
   gap: 40px;
   padding: 24px 28px 30px;
-  border-top: 3px solid #D209B6;
+  border-top: 3px solid #e91e63;
   margin-top: 10px;
 }
 
@@ -769,7 +769,7 @@ export default {
 .boleta-grand-value {
   font-size: 52px;
   font-weight: 900;
-  color: #D209B6;
+  color: #e91e63;
   min-width: 240px;
   text-align: right;
 }
@@ -796,12 +796,12 @@ export default {
   width: 60px;
   height: 60px;
   border-radius: 50%;
-  border: 3px solid #D209B6;
+  border: 3px solid #e91e63;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 26px;
-  color: #D209B6;
+  color: #e91e63;
   flex-shrink: 0;
 }
 
@@ -827,7 +827,7 @@ export default {
 .boleta-payment-amount {
   font-size: 36px;
   font-weight: 800;
-  color: #D209B6;
+  color: #e91e63;
 }
 
 /* ===== AGRADECIMIENTO ===== */
@@ -848,7 +848,7 @@ export default {
   align-items: center;
   justify-content: center;
   font-size: 36px;
-  color: #D209B6;
+  color: #e91e63;
   flex-shrink: 0;
 }
 
@@ -898,9 +898,9 @@ export default {
 }
 
 .boleta-social-link:hover {
-  background: #D209B6;
+  background: #e91e63;
   color: white;
-  border-color: #D209B6;
+  border-color: #e91e63;
   transform: translateY(-3px);
   box-shadow: 0 10px 15px -3px rgba(210, 9, 182, 0.3);
 }
