@@ -787,15 +787,15 @@ body
 .map-section
   .map-container
     margin-bottom 0
-    
-  // Asegurar que el mapa se vea bien en móviles
-  @media (max-width: 768px)
-    order 1
-    width 100%
-    
-    #map
-      height 250px !important
-      border-radius 8px
+
+  .map-container.map-link-only
+    background white
+    border 1px solid #e9ecef
+    border-radius 12px
+    min-height auto
+
+    .map-info
+      padding 20px
 
 .office-info-section
   background #f8f9fa
@@ -974,6 +974,7 @@ body
   color #ff9800
   text-decoration none
   font-weight 500
+  word-break break-all
   
   &:hover
     text-decoration underline
