@@ -659,17 +659,22 @@ export default {
 
     categories() {
       if (!this.products) return ["Todos"];
-      
-      const arr = this.products.map(function (x) {
-        return x.type;
+
+      const seen = new Map();
+      this.products.forEach((p) => {
+        if (this.isPromotionProduct(p)) return;
+        const raw = String(p.type || "").trim();
+        if (!raw) return;
+        const key = this.normalizeCategory(raw);
+        if (!seen.has(key)) {
+          seen.set(key, this.formatCategoryName(raw));
+        }
       });
 
-      let ret = arr.filter(function (v, i, self) {
-        return i == self.indexOf(v);
-      });
-
-      // Agregar "Todos" al inicio del array
-      return ["Todos", ...ret];
+      const sorted = Array.from(seen.values()).sort((a, b) =>
+        a.localeCompare(b, "es", { sensitivity: "base" })
+      );
+      return ["Todos", ...sorted];
     },
 
 
@@ -700,7 +705,11 @@ export default {
           this.selectedCategories.length > 0 &&
           !this.selectedCategories.includes("Todos")
         ) {
-          matchesCategory = this.selectedCategories.includes(product.type);
+          matchesCategory = this.selectedCategories.some(
+            (cat) =>
+              this.normalizeCategory(cat) ===
+              this.normalizeCategory(product.type)
+          );
         }
 
         return matchesSearch && matchesCategory;
@@ -917,9 +926,14 @@ export default {
       return 10;
     },
 
+    normalizeCategory(category) {
+      return String(category || "").trim().toLowerCase();
+    },
+
     formatCategoryName(category) {
-      // Convertir la primera letra a mayúscula y el resto a minúscula
-      return category.charAt(0).toUpperCase() + category.slice(1).toLowerCase();
+      const raw = String(category || "").trim();
+      if (!raw) return "";
+      return raw.charAt(0).toUpperCase() + raw.slice(1).toLowerCase();
     },
     touch(i) {
       this.product = this.products[i];
