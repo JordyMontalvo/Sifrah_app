@@ -171,9 +171,9 @@ body
   padding 35px
   height 898px
   border-radius 18px
-  box-shadow 0 8px 32px rgba(0,0,0,0.12)
+  box-shadow 0 8px 32px rgba(233, 30, 99, 0.12)
   width 445px
-  border 1px solid #e8e8e8
+  border 1px solid rgba(233, 30, 99, 0.12)
   position relative
   z-index 10
   margin-top 20px
@@ -184,9 +184,9 @@ body
   text-align center
   margin-bottom 13px
   padding 25px
-  background #c285c75e
+  background rgba(233, 30, 99, 0.12)
   border-radius 12px
-  border 2px solid #c285c75e
+  border 2px solid rgba(233, 30, 99, 0.2)
   
   h2
     margin 0 0 12px 0
@@ -263,11 +263,11 @@ body
   margin-bottom 22px
   transition all 0.3s ease
   background linear-gradient(135deg, #ffffff 0%, #fefefe 100%)
-  box-shadow 0 4px 16px rgba(0,0,0,0.08)
+  box-shadow 0 4px 16px rgba(233, 30, 99, 0.12)
   
   &:hover
     border-color #e91e63
-    box-shadow #e91e6333
+    box-shadow 0 6px 20px rgba(233, 30, 99, 0.18)
     transform translateY(-2px)
 
 .cart-item-image
@@ -384,8 +384,8 @@ body
   background linear-gradient(135deg, #ffffff 0%, #fefefe 100%)
   padding 15px
   border-radius 14px
-  box-shadow 0 4px 16px rgba(0,0,0,0.08)
-  border 1px solid #f0f0f0
+  box-shadow 0 4px 16px rgba(233, 30, 99, 0.1)
+  border 1px solid rgba(233, 30, 99, 0.12)
   flex-shrink 0
 
   .summary-row
@@ -504,9 +504,9 @@ body
   text-align center
   margin-top auto
   padding 20px
-  background #c285c75e
+  background rgba(233, 30, 99, 0.12)
   border-radius 12px
-  border 1px solid rgba(233, 30, 99, 0.1)
+  border 1px solid rgba(233, 30, 99, 0.2)
   flex-shrink 0
   
   p
@@ -525,13 +525,12 @@ body
   cursor pointer
   transition all 0.3s ease
   width 100%
-  box-shadow #e91e6333
-  font-size 1.05rem
+  box-shadow 0 2px 8px rgba(233, 30, 99, 0.15)
   
   &:hover
     background #cf1658
     transform translateY(-3px)
-    box-shadow #e91e6333
+    box-shadow 0 6px 20px rgba(233, 30, 99, 0.25)
 
 // Columna derecha - Proceso de checkout
 .checkout-process
@@ -1912,16 +1911,17 @@ body
     overflow-y auto
     background white
     border-radius 12px
-    box-shadow 0 4px 20px rgba(0,0,0,0.1)
+    box-shadow 0 4px 20px rgba(233, 30, 99, 0.12)
     
     .cart-title
       position sticky
       top 0
-      background white
+      background rgba(233, 30, 99, 0.08)
       z-index 10
-      padding-bottom 15px
+      padding 15px
       margin-bottom 15px
-      border-bottom 1px solid #e0e0e0
+      border-bottom 1px solid rgba(233, 30, 99, 0.15)
+      border-radius 12px
       
       h2
         font-size 1.3rem
@@ -1951,7 +1951,7 @@ body
         border-radius 3px
         
       &::-webkit-scrollbar-thumb:hover
-        background #b8079a
+        background #cf1658
     
     .cart-item
       background white
@@ -1962,11 +1962,11 @@ body
       display flex
       align-items center
       justify-content space-between
-      box-shadow 0 2px 8px rgba(0,0,0,0.05)
+      box-shadow 0 2px 8px rgba(233, 30, 99, 0.08)
       transition all 0.3s ease
       
       &:hover
-        box-shadow 0 4px 12px rgba(0,0,0,0.1)
+        box-shadow 0 4px 12px rgba(233, 30, 99, 0.15)
         transform translateY(-2px)
       
       .cart-item-image
@@ -2068,10 +2068,11 @@ body
     .order-summary
       position sticky
       bottom 0
-      background white
+      background rgba(233, 30, 99, 0.06)
       padding-top 15px
-      border-top 1px solid #e0e0e0
+      border-top 1px solid rgba(233, 30, 99, 0.15)
       margin-top 15px
+      box-shadow 0 -4px 16px rgba(233, 30, 99, 0.08)
     
   .checkout-process
     order 1
