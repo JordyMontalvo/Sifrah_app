@@ -98,14 +98,16 @@
 
             <!-- Bottom Stats Row (Keeping for reference as requested, but maybe user wanted to replace them? I will keep them but focus the 8 new cards below) -->
             <div class="stats-row">
-              <div class="stat-card">
-                <div class="stat-header">
-                  <span class="dash-card-title">Saldo Ganado</span>
-                </div>
-                <span class="dash-card-value-magenta">S/ {{ totalEarnedFormatted }}</span>
-                <div class="stat-icon-premium">
-                  <!-- Money Bag SVG (EXACT Copy from Total Ganado) -->
-                  <svg viewBox="0 0 100 110" class="money-bag-stat-svg">
+              <div class="stat-card stat-card-total-ganado">
+                <div class="stat-card-content">
+                  <div class="stat-text-stack">
+                    <span class="dash-card-title">Total Ganado</span>
+                    <span class="dash-card-value-magenta">S/ {{ totalEarnedFormatted }}</span>
+                    <span class="dash-card-subtitle">Acumulado histórico</span>
+                  </div>
+                  <div class="stat-icon-premium">
+                    <!-- Money Bag SVG -->
+                    <svg viewBox="0 0 100 110" class="money-bag-stat-svg">
                     <defs>
                       <radialGradient id="bagStatGradientFinal" cx="50%" cy="50%" r="50%" fx="35%" fy="35%">
                         <stop offset="0%" style="stop-color:#689f38;stop-opacity:1" />
@@ -133,6 +135,7 @@
                     </g>
                     <path d="M22 60 C22 50 30 40 45 40" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity="0.1" />
                   </svg>
+                </div>
                 </div>
               </div>
             </div>
@@ -184,79 +187,124 @@
             </div>
           </div>
 
-          <!-- 3. Total Ganado -->
-          <div class="info-card total-ganado-card">
-            <div class="info-content-horizontal">
-              <div class="info-text-side">
-                <span class="dash-card-title">Total Ganado</span>
-                <span class="dash-card-value-magenta">S/ {{ totalEarnedFormatted }}</span>
-                <span class="dash-card-subtitle">Acumulado histórico</span>
+          <!-- Saldos: Disponible + No Disponible (unidos en desktop) -->
+          <div class="info-card merged-saldos-card">
+            <div class="merged-saldos-column saldo-disponible-half">
+              <!-- Desktop: layout original unido -->
+              <div class="saldo-disponible-desktop">
+                <div class="merged-header">
+                  <div class="merged-icon wallet-icon-merged">
+                    <svg viewBox="0 0 100 100" class="wallet-svg">
+                      <circle cx="65" cy="30" r="15" fill="#ffd700" stroke="#fbc02d" stroke-width="1" />
+                      <text x="65" y="36" font-family="Arial Black" font-size="16" fill="#fbc02d" text-anchor="middle" font-weight="900">$</text>
+                      <path d="M15 40 Q15 35 20 35 L80 35 Q85 35 85 40 L85 85 Q85 90 80 90 L20 90 Q15 90 15 85 Z" fill="#2e7d32" />
+                      <path d="M15 45 L85 45" stroke="#1b5e20" stroke-width="2" opacity="0.3" />
+                      <path d="M50 35 L85 35 L85 65 L50 65 Q45 65 45 50 Q45 35 50 35 Z" fill="#388e3c" />
+                      <circle cx="75" cy="50" r="4" fill="#ffeb3b" />
+                    </svg>
+                  </div>
+                  <span class="dash-card-title">Saldo Disponible</span>
+                </div>
+                <div class="merged-value-container">
+                  <span class="dash-card-value">S/ {{ (balance || 0).toLocaleString('es-PE', { minimumFractionDigits: 2 }) }}</span>
+                  <span class="dash-card-subtitle">Disponible para retiro</span>
+                </div>
               </div>
-              <div class="money-bag-container">
-                <svg viewBox="0 0 100 110" class="money-bag-svg">
-                  <defs>
-                    <radialGradient id="bagGradient" cx="50%" cy="50%" r="50%" fx="35%" fy="35%">
-                      <stop offset="0%" style="stop-color:#689f38;stop-opacity:1" />
-                      <stop offset="70%" style="stop-color:#33691e;stop-opacity:1" />
-                      <stop offset="100%" style="stop-color:#1b5e20;stop-opacity:1" />
-                    </radialGradient>
-                    <linearGradient id="goldGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                      <stop offset="0%" style="stop-color:#ffee58;stop-opacity:1" />
-                      <stop offset="50%" style="stop-color:#fbc02d;stop-opacity:1" />
-                      <stop offset="100%" style="stop-color:#f9a825;stop-opacity:1" />
-                    </linearGradient>
-                    <linearGradient id="tieGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                      <stop offset="0%" style="stop-color:#fbc02d;stop-opacity:1" />
-                      <stop offset="50%" style="stop-color:#fdd835;stop-opacity:1" />
-                      <stop offset="100%" style="stop-color:#fbc02d;stop-opacity:1" />
-                    </linearGradient>
-                  </defs>
-                  
-                  <!-- Shadow -->
-                  <ellipse cx="50" cy="98" rx="35" ry="8" fill="#000" opacity="0.15" />
-                  
-                  <!-- Top Folds (Cloth above tie) -->
-                  <path d="M35 30 Q30 5 45 15 Q50 5 55 15 Q70 5 65 30 Z" fill="#689f38" stroke="#33691e" stroke-width="0.5" />
-                  <path d="M38 28 Q42 18 45 22 Q50 15 55 22 Q58 18 62 28" fill="none" stroke="#33691e" stroke-width="0.5" opacity="0.5" />
 
-                  <!-- Main Bag Body -->
-                  <path d="M15 65 C15 95 30 100 50 100 C70 100 85 95 85 65 C85 45 75 30 50 30 C25 30 15 45 15 65 Z" fill="url(#bagGradient)" />
-                  
-                  <!-- Tie (Gold rope) -->
-                  <rect x="34" y="28" width="32" height="6" rx="3" fill="url(#tieGradient)" stroke="#f9a825" stroke-width="0.5" />
-                  
-                  <!-- Dollar Sign ($) -->
-                  <g transform="translate(50, 70)">
-                    <text x="0" y="0" font-family="Arial Black, Arial" font-size="42" fill="url(#goldGradient)" text-anchor="middle" dominant-baseline="middle" font-weight="900" style="filter: drop-shadow(0 2px 2px rgba(0,0,0,0.3))" stroke="#fbc02d" stroke-width="0.5">$</text>
-                  </g>
-
-                  <!-- Subtle highlights -->
-                  <path d="M22 60 C22 50 30 40 45 40" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity="0.1" />
-                </svg>
+              <!-- Móvil: texto izquierda + billetera derecha -->
+              <div class="info-content-horizontal saldo-disponible-mobile">
+                <div class="info-text-side">
+                  <span class="dash-card-title">Saldo Disponible</span>
+                  <span class="dash-card-value saldo-disponible-value">S/ {{ (balance || 0).toLocaleString('es-PE', { minimumFractionDigits: 2 }) }}</span>
+                  <span class="dash-card-subtitle">Disponible para retiro</span>
+                </div>
+                <div class="wallet-container">
+                  <svg viewBox="0 0 100 100" class="wallet-svg">
+                    <circle cx="65" cy="30" r="15" fill="#ffd700" stroke="#fbc02d" stroke-width="1" />
+                    <text x="65" y="36" font-family="Arial Black" font-size="16" fill="#fbc02d" text-anchor="middle" font-weight="900">$</text>
+                    <path d="M15 40 Q15 35 20 35 L80 35 Q85 35 85 40 L85 85 Q85 90 80 90 L20 90 Q15 90 15 85 Z" fill="#2e7d32" />
+                    <path d="M15 45 L85 45" stroke="#1b5e20" stroke-width="2" opacity="0.3" />
+                    <path d="M50 35 L85 35 L85 65 L50 65 Q45 65 45 50 Q45 35 50 35 Z" fill="#388e3c" />
+                    <circle cx="75" cy="50" r="4" fill="#ffeb3b" />
+                  </svg>
+                </div>
               </div>
             </div>
-          </div>
 
-          <!-- 2. Saldo Disponible -->
-          <div class="info-card saldo-disponible-card">
-            <div class="info-content-horizontal">
-              <div class="info-text-side">
-                <span class="dash-card-title">Saldo Disponible</span>
-                <span class="dash-card-value">S/ {{ (balance || 0).toLocaleString('es-PE', { minimumFractionDigits: 2 }) }}</span>
-                <span class="dash-card-subtitle">Disponible para retiro</span>
-              </div>
-              <div class="wallet-container">
-                <svg viewBox="0 0 100 100" class="wallet-svg">
-                  <!-- Coin -->
-                  <circle cx="65" cy="30" r="15" fill="#ffd700" stroke="#fbc02d" stroke-width="1" />
-                  <text x="65" y="36" font-family="Arial Black" font-size="16" fill="#fbc02d" text-anchor="middle" font-weight="900">$</text>
-                  <!-- Wallet body -->
-                  <path d="M15 40 Q15 35 20 35 L80 35 Q85 35 85 40 L85 85 Q85 90 80 90 L20 90 Q15 90 15 85 Z" fill="#2e7d32" />
-                  <path d="M15 45 L85 45" stroke="#1b5e20" stroke-width="2" opacity="0.3" />
-                  <!-- Wallet flap -->
-                  <path d="M50 35 L85 35 L85 65 L50 65 Q45 65 45 50 Q45 35 50 35 Z" fill="#388e3c" />
-                  <circle cx="75" cy="50" r="4" fill="#ffeb3b" />
+            <div class="merged-divider merged-saldos-divider"></div>
+
+            <div class="merged-saldos-column saldo-no-disponible-half">
+              <div class="glow-horizontal-line"></div>
+              <div class="bg-lock-icon-premium bg-lock-icon-merged">
+                <svg viewBox="0 0 100 120">
+                  <defs>
+                    <linearGradient id="glassGradientMerged" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" style="stop-color:#fff;stop-opacity:0.2" />
+                      <stop offset="50%" style="stop-color:#fff;stop-opacity:0.05" />
+                      <stop offset="100%" style="stop-color:#fff;stop-opacity:0.1" />
+                    </linearGradient>
+                  </defs>
+                  <rect x="15" y="45" width="70" height="60" rx="15" fill="url(#glassGradientMerged)" stroke="white" stroke-opacity="0.2" stroke-width="1" />
+                  <path d="M30 45 V30 C30 18 38 10 50 10 C62 10 70 18 70 30 V45" fill="none" stroke="white" stroke-opacity="0.3" stroke-width="8" stroke-linecap="round" />
+                  <circle cx="50" cy="75" r="8" fill="white" fill-opacity="0.2" />
+                  <path d="M50 83 V90" stroke="white" stroke-opacity="0.2" stroke-width="4" stroke-linecap="round" />
                 </svg>
+              </div>
+
+              <!-- Desktop: mismo layout que Saldo Disponible -->
+              <div class="saldo-no-disponible-desktop">
+                <div class="merged-header">
+                  <div class="merged-icon lock-icon-merged">
+                    <svg viewBox="0 0 40 40">
+                      <defs>
+                        <linearGradient id="walletGradientMergedDesktop" x1="0%" y1="0%" x2="0%" y2="100%">
+                          <stop offset="0%" style="stop-color:#ff4081;stop-opacity:1" />
+                          <stop offset="100%" style="stop-color:#c2185b;stop-opacity:1" />
+                        </linearGradient>
+                      </defs>
+                      <path d="M12 18 V10 C12 6 15 3 20 3 C25 3 28 6 28 10 V18" fill="none" stroke="#ff80ab" stroke-width="4" stroke-linecap="round" />
+                      <rect x="6" y="15" width="28" height="20" rx="6" fill="url(#walletGradientMergedDesktop)" />
+                      <rect x="6" y="20" width="28" height="2" fill="#880e4f" opacity="0.2" />
+                      <circle cx="20" cy="24" r="3.5" fill="white" />
+                      <path d="M18 24 L22 24 L24 31 L16 31 Z" fill="white" />
+                    </svg>
+                  </div>
+                  <span class="dash-card-title saldo-locked-title">Saldo No Disponible</span>
+                </div>
+                <div class="merged-value-container">
+                  <span class="dash-card-value saldo-locked-value">S/ {{ (_balance || 0).toLocaleString('es-PE', { minimumFractionDigits: 2 }) }}</span>
+                  <span class="dash-card-subtitle saldo-locked-subtitle">
+                    Actívate antes del cierre <span class="magenta-text">para liberarlo</span>
+                  </span>
+                </div>
+              </div>
+
+              <!-- Móvil: texto izquierda + candado rosa -->
+              <div class="saldo-no-disponible-mobile">
+                <div class="saldo-locked-content">
+                  <div class="title-with-premium-lock">
+                    <div class="premium-wallet-lock">
+                      <svg viewBox="0 0 40 40">
+                        <defs>
+                          <linearGradient id="walletGradientMerged" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" style="stop-color:#ff4081;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#c2185b;stop-opacity:1" />
+                          </linearGradient>
+                        </defs>
+                        <path d="M12 18 V10 C12 6 15 3 20 3 C25 3 28 6 28 10 V18" fill="none" stroke="#ff80ab" stroke-width="4" stroke-linecap="round" />
+                        <rect x="6" y="15" width="28" height="20" rx="6" fill="url(#walletGradientMerged)" />
+                        <rect x="6" y="20" width="28" height="2" fill="#880e4f" opacity="0.2" />
+                        <circle cx="20" cy="24" r="3.5" fill="white" />
+                        <path d="M18 24 L22 24 L24 31 L16 31 Z" fill="white" />
+                      </svg>
+                    </div>
+                    <span class="dash-card-title saldo-locked-title">Saldo No Disponible</span>
+                  </div>
+                  <span class="dash-card-value saldo-locked-value">S/ {{ (_balance || 0).toLocaleString('es-PE', { minimumFractionDigits: 2 }) }}</span>
+                  <span class="dash-card-subtitle saldo-locked-subtitle">
+                    Actívate antes del cierre <span class="magenta-text">para liberarlo</span>
+                  </span>
+                </div>
               </div>
             </div>
           </div>
@@ -364,58 +412,6 @@
                 </svg>
               </div>
               <span>{{ activationLevelLabel }}</span>
-            </div>
-          </div>
-
-          <!-- 6. Saldo no disponible -->
-          <div class="info-card saldo-no-disponible-card">
-            <!-- Glossy Horizontal Line -->
-            <div class="glow-horizontal-line"></div>
-            
-            <!-- Large background lock (Glossy/Glass effect) -->
-            <div class="bg-lock-icon-premium">
-              <svg viewBox="0 0 100 120">
-                <defs>
-                   <linearGradient id="glassGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                     <stop offset="0%" style="stop-color:#fff;stop-opacity:0.2" />
-                     <stop offset="50%" style="stop-color:#fff;stop-opacity:0.05" />
-                     <stop offset="100%" style="stop-color:#fff;stop-opacity:0.1" />
-                   </linearGradient>
-                </defs>
-                <rect x="15" y="45" width="70" height="60" rx="15" fill="url(#glassGradient)" stroke="white" stroke-opacity="0.2" stroke-width="1" />
-                <path d="M30 45 V30 C30 18 38 10 50 10 C62 10 70 18 70 30 V45" fill="none" stroke="white" stroke-opacity="0.3" stroke-width="8" stroke-linecap="round" />
-                <circle cx="50" cy="75" r="8" fill="white" fill-opacity="0.2" />
-                <path d="M50 83 V90" stroke="white" stroke-opacity="0.2" stroke-width="4" stroke-linecap="round" />
-              </svg>
-            </div>
-
-            <div class="info-content-horizontal relative">
-              <div class="info-text-side">
-                <div class="title-with-premium-lock">
-                  <div class="premium-wallet-lock">
-                    <svg viewBox="0 0 40 40">
-                      <defs>
-                        <linearGradient id="walletGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                          <stop offset="0%" style="stop-color:#ff4081;stop-opacity:1" />
-                          <stop offset="100%" style="stop-color:#c2185b;stop-opacity:1" />
-                        </linearGradient>
-                      </defs>
-                      <!-- Shackle (Lock handle) -->
-                      <path d="M12 18 V10 C12 6 15 3 20 3 C25 3 28 6 28 10 V18" fill="none" stroke="#ff80ab" stroke-width="4" stroke-linecap="round" />
-                      <!-- Wallet Body -->
-                      <rect x="6" y="15" width="28" height="20" rx="6" fill="url(#walletGradient)" />
-                      <!-- Stitching or Detail line -->
-                      <rect x="6" y="20" width="28" height="2" fill="#880e4f" opacity="0.2" />
-                      <!-- Keyhole -->
-                      <circle cx="20" cy="24" r="3.5" fill="white" />
-                      <path d="M18 24 L22 24 L24 31 L16 31 Z" fill="white" />
-                    </svg>
-                  </div>
-                  <span class="dash-card-title" style="color: rgba(255,255,255,0.7) !important">Saldo No Disponible</span>
-                </div>
-                <span class="dash-card-value" style="color: #fff !important; font-size: 28px !important">S/ {{ (_balance || 0).toLocaleString('es-PE', { minimumFractionDigits: 2 }) }}</span>
-                <span class="dash-card-subtitle" style="color: rgba(255,255,255,0.6) !important">Activate antes del cierre <br><span class="magenta-text">para liberarlo</span></span>
-              </div>
             </div>
           </div>
 
