@@ -2419,6 +2419,18 @@
   padding: 12px 20px !important;
 }
 
+.bono-ahorro-card-link {
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+.bono-ahorro-card-link:hover,
+.bono-ahorro-card-link:focus {
+  text-decoration: none;
+  color: inherit;
+}
+
 .piggy-bank-container {
   width: 100px;
   height: 90px;

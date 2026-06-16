@@ -431,7 +431,7 @@
           </div>
 
           <!-- 9. Bono Ahorro -->
-          <div class="info-card bono-ahorro-card">
+          <router-link to="/savings-bonus" class="info-card bono-ahorro-card bono-ahorro-card-link">
             <div class="info-content-horizontal">
               <div class="info-text-side">
                 <span class="dash-card-title">Bono Ahorro</span>
@@ -484,7 +484,7 @@
                 </svg>
               </div>
             </div>
-          </div>
+          </router-link>
         </div>
       </div>
     </div>
