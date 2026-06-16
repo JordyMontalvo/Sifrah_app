@@ -295,3 +295,141 @@ input[type="checkbox"]:checked
 @media (max-width: 768px)
   .register-title-form
     display none
+
+// Pantalla de confirmación (registro por patrocinador)
+.register-success
+  max-width 520px
+  margin 0 auto
+  padding 24px 16px 32px
+  text-align center
+
+.success-icon-wrap
+  display flex
+  justify-content center
+  margin-bottom 16px
+
+.success-icon-circle
+  width 72px
+  height 72px
+  border-radius 50%
+  background linear-gradient(135deg, #43a047 0%, #2e7d32 100%)
+  display flex
+  align-items center
+  justify-content center
+  box-shadow 0 8px 24px rgba(46, 125, 50, 0.25)
+
+  i
+    color #fff
+    font-size 2rem
+
+.success-title
+  margin 0 0 8px
+  font-size 1.75rem
+  font-weight 700
+  color #2e7d32
+
+.success-subtitle
+  margin 0 0 24px
+  color #555
+  font-size 1rem
+
+.success-user-card
+  background linear-gradient(135deg, #e8f5e9 0%, #f1f8e9 100%)
+  border 1px solid #c8e6c9
+  border-radius 16px
+  padding 20px 16px
+  margin-bottom 20px
+
+.success-user-avatar
+  width 48px
+  height 48px
+  margin 0 auto 12px
+  border-radius 50%
+  background #fff
+  border 2px solid #a5d6a7
+  display flex
+  align-items center
+  justify-content center
+
+  i
+    color #43a047
+    font-size 1.25rem
+
+.success-user-label
+  margin 0 0 6px
+  color #333
+  font-size 0.95rem
+
+.success-user-dni
+  margin 0 0 4px
+  font-size 1.75rem
+  font-weight 700
+  color #2e7d32
+  letter-spacing 0.5px
+
+.success-user-hint
+  margin 0
+  color #666
+  font-size 0.85rem
+
+.success-info-box
+  display flex
+  align-items flex-start
+  gap 10px
+  text-align left
+  background #e3f2fd
+  border 1px solid #90caf9
+  border-radius 12px
+  padding 14px 16px
+  margin-bottom 24px
+  color #1565c0
+  font-size 0.92rem
+  line-height 1.4
+
+  i
+    flex-shrink 0
+    margin-top 2px
+    font-size 1.1rem
+
+.success-home-btn
+  display inline-flex
+  align-items center
+  justify-content center
+  gap 10px
+  width 100%
+  max-width 460px
+  margin 0 auto 16px
+
+.success-session-note
+  margin 0 0 24px
+  color #666
+  font-size 0.88rem
+  line-height 1.45
+  max-width 420px
+  margin-left auto
+  margin-right auto
+
+.success-help
+  margin-bottom 20px
+  padding-top 16px
+  border-top 1px solid #eee
+
+  p
+    margin 0
+    color #777
+    font-size 0.9rem
+    line-height 1.4
+
+@media (max-width: 768px)
+  .register-success
+    padding 16px 12px 24px
+
+  .success-title
+    font-size 1.5rem
+
+  .success-user-dni
+    font-size 1.5rem
+
+  .success-home-btn
+    width 90%
+    max-width 400px

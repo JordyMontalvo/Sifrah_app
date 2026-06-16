@@ -116,6 +116,16 @@ import App from "@/views/layouts/App";
 import api from "@/api";
 import Swal from "sweetalert2";
 
+const FALLBACK_STORE_CATEGORIES = [
+  { name: "Productos SIFRAH", icon: "fas fa-leaf", color: "#e3f2fd", order: 1 },
+  { name: "Bienestar", icon: "fas fa-heart", color: "#fce4ec", order: 2 },
+  { name: "Hogar", icon: "fas fa-home", color: "#fff3e0", order: 3 },
+  { name: "Tecnología", icon: "fas fa-laptop", color: "#e0f2f1", order: 4 },
+  { name: "Herramientas", icon: "fas fa-tools", color: "#efebe9", order: 5 },
+  { name: "Electrodomésticos", icon: "fas fa-blender", color: "#f1f8e9", order: 6 },
+  { name: "Promociones", icon: "fas fa-tag", color: "#fffde7", order: 7 },
+];
+
 export default {
   components: {
     App,
@@ -127,23 +137,60 @@ export default {
       selectedCategory: "Todos",
       searchTerm: "",
       featuredProducts: [],
-      activeCatalogTab: "all", // 'bonus', 'sifrah', 'all'
-      visualCategories: [
-        { name: "Todos", icon: "fas fa-th", color: "#f1f2f6" },
-        { name: "Productos SIFRAH", icon: "fas fa-leaf", color: "#e3f2fd" },
-        { name: "Bienestar", icon: "fas fa-heart", color: "#fce4ec" },
-        { name: "Hogar", icon: "fas fa-home", color: "#fff3e0" },
-        { name: "Tecnología", icon: "fas fa-laptop", color: "#e0f2f1" },
-        { name: "Herramientas", icon: "fas fa-tools", color: "#efebe9" },
-        { name: "Electrodomésticos", icon: "fas fa-blender", color: "#f1f8e9" },
-        { name: "Promociones", icon: "fas fa-tag", color: "#fffde7" },
-      ],
+      activeCatalogTab: "all",
+      apiCategories: [],
     };
   },
   computed: {
     session() { return this.$store.state.session; },
     office_id() { return this.$store.state.office_id; },
     title() { return "Bono Ahorro"; },
+    visualCategories() {
+      const todos = { name: "Todos", icon: "fas fa-th", color: "#f1f2f6", id: null };
+      const apiCats = (this.apiCategories || []).map((c) => ({
+        id: c.id,
+        name: c.name,
+        icon: c.icon || "fas fa-tag",
+        color: c.color || "#f1f2f6",
+        order: Number(c.order) || 0,
+      }));
+
+      const apiNames = new Set(apiCats.map((c) => c.name));
+      const fallbackCats = FALLBACK_STORE_CATEGORIES.filter((c) => !apiNames.has(c.name)).map((c) => ({
+        ...c,
+        id: null,
+      }));
+
+      let baseProducts = this.featuredProducts;
+      if (this.activeCatalogTab === "bonus") {
+        baseProducts = baseProducts.filter((p) => p.catalog_type === "savings");
+      } else if (this.activeCatalogTab === "sifrah") {
+        baseProducts = baseProducts.filter(
+          (p) => p.catalog_type === "both" || p.catalog_type === "sifrah"
+        );
+      }
+
+      const knownNames = new Set([...apiNames, ...fallbackCats.map((c) => c.name)]);
+      const legacyTypes = [...new Set(baseProducts.map((p) => p.type).filter(Boolean))]
+        .filter((t) => !knownNames.has(t))
+        .map((name) => ({
+          name,
+          icon: "fas fa-box",
+          color: "#f1f2f6",
+          id: null,
+          order: 99,
+        }));
+
+      const merged = [...apiCats, ...fallbackCats, ...legacyTypes].sort(
+        (a, b) => (Number(a.order) || 0) - (Number(b.order) || 0)
+      );
+
+      return [todos, ...merged];
+    },
+    selectedCategoryObj() {
+      if (this.selectedCategory === "Todos") return null;
+      return this.visualCategories.find((c) => c.name === this.selectedCategory) || null;
+    },
     filteredProducts() {
       // 1. Filtrar por pestaña de catálogo
       let baseProducts = this.featuredProducts;
@@ -154,25 +201,22 @@ export default {
       }
 
       // 2. Filtrar por búsqueda y categoría
-      return baseProducts.filter(p => {
-        const matchesSearch = p.name.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-          p.type.toLowerCase().includes(this.searchTerm.toLowerCase());
-        const matchesCategory = this.selectedCategory === "Todos" || p.type === this.selectedCategory;
+      return baseProducts.filter((p) => {
+        const matchesSearch =
+          p.name.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+          (p.type || "").toLowerCase().includes(this.searchTerm.toLowerCase());
+        const cat = this.selectedCategoryObj;
+        const matchesCategory =
+          this.selectedCategory === "Todos" ||
+          p.type === this.selectedCategory ||
+          (this.selectedCategory === "Productos SIFRAH" &&
+            (p.catalog_type === "both" || p.catalog_type === "sifrah") &&
+            !p.is_promotion) ||
+          (this.selectedCategory === "Promociones" && p.is_promotion) ||
+          (cat && cat.id && p.savings_category_id === cat.id);
         return matchesSearch && matchesCategory;
       });
     },
-    categories() {
-      // Las categorías deben ser dinámicas según la pestaña activa
-      let baseProducts = this.featuredProducts;
-      if (this.activeCatalogTab === 'bonus') {
-        baseProducts = baseProducts.filter(p => p.catalog_type === 'savings');
-      } else if (this.activeCatalogTab === 'sifrah') {
-        baseProducts = baseProducts.filter(p => p.catalog_type === 'both' || p.catalog_type === 'sifrah');
-      }
-      
-      const cats = new Set(baseProducts.map(p => p.type));
-      return ["Todos", ...Array.from(cats).filter(Boolean)];
-    }
   },
   async created() {
     await this.fetchData();
@@ -199,6 +243,9 @@ export default {
         if (productsData && !productsData.error) {
           if (productsData.products) {
             this.featuredProducts = productsData.products;
+          }
+          if (productsData.categories) {
+            this.apiCategories = productsData.categories;
           }
           if (productsData.savingsBalance != null) {
             this.sifrahBalance = Number(productsData.savingsBalance) || 0;

@@ -1,6 +1,67 @@
 <template>
   <Auth>
-    <section>
+    <section v-if="showSuccess" class="register-success">
+      <div class="success-icon-wrap">
+        <div class="success-icon-circle">
+          <i class="fas fa-check"></i>
+        </div>
+      </div>
+
+      <h1 class="success-title">¡Registro exitoso!</h1>
+      <p class="success-subtitle">La cuenta se ha creado correctamente.</p>
+
+      <div class="success-user-card">
+        <div class="success-user-avatar">
+          <i class="fas fa-user"></i>
+        </div>
+        <p class="success-user-label">Usuario registrado:</p>
+        <p class="success-user-dni">{{ registeredDni }}</p>
+        <p class="success-user-hint">(Documento de identidad)</p>
+      </div>
+
+      <div class="success-info-box">
+        <i class="fas fa-info-circle"></i>
+        <span>No olvide la contraseña registrada durante el proceso.</span>
+      </div>
+
+      <button class="register-button success-home-btn" @click="goToHome">
+        <i class="fas fa-home"></i>
+        Regresar al inicio
+      </button>
+
+      <p class="success-session-note">
+        Usted seguirá conectado en su cuenta actual y puede seguir registrando más personas.
+      </p>
+
+      <div class="success-help">
+        <p>¿Necesitas ayuda? Contáctanos por nuestros canales oficiales.</p>
+      </div>
+
+      <div class="social">
+        <a
+          class="fab fa-facebook-square social-icon facebook"
+          :href="fb"
+          target="_blank"
+        ></a>
+        <a
+          class="fab fa-youtube social-icon youtube"
+          :href="yt"
+          target="_blank"
+        ></a>
+        <a
+          class="fab fa-tiktok social-icon tiktok"
+          :href="tk"
+          target="_blank"
+        ></a>
+        <a
+          class="fab fa-whatsapp social-icon whatsapp"
+          :href="wsp_pe"
+          target="_blank"
+        ></a>
+      </div>
+    </section>
+
+    <section v-else>
       <div class="register-title-form">
         <h1>REGÍSTRATE</h1>
       </div>
@@ -603,6 +664,9 @@ export default {
       alert: null,
       disabled: false,
       show: false,
+      showSuccess: false,
+      registeredDni: null,
+      sponsorSession: null,
     };
   },
   filters: {
@@ -643,11 +707,9 @@ export default {
     },
   },
   created() {
-    console.log("Register");
-
     this.code = this.$route.params.code;
+    this.sponsorSession = localStorage.getItem("session") || this.$store.state.session || null;
     
-    // Si viene código en la URL, pre-llenarlo en el campo de patrocinador
     if (this.code) {
       this.sponsorCode = this.code;
       this.disabled = true;
@@ -655,21 +717,11 @@ export default {
 
     setTimeout(() => {
       const logoAuth = document.getElementById("logo-auth");
-      console.log(logoAuth);
-      logoAuth.style.order = 1;
+      if (logoAuth) logoAuth.style.order = 1;
 
       const contentAuth = document.getElementById("content-auth");
-      console.log(contentAuth);
-      contentAuth.style.order = 0;
+      if (contentAuth) contentAuth.style.order = 0;
     }, 100);
-
-    // const logoAuth = document.getElementById("logo-auth");
-    // console.log(logoAuth);
-    // logoAuth.style.order = 1;
-
-    // const contentAuth = document.getElementById("content-auth");
-    // console.log(contentAuth);
-    // contentAuth.style.order = 0;
   },
   watch: {
     /* async dni(dni) {
@@ -763,7 +815,7 @@ export default {
       this.sending = true;
 
       try {
-        const { data } = await api.register({
+        const payload = {
           dni,
           name,
           lastName,
@@ -774,7 +826,13 @@ export default {
           code: sponsorCode,
           department,
           province,
-        });
+        };
+
+        if (this.sponsorSession) {
+          payload.sponsorSession = this.sponsorSession;
+        }
+
+        const { data } = await api.register(payload);
 
         this.sending = false;
 
@@ -783,15 +841,14 @@ export default {
           return;
         }
 
-        const session = localStorage.getItem("session");
-        if (session) {
-          localStorage.removeItem("session");
-          api.logout(this.session);
+        if (data.sponsorRegistration) {
+          this.registeredDni = data.registeredDni || dni;
+          this.showSuccess = true;
+          return;
         }
 
         this.$store.commit("SET_SESSION", data.session);
         
-        // Redirigir según el estado de afiliación
         if (data.affiliated) {
           this.$router.push("/dashboard");
         } else {
@@ -800,6 +857,17 @@ export default {
       } catch (err) {
         this.sending = false;
         this.alert = "Error al registrar. Por favor intenta nuevamente.";
+      }
+    },
+
+    goToHome() {
+      const affiliated = this.$store.state.affiliated;
+      if (affiliated) {
+        this.$router.push("/dashboard");
+      } else if (this.sponsorSession) {
+        this.$router.push("/affiliation");
+      } else {
+        this.$router.push("/login");
       }
     },
 
