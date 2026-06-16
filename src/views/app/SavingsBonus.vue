@@ -156,9 +156,21 @@ export default {
         );
       }
 
-      const knownNames = new Set(apiNames);
-      const legacyTypes = [...new Set(baseProducts.map((p) => p.type).filter(Boolean))]
-        .filter((t) => !knownNames.has(t))
+      // Solo productos exclusivos de canje sin categoría asignada generan pestañas legacy
+      const legacyTypes = [
+        ...new Set(
+          baseProducts
+            .filter(
+              (p) =>
+                p.catalog_type === "savings" &&
+                !p.is_promotion &&
+                !p.savings_category_id &&
+                p.type
+            )
+            .map((p) => p.type)
+        ),
+      ]
+        .filter((t) => !apiNames.has(t))
         .map((name) => ({
           name,
           icon: "fas fa-box",
@@ -194,12 +206,15 @@ export default {
         const cat = this.selectedCategoryObj;
         const matchesCategory =
           this.selectedCategory === "Todos" ||
-          p.type === this.selectedCategory ||
           (this.selectedCategory === "Productos SIFRAH" &&
             (p.catalog_type === "both" || p.catalog_type === "sifrah") &&
             !p.is_promotion) ||
           (this.selectedCategory === "Promociones" && p.is_promotion) ||
-          (cat && cat.id && p.savings_category_id === cat.id);
+          (cat && cat.id && p.savings_category_id === cat.id) ||
+          (p.catalog_type === "savings" &&
+            !p.is_promotion &&
+            !p.savings_category_id &&
+            p.type === this.selectedCategory);
         return matchesSearch && matchesCategory;
       });
     },
