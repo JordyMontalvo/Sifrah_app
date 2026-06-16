@@ -116,16 +116,6 @@ import App from "@/views/layouts/App";
 import api from "@/api";
 import Swal from "sweetalert2";
 
-const FALLBACK_STORE_CATEGORIES = [
-  { name: "Productos SIFRAH", icon: "fas fa-leaf", color: "#e3f2fd", order: 1 },
-  { name: "Bienestar", icon: "fas fa-heart", color: "#fce4ec", order: 2 },
-  { name: "Hogar", icon: "fas fa-home", color: "#fff3e0", order: 3 },
-  { name: "Tecnología", icon: "fas fa-laptop", color: "#e0f2f1", order: 4 },
-  { name: "Herramientas", icon: "fas fa-tools", color: "#efebe9", order: 5 },
-  { name: "Electrodomésticos", icon: "fas fa-blender", color: "#f1f8e9", order: 6 },
-  { name: "Promociones", icon: "fas fa-tag", color: "#fffde7", order: 7 },
-];
-
 export default {
   components: {
     App,
@@ -156,10 +146,6 @@ export default {
       }));
 
       const apiNames = new Set(apiCats.map((c) => c.name));
-      const fallbackCats = FALLBACK_STORE_CATEGORIES.filter((c) => !apiNames.has(c.name)).map((c) => ({
-        ...c,
-        id: null,
-      }));
 
       let baseProducts = this.featuredProducts;
       if (this.activeCatalogTab === "bonus") {
@@ -170,7 +156,7 @@ export default {
         );
       }
 
-      const knownNames = new Set([...apiNames, ...fallbackCats.map((c) => c.name)]);
+      const knownNames = new Set(apiNames);
       const legacyTypes = [...new Set(baseProducts.map((p) => p.type).filter(Boolean))]
         .filter((t) => !knownNames.has(t))
         .map((name) => ({
@@ -181,7 +167,7 @@ export default {
           order: 99,
         }));
 
-      const merged = [...apiCats, ...fallbackCats, ...legacyTypes].sort(
+      const merged = [...apiCats, ...legacyTypes].sort(
         (a, b) => (Number(a.order) || 0) - (Number(b.order) || 0)
       );
 
