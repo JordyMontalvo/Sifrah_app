@@ -1,5 +1,5 @@
 <template>
-  <div class="auth" :class="{ 'register-page': $route.path.startsWith('/register') }">
+  <div class="auth" :class="{ 'register-page': $route.path.startsWith('/register'), 'office-embed': isOfficeEmbed }">
     <!-- Frase para móvil en el fondo fucsia -->
     <div class="mobile-welcome-text">
       <h1 class="mobile-welcome-title">BIENVENIDO</h1>
@@ -68,6 +68,14 @@
 <script>
 export default {
   computed: {
+    isOfficeEmbed() {
+      const q = this.$route.query || {};
+      return !!(
+        this.$route.params.id ||
+        q.office_id ||
+        q.embed === "office"
+      );
+    },
     // msn()  { return this.$store.state.msn },
     // wsp()  { return this.$store.state.wsp_bo },
     wsp() {

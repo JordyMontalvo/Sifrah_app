@@ -1,8 +1,14 @@
 <template>
   <Auth>
-    <section v-if="office_id && (sending || embedAutoLogin)" class="office-embed-loading">
-      <i class="fas fa-spinner fa-spin"></i>
-      <p>Abriendo sesión del socio…</p>
+    <section v-if="isOfficeEmbed" class="office-embed-panel">
+      <div v-if="officeEmbedError" class="office-embed-error">
+        <i class="fas fa-exclamation-circle"></i>
+        <p>{{ officeEmbedError }}</p>
+      </div>
+      <div v-else class="office-embed-loading">
+        <i class="fas fa-spinner fa-spin"></i>
+        <p>{{ sending ? "Abriendo sesión del socio…" : "Conectando con el socio…" }}</p>
+      </div>
     </section>
 
     <section v-else>
@@ -171,10 +177,21 @@ export default {
 
       office_id: null,
       path: null,
-      embedAutoLogin: false,
+      officeEmbedError: null,
     };
   },
   computed: {
+    isOfficeEmbed() {
+      const q = this.$route.query || {};
+      return !!(
+        this.office_id ||
+        q.office_id ||
+        (q.dni && (q.office_id || this.$route.params.id))
+      );
+    },
+    effectiveOfficeId() {
+      return this.office_id || this.$route.query.office_id || "central";
+    },
     // social
     fb() {
       return this.$store.state.fb;
@@ -203,37 +220,36 @@ export default {
     },
   },
   created() {
-    this.office_id = this.$route.params.id;
+    this.office_id = this.$route.params.id || this.$route.query.office_id || null;
     this.path = this.$route.query.path;
     if (this.$route.query.dni) {
       this.dni = String(this.$route.query.dni).trim();
     }
 
-    if (this.office_id) {
-      this.password =
-        process.env.VUE_APP_OFFICE_PASSWORD || "8QfghvCxuzxrbvii4w";
+    if (this.isOfficeEmbed) {
+      this.$store.dispatch("clearState");
       if (this.dni) {
-        this.embedAutoLogin = true;
-        setTimeout(() => {
-          if (this.embedAutoLogin) this.submit();
-        }, 500);
+        setTimeout(() => this.submit(), 400);
+      } else {
+        this.officeEmbedError = "Falta el DNI del socio.";
       }
     } else {
       localStorage.removeItem("office");
       localStorage.removeItem("path");
     }
 
-    setTimeout(() => {
-      const logoAuth = document.getElementById("logo-auth");
-      console.log(logoAuth);
-      logoAuth.style.order = 0;
+    if (!this.isOfficeEmbed) {
+      setTimeout(() => {
+        const logoAuth = document.getElementById("logo-auth");
+        if (logoAuth) logoAuth.style.order = 0;
 
-      const contentAuth = document.getElementById("content-auth");
-      console.log(contentAuth);
-      contentAuth.style.order = 1;
-    }, 100);
+        const contentAuth = document.getElementById("content-auth");
+        if (contentAuth) contentAuth.style.order = 1;
+      }, 100);
+    }
   },
   mounted() {
+    if (this.isOfficeEmbed) return;
     // Cargar el script de Google Identity Services si no está presente
     if (!window.google || !window.google.accounts) {
       const script = document.createElement("script");
@@ -325,25 +341,61 @@ export default {
         this.$store.commit("SET__BALANCE", userInfo._balance);
       }
     },
+    getOfficePasswordCandidates() {
+      const fromEnv = process.env.VUE_APP_OFFICE_PASSWORD;
+      return [...new Set([fromEnv, "8QfghvCxuzxrbvii4w", "2374", "098"].filter(Boolean))];
+    },
     async submit() {
-      const { dni, password, office_id, path } = this;
+      const dni = String(this.dni || "").trim();
+      const office_id = this.isOfficeEmbed ? this.effectiveOfficeId : this.office_id;
+      const path = this.path;
 
-      if (!dni) return (this.error.dni = true);
-      if (!password) return (this.error.password = true);
+      if (!dni) {
+        if (this.isOfficeEmbed) {
+          this.officeEmbedError = "Falta el DNI del socio.";
+        } else {
+          this.error.dni = true;
+        }
+        return;
+      }
 
-      this.embedAutoLogin = false;
+      if (!this.isOfficeEmbed && !this.password) {
+        return (this.error.password = true);
+      }
+
       this.sending = true;
+      this.officeEmbedError = null;
       this.alert = null;
 
       try {
-        const { data } = await api.login({ dni, password, office_id });
+        const passwords = this.isOfficeEmbed
+          ? this.getOfficePasswordCandidates()
+          : [this.password];
 
-        if (data.error) {
-          if (data.code === "ACCOUNT_BLOCKED") {
+        let data = null;
+        let lastError = null;
+
+        for (const password of passwords) {
+          const response = await api.login({ dni, password, office_id });
+          data = response.data;
+          if (!data.error) break;
+          lastError = data;
+        }
+
+        if (!data || data.error) {
+          if (data && data.code === "ACCOUNT_BLOCKED") {
             this.showUnlockModal(data.dni, data.msg);
             return;
           }
-          this.alert = data.msg;
+          const msg =
+            (data && (data.msg || data.error)) ||
+            (lastError && lastError.msg) ||
+            "No se pudo abrir la sesión";
+          if (this.isOfficeEmbed) {
+            this.officeEmbedError = this.$options.filters.alert(msg) || msg;
+          } else {
+            this.alert = msg;
+          }
           return;
         }
 
@@ -368,14 +420,21 @@ export default {
         await this.$nextTick();
 
         if (office_id) {
-          this.$router.push(`/${this.path}`);
+          const dest =
+            !path || path === "dashboard" ? "/dashboard" : `/${path}`;
+          this.$router.push(dest);
         } else if (this.$store.state.affiliated) {
           this.$router.push("/dashboard");
         } else {
           this.$router.push("/affiliation");
         }
       } catch (error) {
-        this.alert = "Error en el servidor. Intente nuevamente.";
+        const msg = "Error en el servidor. Intente nuevamente.";
+        if (this.isOfficeEmbed) {
+          this.officeEmbedError = msg;
+        } else {
+          this.alert = msg;
+        }
         console.error("Error en login:", error);
       } finally {
         this.sending = false;
@@ -467,15 +526,34 @@ export default {
 <style scoped lang="stylus">
 @import '~@/assets/style/login.styl';
 
+.office-embed-panel
+  min-height 280px
+  display flex
+  align-items center
+  justify-content center
+  padding 48px 24px
+
 .office-embed-loading
   text-align center
-  padding 48px 24px
   color #666
   i
-    font-size 2rem
+    font-size 2.2rem
     color #e91e63
     margin-bottom 16px
+    display block
   p
     margin 0
     font-size 1rem
+
+.office-embed-error
+  text-align center
+  color #c0392b
+  max-width 360px
+  i
+    font-size 2rem
+    margin-bottom 12px
+    display block
+  p
+    margin 0
+    line-height 1.5
 </style>

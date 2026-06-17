@@ -60,12 +60,6 @@ const routes = [
     meta: { public: true, requiresAuth: false }
   },
 
-  // Catch-all - debe estar DESPUÉS de las rutas públicas
-  {
-    path: '*',
-    redirect: '/login'
-  },
-
   // Redirección por defecto para usuarios autenticados
   {
     path: '/',
@@ -306,6 +300,12 @@ const routes = [
     path: '/boleta',
     component: BoletaView,
     meta: { requiresAuth: false }
+  },
+
+  // Catch-all al final (no debe ir antes de /login/:id ni otras rutas)
+  {
+    path: '*',
+    redirect: '/login'
   }
 ]
 
@@ -378,6 +378,17 @@ router.beforeEach(async (to, from, next) => {
 
   // Si es usuario de oficina, manejar redirección especial
   if (office_id && path) {
+    const isOfficeLoginRoute =
+      to.path.startsWith("/login/") &&
+      (to.params.id || to.query.office_id || to.query.embed === "office");
+    const embedDni = to.query.dni ? String(to.query.dni).trim() : "";
+
+    // Permitir login embebido del admin aunque quede sesión anterior en el iframe
+    if (isOfficeLoginRoute && embedDni) {
+      next();
+      return;
+    }
+
     if (requiresNoAuth && session) {
       console.log('Router Guard: Usuario de oficina, redirigiendo a', `/${path}`)
       next({ path: `/${path}` })
