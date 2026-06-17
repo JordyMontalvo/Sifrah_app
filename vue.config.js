@@ -4,6 +4,7 @@ module.exports = {
     '@sentry'
   ],
   devServer: {
+    historyApiFallback: true,
     proxy: {
       '/api': {
         target: process.env.VUE_APP_SERVER || 'http://localhost:3000',
