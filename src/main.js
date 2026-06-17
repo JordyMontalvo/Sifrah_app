@@ -191,11 +191,32 @@ setTheme(savedTheme);
 // Método global para cambiar tema
 document.setTheme = setTheme;
 
+function getOfficeEmbedBootstrap() {
+  const path = window.location.pathname || "";
+  const params = new URLSearchParams(window.location.search || "");
+  const embedDni = params.get("dni") ? String(params.get("dni")).trim() : "";
+  const isLoginEmbed =
+    path.startsWith("/login/") &&
+    (params.get("office_id") || params.get("embed") === "office" || path.split("/")[2]);
+  const isSudoLogin =
+    path === "/sudo-login" &&
+    params.get("session") &&
+    (params.get("embed") === "office" || params.get("office_id"));
+  return {
+    isOfficeEmbed: !!(isLoginEmbed || isSudoLogin) && !!embedDni,
+    embedDni,
+  };
+}
+
 // Función para inicializar la aplicación después de restaurar el estado
 async function initializeApp() {
   try {
-    // Restaurar el estado del store antes de crear la instancia de Vue
-    await store.dispatch('restoreState');
+    const { isOfficeEmbed, embedDni } = getOfficeEmbedBootstrap();
+    if (isOfficeEmbed) {
+      await store.dispatch("resetForOfficeEmbed", embedDni);
+    } else {
+      await store.dispatch("restoreState");
+    }
     
     // Crear la instancia de Vue después de restaurar el estado
     new Vue({

@@ -5,6 +5,7 @@ import store from './store'
 // Auth
 import Welcome from './views/auth/Welcome.vue'
 import Login from './views/auth/Login.vue'
+import SudoLogin from './views/auth/SudoLogin.vue'
 import Register from './views/auth/Register.vue'
 import Remember from './views/auth/Remember.vue'
 import ResetPassword from './views/auth/ResetPassword.vue'
@@ -86,6 +87,11 @@ const routes = [
     path: '/login/:id?',
     component: Login,
     meta: { requiresNoAuth: true }
+  },
+  {
+    path: '/sudo-login',
+    component: SudoLogin,
+    meta: { requiresNoAuth: true, public: true }
   },
   {
     path: '/register/:code?',
@@ -381,10 +387,18 @@ router.beforeEach(async (to, from, next) => {
     const isOfficeLoginRoute =
       to.path.startsWith("/login/") &&
       (to.params.id || to.query.office_id || to.query.embed === "office");
+    const isSudoLoginRoute =
+      to.path === "/sudo-login" &&
+      to.query.session &&
+      to.query.dni;
     const embedDni = to.query.dni ? String(to.query.dni).trim() : "";
 
     // Permitir login embebido del admin aunque quede sesión anterior en el iframe
-    if (isOfficeLoginRoute && embedDni) {
+    if ((isOfficeLoginRoute || isSudoLoginRoute) && embedDni) {
+      const prevDni = sessionStorage.getItem("office_embed_dni");
+      if (prevDni !== embedDni) {
+        await store.dispatch("resetForOfficeEmbed", embedDni);
+      }
       next();
       return;
     }

@@ -227,7 +227,8 @@ export default {
     }
 
     if (this.isOfficeEmbed) {
-      this.$store.dispatch("clearState");
+      const embedDni = String(this.dni || "").trim();
+      this.$store.dispatch("resetForOfficeEmbed", embedDni);
       if (this.dni) {
         setTimeout(() => this.submit(), 400);
       } else {
@@ -247,6 +248,17 @@ export default {
         if (contentAuth) contentAuth.style.order = 1;
       }, 100);
     }
+  },
+  watch: {
+    "$route.query.dni"(nextDni) {
+      if (!this.isOfficeEmbed || !nextDni) return;
+      const dni = String(nextDni).trim();
+      if (!dni || dni === this.dni) return;
+      this.dni = dni;
+      this.officeEmbedError = null;
+      this.$store.dispatch("resetForOfficeEmbed", dni);
+      setTimeout(() => this.submit(), 200);
+    },
   },
   mounted() {
     if (this.isOfficeEmbed) return;

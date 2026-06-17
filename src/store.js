@@ -415,9 +415,21 @@ export default new Vuex.Store({
       commit('SET_TOTAL_POINTS', null)
       commit('SET_BALANCE', null)
       commit('SET__BALANCE', null)
+      commit('SET_DNI', null)
 
       // Limpiar estados de los menús
       commit('CLEAR_MENU_STATES')
+    },
+
+  /** Limpia sesión previa al impersonar otro socio desde el admin (iframe). */
+    resetForOfficeEmbed({ dispatch }, embedDni) {
+      const theme = localStorage.getItem('theme')
+      localStorage.clear()
+      if (theme) localStorage.setItem('theme', theme)
+      if (embedDni) {
+        sessionStorage.setItem('office_embed_dni', String(embedDni).trim())
+      }
+      return dispatch('clearState')
     }
   }
 })
