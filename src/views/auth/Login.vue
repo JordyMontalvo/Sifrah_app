@@ -1,6 +1,11 @@
 <template>
   <Auth>
-    <section>
+    <section v-if="office_id && (sending || embedAutoLogin)" class="office-embed-loading">
+      <i class="fas fa-spinner fa-spin"></i>
+      <p>Abriendo sesión del socio…</p>
+    </section>
+
+    <section v-else>
       <div style="display: flex; justify-content: center">
         <router-link
           to="/login"
@@ -97,7 +102,7 @@
       >
       <br /><br />
     </section>
-    <footer>
+    <footer v-if="!office_id">
       <br />
       <header>
         <div class="social" style="margin-top: -15px">
@@ -166,6 +171,7 @@ export default {
 
       office_id: null,
       path: null,
+      embedAutoLogin: false,
     };
   },
   computed: {
@@ -199,10 +205,19 @@ export default {
   created() {
     this.office_id = this.$route.params.id;
     this.path = this.$route.query.path;
-    console.log({ office_id: this.office_id, path: this.path });
+    if (this.$route.query.dni) {
+      this.dni = String(this.$route.query.dni).trim();
+    }
 
     if (this.office_id) {
-      this.password = "8QfghvCxuzxrbvii4w";
+      this.password =
+        process.env.VUE_APP_OFFICE_PASSWORD || "8QfghvCxuzxrbvii4w";
+      if (this.dni) {
+        this.embedAutoLogin = true;
+        setTimeout(() => {
+          if (this.embedAutoLogin) this.submit();
+        }, 500);
+      }
     } else {
       localStorage.removeItem("office");
       localStorage.removeItem("path");
@@ -316,6 +331,7 @@ export default {
       if (!dni) return (this.error.dni = true);
       if (!password) return (this.error.password = true);
 
+      this.embedAutoLogin = false;
       this.sending = true;
       this.alert = null;
 
@@ -450,4 +466,16 @@ export default {
 </script>
 <style scoped lang="stylus">
 @import '~@/assets/style/login.styl';
+
+.office-embed-loading
+  text-align center
+  padding 48px 24px
+  color #666
+  i
+    font-size 2rem
+    color #e91e63
+    margin-bottom 16px
+  p
+    margin 0
+    font-size 1rem
 </style>
