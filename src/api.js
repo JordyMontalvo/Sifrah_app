@@ -2,16 +2,14 @@ import axios from "axios";
 
 // Configuración para diferentes entornos
 const getBaseURL = () => {
-  // Si hay una variable de entorno específica, usarla
+  const isDevelopment = process.env.NODE_ENV === "development";
+  if (isDevelopment) {
+    return "/api";
+  }
   if (process.env.VUE_APP_SERVER) {
     return process.env.VUE_APP_SERVER + "/api";
   }
-
-  // En desarrollo, usar ruta relativa para que funcione con el proxy
-  const isDevelopment = process.env.NODE_ENV === 'development';
-  return isDevelopment
-    ? "/api"  // Ruta relativa - el proxy redirigirá a localhost:3000
-    : "https://sifrah-server-0920254d8662.herokuapp.com/api";
+  return "https://sifrah-server-0920254d8662.herokuapp.com/api";
 };
 
 axios.defaults.baseURL = getBaseURL();

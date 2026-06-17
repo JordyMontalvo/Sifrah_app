@@ -202,8 +202,12 @@ function getOfficeEmbedBootstrap() {
     path === "/sudo-login" &&
     params.get("session") &&
     (params.get("embed") === "office" || params.get("office_id"));
+  const isOfficeEmbedRoute =
+    path === "/office/embed" &&
+    params.get("dni") &&
+    (params.get("embed") === "office" || params.get("office_id"));
   return {
-    isOfficeEmbed: !!(isLoginEmbed || isSudoLogin) && !!embedDni,
+    isOfficeEmbed: !!(isLoginEmbed || isSudoLogin || isOfficeEmbedRoute) && !!embedDni,
     embedDni,
   };
 }

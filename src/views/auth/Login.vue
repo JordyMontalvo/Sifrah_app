@@ -184,9 +184,11 @@ export default {
     isOfficeEmbed() {
       const q = this.$route.query || {};
       return !!(
+        q.embed === "office" ||
         this.office_id ||
         q.office_id ||
-        (q.dni && (q.office_id || this.$route.params.id))
+        this.$route.params.id ||
+        (q.dni && (q.office_id || this.$route.params.id || q.embed === "office"))
       );
     },
     effectiveOfficeId() {
