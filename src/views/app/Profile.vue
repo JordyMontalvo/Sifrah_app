@@ -249,7 +249,11 @@ export default {
       return `${ROOT}/register/${this.token}`;
     },
     photo() {
-      return this.$store.state.photo || 'https://ik.imagekit.io/asu/Lehaim/avatar_bEyc3MFLf.png';
+      const p = this.$store.state.photo;
+      if (!p || p.includes('avatar_cWVgh_GNP.png') || p.includes('avatar_bEyc3MFLf.png')) {
+        return '/avatar.png';
+      }
+      return p;
     },
   },
   async created() {
