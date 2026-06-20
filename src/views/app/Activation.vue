@@ -202,7 +202,7 @@
                           v-if="product.promotion_remaining != null"
                           class="stock-badge"
                         >
-                          Quedan {{ product.promotion_remaining }}
+                          Quedan {{ product.promotion_remaining }} para ti
                         </div>
                         <div class="product-image-container">
                           <img
