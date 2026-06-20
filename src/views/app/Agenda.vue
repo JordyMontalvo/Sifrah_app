@@ -106,48 +106,54 @@
         </div>
 
         <div class="events-timeline">
-          <transition-group name="fade-slide" tag="div">
-            <div
-              v-for="event in filteredEvents"
-              :key="event.id"
-              class="event-row"
-              :data-event-id="String(event.id)"
+          <template v-if="groupedWeekEvents.length">
+            <section
+              v-for="group in groupedWeekEvents"
+              :key="group.key"
+              class="week-events-group"
             >
-              <div class="event-time-col">{{ event.time }}</div>
-              
-              <div class="event-card" :style="eventCardStyle(event)">
-                <div class="event-main">
-                  <div
-                    class="event-icon"
-                    :class="{ 'is-mixta': isMixta(event.modality) }"
-                    :style="eventIconStyle(event)"
-                  >
-                    <template v-if="isMixta(event.modality)">
-                      <i class="fas fa-user-friends"></i>
-                      <i class="fas fa-video"></i>
-                    </template>
-                    <i v-else :class="getModalityIcon(event.modality)"></i>
-                  </div>
-                  <div class="event-info">
-                  <h3>{{ event.title }}</h3>
-                  <p><i class="far fa-clock"></i><span class="event-info-line">{{ event.start }} - {{ event.end }}</span></p>
-                    <p v-if="eventLocationLine(event)"><i class="fas fa-map-marker-alt"></i><span class="event-info-line">{{ eventLocationLine(event) }}</span></p>
-                  </div>
-                </div>
-                <div class="event-more-btn" @click.stop="openEventModal(event)">
-                  <i class="fas fa-ellipsis-h"></i>
-                </div>
+              <h3 class="week-day-heading">{{ group.label }}</h3>
+              <div
+                v-for="event in group.events"
+                :key="event.id"
+                class="event-row"
+                :data-event-id="String(event.id)"
+              >
+                <div class="event-time-col">{{ event.time }}</div>
 
-                <!-- Active Time Indicator -->
-                <div v-if="event.isCurrent" class="now-line"></div>
+                <div class="event-card" :style="eventCardStyle(event)">
+                  <div class="event-main">
+                    <div
+                      class="event-icon"
+                      :class="{ 'is-mixta': isMixta(event.modality) }"
+                      :style="eventIconStyle(event)"
+                    >
+                      <template v-if="isMixta(event.modality)">
+                        <i class="fas fa-user-friends"></i>
+                        <i class="fas fa-video"></i>
+                      </template>
+                      <i v-else :class="getModalityIcon(event.modality)"></i>
+                    </div>
+                    <div class="event-info">
+                      <h3>{{ event.title }}</h3>
+                      <p><i class="far fa-clock"></i><span class="event-info-line">{{ event.start }} - {{ event.end }}</span></p>
+                      <p v-if="eventLocationLine(event)"><i class="fas fa-map-marker-alt"></i><span class="event-info-line">{{ eventLocationLine(event) }}</span></p>
+                    </div>
+                  </div>
+                  <div class="event-more-btn" @click.stop="openEventModal(event)">
+                    <i class="fas fa-ellipsis-h"></i>
+                  </div>
+
+                  <div v-if="event.isCurrent" class="now-line"></div>
+                </div>
               </div>
-            </div>
-          </transition-group>
+            </section>
+          </template>
 
           <!-- Empty State -->
-          <div v-if="filteredEvents.length === 0" class="empty-agenda">
+          <div v-else class="empty-agenda">
             <i class="fas fa-calendar-day"></i>
-            <p>No tienes eventos programados para este día.</p>
+            <p>{{ emptyAgendaMessage }}</p>
           </div>
         </div>
       </main>
@@ -337,12 +343,89 @@ export default {
       }
       return days;
     },
+    isSelectedInCurrentWeekList() {
+      const selected = this.startOfDay(this.selectedDate).getTime();
+      const start = this.todayStart.getTime();
+      const end = this.startOfDay(this.weekListEnd).getTime();
+      return selected >= start && selected <= end;
+    },
+    listRangeStart() {
+      if (this.isSelectedInCurrentWeekList) {
+        return new Date(this.todayStart);
+      }
+      return this.startOfDay(this.selectedDate);
+    },
+    listRangeEnd() {
+      if (this.isSelectedInCurrentWeekList) {
+        return new Date(this.weekListEnd);
+      }
+      return this.getSundayEndOfWeek(this.selectedDate);
+    },
     filteredEvents() {
-      return this.events.filter(e => 
-        e.day === this.selectedDate.getDate() &&
-        e.month === this.selectedDate.getMonth() &&
-        e.year === this.selectedDate.getFullYear()
-      );
+      const start = this.listRangeStart.getTime();
+      const end = this.listRangeEnd.getTime();
+      const todayStart = this.todayStart.getTime();
+
+      return this.events
+        .filter((e) => {
+          if (e.day == null || e.month == null || e.year == null) return false;
+
+          const eventDay = this.startOfDay(new Date(e.year, e.month, e.day));
+          const eventTime = eventDay.getTime();
+
+          if (eventTime < start || eventTime > end) return false;
+
+          if (eventTime === todayStart && this.isEventPast(e)) return false;
+
+          return true;
+        })
+        .sort((a, b) => {
+          const da = new Date(a.year, a.month, a.day);
+          const db = new Date(b.year, b.month, b.day);
+          if (da - db !== 0) return da - db;
+          return String(a.time || "").localeCompare(String(b.time || ""));
+        });
+    },
+    emptyAgendaMessage() {
+      if (this.isSelectedInCurrentWeekList) {
+        return "No tienes eventos pendientes para el resto de esta semana.";
+      }
+      const selected = this.startOfDay(this.selectedDate).getTime();
+      const rangeEnd = this.startOfDay(this.listRangeEnd).getTime();
+      if (selected === rangeEnd) {
+        return "No tienes eventos programados para este día.";
+      }
+      return "No tienes eventos pendientes para los días seleccionados.";
+    },
+    groupedWeekEvents() {
+      const groups = new Map();
+
+      for (const event of this.filteredEvents) {
+        const key = `${event.year}-${event.month}-${event.day}`;
+        if (!groups.has(key)) {
+          const date = new Date(event.year, event.month, event.day);
+          groups.set(key, {
+            key,
+            date,
+            label: this.formatWeekDayLabel(date),
+            events: [],
+          });
+        }
+        groups.get(key).events.push(event);
+      }
+
+      return Array.from(groups.values()).sort((a, b) => a.date - b.date);
+    },
+    todayStart() {
+      const d = new Date();
+      d.setHours(0, 0, 0, 0);
+      return d;
+    },
+    weekListStart() {
+      return new Date(this.todayStart);
+    },
+    weekListEnd() {
+      return this.getSundayEndOfWeek(new Date());
     },
     eventSearchResults() {
       const q = (this.eventSearchQuery || "").trim().toLowerCase();
@@ -439,6 +522,70 @@ export default {
       if (!isNaN(d)) return d;
       const fallback = new Date(s);
       return isNaN(fallback) ? null : fallback;
+    },
+    startOfDay(date) {
+      const d = new Date(date);
+      d.setHours(0, 0, 0, 0);
+      return d;
+    },
+    getSundayEndOfWeek(date) {
+      const base = new Date(date);
+      const day = base.getDay();
+      const daysUntilSunday = day === 0 ? 0 : 7 - day;
+      const sunday = new Date(base);
+      sunday.setDate(base.getDate() + daysUntilSunday);
+      sunday.setHours(23, 59, 59, 999);
+      return sunday;
+    },
+    getEventEndDateTime(event) {
+      if (!event || event.day == null || event.month == null || event.year == null) {
+        return null;
+      }
+      const endRaw = event.end || event.time || "23:59";
+      const parts = String(endRaw).split(":");
+      const hours = parseInt(parts[0], 10);
+      const minutes = parseInt(parts[1], 10) || 0;
+      return new Date(
+        event.year,
+        event.month,
+        event.day,
+        Number.isFinite(hours) ? hours : 23,
+        Number.isFinite(minutes) ? minutes : 59,
+        0,
+        0
+      );
+    },
+    isEventPast(event) {
+      const end = this.getEventEndDateTime(event);
+      return !!(end && end.getTime() < Date.now());
+    },
+    formatWeekDayLabel(date) {
+      const d = this.startOfDay(date);
+      const today = this.todayStart.getTime();
+      const tomorrow = new Date(this.todayStart);
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      const selected = this.startOfDay(this.selectedDate).getTime();
+
+      if (d.getTime() === today) return "Hoy";
+      if (d.getTime() === tomorrow.getTime()) return "Mañana";
+      if (
+        !this.isSelectedInCurrentWeekList &&
+        d.getTime() === selected
+      ) {
+        const label = d.toLocaleDateString("es-ES", {
+          weekday: "long",
+          day: "numeric",
+          month: "long",
+        });
+        return label.charAt(0).toUpperCase() + label.slice(1);
+      }
+
+      const label = d.toLocaleDateString("es-ES", {
+        weekday: "long",
+        day: "numeric",
+        month: "long",
+      });
+      return label.charAt(0).toUpperCase() + label.slice(1);
     },
     async fetchEvents() {
       try {
@@ -565,6 +712,23 @@ export default {
 <style scoped src="../../assets/style/views/app/Agenda.css"></style>
 
 <style scoped>
+.week-events-group {
+  margin-bottom: 28px;
+}
+
+.week-events-group:last-child {
+  margin-bottom: 0;
+}
+
+.week-day-heading {
+  margin: 0 0 14px;
+  padding: 0 4px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--agenda-primary);
+  text-transform: capitalize;
+}
+
 .empty-agenda {
   text-align: center;
   padding: 60px 20px;
