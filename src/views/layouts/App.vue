@@ -54,7 +54,7 @@
           <button
             v-if="token"
             @click.stop="copy_token_code" 
-            class="header-code-button"
+            class="header-code-button header-code-button-mobile"
             style="background: none; border: none; color: white; font-size: 14px; font-weight: 600; cursor: pointer; padding: 0; margin: 0; margin-right: 12px; white-space: nowrap; pointer-events: auto;"
           >
             Cód: {{ token }}
@@ -111,6 +111,20 @@
             Link copiado <i class="fas fa-check" style="color: #4CAF50;"></i>
           </span>
         </div>
+        <router-link to="/agenda" v-if="office_id == null" class="header-icon-link">
+          <svg
+            class="header-icon header-icon-agenda-mobile"
+            width="28"
+            height="28"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            aria-label="Agenda Semanal"
+          >
+            <path d="M7 2V4M17 2V4M4 8H20M5 4H19C20.1046 4 21 4.89543 21 6V20C21 21.1046 20.1046 22 19 22H5C3.89543 22 3 21.1046 3 20V6C3 4.89543 3.89543 4 5 4Z" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M8 12H8.01M12 12H12.01M16 12H16.01M8 16H8.01M12 16H12.01M16 16H16.01" stroke="white" stroke-width="2.2" stroke-linecap="round"/>
+          </svg>
+        </router-link>
         <router-link to="/profile" v-if="office_id == null" class="header-icon-link">
           <!-- Ícono configuración para desktop -->
           <i class="fas fa-cog header-icon header-icon-cog-desktop"></i>
@@ -1864,6 +1878,10 @@ export default {
   display: block;
 }
 
+.header-icon-agenda-mobile {
+  display: none;
+}
+
 /* Estilos para móvil */
 @media (max-width: 767px) {
   .logo-mobile {
@@ -1896,6 +1914,18 @@ export default {
 
   .header-icon-share-desktop {
     display: none;
+  }
+
+  .header-icon-agenda-mobile {
+    display: block;
+  }
+
+  .header-code-button-mobile {
+    display: none !important;
+  }
+
+  .header-center {
+    display: none !important;
   }
 
   .header-dni-mobile {
