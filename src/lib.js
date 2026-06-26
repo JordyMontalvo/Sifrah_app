@@ -3,7 +3,7 @@ import axios from 'axios'
 const getServerURL = () => {
   if (process.env.VUE_APP_SERVER) return process.env.VUE_APP_SERVER;
   if (process.env.NODE_ENV === 'development') return '';
-  return 'https://sifrah-server-0920254d8662.herokuapp.com';
+  return 'https://api.serve-sifrah.xyz';
 };
 
 const SERVER = getServerURL();

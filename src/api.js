@@ -9,7 +9,7 @@ const getBaseURL = () => {
   if (process.env.VUE_APP_SERVER) {
     return process.env.VUE_APP_SERVER + "/api";
   }
-  return "https://sifrah-server-0920254d8662.herokuapp.com/api";
+  return "https://api.serve-sifrah.xyz/api";
 };
 
 axios.defaults.baseURL = getBaseURL();

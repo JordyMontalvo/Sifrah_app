@@ -230,8 +230,8 @@ export default {
       try {
         await this.loadPdfScripts();
         
-        // Proxy URL to bypass CORS (Backend is on Heroku)
-        const BACKEND_URL = 'https://sifrah-server-0920254d8662.herokuapp.com/api';
+        // Proxy URL para evitar CORS. Usa el mismo backend que el resto de la app.
+        const BACKEND_URL = (process.env.VUE_APP_SERVER || 'https://api.serve-sifrah.xyz') + '/api';
         const proxyUrl = `${BACKEND_URL}/pdf-proxy?url=${encodeURIComponent(originalUrl)}`;
 
         this.pdfDoc = await window.pdfjsLib.getDocument(proxyUrl).promise;
