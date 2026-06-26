@@ -649,11 +649,12 @@
                 
                 <!-- Campos de Pago con Comprobante - Fuera del contenedor de métodos -->
                 <div v-if="needsExternalPayment && pay_method === 'bank'" class="voucher-payment-fields">
+                  <!-- Comprobante 1 -->
                   <div class="form-field-simple">
                     <label>Número de Operación/Voucher</label>
                     <input v-model="voucherNumber" type="text" placeholder="Número de Operación/Voucher" @input="onlyNumbers($event, 'voucherNumber')" required />
                   </div>
-                  
+
                   <div class="form-field-simple">
                     <label>Comprobante de Pago</label>
                     <div class="file-upload-simple">
@@ -664,8 +665,19 @@
                       </label>
                     </div>
                     <img v-if="voucherPreview" :src="voucherPreview" class="voucher-preview-img" />
-                    
-                    <div class="file-upload-simple" style="margin-top: 15px;">
+                  </div>
+
+                  <!-- Número de operación del segundo voucher: se genera al subir el segundo comprobante.
+                       Se muestra ARRIBA de su comprobante para mantener el mismo orden que el primero. -->
+                  <div v-if="voucherPreview2" class="form-field-simple">
+                    <label>Número de Operación/Voucher (Comprobante 2)</label>
+                    <input v-model="voucherNumber2" type="text" placeholder="Número de Operación del segundo voucher" @input="onlyNumbers($event, 'voucherNumber2')" required />
+                  </div>
+
+                  <!-- Comprobante 2 (opcional). Al agregarlo, se exige su propio número de operación -->
+                  <div class="form-field-simple">
+                    <label>Segundo Comprobante de Pago (opcional)</label>
+                    <div class="file-upload-simple">
                       <input type="file" accept="image/*" @change="onVoucherFileChange2" id="voucher-file-2" />
                       <label for="voucher-file-2" class="file-label-simple">
                         <i class="fas fa-upload"></i>
@@ -818,6 +830,7 @@ export default {
       bankName: '',
       paymentDate: '',
       voucherNumber: '',
+      voucherNumber2: '',
       // Variables para el desplegable de bancos
       showBankOptions: false,
       selectedBank: '',
@@ -937,7 +950,18 @@ export default {
     },
     
     canProcessOrder() {
-      return this.cartItems.length > 0 && (!this.needsExternalPayment || this.pay_method);
+      if (this.cartItems.length === 0) return false;
+      if (!this.needsExternalPayment) return true;
+      if (!this.pay_method) return false;
+
+      // Pago por transferencia: voucher 1 con su número de operación obligatorios
+      if (this.pay_method === 'bank') {
+        if (!this.voucherNumber || !this.voucherFile) return false;
+        // Si se agregó un segundo comprobante, su número de operación es obligatorio
+        if (this.voucherFile2 && !this.voucherNumber2) return false;
+      }
+
+      return true;
     },
 
     needsExternalPayment() {
@@ -1099,6 +1123,8 @@ export default {
       const pathParts = fieldPath.split('.');
       if (pathParts.length === 2) {
         this[pathParts[0]][pathParts[1]] = value;
+      } else {
+        this[fieldPath] = value;
       }
     },
     
@@ -1462,6 +1488,7 @@ export default {
         if (!file.type || !file.type.startsWith('image/')) {
           this.voucherFile2 = null;
           this.voucherPreview2 = null;
+          this.voucherNumber2 = '';
           if (event && event.target) event.target.value = '';
           const msg = 'Solo se permiten imágenes (JPG, PNG, WEBP, etc.) para el voucher.';
           this.activationError = msg;
@@ -1477,6 +1504,7 @@ export default {
       } else {
         this.voucherFile2 = null;
         this.voucherPreview2 = null;
+        this.voucherNumber2 = '';
       }
     },
     
@@ -1544,9 +1572,10 @@ export default {
           voucher_number: isBankPayment ? this.voucherNumber : null,
         };
         
-        // Solo agregar voucher2 si existe
+        // Solo agregar voucher2 y su número de operación si existe
         if (voucherUrl2) {
           payload.voucher2 = voucherUrl2;
+          payload.voucher_number2 = isBankPayment ? this.voucherNumber2 : null;
         }
 
         if (this.deliveryMethod === 'pickup') {
@@ -1634,6 +1663,13 @@ export default {
           return;
         }
 
+        // Si hay segundo comprobante, su número de operación es obligatorio
+        if (isBankPayment && voucherUrl2 && !this.voucherNumber2) {
+          this.activationError = 'Ingresa el número de operación correspondiente al segundo comprobante de pago.';
+          this.sending = false;
+          return;
+        }
+
         // Si es checkout de afiliación, usar el endpoint de afiliación
         if (isAffiliationCheckout) {
           const affiliationPlan = this.$store.state.affiliationPlan;
@@ -1671,9 +1707,10 @@ export default {
             voucher_number: isBankPayment ? this.voucherNumber : null,
           };
           
-          // Solo agregar voucher2 si existe
+          // Solo agregar voucher2 y su número de operación si existe
           if (voucherUrl2) {
             affiliationPayload.voucher2 = voucherUrl2;
+            affiliationPayload.voucher_number2 = isBankPayment ? this.voucherNumber2 : null;
           }
           
           const { data } = await api.Afiliation.POST(session, affiliationPayload);
@@ -1726,6 +1763,7 @@ export default {
           this.voucherPreview = null;
           this.voucherFile2 = null;
           this.voucherPreview2 = null;
+          this.voucherNumber2 = '';
         }
         
         this.activationError = errMsg;
