@@ -1102,7 +1102,7 @@ export default {
           const script = document.createElement('script');
           script.id = 'izipay-script';
           script.src = 'https://static.micuentaweb.pe/static/js/krypton-client/V4.0/stable/kr-payment-form.min.js';
-          script.setAttribute('kr-public-key', '33003249:testpublickey_IO8H3hAwK70CNBISWnVaXfy9TxsrkNKQEKIqNWj6vrEhc');
+          script.setAttribute('kr-public-key', '33003249:publickey_yekT6W03reoGaKT2dSrjdzE0oBJ2a7X2seEsnusIcExSO');
           script.setAttribute('kr-post-url-success', 'javascript:void(0);');
           
           document.head.appendChild(script);
