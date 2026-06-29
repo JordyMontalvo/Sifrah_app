@@ -609,7 +609,7 @@
                     </div>
                   </div>
                   
-                  <div class="payment-method disabled-payment-method">
+                  <div class="payment-method">
                     <input 
                       type="radio" 
                       id="credit-card" 
@@ -617,12 +617,28 @@
                       value="credit-card"
                       v-model="pay_method"
                       @click="togglePaymentMethod('credit-card')"
-                      disabled
                     />
-                    <label for="credit-card" class="disabled-label">
+                    <label for="credit-card">
                       <i class="fas fa-credit-card"></i>
-                      <span>Tarjeta de Crédito/Débito</span>
+                      <span>Tarjeta de Crédito/Débito (Izipay)</span>
                     </label>
+                  </div>
+                  
+                  <!-- Contenedor Izipay -->
+                  <div v-if="pay_method === 'credit-card'" class="izipay-container" style="margin-top: 15px; text-align: center;">
+                    <div v-if="izipayLoading" style="padding: 20px;">
+                      <i class="fas fa-spinner fa-spin"></i> Cargando pasarela de pago...
+                    </div>
+                    <div v-else-if="izipayError" style="color: red; padding: 20px; font-size: 14px;">
+                      {{ izipayError }}
+                    </div>
+                    <div v-else-if="izipayFormToken" class="kr-embedded" :kr-form-token="izipayFormToken">
+                      <div class="kr-pan"></div>
+                      <div class="kr-expiry"></div>
+                      <div class="kr-security-code"></div>
+                      <button class="kr-payment-button"></button>
+                      <div class="kr-form-error"></div>
+                    </div>
                   </div>
                   
                   <!-- Información del banco seleccionado -->
@@ -749,6 +765,8 @@
 import App from "@/views/layouts/App";
 import api from "@/api";
 import lib from "@/lib";
+import axios from "axios";
+import { mapState } from 'vuex';
 
 export default {
   name: 'Checkout',
@@ -838,7 +856,13 @@ export default {
       activationSuccess: false,
       // Métodos de pago dinámicos
       paymentMethods: [],
-      loadingPaymentMethods: false
+      loadingPaymentMethods: false,
+      
+      // Izipay variables
+      izipayFormToken: null,
+      izipayLoading: false,
+      izipayError: null,
+      izipayTransactionId: null
     }
   },
   
@@ -1032,11 +1056,6 @@ export default {
   methods: {
     // Método para toggle de métodos de pago - permite desmarcar al hacer clic nuevamente
     togglePaymentMethod(method) {
-      // Bloquear la selección de tarjeta de crédito/débito
-      if (method === 'credit-card') {
-        return; // No permitir seleccionar esta opción
-      }
-      
       if (this.pay_method === method) {
         // Si ya está seleccionado, deseleccionar
         this.pay_method = '';
@@ -1051,8 +1070,76 @@ export default {
           this.showBankOptions = false;
           this.selectedBank = '';
         }
+        
+        if (method === 'credit-card') {
+          this.initIzipay();
+        }
       }
       
+    },
+    
+    async initIzipay() {
+      if (this.izipayFormToken) return; // Ya generado
+      this.izipayLoading = true;
+      this.izipayError = null;
+      
+      try {
+        const orderId = `ORDER-${Date.now()}`;
+        const amount = this.finalTotal; // Total a pagar de la compra actual
+        const email = this.billingData.email || (this.$store.state.user ? this.$store.state.user.email : null) || 'cliente@sifrah.com';
+        
+        const response = await axios.post('/app/izipay-token', {
+          amount,
+          email,
+          orderId,
+          customerName: this.billingData.firstName || (this.$store.state.user ? this.$store.state.user.name : null) || 'Cliente'
+        });
+        
+        this.izipayFormToken = response.data.formToken;
+        
+        // Cargar script de Izipay si no existe
+        if (!document.getElementById('izipay-script')) {
+          const script = document.createElement('script');
+          script.id = 'izipay-script';
+          script.src = 'https://static.micuentaweb.pe/static/js/krypton-client/V4.0/stable/kr-payment-form.min.js';
+          script.setAttribute('kr-public-key', '33003249:testpublickey_IO8H3hAwK70CNBISWnVaXfy9TxsrkNKQEKIqNWj6vrEhc');
+          script.setAttribute('kr-post-url-success', 'javascript:void(0);');
+          
+          document.head.appendChild(script);
+          
+          const style = document.createElement('link');
+          style.rel = 'stylesheet';
+          style.href = 'https://static.micuentaweb.pe/static/js/krypton-client/V4.0/ext/classic-reset.css';
+          document.head.appendChild(style);
+          
+          const scriptTheme = document.createElement('script');
+          scriptTheme.src = 'https://static.micuentaweb.pe/static/js/krypton-client/V4.0/ext/classic.js';
+          document.head.appendChild(scriptTheme);
+          
+          script.onload = () => {
+            if (window.KR) {
+              window.KR.onSubmit(this.onIzipaySuccess);
+            }
+          };
+        } else if (window.KR) {
+          window.KR.onSubmit(this.onIzipaySuccess);
+        }
+        
+      } catch (err) {
+        console.error('Error al generar token Izipay:', err);
+        this.izipayError = 'Ocurrió un error al cargar la pasarela de pago.';
+      } finally {
+        this.izipayLoading = false;
+      }
+    },
+    
+    onIzipaySuccess(event) {
+      if (event.clientAnswer.orderStatus === 'PAID') {
+        this.izipayTransactionId = event.clientAnswer.transactions[0].uuid;
+        // Lanzar la activación del lado del sistema local
+        this.submitActivation();
+      }
+      return false; // Prevenir redirección POST estándar
     },
     
     selectBankOption(bank) {
@@ -1521,6 +1608,7 @@ export default {
         const isAffiliationCheckout = this.$store.state.isAffiliationCheckout;
         const needsExternalPayment = this.needsExternalPayment;
         const isBankPayment = needsExternalPayment && this.pay_method === 'bank';
+        const isIzipayPayment = needsExternalPayment && this.pay_method === 'credit-card';
         const effectivePayMethod = needsExternalPayment ? this.pay_method : 'balance';
         
         // Determinar el directorio según el tipo de checkout
@@ -1570,6 +1658,9 @@ export default {
           bank: isBankPayment && this.selectedBank ? this.getBankInfo(this.selectedBank).name : null,
           bank_info: isBankPayment && this.selectedBank ? this.getBankInfo(this.selectedBank) : null,
           voucher_number: isBankPayment ? this.voucherNumber : null,
+          
+          // Izipay transaction details
+          transaction_id: isIzipayPayment ? this.izipayTransactionId : null,
         };
         
         // Solo agregar voucher2 y su número de operación si existe
@@ -1666,6 +1757,12 @@ export default {
         // Si hay segundo comprobante, su número de operación es obligatorio
         if (isBankPayment && voucherUrl2 && !this.voucherNumber2) {
           this.activationError = 'Ingresa el número de operación correspondiente al segundo comprobante de pago.';
+          this.sending = false;
+          return;
+        }
+        
+        if (isIzipayPayment && !payload.transaction_id) {
+          this.activationError = 'El pago con tarjeta no se completó correctamente.';
           this.sending = false;
           return;
         }
