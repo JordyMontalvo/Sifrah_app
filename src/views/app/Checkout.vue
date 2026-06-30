@@ -191,7 +191,7 @@
                       <div class="form-group">
                         <label>Documento</label>
                         <div class="input-with-icon">
-                          <input v-model="deliveryData.document" type="text" placeholder="Nro. de Documento" @input="onlyNumbersDocument($event, 'deliveryData.document')" maxlength="8" required />
+                          <input v-model="deliveryData.document" type="text" placeholder="Nro. de Documento" @input="onlyNumbers($event, 'deliveryData.document')" required />
                           <i class="fas fa-list"></i>
                         </div>
                       </div>
@@ -387,7 +387,7 @@
                     <div class="form-group">
                       <label>Documento</label>
                       <div class="input-with-icon">
-                        <input v-model="proofData.document" type="text" placeholder="Nro. de Documento" @input="onlyNumbersDocument($event, 'proofData.document')" maxlength="8" required />
+                        <input v-model="proofData.document" type="text" placeholder="Nro. de Documento" @input="onlyNumbers($event, 'proofData.document')" required />
                         <i class="fas fa-list"></i>
                       </div>
                     </div>
@@ -919,7 +919,7 @@ export default {
         if (this.deliveryMethod === 'delivery') {
           const basicInfo = this.deliveryData.recipientName && 
                            this.deliveryData.document && 
-                           this.deliveryData.document.length === 8 &&
+                           this.deliveryData.document.length > 0 &&
                            this.deliveryData.recipientPhone &&
                            this.deliveryData.department &&
                            this.deliveryData.province &&
@@ -934,9 +934,9 @@ export default {
         return this.deliveryMethod && this.selectedPickupPoint;
       }
       if (this.currentStep === 2) {
-        // Para boleta solo requiere documento con exactamente 8 números
+        // Para boleta solo requiere documento (números, sin límite de longitud)
         if (this.proofData.type === 'boleta') {
-          return this.proofData.document && this.proofData.document.length === 8;
+          return !!this.proofData.document && this.proofData.document.length > 0;
         }
         // Para factura requiere RUC con exactamente 11 números, Razón Social y Dirección Fiscal
         if (this.proofData.type === 'factura') {
@@ -959,9 +959,9 @@ export default {
 
     
     canProceedToProofStep() {
-      // Para boleta solo requiere documento con exactamente 8 números
+      // Para boleta solo requiere documento (números, sin límite de longitud)
       if (this.proofData.type === 'boleta') {
-        return this.proofData.document && this.proofData.document.length === 8;
+        return !!this.proofData.document && this.proofData.document.length > 0;
       }
       // Para factura requiere RUC con exactamente 11 números, Razón Social y Dirección Fiscal
       if (this.proofData.type === 'factura') {
