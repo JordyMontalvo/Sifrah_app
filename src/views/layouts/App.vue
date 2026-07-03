@@ -153,9 +153,9 @@
             <span
               v-if="birthdaysBadgeCount > 0"
               class="header-notification-badge"
-              :class="{ 'is-urgent': birthdaysTodayCount > 0 }"
+              :class="{ 'is-urgent': true }"
             >
-              {{ birthdaysBadgeCount > 99 ? "99+" : birthdaysBadgeCount }}
+              {{ birthdaysBadgeCount > 9 ? "9+" : birthdaysBadgeCount }}
             </span>
           </span>
         </router-link>
@@ -906,6 +906,7 @@ export default {
       sending: false,
       birthdaysCount: 0,
       birthdaysTodayCount: 0,
+      birthdaysSeenToday: false,
       birthdaysRefreshTimer: null,
     };
   },
@@ -929,6 +930,7 @@ export default {
     },
     "$route.path"(path) {
       if (path === "/birthdays" || path.startsWith("/birthdays/")) {
+        this.markBirthdaysNotificationSeen();
         this.loadBirthdaysCount();
       }
     },
@@ -938,6 +940,12 @@ export default {
     this.checkMobile();
     this.loadBirthdaysCount();
     this.scheduleBirthdaysRefresh();
+    if (
+      this.$route.path === "/birthdays" ||
+      this.$route.path.startsWith("/birthdays/")
+    ) {
+      this.markBirthdaysNotificationSeen();
+    }
     document.addEventListener("visibilitychange", this.onBirthdaysVisibilityChange);
     window.addEventListener('resize', this.checkMobile);
     this.loadTextPosition();
@@ -1083,8 +1091,8 @@ export default {
       return this.$store.state.dni;
     },
     birthdaysBadgeCount() {
-      if (this.birthdaysTodayCount > 0) return this.birthdaysTodayCount;
-      return this.birthdaysCount;
+      if (this.birthdaysSeenToday) return 0;
+      return this.birthdaysTodayCount;
     },
   },
   methods: {
@@ -1144,7 +1152,29 @@ export default {
     checkMobile() {
       this.isMobile = window.innerWidth < 768;
     },
+    getLimaDateKey() {
+      const parts = new Intl.DateTimeFormat("en-CA", {
+        timeZone: "America/Lima",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+      }).formatToParts(new Date());
+      const y = parts.find((p) => p.type === "year").value;
+      const m = parts.find((p) => p.type === "month").value;
+      const d = parts.find((p) => p.type === "day").value;
+      return `${y}-${m}-${d}`;
+    },
+    syncBirthdaysSeenState() {
+      const key = `birthdays_seen_${this.getLimaDateKey()}`;
+      this.birthdaysSeenToday = localStorage.getItem(key) === "1";
+    },
+    markBirthdaysNotificationSeen() {
+      const key = `birthdays_seen_${this.getLimaDateKey()}`;
+      localStorage.setItem(key, "1");
+      this.birthdaysSeenToday = true;
+    },
     async loadBirthdaysCount() {
+      this.syncBirthdaysSeenState();
       const session = this.$store.state.session;
       if (!session || !this.tree || this.office_id != null) {
         this.birthdaysCount = 0;
