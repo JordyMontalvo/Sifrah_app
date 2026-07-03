@@ -299,17 +299,21 @@
 .birthday-detail-view {
   max-width: 520px;
   margin: 0 auto;
-  padding: 0 16px 100px;
+  padding: 0 16px 88px;
 }
 
 .detail-header {
-  display: flex;
+  display: grid;
+  grid-template-columns: 44px 1fr 44px;
   align-items: center;
-  justify-content: space-between;
   padding: 12px 0 20px;
+  border-bottom: 1px solid #f0f0f0;
+  margin-bottom: 8px;
 }
 
 .detail-header h1 {
+  grid-column: 2;
+  text-align: center;
   font-size: 1rem;
   font-weight: 600;
   margin: 0;
@@ -321,9 +325,25 @@
   background: none;
   border: none;
   font-size: 1.1rem;
-  color: #333;
   cursor: pointer;
   padding: 8px;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-back {
+  grid-column: 1;
+  justify-self: start;
+  color: #333;
+}
+
+.btn-close {
+  grid-column: 3;
+  justify-self: end;
+  color: #e91e63;
 }
 
 .profile-overview {
@@ -488,22 +508,21 @@
 }
 
 .btn-flyer-bottom {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
+  width: 100%;
+  margin-top: 8px;
   padding: 16px;
   background: #e91e63;
   color: #fff;
   border: none;
+  border-radius: 12px;
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
-  box-shadow: 0 -4px 16px rgba(233, 30, 99, 0.3);
+  box-shadow: none;
 }
 
 .btn-flyer-bottom:hover {
@@ -530,5 +549,9 @@
   .btn-create-flyer {
     width: 100%;
     justify-content: center;
+  }
+
+  .birthday-detail-view {
+    padding-bottom: 72px;
   }
 }
