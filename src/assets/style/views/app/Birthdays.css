@@ -639,6 +639,8 @@
 
   .card-member {
     gap: 10px;
+    flex: 1;
+    min-width: 0;
   }
 
   .card-avatar {
@@ -671,14 +673,16 @@
   }
 
   .card-date-row {
-    grid-template-columns: 46px 60px 12px;
-    column-gap: 5px;
+    grid-template-columns: 60px 60px 10px;
+    column-gap: 6px;
   }
 
   .date-badge {
     width: 46px;
     height: 46px;
     margin-right: 6px;
+    margin-left: 0;
+    justify-self: end;
   }
 
   .date-badge-day {
