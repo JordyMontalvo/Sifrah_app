@@ -2121,7 +2121,7 @@ export default {
     gap: 2px;
   }
 
-  header {
+  .app > header {
     display: flex;
     justify-content: flex-end;
     align-items: center;

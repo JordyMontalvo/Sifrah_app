@@ -302,7 +302,7 @@
   padding: 0 16px 88px;
 }
 
-.detail-header {
+.birthday-detail-view .detail-header {
   display: grid;
   grid-template-columns: 44px 1fr 44px;
   align-items: center;
@@ -311,7 +311,7 @@
   margin-bottom: 8px;
 }
 
-.detail-header h1 {
+.birthday-detail-view .detail-header h1 {
   grid-column: 2;
   text-align: center;
   font-size: 1rem;
@@ -320,8 +320,8 @@
   color: #1a1a1a;
 }
 
-.btn-back,
-.btn-close {
+.birthday-detail-view .btn-back,
+.birthday-detail-view .btn-close {
   background: none;
   border: none;
   font-size: 1.1rem;
@@ -334,13 +334,13 @@
   justify-content: center;
 }
 
-.btn-back {
+.birthday-detail-view .btn-back {
   grid-column: 1;
   justify-self: start;
   color: #333;
 }
 
-.btn-close {
+.birthday-detail-view .btn-close {
   grid-column: 3;
   justify-self: end;
   color: #e91e63;
