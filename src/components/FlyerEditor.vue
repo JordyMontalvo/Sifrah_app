@@ -313,6 +313,7 @@ export default {
     }
     // Cargar flyers disponibles
     await this.loadFlyers();
+    this.applyRouteQuery();
   },
   methods: {
     loadScriptFont() {
@@ -365,6 +366,29 @@ export default {
         this.availableFlyers = [];
       } finally {
         this.loadingFlyers = false;
+      }
+    },
+
+    applyRouteQuery() {
+      const query = this.$route && this.$route.query ? this.$route.query : {};
+      const categoryQuery = query.category ? String(query.category).trim() : "";
+      const nombreQuery = query.nombre ? String(query.nombre).trim() : "";
+
+      if (categoryQuery) {
+        const match = this.categories.find((cat) => {
+          const normalized = String(cat).toLowerCase();
+          const target = categoryQuery.toLowerCase();
+          return normalized === target || normalized.includes(target) || target.includes(normalized);
+        });
+        if (match) {
+          this.selectedCategory = match;
+        } else {
+          this.selectedCategory = categoryQuery;
+        }
+      }
+
+      if (nombreQuery) {
+        this.nombreSocio = nombreQuery;
       }
     },
     
@@ -1586,13 +1610,19 @@ export default {
 .category-select
   width 100%
   max-width 400px
-  padding 12px 16px
+  padding 12px 40px 12px 16px
   border 1px solid #ddd
   border-radius 8px
   font-size 16px
   background-color white
   cursor pointer
   transition all 0.3s ease
+  appearance none
+  -webkit-appearance none
+  -moz-appearance none
+  background-image url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%23333333' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")
+  background-repeat no-repeat
+  background-position right 18px center
 
   &:focus
     outline none

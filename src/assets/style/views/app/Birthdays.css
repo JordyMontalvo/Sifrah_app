@@ -1,0 +1,534 @@
+.birthdays-view {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 16px 16px 32px;
+}
+
+.birthdays-hero {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.birthdays-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0 0 8px;
+}
+
+.birthdays-title i {
+  color: #e91e63;
+}
+
+.birthdays-subtitle {
+  margin: 0;
+  color: #666;
+  font-size: 0.95rem;
+  line-height: 1.4;
+  max-width: 420px;
+}
+
+.birthdays-hero-action {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.btn-create-flyer {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #e91e63;
+  color: #fff;
+  border: none;
+  border-radius: 24px;
+  padding: 12px 20px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(233, 30, 99, 0.3);
+}
+
+.btn-create-flyer:hover {
+  background: #d81b60;
+}
+
+.flyer-hint {
+  font-size: 0.75rem;
+  color: #999;
+}
+
+.birthdays-list-section {
+  margin-bottom: 20px;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.section-header h2 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin: 0;
+  color: #1a1a1a;
+}
+
+.btn-filter {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  color: #e91e63;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.filter-panel {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 16px;
+  padding: 12px;
+  background: #fafafa;
+  border-radius: 12px;
+}
+
+.filter-search,
+.filter-select {
+  flex: 1;
+  min-width: 160px;
+  padding: 10px 12px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 0.9rem;
+}
+
+.filter-select {
+  padding: 10px 36px 10px 12px;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-color: #fff;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%23333333' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 18px center;
+  cursor: pointer;
+}
+
+.birthdays-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.birthday-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px;
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  text-decoration: none;
+  color: inherit;
+  transition: box-shadow 0.2s;
+}
+
+.birthday-card:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+.card-avatar-wrap {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.card-avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.card-avatar-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f0f0f0;
+  color: #bbb;
+  font-size: 1.2rem;
+}
+
+.badge-today {
+  position: absolute;
+  bottom: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #e91e63;
+  color: #fff;
+  font-size: 0.6rem;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+.card-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.card-name {
+  margin: 0 0 2px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.card-role {
+  margin: 0 0 4px;
+  font-size: 0.8rem;
+  color: #888;
+}
+
+.card-member-since {
+  margin: 0;
+  font-size: 0.72rem;
+  color: #e91e63;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.card-member-since i {
+  font-size: 0.65rem;
+}
+
+.card-date {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.date-badge {
+  background: #fce4ec;
+  color: #c2185b;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 6px 8px;
+  border-radius: 8px;
+  text-align: center;
+  line-height: 1.2;
+  min-width: 48px;
+}
+
+.proximity-label {
+  font-size: 0.72rem;
+  color: #e91e63;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.proximity-label.today {
+  font-weight: 700;
+}
+
+.card-chevron {
+  color: #ccc;
+  font-size: 0.85rem;
+  flex-shrink: 0;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 48px 24px;
+  color: #888;
+}
+
+.empty-state i {
+  font-size: 2.5rem;
+  color: #e91e63;
+  margin-bottom: 12px;
+}
+
+.empty-hint {
+  font-size: 0.85rem;
+  color: #aaa;
+}
+
+.birthdays-info-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  background: #fce4ec;
+  border-radius: 12px;
+  color: #880e4f;
+}
+
+.birthdays-info-banner i {
+  color: #e91e63;
+  margin-top: 2px;
+}
+
+.birthdays-info-banner p {
+  margin: 0;
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
+/* Detail view */
+.birthday-detail-view {
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 0 16px 100px;
+}
+
+.detail-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0 20px;
+}
+
+.detail-header h1 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0;
+  color: #1a1a1a;
+}
+
+.btn-back,
+.btn-close {
+  background: none;
+  border: none;
+  font-size: 1.1rem;
+  color: #333;
+  cursor: pointer;
+  padding: 8px;
+}
+
+.profile-overview {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.profile-avatar-wrap {
+  position: relative;
+  display: inline-block;
+  margin-bottom: 12px;
+}
+
+.profile-avatar {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.profile-avatar-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f0f0f0;
+  color: #bbb;
+  font-size: 2rem;
+}
+
+.birthday-icon-badge {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 28px;
+  height: 28px;
+  background: #e91e63;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 0.75rem;
+  border: 2px solid #fff;
+}
+
+.profile-title h2 {
+  margin: 0 0 8px;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.profile-meta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.profile-meta .role {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.status-pill {
+  font-size: 0.75rem;
+  padding: 3px 10px;
+  border-radius: 12px;
+  background: #eee;
+  color: #666;
+}
+
+.status-pill.active {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.member-since {
+  font-size: 0.8rem;
+  color: #e91e63;
+  margin: 0;
+}
+
+.member-id {
+  color: #999;
+  margin-left: 8px;
+}
+
+.birthday-highlight {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px;
+  background: #fce4ec;
+  border-radius: 12px;
+  margin-bottom: 20px;
+}
+
+.birthday-highlight > i {
+  font-size: 1.5rem;
+  color: #e91e63;
+}
+
+.birthday-date {
+  margin: 0 0 4px;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.birthday-proximity {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #e91e63;
+}
+
+.info-section {
+  margin-bottom: 20px;
+}
+
+.info-section h3 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin: 0 0 12px;
+  color: #1a1a1a;
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.info-label {
+  font-size: 0.85rem;
+  color: #888;
+}
+
+.info-value {
+  font-size: 0.9rem;
+  color: #1a1a1a;
+  text-align: right;
+}
+
+.info-value.points {
+  color: #e91e63;
+  font-weight: 600;
+}
+
+.status-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ccc;
+  margin-right: 6px;
+}
+
+.status-dot.active {
+  background: #4caf50;
+}
+
+.btn-flyer-bottom {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 16px;
+  background: #e91e63;
+  color: #fff;
+  border: none;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 -4px 16px rgba(233, 30, 99, 0.3);
+}
+
+.btn-flyer-bottom:hover {
+  background: #d81b60;
+}
+
+.btn-back-link {
+  display: inline-block;
+  margin-top: 16px;
+  color: #e91e63;
+  font-weight: 600;
+}
+
+@media (max-width: 600px) {
+  .birthdays-hero {
+    flex-direction: column;
+  }
+
+  .birthdays-hero-action {
+    align-items: flex-start;
+    width: 100%;
+  }
+
+  .btn-create-flyer {
+    width: 100%;
+    justify-content: center;
+  }
+}

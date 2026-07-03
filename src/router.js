@@ -44,6 +44,8 @@ import ShareStore from './views/app/ShareStore.vue'
 import Audios from './views/app/Audios.vue'
 import Libros from './views/app/Libros.vue'
 import Agenda from './views/app/Agenda.vue'
+import Birthdays from './views/app/Birthdays.vue'
+import BirthdayDetail from './views/app/BirthdayDetail.vue'
 import UniversidadSifrah from './views/app/UniversidadSifrah.vue'
 import SavingsBonus from './views/app/SavingsBonus.vue'
 import MyRedemptions from './views/app/MyRedemptions.vue'
@@ -291,6 +293,16 @@ const routes = [
   {
     path: '/agenda',
     component: Agenda,
+    meta: { requiresAuth: true, requiresAffiliation: true }
+  },
+  {
+    path: '/birthdays',
+    component: Birthdays,
+    meta: { requiresAuth: true, requiresAffiliation: true }
+  },
+  {
+    path: '/birthdays/:id',
+    component: BirthdayDetail,
     meta: { requiresAuth: true, requiresAffiliation: true }
   },
   {

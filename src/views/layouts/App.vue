@@ -125,6 +125,40 @@
             <path d="M8 12H8.01M12 12H12.01M16 12H16.01M8 16H8.01M12 16H12.01M16 16H16.01" stroke="white" stroke-width="2.2" stroke-linecap="round"/>
           </svg>
         </router-link>
+        <router-link
+          to="/birthdays"
+          v-if="office_id == null && tree"
+          class="header-icon-link header-notification-btn"
+          aria-label="Cumpleaños de mi red"
+        >
+          <span class="header-notification-icon-wrap">
+            <svg
+              class="header-icon header-icon-birthdays-notify"
+              width="28"
+              height="28"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true"
+            >
+              <path
+                d="M18.75 15.71V11.25C18.75 7.93 16.52 5.128 13.375 4.258V3.625C13.375 2.59 12.535 1.75 11.5 1.75C10.465 1.75 9.625 2.59 9.625 3.625V4.258C6.48 5.128 4.25 7.93 4.25 11.25V15.71L2.5 17.46V18.25H20.5V17.46L18.75 15.71Z"
+                fill="white"
+              />
+              <path
+                d="M11.5 21.25C12.8117 21.25 13.888 20.3064 14.117 19.063H8.883C9.112 20.3064 10.1883 21.25 11.5 21.25Z"
+                fill="white"
+              />
+            </svg>
+            <span
+              v-if="birthdaysBadgeCount > 0"
+              class="header-notification-badge"
+              :class="{ 'is-urgent': birthdaysTodayCount > 0 }"
+            >
+              {{ birthdaysBadgeCount > 99 ? "99+" : birthdaysBadgeCount }}
+            </span>
+          </span>
+        </router-link>
         <router-link to="/profile" v-if="office_id == null" class="header-icon-link">
           <!-- Ícono configuración para desktop -->
           <i class="fas fa-cog header-icon header-icon-cog-desktop"></i>
@@ -262,6 +296,9 @@
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M13.613 8.00191C13.613 7.82514 13.681 7.6556 13.802 7.5306C13.923 7.4056 14.0871 7.33537 14.2582 7.33537H21.3549C21.526 7.33537 21.6901 7.4056 21.811 7.5306C21.932 7.6556 22 7.82514 22 8.00191C22 8.17869 21.932 8.34823 21.811 8.47323C21.6901 8.59823 21.526 8.66845 21.3549 8.66845H14.2582C14.0871 8.66845 13.923 8.59823 13.802 8.47323C13.681 8.34823 13.613 8.17869 13.613 8.00191ZM21.3549 11.3346H14.2582C14.0871 11.3346 13.923 11.4048 13.802 11.5298C13.681 11.6548 13.613 11.8244 13.613 12.0011C13.613 12.1779 13.681 12.3475 13.802 12.4725C13.923 12.5975 14.0871 12.6677 14.2582 12.6677H21.3549C21.526 12.6677 21.6901 12.5975 21.811 12.4725C21.932 12.3475 22 12.1779 22 12.0011C22 11.8244 21.932 11.6548 21.811 11.5298C21.6901 11.4048 21.526 11.3346 21.3549 11.3346ZM21.3549 15.3338H16.1936C16.0225 15.3338 15.8584 15.4041 15.7375 15.5291C15.6165 15.6541 15.5485 15.8236 15.5485 16.0004C15.5485 16.1772 15.6165 16.3467 15.7375 16.4717C15.8584 16.5967 16.0225 16.6669 16.1936 16.6669H21.3549C21.526 16.6669 21.6901 16.5967 21.811 16.4717C21.932 16.3467 22 16.1772 22 16.0004C22 15.8236 21.932 15.6541 21.811 15.5291C21.6901 15.4041 21.526 15.3338 21.3549 15.3338ZM10.1687 13.1676C10.809 12.6581 11.2789 11.9543 11.5124 11.1549C11.746 10.3555 11.7315 9.5007 11.471 8.71027C11.2105 7.91983 10.7171 7.23346 10.06 6.74741C9.40281 6.26135 8.61488 6 7.80668 6C6.99849 6 6.21056 6.26135 5.5534 6.74741C4.89625 7.23346 4.40283 7.91983 4.14234 8.71027C3.88186 9.5007 3.86737 10.3555 4.10092 11.1549C4.33447 11.9543 4.80434 12.6581 5.44462 13.1676C3.78175 13.895 2.47129 15.3588 2.02049 17.1668C1.99586 17.2653 1.9934 17.3684 2.01329 17.468C2.03318 17.5677 2.07488 17.6613 2.13521 17.7418C2.19555 17.8222 2.2729 17.8873 2.36135 17.932C2.44979 17.9768 2.54699 18.0001 2.64548 18H12.9679C13.0664 18.0001 13.1636 17.9768 13.252 17.932C13.3405 17.8873 13.4178 17.8222 13.4782 17.7418C13.5385 17.6613 13.5802 17.5677 13.6001 17.468C13.62 17.3684 13.6175 17.2653 13.5929 17.1668C13.1421 15.358 11.8316 13.8941 10.1687 13.1676Z" fill="currentColor"/>
             </svg> Registros
+          </router-link>
+          <router-link to="/birthdays" @click.native="closeAllMenus">
+            <i class="fas fa-birthday-cake"></i> Cumpleaños
           </router-link>
         </div>
 
@@ -612,6 +649,10 @@
               </svg>
               <span>Registros</span>
             </router-link>
+            <router-link to="/birthdays" @click.native="handleNavigationClickAndClose" class="mobile-submenu-item">
+              <i class="fas fa-birthday-cake" style="width: 20px; margin-right: 12px;"></i>
+              <span>Cumpleaños</span>
+            </router-link>
           </div>
 
           <a @click.stop="toggleMobileSubmenu(2)" v-if="tree" class="mobile-menu-item mobile-menu-item-with-submenu" :class="{ 'active': mobileSubmenus[2] }">
@@ -863,6 +904,9 @@ export default {
       isDragging: false,
       dragStart: { x: 0, y: 0 },
       sending: false,
+      birthdaysCount: 0,
+      birthdaysTodayCount: 0,
+      birthdaysRefreshTimer: null,
     };
   },
   watch: {
@@ -879,11 +923,22 @@ export default {
           }
         });
       }
-    }
+    },
+    tree(val) {
+      if (val) this.loadBirthdaysCount();
+    },
+    "$route.path"(path) {
+      if (path === "/birthdays" || path.startsWith("/birthdays/")) {
+        this.loadBirthdaysCount();
+      }
+    },
   },
   created() {
     this.startNotificationLoop();
     this.checkMobile();
+    this.loadBirthdaysCount();
+    this.scheduleBirthdaysRefresh();
+    document.addEventListener("visibilitychange", this.onBirthdaysVisibilityChange);
     window.addEventListener('resize', this.checkMobile);
     this.loadTextPosition();
     window.addEventListener('mousemove', this.onDrag);
@@ -893,6 +948,8 @@ export default {
   },
   beforeDestroy() {
     if (this.notificationTimer) clearInterval(this.notificationTimer);
+    if (this.birthdaysRefreshTimer) clearInterval(this.birthdaysRefreshTimer);
+    document.removeEventListener("visibilitychange", this.onBirthdaysVisibilityChange);
     window.removeEventListener('resize', this.checkMobile);
     window.removeEventListener('mousemove', this.onDrag);
     window.removeEventListener('touchmove', this.onDrag);
@@ -1025,6 +1082,10 @@ export default {
     dni() {
       return this.$store.state.dni;
     },
+    birthdaysBadgeCount() {
+      if (this.birthdaysTodayCount > 0) return this.birthdaysTodayCount;
+      return this.birthdaysCount;
+    },
   },
   methods: {
     getSectionStyle() {
@@ -1082,6 +1143,33 @@ export default {
     },
     checkMobile() {
       this.isMobile = window.innerWidth < 768;
+    },
+    async loadBirthdaysCount() {
+      const session = this.$store.state.session;
+      if (!session || !this.tree || this.office_id != null) {
+        this.birthdaysCount = 0;
+        this.birthdaysTodayCount = 0;
+        return;
+      }
+      try {
+        const { data } = await api.Birthdays.GET(session);
+        if (!data.error && Array.isArray(data.birthdays)) {
+          this.birthdaysCount = data.birthdays.length;
+          this.birthdaysTodayCount = data.birthdays.filter((b) => b.isToday).length;
+        }
+      } catch (e) {
+        console.error("Error loading birthdays count:", e);
+      }
+    },
+    scheduleBirthdaysRefresh() {
+      this.birthdaysRefreshTimer = setInterval(() => {
+        this.loadBirthdaysCount();
+      }, 60 * 60 * 1000);
+    },
+    onBirthdaysVisibilityChange() {
+      if (document.visibilityState === "visible") {
+        this.loadBirthdaysCount();
+      }
     },
     toggleMobileTabsMenu() {
       if (this.isMobile) {
@@ -1884,6 +1972,69 @@ export default {
 
 .header-icon-agenda-mobile {
   display: none;
+}
+
+.header-notification-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+  min-height: 28px;
+}
+
+.header-notification-icon-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+}
+
+.header-icon-birthdays-notify {
+  display: block;
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+}
+
+.header-notification-badge {
+  position: absolute;
+  top: -3px;
+  right: -5px;
+  min-width: 17px;
+  height: 17px;
+  padding: 0 4px;
+  background: #ff3b30;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  border-radius: 999px;
+  border: 1.5px solid #000;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.header-notification-badge.is-urgent {
+  animation: birthdays-badge-pulse 1.6s ease-in-out infinite;
+}
+
+@keyframes birthdays-badge-pulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
+  }
+  50% {
+    transform: scale(1.08);
+    box-shadow: 0 0 0 4px rgba(255, 59, 48, 0.25);
+  }
 }
 
 /* Estilos para móvil */

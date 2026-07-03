@@ -38,6 +38,7 @@ class API {
     Audios,
     Books,
     Agenda,
+    Birthdays,
   }) {
     this.Profile = new Profile();
     this.Password = new Password();
@@ -62,6 +63,7 @@ class API {
     this.Audios = new Audios();
     this.Books = new Books();
     this.Agenda = new Agenda();
+    this.Birthdays = new Birthdays();
     this.SavingsBonus = new SavingsBonus();
   }
 
@@ -352,6 +354,14 @@ class Agenda {
   }
 }
 
+class Birthdays {
+  GET(session, memberId) {
+    let url = `/app/birthdays?session=${session}`;
+    if (memberId) url += `&memberId=${memberId}`;
+    return axios.get(url);
+  }
+}
+
 class SavingsBonus {
   GET(session) {
     return axios.get(`/app/savings-bonus?session=${session}`);
@@ -384,5 +394,6 @@ export default new API({
   Audios,
   Books,
   Agenda,
+  Birthdays,
   SavingsBonus,
 });
