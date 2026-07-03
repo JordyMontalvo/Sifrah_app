@@ -151,11 +151,21 @@
         <div class="boleta-payment">
           <div class="boleta-payment-left">
             <div class="boleta-payment-icon">
-              <i class="fas fa-dollar-sign"></i>
+              <i :class="orderData.payMethod === 'credit-card' ? 'fas fa-credit-card' : 'fas fa-dollar-sign'"></i>
             </div>
             <div>
               <span class="boleta-payment-meta">MÉTODO DE PAGO</span>
               <span class="boleta-payment-method">{{ paymentMethodLabel }}</span>
+              <div v-if="orderData.transaction_id || orderData.authorization_code" style="margin-top: 15px; text-align: left;">
+                <div v-if="orderData.transaction_id" style="margin-bottom: 8px;">
+                  <span class="boleta-payment-meta" style="margin-bottom: 2px;">Transaction ID:</span>
+                  <span style="font-size: 26px; font-weight: 700; color: #3f51b5; display: block;">{{ orderData.transaction_id }}</span>
+                </div>
+                <div v-if="orderData.authorization_code">
+                  <span class="boleta-payment-meta" style="margin-bottom: 2px;">Autorización:</span>
+                  <span style="font-size: 26px; font-weight: 700; color: #2d2d2d; display: block;">{{ orderData.authorization_code }}</span>
+                </div>
+              </div>
             </div>
           </div>
           <div class="boleta-payment-right">
@@ -301,7 +311,8 @@ export default {
       const map = {
         bank: 'Transferencia Bancaria',
         cash: 'Efectivo',
-        balance: 'Saldo Disponible'
+        balance: 'Saldo Disponible',
+        'credit-card': 'Tarjeta - Izipay'
       }
       return map[this.orderData.payMethod] || this.orderData.payMethod || 'Efectivo'
     }

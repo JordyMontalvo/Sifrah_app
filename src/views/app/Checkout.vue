@@ -862,7 +862,8 @@ export default {
       izipayFormToken: null,
       izipayLoading: false,
       izipayError: null,
-      izipayTransactionId: null
+      izipayTransactionId: null,
+      izipayAuthorizationCode: null
     }
   },
   
@@ -1135,7 +1136,9 @@ export default {
     
     onIzipaySuccess(event) {
       if (event.clientAnswer.orderStatus === 'PAID') {
-        this.izipayTransactionId = event.clientAnswer.transactions[0].uuid;
+        const transaction = event.clientAnswer.transactions && event.clientAnswer.transactions[0];
+        this.izipayTransactionId = transaction ? transaction.uuid : null;
+        this.izipayAuthorizationCode = transaction ? transaction.authorizationCode : null;
         // Lanzar la activación del lado del sistema local
         this.submitActivation();
       }
@@ -1661,6 +1664,7 @@ export default {
           
           // Izipay transaction details
           transaction_id: isIzipayPayment ? this.izipayTransactionId : null,
+          authorization_code: isIzipayPayment ? this.izipayAuthorizationCode : null,
         };
         
         // Solo agregar voucher2 y su número de operación si existe
@@ -1802,6 +1806,8 @@ export default {
             bank: isBankPayment && this.selectedBank ? this.getBankInfo(this.selectedBank).name : null,
             date: this.paymentDate || new Date().toISOString().split('T')[0],
             voucher_number: isBankPayment ? this.voucherNumber : null,
+            transaction_id: isIzipayPayment ? this.izipayTransactionId : null,
+            authorization_code: isIzipayPayment ? this.izipayAuthorizationCode : null,
           };
           
           // Solo agregar voucher2 y su número de operación si existe
