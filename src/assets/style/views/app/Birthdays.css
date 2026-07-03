@@ -131,24 +131,34 @@
 .birthdays-list {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
 }
 
 .birthday-card {
   display: flex;
+  flex-direction: row;
   align-items: center;
-  gap: 12px;
-  padding: 14px;
+  gap: 14px;
+  padding: 14px 16px;
   background: #fff;
   border-radius: 14px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  border: 1px solid #f0f0f0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   text-decoration: none;
   color: inherit;
   transition: box-shadow 0.2s;
 }
 
 .birthday-card:hover {
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+}
+
+.card-member {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  min-width: 0;
 }
 
 .card-avatar-wrap {
@@ -170,20 +180,6 @@
   background: #f0f0f0;
   color: #bbb;
   font-size: 1.2rem;
-}
-
-.badge-today {
-  position: absolute;
-  bottom: -4px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #e91e63;
-  color: #fff;
-  font-size: 0.6rem;
-  font-weight: 700;
-  padding: 2px 6px;
-  border-radius: 4px;
-  white-space: nowrap;
 }
 
 .card-info {
@@ -220,41 +216,80 @@
   font-size: 0.65rem;
 }
 
-.card-date {
-  display: flex;
-  flex-direction: column;
+.card-date-row {
+  display: grid;
+  grid-template-columns: 52px 72px 12px;
   align-items: center;
-  gap: 4px;
+  column-gap: 6px;
   flex-shrink: 0;
 }
 
 .date-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
   background: #fce4ec;
-  color: #c2185b;
-  font-size: 0.7rem;
-  font-weight: 700;
-  padding: 6px 8px;
-  border-radius: 8px;
-  text-align: center;
-  line-height: 1.2;
-  min-width: 48px;
+  border-radius: 10px;
+  grid-column: 1;
+  justify-self: center;
+  margin-right: 8px;
 }
 
-.proximity-label {
-  font-size: 0.72rem;
+.date-badge-day {
+  font-size: 1.15rem;
+  font-weight: 700;
   color: #e91e63;
+  line-height: 1;
+}
+
+.date-badge-month {
+  font-size: 0.62rem;
   font-weight: 600;
+  color: #e91e63;
+  letter-spacing: 0.04em;
+  margin-top: 3px;
+  line-height: 1;
+}
+
+.card-proximity {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 2px;
+  grid-column: 2;
+  min-height: 36px;
+  text-align: right;
+}
+
+.proximity-primary {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #e91e63;
+  line-height: 1.2;
   white-space: nowrap;
 }
 
-.proximity-label.today {
+.proximity-primary.today {
   font-weight: 700;
 }
 
+.proximity-secondary {
+  font-size: 0.8rem;
+  font-weight: 400;
+  color: #9e9e9e;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
 .card-chevron {
-  color: #ccc;
+  color: #bdbdbd;
   font-size: 0.85rem;
-  flex-shrink: 0;
+  grid-column: 3;
+  justify-self: end;
 }
 
 .empty-state {
@@ -473,7 +508,8 @@
 .info-row {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
+  gap: 16px;
   padding: 10px 0;
   border-bottom: 1px solid #f0f0f0;
 }
@@ -481,17 +517,58 @@
 .info-label {
   font-size: 0.85rem;
   color: #888;
+  flex-shrink: 0;
+  padding-top: 1px;
 }
 
 .info-value {
   font-size: 0.9rem;
   color: #1a1a1a;
   text-align: right;
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .info-value.points {
   color: #e91e63;
   font-weight: 600;
+}
+
+.info-row-scroll {
+  align-items: center;
+}
+
+.info-value-scroll {
+  flex: 1;
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  text-align: right;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.info-value-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.info-value-inline {
+  display: inline-block;
+  white-space: nowrap;
+  word-break: normal;
+  overflow-wrap: normal;
+  text-align: right;
+  padding-left: 8px;
+}
+
+.sponsor-link i {
+  margin-left: 4px;
+  font-size: 0.75rem;
+  color: #bdbdbd;
 }
 
 .status-dot {
@@ -553,5 +630,93 @@
 
   .birthday-detail-view {
     padding-bottom: 72px;
+  }
+
+  .birthday-card {
+    padding: 12px 10px;
+    gap: 8px;
+  }
+
+  .card-member {
+    gap: 10px;
+  }
+
+  .card-avatar {
+    width: 44px;
+    height: 44px;
+  }
+
+  .card-avatar-placeholder {
+    font-size: 1.1rem;
+  }
+
+  .card-name {
+    font-size: 0.82rem;
+  }
+
+  .card-role {
+    font-size: 0.72rem;
+    margin-bottom: 2px;
+  }
+
+  .card-member-since {
+    font-size: 0.65rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .card-member-since i {
+    font-size: 0.6rem;
+  }
+
+  .card-date-row {
+    grid-template-columns: 46px 60px 12px;
+    column-gap: 5px;
+  }
+
+  .date-badge {
+    width: 46px;
+    height: 46px;
+    margin-right: 6px;
+  }
+
+  .date-badge-day {
+    font-size: 1rem;
+  }
+
+  .card-proximity {
+    min-height: 32px;
+  }
+
+  .proximity-primary {
+    font-size: 0.76rem;
+  }
+
+  .proximity-secondary {
+    font-size: 0.7rem;
+  }
+
+  .info-row {
+    gap: 12px;
+  }
+
+  .info-row-scroll .info-value-scroll {
+    mask-image: linear-gradient(to right, transparent 0, #000 12px, #000 100%);
+    -webkit-mask-image: linear-gradient(to right, transparent 0, #000 12px, #000 100%);
+  }
+}
+
+@media (min-width: 601px) {
+  .info-row-scroll .info-value-scroll {
+    overflow-x: visible;
+    mask-image: none;
+    -webkit-mask-image: none;
+  }
+
+  .info-value-inline {
+    white-space: normal;
+    overflow-wrap: anywhere;
+    word-break: break-word;
   }
 }

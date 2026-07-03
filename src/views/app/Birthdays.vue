@@ -53,36 +53,44 @@
             :to="`/birthdays/${person.id}`"
             class="birthday-card"
           >
-            <div class="card-avatar-wrap">
-              <img
-                v-if="person.photo"
-                :src="person.photo"
-                :alt="person.fullName"
-                class="card-avatar"
-              />
-              <div v-else class="card-avatar card-avatar-placeholder">
-                <i class="fas fa-user"></i>
+            <div class="card-member">
+              <div class="card-avatar-wrap">
+                <img
+                  v-if="person.photo"
+                  :src="person.photo"
+                  :alt="person.fullName"
+                  class="card-avatar"
+                />
+                <div v-else class="card-avatar card-avatar-placeholder">
+                  <i class="fas fa-user"></i>
+                </div>
               </div>
-              <span v-if="person.isToday" class="badge-today">HOY</span>
+
+              <div class="card-info">
+                <h3 class="card-name">{{ person.fullName }}</h3>
+                <p class="card-role">{{ person.planLabel }}</p>
+                <p v-if="person.affiliationDateFormatted" class="card-member-since">
+                  <i class="fas fa-gem"></i>
+                  Miembro desde {{ person.affiliationDateFormatted }}
+                </p>
+              </div>
             </div>
 
-            <div class="card-info">
-              <h3 class="card-name">{{ person.fullName }}</h3>
-              <p class="card-role">{{ person.planLabel }}</p>
-              <p v-if="person.affiliationDateFormatted" class="card-member-since">
-                <i class="fas fa-gem"></i>
-                Miembro desde {{ person.affiliationDateFormatted }}
-              </p>
+            <div class="card-date-row">
+              <div class="date-badge">
+                <span class="date-badge-day">{{ formatBirthDay(person) }}</span>
+                <span class="date-badge-month">{{ formatBirthMonth(person) }}</span>
+              </div>
+              <div class="card-proximity">
+                <span class="proximity-primary" :class="{ today: person.isToday }">
+                  {{ proximityPrimary(person) }}
+                </span>
+                <span v-if="!person.isToday" class="proximity-secondary">
+                  {{ proximityDaysLabel(person) }}
+                </span>
+              </div>
+              <i class="fas fa-chevron-right card-chevron"></i>
             </div>
-
-            <div class="card-date">
-              <div class="date-badge">{{ person.dateBadge }}</div>
-              <span class="proximity-label" :class="{ today: person.isToday }">
-                {{ person.proximityLabel }}
-              </span>
-            </div>
-
-            <i class="fas fa-chevron-right card-chevron"></i>
           </router-link>
         </div>
 
@@ -190,6 +198,29 @@ export default {
       const query = { category: "Cumpleaños" };
       if (name) query.nombre = name;
       this.$router.push({ path: "/flyer-editor", query });
+    },
+    formatBirthDay(person) {
+      const day = person.birthDay;
+      if (day == null) {
+        const parts = (person.dateBadge || "").split(" ");
+        return parts[0] || "";
+      }
+      return String(day).padStart(2, "0");
+    },
+    formatBirthMonth(person) {
+      const months = ["ENE", "FEB", "MAR", "ABR", "MAY", "JUN", "JUL", "AGO", "SEP", "OCT", "NOV", "DIC"];
+      if (person.birthMonth) return months[person.birthMonth - 1] || "";
+      const parts = (person.dateBadge || "").split(" ");
+      return parts[1] || "";
+    },
+    proximityPrimary(person) {
+      if (person.isToday) return "¡Hoy!";
+      if (person.daysUntil === 1) return "Mañana";
+      return `En ${person.daysUntil} días`;
+    },
+    proximityDaysLabel(person) {
+      if (person.daysUntil === 1) return "1 día";
+      return `${person.daysUntil} días`;
     },
   },
 };

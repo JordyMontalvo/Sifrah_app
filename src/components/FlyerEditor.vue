@@ -14,6 +14,11 @@
         </div>
       </div>
       
+      <div v-if="categoryNotice" class="category-notice">
+        <i class="fas fa-info-circle"></i>
+        <p>{{ categoryNotice }}</p>
+      </div>
+      
       <div v-if="loadingFlyers" class="loading-container">
         <i class="fas fa-spinner fa-spin"></i>
         <p>Cargando flyers...</p>
@@ -291,6 +296,7 @@ export default {
       currentFlyer: null,
       selectedCategory: '',
       categories: [],
+      categoryNotice: '',
       portraitShape: 'circle', // 'circle' o 'square'
     };
   },
@@ -299,9 +305,21 @@ export default {
       if (!this.selectedCategory) {
         return this.availableFlyers;
       }
-      return this.availableFlyers.filter(flyer => 
-        flyer.category === this.selectedCategory
-      );
+      const target = this.normalizeCategory(this.selectedCategory);
+      return this.availableFlyers.filter((flyer) => {
+        const cat = this.normalizeCategory(flyer.category);
+        return cat === target || cat.includes(target) || target.includes(cat);
+      });
+    },
+  },
+  watch: {
+    '$route.query': {
+      deep: true,
+      handler() {
+        if (!this.loadingFlyers && this.availableFlyers.length) {
+          this.applyRouteQuery();
+        }
+      },
     },
   },
   async mounted() {
@@ -369,27 +387,85 @@ export default {
       }
     },
 
+    normalizeCategory(value) {
+      return String(value || '')
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .toLowerCase()
+        .trim();
+    },
+
+    isBirthdayCategory(value) {
+      const normalized = this.normalizeCategory(value);
+      return (
+        normalized.includes('cumple') ||
+        normalized.includes('birthday') ||
+        normalized.includes('felicit')
+      );
+    },
+
+    findFlyersByCategory(categoryQuery) {
+      const target = this.normalizeCategory(categoryQuery);
+      if (!target) return [];
+
+      const aliases = this.isBirthdayCategory(target)
+        ? ['cumpleanos', 'cumple', 'birthday', 'felicit']
+        : [target];
+
+      return this.availableFlyers.filter((flyer) => {
+        const cat = this.normalizeCategory(flyer.category);
+        return aliases.some(
+          (alias) => cat === alias || cat.includes(alias) || alias.includes(cat)
+        );
+      });
+    },
+
+    resolveCategoryLabel(categoryQuery, matchingFlyers) {
+      if (matchingFlyers.length > 0) {
+        return matchingFlyers[0].category;
+      }
+      const match = this.categories.find((cat) => {
+        const normalized = this.normalizeCategory(cat);
+        const target = this.normalizeCategory(categoryQuery);
+        return normalized === target || normalized.includes(target) || target.includes(normalized);
+      });
+      return match || categoryQuery;
+    },
+
     applyRouteQuery() {
       const query = this.$route && this.$route.query ? this.$route.query : {};
-      const categoryQuery = query.category ? String(query.category).trim() : "";
-      const nombreQuery = query.nombre ? String(query.nombre).trim() : "";
+      const categoryQuery = query.category ? String(query.category).trim() : '';
+      const nombreQuery = query.nombre ? String(query.nombre).trim() : '';
 
-      if (categoryQuery) {
-        const match = this.categories.find((cat) => {
-          const normalized = String(cat).toLowerCase();
-          const target = categoryQuery.toLowerCase();
-          return normalized === target || normalized.includes(target) || target.includes(normalized);
-        });
-        if (match) {
-          this.selectedCategory = match;
-        } else {
-          this.selectedCategory = categoryQuery;
-        }
-      }
+      this.categoryNotice = '';
+      this.editingMode = false;
+      this.currentFlyer = null;
+      this.selectedFlyerId = '';
 
       if (nombreQuery) {
         this.nombreSocio = nombreQuery;
+      } else {
+        this.nombreSocio = '';
       }
+
+      if (!categoryQuery) {
+        this.selectedCategory = '';
+        return;
+      }
+
+      const matchingFlyers = this.findFlyersByCategory(categoryQuery);
+
+      if (matchingFlyers.length > 0) {
+        this.selectedCategory = this.resolveCategoryLabel(categoryQuery, matchingFlyers);
+
+        if (nombreQuery || matchingFlyers.length === 1) {
+          this.startEditing(matchingFlyers[0]);
+        }
+        return;
+      }
+
+      this.selectedCategory = '';
+      this.categoryNotice = `No hay plantillas de "${categoryQuery}" disponibles. Elige una de las opciones siguientes.`;
     },
     
     startEditing(flyer) {
@@ -417,7 +493,13 @@ export default {
       this.nombreSocio = '';
       this.portraitLayers = [];
       this.activeLayerIndex = -1;
+      this.categoryNotice = '';
       this.showInstructions = true;
+
+      const query = this.$route && this.$route.query ? this.$route.query : {};
+      if (query.category || query.nombre) {
+        this.$router.replace({ path: '/flyer-editor' });
+      }
     },
     
     getFlyerImage(flyer) {
@@ -1606,6 +1688,25 @@ export default {
 
 .filter-section
   margin-bottom 20px
+
+.category-notice
+  display flex
+  align-items flex-start
+  gap 10px
+  padding 12px 14px
+  margin-bottom 16px
+  background #fce4ec
+  border-radius 10px
+  color #880e4f
+
+  i
+    margin-top 2px
+    color #e91e63
+
+  p
+    margin 0
+    font-size 0.9rem
+    line-height 1.4
 
 .category-select
   width 100%

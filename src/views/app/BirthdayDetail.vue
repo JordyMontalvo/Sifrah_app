@@ -63,20 +63,24 @@
           <span class="info-label">Teléfono</span>
           <span class="info-value">{{ member.phone }}</span>
         </div>
-        <div class="info-row" v-if="member.email">
+        <div class="info-row info-row-scroll" v-if="member.email">
           <span class="info-label">Correo</span>
-          <span class="info-value">{{ member.email }}</span>
+          <div class="info-value-scroll" tabindex="0" :aria-label="member.email">
+            <span class="info-value info-value-inline">{{ member.email }}</span>
+          </div>
         </div>
       </section>
 
       <section class="info-section">
         <h3>Información de red</h3>
-        <div class="info-row" v-if="member.sponsor">
+        <div class="info-row info-row-scroll" v-if="member.sponsor">
           <span class="info-label">Patrocinador</span>
-          <span class="info-value sponsor-link">
-            {{ member.sponsor.fullName }}
-            <i class="fas fa-chevron-right"></i>
-          </span>
+          <div class="info-value-scroll" tabindex="0" :aria-label="member.sponsor.fullName">
+            <span class="info-value info-value-inline sponsor-link">
+              {{ member.sponsor.fullName }}
+              <i class="fas fa-chevron-right"></i>
+            </span>
+          </div>
         </div>
         <div class="info-row" v-if="member.rankLabel">
           <span class="info-label">Rango cerrado</span>
