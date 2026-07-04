@@ -233,11 +233,11 @@ export default {
 }
 
 .password-back-link:hover {
-  color: #fb8c00;
+  color: #1a1a1a;
 }
 
 .password-glass-hint {
-  color: #666;
+  color: #444;
   font-size: 0.98rem;
   line-height: 1.5;
   margin: 0 0 24px 0;
@@ -252,6 +252,12 @@ export default {
 .password-input-wrap input {
   width: 100%;
   padding-right: 48px;
+}
+
+.password-glass-card .glass-form-group input:focus {
+  border: 2px solid #e91e63;
+  box-shadow: 0 4px 16px rgba(233, 30, 99, 0.12) inset,
+    0 2px 12px rgba(233, 30, 99, 0.08);
 }
 
 .password-toggle-btn {
@@ -294,7 +300,7 @@ export default {
 .password-submit-btn {
   width: 100%;
   margin-top: 8px;
-  background: linear-gradient(135deg, #e91e63 0%, #ff9800 100%);
+  background: #e91e63;
   color: #fff;
   border: none;
   border-radius: 22px;
@@ -302,8 +308,8 @@ export default {
   font-size: 1.05rem;
   font-weight: 700;
   cursor: pointer;
-  box-shadow: 0 4px 16px rgba(233, 30, 99, 0.2);
-  transition: transform 0.15s, box-shadow 0.15s, opacity 0.2s;
+  box-shadow: 0 4px 16px rgba(233, 30, 99, 0.25);
+  transition: transform 0.15s, box-shadow 0.15s, background 0.2s, opacity 0.2s;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -312,7 +318,8 @@ export default {
 
 .password-submit-btn:hover:not(:disabled) {
   transform: translateY(-1px);
-  box-shadow: 0 6px 20px rgba(233, 30, 99, 0.28);
+  background: #c2185b;
+  box-shadow: 0 6px 20px rgba(233, 30, 99, 0.32);
 }
 
 .password-submit-btn:disabled {
