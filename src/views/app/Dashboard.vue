@@ -586,7 +586,10 @@ export default {
     },
     totalEarnedFormatted() {
       const total = Number(this.totalEarned) || 0;
-      return total.toLocaleString("es-PE", { minimumFractionDigits: 2 });
+      return total.toLocaleString("es-PE", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      });
     },
   },
   filters: {
