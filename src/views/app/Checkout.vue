@@ -1732,8 +1732,8 @@ export default {
           this.sending = false;
           return;
         }
-        if (payload.proofType === 'boleta' && (!payload.proofDocument || payload.proofDocument.length !== 8)) {
-          this.activationError = 'El documento para boleta debe tener 8 dígitos.';
+        if (payload.proofType === 'boleta' && !payload.proofDocument) {
+          this.activationError = 'Por favor, ingrese el documento para la boleta.';
           this.sending = false;
           return;
         }
