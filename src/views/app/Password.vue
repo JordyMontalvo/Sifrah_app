@@ -52,7 +52,7 @@
                   id="new-password"
                   :type="showNew ? 'text' : 'password'"
                   v-model="newPassword"
-                  placeholder="Mínimo 4 caracteres"
+                  placeholder="Mín. 5 caracteres, letras y números"
                   autocomplete="new-password"
                   @keydown="resetError"
                 />
@@ -116,10 +116,21 @@
 import App from '@/views/layouts/App'
 import api from '@/api'
 
+const WEAK_PASSWORD_MSG =
+  'La nueva contraseña debe tener al menos 5 caracteres, incluir al menos una letra y al menos un número'
+
+function isValidPassword(password) {
+  const value = String(password || '')
+  if (value.length < 5) return false
+  const hasLetter = /[a-zA-ZáéíóúÁÉÍÓÚñÑ]/.test(value)
+  const hasNumber = /\d/.test(value)
+  return hasLetter && hasNumber
+}
+
 const ERROR_MESSAGES = {
   'invalid password': 'La contraseña actual no coincide',
   'missing fields': 'Completa todos los campos',
-  'weak password': 'La nueva contraseña debe tener al menos 4 caracteres',
+  'weak password': WEAK_PASSWORD_MSG,
 }
 
 export default {
@@ -169,8 +180,8 @@ export default {
         this.errorMessage = ERROR_MESSAGES['missing fields']
         return false
       }
-      if (this.newPassword.length < 4) {
-        this.errorMessage = ERROR_MESSAGES['weak password']
+      if (!isValidPassword(this.newPassword)) {
+        this.errorMessage = WEAK_PASSWORD_MSG
         return false
       }
       if (this.newPassword !== this.confirmPassword) {
