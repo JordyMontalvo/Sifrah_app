@@ -1,0 +1,667 @@
+.rank-progress-view {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 16px 16px 32px;
+}
+
+.rp-hero {
+  margin-bottom: 20px;
+}
+
+.rp-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0 0 8px;
+}
+
+.rp-title i {
+  color: #e91e63;
+}
+
+.rp-subtitle {
+  margin: 0;
+  color: #666;
+  font-size: 0.95rem;
+}
+
+.rp-card {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+
+.rp-main-card {
+  padding: 20px;
+}
+
+.rp-main-header {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.rp-target-zone {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.rp-target-top {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.rp-target-titles {
+  min-width: 0;
+}
+
+.rp-target-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(233, 30, 99, 0.12);
+  color: #e91e63;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.rp-target-label {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: #e91e63;
+  margin-bottom: 4px;
+}
+
+.rp-target-rank {
+  margin: 0;
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: #e91e63;
+  line-height: 1.1;
+}
+
+.rp-target-pill {
+  margin: 0;
+  display: block;
+  width: fit-content;
+  max-width: 100%;
+  font-size: 0.72rem;
+  color: #e91e63;
+  background: rgba(233, 30, 99, 0.1);
+  border-radius: 20px;
+  padding: 5px 10px;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.rp-current-rank-box {
+  background: #f8f8f8;
+  border: 1px solid #eee;
+  border-radius: 12px;
+  padding: 10px 12px;
+  flex-shrink: 0;
+  max-width: 42%;
+}
+
+.rp-current-label {
+  display: block;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  color: #888;
+  margin-bottom: 8px;
+}
+
+.rp-current-rank {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.rp-medal-icon {
+  font-size: 1.5rem;
+  color: #cd7f32;
+}
+
+.rp-current-rank strong {
+  display: block;
+  font-size: 1.1rem;
+  color: #1a1a1a;
+}
+
+.rp-current-rank span {
+  font-size: 0.8rem;
+  color: #888;
+}
+
+.rp-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+  margin-bottom: 20px;
+  border-top: 1px solid #f0f0f0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.rp-stat {
+  padding: 14px 10px;
+  border-right: 1px solid #f0f0f0;
+}
+
+.rp-stat:last-child {
+  border-right: none;
+}
+
+.rp-stat-label {
+  display: block;
+  font-size: 0.8rem;
+  color: #666;
+  margin-bottom: 6px;
+}
+
+.rp-stat-value {
+  margin: 0 0 6px;
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.rp-stat-value strong {
+  color: #e91e63;
+  font-size: 1.1rem;
+}
+
+.rp-stat-hint {
+  font-size: 0.78rem;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.rp-stat-hint.ok {
+  color: #2e7d32;
+}
+
+.rp-stat-hint.warn {
+  color: #e65100;
+}
+
+.rp-progress-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.rp-progress-bar {
+  flex: 1;
+  height: 10px;
+  background: #eee;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.rp-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #e91e63, #f06292);
+  border-radius: 5px;
+  transition: width 0.4s ease;
+}
+
+.rp-progress-pct {
+  font-weight: 700;
+  color: #e91e63;
+  font-size: 1rem;
+  min-width: 40px;
+  text-align: right;
+}
+
+.rp-card-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 20px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.rp-card-header i {
+  color: #e91e63;
+  font-size: 1.1rem;
+}
+
+.rp-card-header h3 {
+  margin: 0;
+  flex: 1;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: #1a1a1a;
+  min-width: 0;
+}
+
+.rp-info-btn {
+  background: none;
+  border: none;
+  color: #aaa;
+  cursor: pointer;
+  padding: 4px;
+  font-size: 1rem;
+}
+
+.rp-table-wrap {
+  overflow-x: auto;
+}
+
+.rp-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.rp-table th {
+  text-align: left;
+  padding: 10px 16px;
+  color: #888;
+  font-weight: 600;
+  font-size: 0.75rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.rp-table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid #f8f8f8;
+  color: #333;
+  vertical-align: middle;
+}
+
+.rp-leg-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #e91e63;
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+.rp-personal-plus {
+  color: #e91e63;
+  font-weight: 600;
+}
+
+.rp-valid-pts {
+  color: #e91e63;
+}
+
+.rp-status-badge.vmp {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: #1a1a1a;
+  color: #fff;
+  border-radius: 20px;
+  padding: 4px 10px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.rp-status-badge.vmp i {
+  color: #e91e63;
+  font-size: 0.65rem;
+}
+
+.rp-status-text {
+  color: #888;
+  font-size: 0.78rem;
+}
+
+.rp-status-dash {
+  color: #ccc;
+}
+
+.rp-empty-legs {
+  text-align: center;
+  color: #888;
+  padding: 24px !important;
+}
+
+.rp-table-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-top: 1px solid #f0f0f0;
+}
+
+.rp-total-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #1a1a1a;
+  font-size: 0.85rem;
+}
+
+.rp-total-label i {
+  color: #1a1a1a;
+}
+
+.rp-total-value {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #e91e63;
+}
+
+.rp-req-list {
+  list-style: none;
+  margin: 0;
+  padding: 8px 20px 16px;
+}
+
+.rp-req-list li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid #f8f8f8;
+}
+
+.rp-req-list li:last-child {
+  border-bottom: none;
+}
+
+.rp-req-list .ok {
+  color: #2e7d32;
+}
+
+.rp-req-list .warn {
+  color: #e65100;
+}
+
+.rp-req-label {
+  flex: 1;
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.rp-req-value {
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.rp-tip-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  background: rgba(233, 30, 99, 0.08);
+  border-radius: 12px;
+  padding: 14px 16px;
+}
+
+.rp-tip-banner i {
+  color: #e91e63;
+  font-size: 1.1rem;
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.rp-tip-banner p {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #555;
+  line-height: 1.45;
+}
+
+.rp-error {
+  text-align: center;
+  padding: 48px 16px;
+  color: #888;
+}
+
+.rp-error i {
+  font-size: 2rem;
+  color: #e91e63;
+  margin-bottom: 12px;
+}
+
+@media (max-width: 600px) {
+  .rank-progress-view {
+    padding: 12px 12px 28px;
+  }
+
+  .rp-main-card {
+    padding: 14px 12px;
+  }
+
+  .rp-main-header {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .rp-target-icon {
+    width: 32px;
+    height: 32px;
+    font-size: 0.8rem;
+  }
+
+  .rp-target-label {
+    font-size: 0.6rem;
+  }
+
+  .rp-target-rank {
+    font-size: 1.35rem;
+  }
+
+  .rp-target-pill {
+    font-size: 0.58rem;
+    padding: 4px 8px;
+    letter-spacing: -0.01em;
+  }
+
+  .rp-current-rank-box {
+    width: auto;
+    max-width: 44%;
+    padding: 8px 10px;
+  }
+
+  .rp-current-label {
+    font-size: 0.55rem;
+    margin-bottom: 6px;
+  }
+
+  .rp-medal-icon {
+    font-size: 1.2rem;
+  }
+
+  .rp-current-rank strong {
+    font-size: 0.95rem;
+  }
+
+  .rp-current-rank span {
+    font-size: 0.68rem;
+  }
+
+  .rp-stats-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+  }
+
+  .rp-stat {
+    padding: 12px 6px;
+  }
+
+  .rp-stat-label {
+    font-size: 0.68rem;
+    line-height: 1.2;
+    margin-bottom: 4px;
+  }
+
+  .rp-stat-value {
+    font-size: 0.72rem;
+    margin-bottom: 4px;
+    line-height: 1.3;
+  }
+
+  .rp-stat-value strong {
+    font-size: 0.9rem;
+  }
+
+  .rp-stat-hint {
+    font-size: 0.62rem;
+    line-height: 1.25;
+    flex-wrap: wrap;
+  }
+
+  .rp-stat-hint i {
+    font-size: 0.6rem;
+  }
+
+  .rp-progress-row {
+    gap: 8px;
+  }
+
+  .rp-progress-pct {
+    font-size: 0.9rem;
+    min-width: 36px;
+  }
+
+  /* Sección inferior: solo tamaños más compactos en móvil */
+  .rp-table-card .rp-card-header,
+  .rp-requirements-card .rp-card-header {
+    padding: 10px 12px;
+    gap: 8px;
+  }
+
+  .rp-table-card .rp-card-header i,
+  .rp-requirements-card .rp-card-header i {
+    font-size: 0.9rem;
+  }
+
+  .rp-table-card .rp-card-header h3,
+  .rp-requirements-card .rp-card-header h3 {
+    font-size: 0.68rem;
+    letter-spacing: 0.01em;
+    line-height: 1.25;
+  }
+
+  .rp-info-btn {
+    font-size: 0.85rem;
+    padding: 2px;
+  }
+
+  .rp-table {
+    font-size: 0.72rem;
+  }
+
+  .rp-table th {
+    padding: 6px 8px;
+    font-size: 0.62rem;
+  }
+
+  .rp-table td {
+    padding: 8px;
+    font-size: 0.72rem;
+  }
+
+  .rp-table th:nth-child(2),
+  .rp-table td:nth-child(2) {
+    min-width: 0;
+  }
+
+  .rp-leg-badge {
+    width: 22px;
+    height: 22px;
+    font-size: 0.72rem;
+  }
+
+  .rp-personal-plus {
+    font-size: 0.62rem;
+  }
+
+  .rp-valid-pts {
+    font-size: 0.72rem;
+  }
+
+  .rp-status-badge.vmp {
+    font-size: 0.58rem;
+    padding: 3px 6px;
+  }
+
+  .rp-status-text {
+    font-size: 0.62rem;
+  }
+
+  .rp-table-footer {
+    padding: 10px 12px;
+  }
+
+  .rp-total-label {
+    font-size: 0.68rem;
+    gap: 6px;
+  }
+
+  .rp-total-label i {
+    font-size: 0.75rem;
+  }
+
+  .rp-total-value {
+    font-size: 0.95rem;
+  }
+
+  .rp-req-list {
+    padding: 4px 12px 10px;
+  }
+
+  .rp-req-list li {
+    gap: 8px;
+    padding: 7px 0;
+  }
+
+  .rp-req-list li i {
+    font-size: 0.85rem;
+  }
+
+  .rp-req-label,
+  .rp-req-value {
+    font-size: 0.78rem;
+  }
+
+  .rp-tip-banner {
+    padding: 10px 12px;
+    gap: 8px;
+    border-radius: 10px;
+  }
+
+  .rp-tip-banner i {
+    font-size: 0.9rem;
+  }
+
+  .rp-tip-banner p {
+    font-size: 0.72rem;
+    line-height: 1.35;
+  }
+
+  .rp-card {
+    margin-bottom: 12px;
+  }
+}

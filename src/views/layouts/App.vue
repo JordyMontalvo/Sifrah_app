@@ -329,6 +329,10 @@
           </router-link>
         </div>
 
+        <router-link to="/rango" @click.native="closeAllMenus" v-if="tree && affiliated">
+          <i class="fas fa-trophy"></i> RANGO
+        </router-link>
+
         <router-link to="/collect" @click.native="closeAllMenus" v-if="tree">
            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
              <g clip-path="url(#clip0_74_920)">
@@ -676,6 +680,11 @@
               <span>Movimientos</span>
             </router-link>
           </div>
+
+          <router-link to="/rango" v-if="tree && affiliated" @click.native="handleNavigationClickAndClose" class="mobile-menu-item">
+            <i class="fas fa-trophy"></i>
+            <span>RANGO</span>
+          </router-link>
 
           <router-link to="/collect" v-if="tree" @click.native="handleNavigationClickAndClose" class="mobile-menu-item">
             <!-- Mismo ícono SVG de RETIROS que en escritorio -->

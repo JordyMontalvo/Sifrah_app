@@ -39,6 +39,7 @@ class API {
     Books,
     Agenda,
     Birthdays,
+    RankProgress,
   }) {
     this.Profile = new Profile();
     this.Password = new Password();
@@ -64,6 +65,7 @@ class API {
     this.Books = new Books();
     this.Agenda = new Agenda();
     this.Birthdays = new Birthdays();
+    this.RankProgress = new RankProgress();
     this.SavingsBonus = new SavingsBonus();
   }
 
@@ -371,6 +373,12 @@ class SavingsBonus {
   }
 }
 
+class RankProgress {
+  GET(session) {
+    return axios.get(`/app/rank-progress?session=${session}`);
+  }
+}
+
 export default new API({
   Profile,
   Password,
@@ -395,5 +403,6 @@ export default new API({
   Books,
   Agenda,
   Birthdays,
+  RankProgress,
   SavingsBonus,
 });

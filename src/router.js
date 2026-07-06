@@ -46,6 +46,7 @@ import Libros from './views/app/Libros.vue'
 import Agenda from './views/app/Agenda.vue'
 import Birthdays from './views/app/Birthdays.vue'
 import BirthdayDetail from './views/app/BirthdayDetail.vue'
+import RankProgress from './views/app/RankProgress.vue'
 import UniversidadSifrah from './views/app/UniversidadSifrah.vue'
 import SavingsBonus from './views/app/SavingsBonus.vue'
 import MyRedemptions from './views/app/MyRedemptions.vue'
@@ -303,6 +304,11 @@ const routes = [
   {
     path: '/birthdays/:id',
     component: BirthdayDetail,
+    meta: { requiresAuth: true, requiresAffiliation: true }
+  },
+  {
+    path: '/rango',
+    component: RankProgress,
     meta: { requiresAuth: true, requiresAffiliation: true }
   },
   {
