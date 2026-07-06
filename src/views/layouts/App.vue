@@ -682,7 +682,7 @@
           </div>
 
           <router-link to="/rango" v-if="tree && affiliated" @click.native="handleNavigationClickAndClose" class="mobile-menu-item">
-            <i class="fas fa-trophy"></i>
+            <i class="fas fa-trophy" style="width: 20px; margin-right: 12px;"></i>
             <span>RANGO</span>
           </router-link>
 
