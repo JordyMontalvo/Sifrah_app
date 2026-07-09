@@ -143,7 +143,12 @@
                 />
                 <span>{{ formatCoins(product.price) }}</span>
               </div>
-              <button class="redeem-btn" @click="addToCart(product)">
+              <div v-if="cartQty(product.id) > 0" class="cart-qty-control">
+                <button type="button" class="qty-btn" @click="updateCartQty(product, -1)" aria-label="Disminuir cantidad">−</button>
+                <span class="qty-value">{{ cartQty(product.id) }}</span>
+                <button type="button" class="qty-btn" @click="updateCartQty(product, 1)" aria-label="Aumentar cantidad">+</button>
+              </div>
+              <button v-else type="button" class="redeem-btn" @click="addToCart(product)">
                 Canjear <i class="fas fa-shopping-cart"></i>
               </button>
             </div>
@@ -188,8 +193,11 @@ import App from "@/views/layouts/App";
 import Spinner from "@/components/Spinner";
 import api from "@/api";
 import Swal from "sweetalert2";
-
-const BONUS_CART_STORAGE_KEY = "sifrah_bonus_cart";
+import {
+  loadBonusCart,
+  saveBonusCart,
+  clearBonusCart,
+} from "@/utils/savingsBonusCart";
 
 export default {
   components: {
@@ -299,32 +307,19 @@ export default {
     },
   },
   async created() {
-    this.loadCart();
+    this.bonusCart = loadBonusCart(this.session);
     await this.fetchData();
   },
   methods: {
-    cartStorageKey() {
-      return `${BONUS_CART_STORAGE_KEY}_${this.session || "guest"}`;
-    },
     loadCart() {
-      try {
-        const raw = sessionStorage.getItem(this.cartStorageKey());
-        const parsed = raw ? JSON.parse(raw) : [];
-        this.bonusCart = Array.isArray(parsed) ? parsed : [];
-      } catch (e) {
-        this.bonusCart = [];
-      }
+      this.bonusCart = loadBonusCart(this.session);
     },
     saveCart() {
-      try {
-        sessionStorage.setItem(this.cartStorageKey(), JSON.stringify(this.bonusCart));
-      } catch (e) {
-        console.warn("No se pudo guardar el carrito de Bono Ahorro", e);
-      }
+      saveBonusCart(this.session, this.bonusCart);
     },
     clearCart() {
       this.bonusCart = [];
-      sessionStorage.removeItem(this.cartStorageKey());
+      clearBonusCart(this.session);
     },
     async fetchData() {
       try {
@@ -427,11 +422,26 @@ export default {
         icon: "success",
         title: "Producto agregado al carrito",
         showConfirmButton: false,
-        timer: 1800,
+        timer: 1400,
         timerProgressBar: true,
       });
     },
-    async openCart() {
+    cartQty(productId) {
+      const item = this.bonusCart.find((p) => p.id === productId);
+      return item ? (item.qty || 1) : 0;
+    },
+    updateCartQty(product, delta) {
+      const idx = this.bonusCart.findIndex((item) => item.id === product.id);
+      if (idx === -1) return;
+      const item = this.bonusCart[idx];
+      const next = (item.qty || 1) + delta;
+      if (next <= 0) {
+        this.bonusCart.splice(idx, 1);
+        return;
+      }
+      this.$set(item, "qty", next);
+    },
+    openCart() {
       if (!this.bonusCart.length) {
         Swal.fire({
           icon: "info",
@@ -441,71 +451,8 @@ export default {
         });
         return;
       }
-
-      const itemsHtml = this.bonusCart
-        .map((item) => {
-          const qty = item.qty || 1;
-          const price = Number(item.price) || 0;
-          return `<li style="text-align:left;margin-bottom:6px"><strong>${item.name}</strong> × ${qty} — ${this.formatCoins(price * qty)}</li>`;
-        })
-        .join("");
-
-      const total = this.bonusCart.reduce(
-        (sum, item) => sum + (Number(item.price) || 0) * (item.qty || 1),
-        0
-      );
-
-      const { isConfirmed } = await Swal.fire({
-        title: "Carrito de canje",
-        html: `<ul style="padding-left:18px;margin:0 0 12px">${itemsHtml}</ul><p style="margin:0;font-weight:700">Total: ${this.formatCoins(total)}</p>`,
-        icon: "question",
-        showCancelButton: true,
-        confirmButtonText: "Confirmar canje",
-        cancelButtonText: "Seguir comprando",
-        confirmButtonColor: "#e91e63",
-      });
-
-      if (!isConfirmed) return;
-
-      const products = this.bonusCart.map((item) => ({
-        id: item.id,
-        name: item.name,
-        price: Number(item.price) || 0,
-        total: item.qty || 1,
-      }));
-
-      try {
-        const { data } = await api.SavingsBonus.POST(this.session, {
-          products,
-          office: "central",
-          deliveryMethod: "pickup",
-          deliveryInfo: { officeId: "central" },
-        });
-
-        if (data.error) {
-          Swal.fire({
-            icon: "error",
-            title: "Error",
-            text: data.msg || "No se pudo registrar el canje",
-          });
-          return;
-        }
-
-        this.clearCart();
-        await Swal.fire({
-          icon: "success",
-          title: "Solicitud enviada",
-          text: `Tu canje #${data.orderNumber || data.id} está pendiente de aprobación.`,
-        });
-        await this.fetchData();
-      } catch (e) {
-        console.error("Error en canje:", e);
-        Swal.fire({
-          icon: "error",
-          title: "Error",
-          text: "No se pudo procesar el canje. Intenta de nuevo.",
-        });
-      }
+      this.saveCart();
+      this.$router.push("/savings-bonus/checkout");
     },
   }
 };
@@ -517,15 +464,28 @@ export default {
 tablet-break = 900px
 
 .savings-bonus-container
-  padding 22px 24px
+  box-sizing border-box
+  width 100%
+  max-width 1800px
+  margin 0 0 0 20px
+  padding 20px
   background #fafafa
   min-height 100vh
   font-family 'Inter', sans-serif
 
-  @media (min-width 901px)
-    padding 28px 32px 40px
-    max-width 1280px
-    margin 0 auto
+  @media (max-width 1800px)
+    max-width 95%
+    padding 15px
+    margin 0 0 0 15px
+
+  @media (max-width 768px)
+    max-width 100%
+    padding 10px
+    margin 0 0 0 10px
+
+  @media (max-width 480px)
+    padding 8px
+    margin 0 0 0 8px
 
 .bonus-header
   margin-bottom 18px
@@ -1125,6 +1085,39 @@ tablet-break = 900px
       &:hover
         background #d81b60
         box-shadow 0 4px 12px rgba(233, 30, 99, 0.3)
+
+    .cart-qty-control
+      display flex
+      align-items center
+      width 100%
+      margin-top auto
+      border 1px solid #f3d1df
+      border-radius 10px
+      background #fff
+      overflow hidden
+      min-height 42px
+
+      .qty-btn
+        flex 1
+        border none
+        background transparent
+        color #e91e63
+        font-size 1.25rem
+        font-weight 600
+        line-height 1
+        cursor pointer
+        padding 10px 8px
+        transition 0.2s
+
+        &:hover
+          background #fff5f8
+
+      .qty-value
+        flex 0 0 36px
+        text-align center
+        font-size 1rem
+        font-weight 700
+        color #2d3436
 
 .saldo-info-bar
   display flex

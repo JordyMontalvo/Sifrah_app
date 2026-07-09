@@ -49,6 +49,7 @@ import BirthdayDetail from './views/app/BirthdayDetail.vue'
 import RankProgress from './views/app/RankProgress.vue'
 import UniversidadSifrah from './views/app/UniversidadSifrah.vue'
 import SavingsBonus from './views/app/SavingsBonus.vue'
+import SavingsBonusCheckout from './views/app/SavingsBonusCheckout.vue'
 import MyRedemptions from './views/app/MyRedemptions.vue'
 import BonusHistory from './views/app/BonusHistory.vue'
 import BoletaView from './views/app/BoletaView.vue'
@@ -314,6 +315,11 @@ const routes = [
   {
     path: '/savings-bonus',
     component: SavingsBonus,
+    meta: { requiresAuth: true, requiresAffiliation: true }
+  },
+  {
+    path: '/savings-bonus/checkout',
+    component: SavingsBonusCheckout,
     meta: { requiresAuth: true, requiresAffiliation: true }
   },
   {
