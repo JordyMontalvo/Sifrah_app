@@ -2419,6 +2419,19 @@
   padding: 12px 20px !important;
 }
 
+.dash-bono-balance {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dash-bono-coin-icon {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
 .bono-ahorro-card-link {
   text-decoration: none;
   color: inherit;

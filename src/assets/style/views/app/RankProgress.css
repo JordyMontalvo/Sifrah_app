@@ -4,6 +4,13 @@
   padding: 16px 16px 32px;
 }
 
+.rp-bottom-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
 .rp-hero {
   margin-bottom: 20px;
 }
@@ -443,6 +450,183 @@
   margin-bottom: 12px;
 }
 
+@media (min-width: 901px) {
+  .rank-progress-view {
+    max-width: 1120px;
+    padding: 24px 32px 40px;
+  }
+
+  .rp-hero {
+    margin-bottom: 24px;
+  }
+
+  .rp-title {
+    font-size: 1.75rem;
+  }
+
+  .rp-subtitle {
+    font-size: 1rem;
+  }
+
+  .rp-main-card {
+    padding: 28px 32px;
+    margin-bottom: 20px;
+  }
+
+  .rp-main-header {
+    gap: 24px;
+    margin-bottom: 24px;
+  }
+
+  .rp-target-icon {
+    width: 48px;
+    height: 48px;
+    font-size: 1.1rem;
+  }
+
+  .rp-target-rank {
+    font-size: 2.25rem;
+  }
+
+  .rp-target-pill {
+    font-size: 0.8rem;
+    padding: 6px 14px;
+  }
+
+  .rp-current-rank-box {
+    max-width: 280px;
+    padding: 16px 20px;
+  }
+
+  .rp-current-label {
+    font-size: 0.7rem;
+  }
+
+  .rp-medal-icon {
+    font-size: 2rem;
+  }
+
+  .rp-current-rank strong {
+    font-size: 1.5rem;
+  }
+
+  .rp-stats-grid {
+    margin-bottom: 24px;
+  }
+
+  .rp-stat {
+    padding: 20px 16px;
+  }
+
+  .rp-stat-label {
+    font-size: 0.85rem;
+  }
+
+  .rp-stat-value {
+    font-size: 1rem;
+  }
+
+  .rp-stat-value strong {
+    font-size: 1.35rem;
+  }
+
+  .rp-stat-hint {
+    font-size: 0.82rem;
+  }
+
+  .rp-progress-bar {
+    height: 14px;
+    border-radius: 7px;
+  }
+
+  .rp-progress-fill {
+    border-radius: 7px;
+  }
+
+  .rp-progress-pct {
+    font-size: 1.15rem;
+    min-width: 48px;
+  }
+
+  .rp-bottom-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 320px;
+    gap: 20px;
+    align-items: start;
+    margin-bottom: 20px;
+  }
+
+  .rp-bottom-grid .rp-card {
+    margin-bottom: 0;
+  }
+
+  .rp-table-card .rp-card-header,
+  .rp-requirements-card .rp-card-header {
+    padding: 18px 24px;
+  }
+
+  .rp-table-card .rp-card-header h3,
+  .rp-requirements-card .rp-card-header h3 {
+    font-size: 0.9rem;
+  }
+
+  .rp-table th {
+    padding: 12px 20px;
+    font-size: 0.78rem;
+  }
+
+  .rp-table td {
+    padding: 14px 20px;
+    font-size: 0.9rem;
+  }
+
+  .rp-table-footer {
+    background: #fff;
+    padding: 20px 24px;
+    border-top: 1px solid #f0f0f0;
+  }
+
+  .rp-total-label {
+    color: #1a1a1a;
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+  }
+
+  .rp-total-label i {
+    color: #1a1a1a;
+    font-size: 1rem;
+  }
+
+  .rp-total-value {
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: #e91e63;
+  }
+
+  .rp-req-list {
+    padding: 12px 24px 20px;
+  }
+
+  .rp-req-list li {
+    padding: 14px 0;
+  }
+
+  .rp-req-label,
+  .rp-req-value {
+    font-size: 0.95rem;
+  }
+
+  .rp-tip-banner {
+    padding: 16px 20px;
+    border-radius: 14px;
+  }
+
+  .rp-tip-banner p {
+    font-size: 0.9rem;
+  }
+}
+
 @media (max-width: 600px) {
   .rank-progress-view {
     padding: 12px 12px 28px;
@@ -586,6 +770,11 @@
   .rp-table th:nth-child(2),
   .rp-table td:nth-child(2) {
     min-width: 0;
+  }
+
+  .rp-table th:nth-child(4),
+  .rp-table td:nth-child(4) {
+    display: none;
   }
 
   .rp-leg-badge {

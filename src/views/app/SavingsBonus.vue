@@ -3,23 +3,16 @@
     <div class="savings-bonus-container">
       <!-- Header Section -->
       <div class="bonus-header">
-        <div class="header-text">
-          <h1 class="main-title">Tienda <span class="highlight">Bono Ahorro</span></h1>
-          <p class="subtitle">Canjea tu saldo acumulado por productos y beneficios exclusivos.</p>
-        </div>
-        <div class="header-actions">
-          <!-- The profile and share buttons are already in the layout, but the image shows them here too. 
-               We'll stick to the layout header if possible, or add them here if the user wants this specific design.
-               For now, we'll implement the main content area. -->
-        </div>
+        <h1 class="main-title">Tienda <span class="highlight">Bono Ahorro</span></h1>
+        <p class="subtitle">Canjea tu saldo acumulado por productos y beneficios exclusivos.</p>
       </div>
 
       <!-- Hero Section -->
       <div class="hero-grid">
         <div class="promo-banner">
           <div class="banner-content">
-            <h2>Tu esfuerzo<br />también te recompensa</h2>
-            <p>Usa tu Bono Ahorro para canjear<br />productos increíbles sin gastar dinero.</p>
+            <h2>Tu esfuerzo también te <span class="banner-highlight">recompensa</span></h2>
+            <p>Usa tu Bono Ahorro para canjear productos increíbles sin gastar dinero.</p>
           </div>
           <div class="banner-image">
             <img src="../../assets/img/piggy-3d.png" alt="Bono Ahorro" />
@@ -27,20 +20,58 @@
         </div>
 
         <div class="balance-card">
-          <p class="balance-label">Saldo disponible</p>
+          <p class="balance-label">Tu saldo de Bono Ahorro</p>
           <div class="balance-amount">
-            <span class="currency">S/</span> {{ sifrahBalance.toLocaleString('es-PE', { minimumFractionDigits: 2 }) }}
             <img
               class="coin-icon-img"
               src="../../assets/img/coin-saldo-icon.png"
               alt=""
             />
+            <span class="balance-value">{{ formatCoins(sifrahBalance) }}</span>
           </div>
-          <p class="balance-note">No retirable | Solo para canje</p>
-          <router-link to="/bonus-history" class="history-btn" style="text-decoration: none;">
-            <i class="fas fa-history"></i> Ver historial
-          </router-link>
+          <div class="balance-meta">
+            <p class="balance-note">
+              Saldo solo para canje
+              <i class="fas fa-info-circle" title="Este saldo solo puede usarse para canjear productos"></i>
+            </p>
+            <p class="balance-subnote">Solo para canje · No genera puntos.</p>
+          </div>
+          <button type="button" class="cart-btn" @click="openCart">
+            <i class="fas fa-shopping-cart"></i>
+            Ver carrito y canjear<span v-if="cartCount > 0"> ({{ cartCount }})</span>
+            <i class="fas fa-arrow-right"></i>
+          </button>
         </div>
+      </div>
+
+      <!-- Info: cómo ganar bono -->
+      <div class="earn-info-bar" :class="{ 'is-expanded': earnInfoExpanded }">
+        <div class="earn-info-text">
+          <i class="fas fa-lightbulb earn-info-icon"></i>
+          <div class="earn-info-copy">
+            <p class="earn-info-question">¿Cómo gano Bono Ahorro?</p>
+            <div class="earn-info-expandable">
+              <p class="earn-info-answer">
+                Realiza compras personales adicionales a las 4 compras mínimas mensuales y acumula saldo de Bono Ahorro.
+              </p>
+              <router-link to="/bonus-history" class="earn-info-link earn-info-link-inline">
+                Ver más detalles <i class="fas fa-arrow-right"></i>
+              </router-link>
+            </div>
+          </div>
+        </div>
+        <button
+          type="button"
+          class="earn-info-toggle"
+          :aria-expanded="earnInfoExpanded ? 'true' : 'false'"
+          aria-label="Mostrar cómo ganar Bono Ahorro"
+          @click="earnInfoExpanded = !earnInfoExpanded"
+        >
+          <i class="fas fa-chevron-down earn-info-chevron"></i>
+        </button>
+        <router-link to="/bonus-history" class="earn-info-link earn-info-link-side">
+          Ver más detalles <i class="fas fa-arrow-right"></i>
+        </router-link>
       </div>
 
       <!-- Search & Categories Section -->
@@ -50,62 +81,103 @@
           <input type="text" placeholder="Buscar productos..." v-model="searchTerm" />
         </div>
 
-        <!-- Category pills (como en Figma) -->
-        <div class="category-pills">
-          <button
-            v-for="cat in visualCategories"
-            :key="cat.name"
-            class="pill"
-            :class="{ active: selectedCategory === cat.name }"
-            @click="selectCategory(cat.name)"
-            type="button"
-          >
-            {{ cat.name }}
-          </button>
-        </div>
-      </div>
-
-      <!-- Visual Categories Icons (Primary Filters) -->
-      <div class="visual-categories">
-        <div 
-          v-for="cat in visualCategories" 
-          :key="cat.name" 
-          class="cat-item"
-          :class="{ active: selectedCategory === cat.name }"
-          @click="selectCategory(cat.name)"
-        >
-          <div class="cat-icon-wrapper" :style="{ backgroundColor: selectedCategory === cat.name ? '#e91e63' : cat.color }">
-            <img v-if="cat.img" :src="cat.img" :alt="cat.name" />
-            <i v-else :class="cat.icon" :style="{ color: selectedCategory === cat.name ? 'white' : '#2d3436' }"></i>
+        <div class="category-pills-wrap">
+          <div class="category-pills">
+            <button
+              v-for="cat in visualCategories"
+              :key="cat.name"
+              class="pill"
+              :class="{ active: selectedCategory === cat.name }"
+              :aria-pressed="selectedCategory === cat.name ? 'true' : 'false'"
+              @click="selectCategory(cat.name)"
+              type="button"
+            >
+              {{ cat.name }}
+            </button>
           </div>
-          <span :class="{ 'active-text': selectedCategory === cat.name }">{{ cat.name }}</span>
         </div>
       </div>
 
       <!-- Featured Products Section -->
       <div class="featured-section">
         <div class="section-header">
-          <h3>Productos destacados</h3>
-          <router-link to="/savings-bonus/all" class="view-all">Ver todos <i class="fas fa-arrow-right"></i></router-link>
+          <h3>Productos disponibles para canjear</h3>
+          <div class="sort-control">
+            <label for="sort-by">Ordenar por:</label>
+            <select id="sort-by" v-model="sortBy" class="sort-select">
+              <option value="featured">Destacados</option>
+              <option value="price-asc">Menor precio</option>
+              <option value="price-desc">Mayor precio</option>
+              <option value="name">Nombre A-Z</option>
+            </select>
+          </div>
         </div>
 
-        <div class="products-grid">
-          <div v-for="product in filteredProducts" :key="product.id" class="product-card">
+        <div v-if="loading" class="products-loading">
+          <Spinner :size="36" color="#e91e63" />
+          <p>Cargando productos...</p>
+        </div>
+
+        <div v-else-if="!sortedFilteredProducts.length" class="products-empty">
+          <i class="fas fa-box-open"></i>
+          <p v-if="searchTerm || selectedCategory !== 'Todos'">
+            No hay productos que coincidan con tu búsqueda o categoría.
+          </p>
+          <p v-else>No hay productos disponibles para canjear en este momento.</p>
+        </div>
+
+        <div v-else class="products-grid">
+          <div v-for="product in sortedFilteredProducts" :key="product.id" class="product-card">
             <div class="info-icon" @click="showProductDetail(product)">i</div>
             <div class="product-image">
               <img :src="product.img" :alt="product.name" />
             </div>
             <div class="product-details">
               <h4 class="product-name">{{ product.name }}</h4>
-              <p class="product-sub">{{ product.sub }}</p>
+              <p class="product-sub">{{ categoryLabel(product) || product.sub || product.type }}</p>
               <div class="product-price">
-                <span class="price-coin">🪙</span> S/ {{ product.price }}
+                <img
+                  class="price-coin-img"
+                  src="../../assets/img/coin-saldo-icon.png"
+                  alt=""
+                />
+                <span>{{ formatCoins(product.price) }}</span>
               </div>
-              <button class="redeem-btn" @click="redeem(product)">Canjear</button>
-              <p class="product-footer">No genera puntos ni comisiones</p>
+              <button class="redeem-btn" @click="addToCart(product)">
+                Canjear <i class="fas fa-shopping-cart"></i>
+              </button>
             </div>
           </div>
         </div>
+      </div>
+
+      <div class="saldo-info-bar" :class="{ 'is-expanded': saldoInfoExpanded }">
+        <div class="saldo-info-text">
+          <i class="fas fa-info-circle saldo-info-icon"></i>
+          <div class="saldo-info-copy">
+            <p class="saldo-info-question">¿Te falta saldo?</p>
+            <div class="saldo-info-expandable">
+              <p class="saldo-info-answer">
+                Puedes completar con dinero la diferencia para llevarte el producto que deseas.
+              </p>
+              <button type="button" class="saldo-info-btn saldo-info-btn-inline" @click="showSaldoHelp">
+                Conoce cómo funciona <i class="fas fa-arrow-right"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+        <button
+          type="button"
+          class="saldo-info-toggle"
+          :aria-expanded="saldoInfoExpanded ? 'true' : 'false'"
+          aria-label="Mostrar información de saldo"
+          @click="saldoInfoExpanded = !saldoInfoExpanded"
+        >
+          <i class="fas fa-chevron-down saldo-info-chevron"></i>
+        </button>
+        <button type="button" class="saldo-info-btn saldo-info-btn-side" @click="showSaldoHelp">
+          Conoce cómo funciona <i class="fas fa-arrow-right"></i>
+        </button>
       </div>
     </div>
   </App>
@@ -113,12 +185,16 @@
 
 <script>
 import App from "@/views/layouts/App";
+import Spinner from "@/components/Spinner";
 import api from "@/api";
 import Swal from "sweetalert2";
+
+const BONUS_CART_STORAGE_KEY = "sifrah_bonus_cart";
 
 export default {
   components: {
     App,
+    Spinner,
   },
   data() {
     return {
@@ -126,84 +202,67 @@ export default {
       loading: true,
       selectedCategory: "Todos",
       searchTerm: "",
+      sortBy: "featured",
       featuredProducts: [],
-      activeCatalogTab: "all",
       apiCategories: [],
+      bonusCart: [],
+      earnInfoExpanded: false,
+      saldoInfoExpanded: false,
     };
   },
   computed: {
     session() { return this.$store.state.session; },
     office_id() { return this.$store.state.office_id; },
     title() { return "Bono Ahorro"; },
+    cartCount() {
+      return this.bonusCart.reduce((sum, item) => sum + (item.qty || 1), 0);
+    },
     visualCategories() {
-      const todos = { name: "Todos", icon: "fas fa-th", color: "#f1f2f6", id: null };
+      const todos = { name: "Todos", id: null };
       const apiCats = (this.apiCategories || []).map((c) => ({
         id: c.id,
         name: c.name,
-        icon: c.icon || "fas fa-tag",
-        color: c.color || "#f1f2f6",
-        order: Number(c.order) || 0,
       }));
 
-      const apiNames = new Set(apiCats.map((c) => c.name));
-
-      let baseProducts = this.featuredProducts;
-      if (this.activeCatalogTab === "bonus") {
-        baseProducts = baseProducts.filter((p) => p.catalog_type === "savings");
-      } else if (this.activeCatalogTab === "sifrah") {
-        baseProducts = baseProducts.filter(
-          (p) => p.catalog_type === "both" || p.catalog_type === "sifrah"
-        );
+      if (apiCats.length) {
+        return [todos, ...apiCats];
       }
 
-      // Solo productos exclusivos de canje sin categoría asignada generan pestañas legacy
-      const legacyTypes = [
+      const fromProducts = [
         ...new Set(
-          baseProducts
-            .filter(
-              (p) =>
-                p.catalog_type === "savings" &&
-                !p.is_promotion &&
-                !p.savings_category_id &&
-                p.type
-            )
-            .map((p) => p.type)
+          this.featuredProducts
+            .map((p) => this.categoryLabel(p))
+            .filter((name) => name && name !== "Promociones")
         ),
-      ]
-        .filter((t) => !apiNames.has(t))
-        .map((name) => ({
-          name,
-          icon: "fas fa-box",
-          color: "#f1f2f6",
-          id: null,
-          order: 99,
-        }));
+      ].map((name) => ({ name, id: null }));
 
-      const merged = [...apiCats, ...legacyTypes].sort(
-        (a, b) => (Number(a.order) || 0) - (Number(b.order) || 0)
-      );
+      if (fromProducts.length) {
+        return [todos, ...fromProducts];
+      }
 
-      return [todos, ...merged];
+      const defaults = [
+        "Salud y Bienestar",
+        "Hogar",
+        "Tecnología",
+        "Electrodomésticos",
+        "Accesorios",
+        "Beneficios",
+      ].map((name) => ({ name, id: null }));
+
+      return [todos, ...defaults];
     },
     selectedCategoryObj() {
       if (this.selectedCategory === "Todos") return null;
       return this.visualCategories.find((c) => c.name === this.selectedCategory) || null;
     },
     filteredProducts() {
-      // 1. Filtrar por pestaña de catálogo
-      let baseProducts = this.featuredProducts;
-      if (this.activeCatalogTab === 'bonus') {
-        baseProducts = baseProducts.filter(p => p.catalog_type === 'savings');
-      } else if (this.activeCatalogTab === 'sifrah') {
-        baseProducts = baseProducts.filter(p => p.catalog_type === 'both' || p.catalog_type === 'sifrah');
-      }
-
-      // 2. Filtrar por búsqueda y categoría
-      return baseProducts.filter((p) => {
+      return this.featuredProducts.filter((p) => {
         const matchesSearch =
           p.name.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-          (p.type || "").toLowerCase().includes(this.searchTerm.toLowerCase());
+          (p.type || "").toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+          (p.sub || "").toLowerCase().includes(this.searchTerm.toLowerCase());
         const cat = this.selectedCategoryObj;
+        const productCategory = this.categoryLabel(p);
         const matchesCategory =
           this.selectedCategory === "Todos" ||
           (this.selectedCategory === "Productos SIFRAH" &&
@@ -211,18 +270,62 @@ export default {
             !p.is_promotion) ||
           (this.selectedCategory === "Promociones" && p.is_promotion) ||
           (cat && cat.id && p.savings_category_id === cat.id) ||
-          (p.catalog_type === "savings" &&
-            !p.is_promotion &&
-            !p.savings_category_id &&
-            p.type === this.selectedCategory);
+          productCategory === this.selectedCategory ||
+          (p.type && p.type.toUpperCase() === this.selectedCategory.toUpperCase()) ||
+          (p.sub && p.sub.toUpperCase() === this.selectedCategory.toUpperCase());
         return matchesSearch && matchesCategory;
       });
     },
+    sortedFilteredProducts() {
+      const list = [...this.filteredProducts];
+      if (this.sortBy === "price-asc") {
+        return list.sort((a, b) => Number(a.price) - Number(b.price));
+      }
+      if (this.sortBy === "price-desc") {
+        return list.sort((a, b) => Number(b.price) - Number(a.price));
+      }
+      if (this.sortBy === "name") {
+        return list.sort((a, b) => String(a.name).localeCompare(String(b.name), "es"));
+      }
+      return list;
+    },
+  },
+  watch: {
+    bonusCart: {
+      deep: true,
+      handler() {
+        this.saveCart();
+      },
+    },
   },
   async created() {
+    this.loadCart();
     await this.fetchData();
   },
   methods: {
+    cartStorageKey() {
+      return `${BONUS_CART_STORAGE_KEY}_${this.session || "guest"}`;
+    },
+    loadCart() {
+      try {
+        const raw = sessionStorage.getItem(this.cartStorageKey());
+        const parsed = raw ? JSON.parse(raw) : [];
+        this.bonusCart = Array.isArray(parsed) ? parsed : [];
+      } catch (e) {
+        this.bonusCart = [];
+      }
+    },
+    saveCart() {
+      try {
+        sessionStorage.setItem(this.cartStorageKey(), JSON.stringify(this.bonusCart));
+      } catch (e) {
+        console.warn("No se pudo guardar el carrito de Bono Ahorro", e);
+      }
+    },
+    clearCart() {
+      this.bonusCart = [];
+      sessionStorage.removeItem(this.cartStorageKey());
+    },
     async fetchData() {
       try {
         this.loading = true;
@@ -233,8 +336,10 @@ export default {
         ]);
 
         const dashData = dashResponse.data;
+        let balance = 0;
+
         if (dashData && !dashData.error) {
-          this.sifrahBalance = Number(dashData.sifrahBalance) || 0;
+          balance = Number(dashData.sifrahBalance) || 0;
         } else if (dashData && dashData.msg === "invalid session") {
           this.$router.push("/login");
           return;
@@ -249,9 +354,11 @@ export default {
             this.apiCategories = productsData.categories;
           }
           if (productsData.savingsBalance != null) {
-            this.sifrahBalance = Number(productsData.savingsBalance) || 0;
+            balance = Number(productsData.savingsBalance) || 0;
           }
         }
+
+        this.sifrahBalance = balance;
       } catch (e) {
         console.error("Error fetching savings data:", e);
       } finally {
@@ -261,24 +368,115 @@ export default {
     selectCategory(cat) {
       this.selectedCategory = cat;
     },
-    async redeem(product) {
-      const price = Number(product.price) || 0;
-      if (price <= 0) return;
+    categoryLabel(product) {
+      if (!product) return "";
+      const aliases = {
+        SALUD: "Salud y Bienestar",
+        BELLEZA: "Salud y Bienestar",
+        BIENESTAR: "Salud y Bienestar",
+        HOGAR: "Hogar",
+        TECNOLOGIA: "Tecnología",
+        TECNOLOGÍA: "Tecnología",
+        ELECTRODOMESTICOS: "Electrodomésticos",
+        ELECTRODOMÉSTICOS: "Electrodomésticos",
+        ACCESORIOS: "Accesorios",
+        BENEFICIOS: "Beneficios",
+      };
+      const raw = String(product.sub || product.type || "").trim();
+      if (!raw) return "";
+      const upper = raw.toUpperCase();
+      if (aliases[upper]) return aliases[upper];
+      return raw
+        .toLowerCase()
+        .replace(/\b\w/g, (c) => c.toUpperCase());
+    },
+    formatCoins(value) {
+      const n = Number(value);
+      const safe = Number.isFinite(n) ? Math.max(0, Math.round(n)) : 0;
+      return safe.toLocaleString("es-PE");
+    },
+    showProductDetail(product) {
+      Swal.fire({
+        title: product.name,
+        html: `<p style="margin:0 0 8px;color:#666">${product.sub || product.type || ""}</p><p style="margin:0;font-size:1.25rem;font-weight:700;color:#e91e63">${this.formatCoins(product.price)}</p>`,
+        imageUrl: product.img,
+        imageWidth: 180,
+        confirmButtonColor: "#e91e63",
+        confirmButtonText: "Cerrar",
+      });
+    },
+    showSaldoHelp() {
+      Swal.fire({
+        icon: "info",
+        title: "¿Te falta saldo?",
+        text: "Si el producto que deseas supera tu saldo de Bono Ahorro, puedes completar la diferencia con dinero al momento del canje.",
+        confirmButtonColor: "#e91e63",
+        confirmButtonText: "Entendido",
+      });
+    },
+    addToCart(product) {
+      const existing = this.bonusCart.find((item) => item.id === product.id);
+      if (existing) {
+        existing.qty = (existing.qty || 1) + 1;
+      } else {
+        this.bonusCart.push({ ...product, qty: 1 });
+      }
+      Swal.fire({
+        toast: true,
+        position: "top-end",
+        icon: "success",
+        title: "Producto agregado al carrito",
+        showConfirmButton: false,
+        timer: 1800,
+        timerProgressBar: true,
+      });
+    },
+    async openCart() {
+      if (!this.bonusCart.length) {
+        Swal.fire({
+          icon: "info",
+          title: "Carrito vacío",
+          text: "Agrega productos con el botón Canjear para continuar.",
+          confirmButtonColor: "#e91e63",
+        });
+        return;
+      }
+
+      const itemsHtml = this.bonusCart
+        .map((item) => {
+          const qty = item.qty || 1;
+          const price = Number(item.price) || 0;
+          return `<li style="text-align:left;margin-bottom:6px"><strong>${item.name}</strong> × ${qty} — ${this.formatCoins(price * qty)}</li>`;
+        })
+        .join("");
+
+      const total = this.bonusCart.reduce(
+        (sum, item) => sum + (Number(item.price) || 0) * (item.qty || 1),
+        0
+      );
 
       const { isConfirmed } = await Swal.fire({
-        title: "¿Confirmar canje?",
-        html: `Vas a canjear <strong>${product.name}</strong> por <strong>S/ ${price.toFixed(2)}</strong> de tu Bono Ahorro.<br><small>La solicitud quedará pendiente de aprobación.</small>`,
+        title: "Carrito de canje",
+        html: `<ul style="padding-left:18px;margin:0 0 12px">${itemsHtml}</ul><p style="margin:0;font-weight:700">Total: ${this.formatCoins(total)}</p>`,
         icon: "question",
         showCancelButton: true,
-        confirmButtonText: "Solicitar canje",
-        cancelButtonText: "Cancelar",
+        confirmButtonText: "Confirmar canje",
+        cancelButtonText: "Seguir comprando",
+        confirmButtonColor: "#e91e63",
       });
 
       if (!isConfirmed) return;
 
+      const products = this.bonusCart.map((item) => ({
+        id: item.id,
+        name: item.name,
+        price: Number(item.price) || 0,
+        total: item.qty || 1,
+      }));
+
       try {
         const { data } = await api.SavingsBonus.POST(this.session, {
-          products: [{ id: product.id, name: product.name, price, total: 1 }],
+          products,
           office: "central",
           deliveryMethod: "pickup",
           deliveryInfo: { officeId: "central" },
@@ -293,6 +491,7 @@ export default {
           return;
         }
 
+        this.clearCart();
         await Swal.fire({
           icon: "success",
           title: "Solicitud enviada",
@@ -307,7 +506,7 @@ export default {
           text: "No se pudo procesar el canje. Intenta de nuevo.",
         });
       }
-    }
+    },
   }
 };
 </script>
@@ -315,11 +514,18 @@ export default {
 <style lang="stylus" scoped>
 @import "../../assets/style/vars.styl"
 
+tablet-break = 900px
+
 .savings-bonus-container
   padding 22px 24px
   background #fafafa
   min-height 100vh
   font-family 'Inter', sans-serif
+
+  @media (min-width 901px)
+    padding 28px 32px 40px
+    max-width 1280px
+    margin 0 auto
 
 .bonus-header
   margin-bottom 18px
@@ -344,66 +550,60 @@ export default {
   gap 18px
   margin-bottom 18px
 
-  @media (max-width m-break)
+  @media (min-width 901px)
+    gap 20px
+    margin-bottom 20px
+
+  @media (max-width tablet-break)
     grid-template-columns 1fr
 
 .promo-banner
-  /* Izquierda más profunda, derecha más clara + resplandor tras el chancho (como referencia) */
-  background linear-gradient(95deg, #c02677 0%, #db2777 22%, #ec4899 50%, #f9a8d4 88%, #fbcfe8 100%)
+  background linear-gradient(135deg, #fce4ec 0%, #f8bbd0 45%, #f48fb1 100%)
   border-radius 16px
   padding 22px 20px 20px 32px
   display flex
-  align-items flex-start
+  align-items center
   justify-content flex-start
-  color white
+  color #2d3436
   overflow hidden
   position relative
-  box-shadow 0 16px 40px rgba(233, 30, 99, 0.14)
+  box-shadow 0 8px 24px rgba(233, 30, 99, 0.08)
   box-sizing border-box
   min-height 230px
   height auto
 
-  &:before
-    content ''
-    position absolute
-    inset 0
-    border-radius inherit
-    /* Brillo suave detrás del personaje (lado derecho) */
-    background radial-gradient(ellipse 75% 120% at 88% 48%, rgba(255, 255, 255, 0.35) 0%, rgba(255, 255, 255, 0.08) 45%, transparent 62%)
-    pointer-events none
-    z-index 0
-
-  &:after
-    content ''
-    position absolute
-    inset 0
-    border-radius inherit
-    background radial-gradient(120% 80% at 12% 35%, rgba(0, 0, 0, 0.06) 0%, transparent 50%)
-    pointer-events none
-    z-index 0
+  @media (min-width 901px)
+    min-height 250px
+    padding 32px 28px 28px 40px
 
   .banner-content
-    flex 0 0 48%
-    max-width 48%
+    flex 0 0 52%
+    max-width 52%
     position relative
     z-index 1
     padding 2px 12px 0 0
-    align-self flex-start
+    align-self center
     h2
       font-size 32px
-      font-weight 500
-      margin 0 0 20px 0
-      line-height 1.28
-      letter-spacing 0.055em
-      -webkit-font-smoothing antialiased
+      font-weight 700
+      margin 0 0 16px 0
+      line-height 1.25
+      color #2d3436
+      .banner-highlight
+        color #e91e63
     p
       font-size 16px
       font-weight 400
-      opacity 0.96
+      color #636e72
       margin 0
-      line-height 1.4
-      letter-spacing 0.04em
-      max-width 34em
+      line-height 1.5
+      max-width 28em
+
+    @media (min-width 901px)
+      h2
+        font-size 2.1rem
+      p
+        font-size 1rem
 
   .banner-image
     position absolute
@@ -462,77 +662,90 @@ export default {
         max-width 100%
 
 .balance-card
-  background #301050 // Dark purple
+  background linear-gradient(160deg, #1e2a5a 0%, #2d1b69 55%, #301050 100%)
   border-radius 18px
   padding 20px 22px 18px 22px
   color #fff
   display flex
   flex-direction column
   justify-content space-between
-  box-shadow 0 10px 24px rgba(48, 16, 80, 0.14)
+  box-shadow 0 10px 24px rgba(48, 16, 80, 0.2)
   box-sizing border-box
   min-height 230px
 
+  @media (min-width 901px)
+    min-height 250px
+    padding 24px 24px 20px
+
   .balance-label
-    font-size 16px
-    font-weight 400
-    letter-spacing 0.04em
-    color #fff
-    margin 0 0 10px 0
+    font-size 15px
+    font-weight 500
+    color rgba(255,255,255,0.92)
+    margin 0 0 12px 0
 
   .balance-amount
-    font-size 32px
-    font-weight 500
-    letter-spacing 0.02em
+    font-size 42px
+    font-weight 700
     color #fff
-    margin 0 0 10px 0
+    margin 0 0 12px 0
     display flex
     align-items center
-    gap 8px
-    line-height 1.15
-    
-    .currency
-      font-size 30px
-      font-weight 500
-      color #fff
-    
+    gap 10px
+    line-height 1
+
+    .balance-value
+      font-size 2.5rem
+      font-weight 800
+      min-width 1ch
+      display inline-block
+
     .coin-icon-img
-      width 30px
-      height 40px
+      width 36px
+      height 36px
       flex-shrink 0
-      display block
       object-fit contain
-      vertical-align middle
+
+  .balance-meta
+    margin-bottom 16px
 
   .balance-note
-    font-size 16px
+    font-size 13px
     font-weight 400
-    letter-spacing 0.03em
-    color #fff
-    margin 0 0 14px 0
-    line-height 1.4
+    color rgba(255,255,255,0.88)
+    margin 0 0 4px 0
+    display flex
+    align-items center
+    gap 6px
 
-  .history-btn
+    i
+      font-size 12px
+      opacity 0.8
+
+  .balance-subnote
+    font-size 12px
+    color rgba(255,255,255,0.75)
+    margin 0
+
+  .cart-btn
     background white
-    color #301050
+    color #e91e63
     border none
     border-radius 10px
     padding 12px 16px
-    font-size 16px
-    font-weight 500
-    letter-spacing 0.03em
+    font-size 14px
+    font-weight 700
     cursor pointer
     display flex
     align-items center
     justify-content center
-    gap 10px
+    gap 8px
+    width 100%
     transition 0.3s
-    
-    &:hover
-      background white
-      transform translateY(-2px)
 
-  /* ===== Balance card - Móvil ===== */
+    &:hover
+      transform translateY(-1px)
+      box-shadow 0 6px 16px rgba(0,0,0,0.12)
+
   @media (max-width m-break)
     padding 16px 18px 14px 18px
     min-height auto
@@ -545,9 +758,6 @@ export default {
       font-size 26px
       margin 0 0 8px 0
 
-      .currency
-        font-size 24px
-
       .coin-icon-img
         width 26px
         height 26px
@@ -556,20 +766,116 @@ export default {
       font-size 12px
       margin 0 0 12px 0
 
-    .history-btn
-      padding 10px 14px
-      font-size 14px
+.earn-info-bar
+  display flex
+  align-items center
+  justify-content space-between
+  gap 16px
+  background #fff8f0
+  border 1px solid #ffe8cc
+  border-radius 14px
+  padding 14px 20px
+  margin-bottom 18px
+
+  .earn-info-text
+    display flex
+    align-items flex-start
+    gap 12px
+    flex 1
+    min-width 0
+
+  .earn-info-icon
+    color #f59e0b
+    font-size 1.1rem
+    margin-top 4px
+    flex-shrink 0
+
+  .earn-info-copy
+    display flex
+    flex-direction column
+    gap 2px
+    flex 1
+    min-width 0
+
+  .earn-info-question
+    margin 0
+    font-size 0.95rem
+    font-weight 700
+    color #2d3436
+    line-height 1.25
+
+  .earn-info-toggle
+    display none
+    align-items center
+    justify-content center
+    width 32px
+    height 32px
+    padding 0
+    border none
+    background transparent
+    color #8B5E34
+    cursor pointer
+    flex-shrink 0
+
+  .earn-info-chevron
+    font-size 1rem
+    transition transform 0.2s ease
+
+  .earn-info-expandable
+    display block
+
+  .earn-info-answer
+    margin 0
+    font-size 0.88rem
+    color #666
+    line-height 1.35
+    text-align left
+
+  .earn-info-link
+    color #8B5E34
+    font-size 0.85rem
+    font-weight 600
+    text-decoration none
+    white-space nowrap
+    display flex
+    align-items center
+    gap 6px
+    padding 8px 14px
+    border-radius 8px
+    background rgba(255, 255, 255, 0.55)
+    border 1px solid #E8D5B5
+    transition background 0.2s, color 0.2s
+    flex-shrink 0
+
+    &.earn-info-link-inline
+      display none
+
+    i
+      color #8B5E34
+      font-size 0.8rem
+
+    &:hover
+      background #fff
+      color #6F4A28
+      text-decoration none
+
+      i
+        color #6F4A28
 
 .controls-section
   display flex
   gap 14px
   align-items center
   margin-bottom 14px
-  flex-wrap wrap
+  flex-wrap nowrap
+
+  @media (min-width 901px)
+    margin-bottom 20px
+    gap 16px
 
 .search-bar
-  flex 1
-  min-width 250px
+  flex 0 1 360px
+  min-width 200px
   background white
   border-radius 999px
   padding 12px 18px
@@ -590,13 +896,34 @@ export default {
     &::placeholder
       color #b2bec3
 
+.category-pills-wrap
+  position relative
+  flex 1
+  min-width 0
+
+  &::after
+    content ''
+    position absolute
+    top 0
+    right 0
+    width 32px
+    height 100%
+    pointer-events none
+    background linear-gradient(to left, #fafafa 20%, transparent)
+
 .category-pills
   display flex
   gap 10px
-  width auto
+  flex 1
+  min-width 0
   overflow-x auto
+  flex-wrap nowrap
   padding 0
   margin 0
+  flex-shrink 1
+  -webkit-overflow-scrolling touch
+  scrollbar-width none
+  -ms-overflow-style none
   
   &::-webkit-scrollbar
     display none
@@ -620,108 +947,15 @@ export default {
       border-color #e91e63
       box-shadow 0 10px 22px rgba(233, 30, 99, 0.22)
 
-.category-filters
-  display flex
-  gap 10px
-  overflow-x auto
-  padding-bottom 5px
-  
-  &::-webkit-scrollbar
-    height 0px
-
-  button
-    background white
-    border none
-    padding 10px 20px
-    border-radius 50px
-    font-size 14px
-    font-weight 600
-    color #636e72
-    cursor pointer
-    white-space nowrap
-    transition 0.3s
-    box-shadow 0 2px 5px rgba(0,0,0,0.05)
-    
-    &:hover
-      background #f1f2f6
-    
-    &.active
-      background #e91e63
-      color white
-      box-shadow 0 4px 10px rgba(233, 30, 99, 0.3)
-
-.visual-categories
-  display grid
-  grid-template-columns repeat(auto-fit, minmax(110px, 1fr))
-  gap 14px
-  margin-bottom 22px
-
-  .cat-item
-    background white
-    padding 14px 10px
-    border-radius 16px
-    display flex
-    flex-direction column
-    align-items center
-    justify-content center
-    gap 10px
-    cursor pointer
-    border 1px solid rgba(0,0,0,0.06)
-    box-shadow 0 10px 24px rgba(0,0,0,0.03)
-    will-change transform, box-shadow, background-color
-    transition background-color 280ms cubic-bezier(0.4, 0, 0.2, 1), box-shadow 280ms cubic-bezier(0.4, 0, 0.2, 1), transform 280ms cubic-bezier(0.4, 0, 0.2, 1), border-color 280ms cubic-bezier(0.4, 0, 0.2, 1)
-
-    &:hover
-      transform translateY(-2px)
-      box-shadow 0 12px 26px rgba(0,0,0,0.06)
-      border-color rgba(233, 30, 99, 0.18)
-
-    &.active
-      background #fff0f3
-      border-color rgba(233, 30, 99, 0.18)
-      box-shadow 0 14px 28px rgba(233, 30, 99, 0.10)
-      transform translateY(-2px)
-
-    .cat-icon-wrapper
-      width 56px
-      height 56px
-      border-radius 50%
-      display flex
-      align-items center
-      justify-content center
-      font-size 24px
-      color #2d3436
-      transition background-color 280ms cubic-bezier(0.4, 0, 0.2, 1), box-shadow 280ms cubic-bezier(0.4, 0, 0.2, 1), transform 280ms cubic-bezier(0.4, 0, 0.2, 1)
-      will-change background-color, transform
-
-      i
-        transition color 280ms cubic-bezier(0.4, 0, 0.2, 1)
-
-      img
-        width 35px
-        height 35px
-        object-fit contain
-
-    &.active .cat-icon-wrapper
-      box-shadow 0 8px 18px rgba(233, 30, 99, 0.28)
-      transform scale(1.04)
-
-    span
-      font-size 13px
-      font-weight 700
-      color #2d3436
-      text-align center
-      transition color 280ms cubic-bezier(0.4, 0, 0.2, 1)
-      &.active-text
-        color #e91e63
-        font-weight 700
-
 .featured-section
+  margin-bottom 20px
+
   .section-header
     display flex
     justify-content space-between
     align-items center
     margin-bottom 20px
+    gap 16px
     
     h3
       font-size 20px
@@ -730,31 +964,79 @@ export default {
       margin 0
       padding-left 10px
       border-left 4px solid #e91e63
-    
-    .view-all
-      color #e91e63
-      font-size 14px
-      font-weight 600
-      text-decoration none
+
+    .sort-control
       display flex
       align-items center
-      gap-5px
-      
-      &:hover
-        text-decoration underline
+      gap 8px
+      font-size 0.88rem
+      color #666
+      white-space nowrap
+
+      label
+        font-weight 500
+
+      .sort-select
+        border 1px solid #e0e0e0
+        border-radius 8px
+        padding 6px 30px 6px 10px
+        font-size 0.88rem
+        color #2d3436
+        background-color #fff
+        background-image url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%23333333' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")
+        background-repeat no-repeat
+        background-position right 14px center
+        appearance none
+        -webkit-appearance none
+        -moz-appearance none
+        cursor pointer
+        outline none
+
+        &:focus
+          border-color #e91e63
+
+.products-loading,
+.products-empty
+  display flex
+  flex-direction column
+  align-items center
+  justify-content center
+  gap 12px
+  padding 48px 24px
+  text-align center
+  color #636e72
+
+.products-empty
+  i
+    font-size 2rem
+    color #b2bec3
+
+  p
+    margin 0
+    font-size 0.95rem
+    line-height 1.5
+    max-width 320px
 
 .products-grid
   display grid
   grid-template-columns repeat(auto-fill, minmax(200px, 1fr))
   gap 20px
 
+  @media (min-width 901px)
+    grid-template-columns repeat(3, 1fr)
+    gap 18px
+
+  @media (min-width 1200px)
+    grid-template-columns repeat(6, 1fr)
+
 .product-card
   background white
-  border-radius 20px
-  padding 15px
+  border-radius 16px
+  padding 14px
   position relative
   transition 0.3s
-  box-shadow 0 4px 10px rgba(0,0,0,0.03)
+  border 1px solid #f0f0f0
+  box-shadow 0 2px 8px rgba(0,0,0,0.04)
   display flex
   flex-direction column
   
@@ -796,11 +1078,12 @@ export default {
     flex-direction column
     
     .product-name
-      font-size 15px
+      font-size 14px
       font-weight 800
       color #2d3436
       margin 0 0 4px 0
-      text-transform uppercase
+      text-transform none
+      line-height 1.3
 
     .product-sub
       font-size 12px
@@ -811,14 +1094,16 @@ export default {
       font-size 18px
       font-weight 800
       color #2d3436
-      margin-bottom 15px
+      margin-bottom 12px
       display flex
       align-items center
       justify-content center
-      gap 5px
-      
-      .price-coin
-        font-size 14px
+      gap 6px
+
+      .price-coin-img
+        width 20px
+        height 20px
+        object-fit contain
 
     .redeem-btn
       background #e91e63
@@ -827,17 +1112,257 @@ export default {
       border-radius 10px
       padding 10px
       font-weight 700
+      font-size 0.88rem
       width 100%
       cursor pointer
       transition 0.3s
-      margin-bottom 10px
+      display flex
+      align-items center
+      justify-content center
+      gap 8px
+      margin-top auto
       
       &:hover
         background #d81b60
         box-shadow 0 4px 12px rgba(233, 30, 99, 0.3)
 
-    .product-footer
-      font-size 10px
-      color #b2bec3
-      margin 0
+.saldo-info-bar
+  display flex
+  align-items center
+  justify-content space-between
+  gap 16px
+  background #e8f4fd
+  border 1px solid #bee3f8
+  border-radius 14px
+  padding 14px 20px
+  margin-top 8px
+
+  .saldo-info-text
+    display flex
+    align-items flex-start
+    gap 12px
+    flex 1
+    min-width 0
+
+  .saldo-info-icon
+    color #3182ce
+    font-size 1.1rem
+    margin-top 4px
+    flex-shrink 0
+
+  .saldo-info-copy
+    display flex
+    flex-direction column
+    gap 2px
+    flex 1
+    min-width 0
+
+  .saldo-info-question
+    margin 0
+    font-size 0.95rem
+    font-weight 700
+    color #1a365d
+    line-height 1.25
+
+  .saldo-info-toggle
+    display none
+    align-items center
+    justify-content center
+    width 32px
+    height 32px
+    padding 0
+    border none
+    background transparent
+    color #2b6cb0
+    cursor pointer
+    flex-shrink 0
+
+  .saldo-info-chevron
+    font-size 1rem
+    transition transform 0.2s ease
+
+  .saldo-info-expandable
+    display block
+
+  .saldo-info-answer
+    margin 0
+    font-size 0.88rem
+    color #2c5282
+    line-height 1.35
+
+  .saldo-info-btn
+    background transparent
+    border 1px solid #63b3ed
+    color #2b6cb0
+    border-radius 8px
+    padding 8px 14px
+    font-size 0.85rem
+    font-weight 600
+    cursor pointer
+    white-space nowrap
+    display flex
+    align-items center
+    gap 6px
+    transition 0.2s
+    flex-shrink 0
+
+    &.saldo-info-btn-inline
+      display none
+
+    &:hover
+      background rgba(99, 179, 237, 0.15)
+
+@media (max-width tablet-break)
+  .earn-info-bar
+    display grid
+    grid-template-columns auto 1fr auto
+    grid-template-rows auto auto
+    column-gap 10px
+    row-gap 0
+    padding 12px 14px
+    align-items center
+
+    .earn-info-text
+      display contents
+
+    .earn-info-copy
+      display contents
+
+    .earn-info-icon
+      grid-column 1
+      grid-row 1
+      margin-top 0
+      align-self center
+
+    .earn-info-question
+      grid-column 2
+      grid-row 1
+      align-self center
+      font-size 0.9rem
+
+    .earn-info-toggle
+      display flex
+      grid-column 3
+      grid-row 1
+      justify-self end
+      align-self center
+
+    .earn-info-link-side
+      display none
+
+    .earn-info-expandable
+      display none
+      grid-column 1 / -1
+      grid-row 2
+      margin-top 10px
+      padding-top 10px
+      border-top 1px solid rgba(232, 213, 181, 0.65)
+
+    &.is-expanded
+      align-items start
+
+      .earn-info-expandable
+        display flex
+        flex-direction column
+        align-items flex-start
+        gap 10px
+
+      .earn-info-answer
+        font-size 0.84rem
+        line-height 1.5
+        color #5c5c5c
+
+      .earn-info-chevron
+        transform rotate(180deg)
+
+    .earn-info-link.earn-info-link-inline
+      display inline-flex
+      margin-top 0
+      align-self flex-start
+
+  .saldo-info-bar
+    display grid
+    grid-template-columns auto 1fr auto
+    grid-template-rows auto auto
+    column-gap 10px
+    row-gap 0
+    padding 12px 14px
+    align-items center
+
+    .saldo-info-text
+      display contents
+
+    .saldo-info-copy
+      display contents
+
+    .saldo-info-icon
+      grid-column 1
+      grid-row 1
+      margin-top 0
+      align-self center
+
+    .saldo-info-question
+      grid-column 2
+      grid-row 1
+      align-self center
+      font-size 0.9rem
+
+    .saldo-info-toggle
+      display flex
+      grid-column 3
+      grid-row 1
+      justify-self end
+      align-self center
+
+    .saldo-info-btn-side
+      display none
+
+    .saldo-info-expandable
+      display none
+      grid-column 1 / -1
+      grid-row 2
+      margin-top 10px
+      padding-top 10px
+      border-top 1px solid rgba(99, 179, 237, 0.35)
+
+    &.is-expanded
+      align-items start
+
+      .saldo-info-expandable
+        display flex
+        flex-direction column
+        align-items flex-start
+        gap 10px
+
+      .saldo-info-answer
+        font-size 0.84rem
+        line-height 1.5
+
+      .saldo-info-chevron
+        transform rotate(180deg)
+
+    .saldo-info-btn.saldo-info-btn-inline
+      display inline-flex
+      margin-top 0
+      align-self flex-start
+
+  .controls-section
+    flex-direction column
+    align-items stretch
+    gap 12px
+
+    .search-bar
+      flex 1 1 100%
+      min-width 0
+
+    .category-pills-wrap
+      width 100%
+
+  .featured-section .section-header
+    flex-direction column
+    align-items flex-start
+
+  .products-grid
+    grid-template-columns repeat(2, 1fr)
+    gap 12px
 </style>

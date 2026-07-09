@@ -435,7 +435,14 @@
             <div class="info-content-horizontal">
               <div class="info-text-side">
                 <span class="dash-card-title">Bono Ahorro</span>
-                <span class="dash-card-value-magenta">S/ {{ (sifrahBalance || 0).toLocaleString('es-PE', { minimumFractionDigits: 2 }) }}</span>
+                <span class="dash-card-value-magenta dash-bono-balance">
+                  <img
+                    src="@/assets/img/coin-saldo-icon.png"
+                    alt=""
+                    class="dash-bono-coin-icon"
+                  />
+                  {{ formatSavingsBalance }}
+                </span>
                 <span class="dash-card-subtitle">Canjéalo por productos</span>
               </div>
               <div class="piggy-bank-container">
@@ -558,6 +565,11 @@ export default {
       if (v == "business") return "Empresarial";
       if (v == "master") return "Empresario";
       return p.charAt(0).toUpperCase() + p.slice(1).toLowerCase();
+    },
+    formatSavingsBalance() {
+      const n = Number(this.sifrahBalance);
+      const safe = Number.isFinite(n) ? Math.max(0, Math.round(n)) : 0;
+      return safe.toLocaleString("es-PE");
     },
     userPlan() {
       if (!this.plans) return null;

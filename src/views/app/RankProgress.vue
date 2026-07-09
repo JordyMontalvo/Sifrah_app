@@ -26,7 +26,7 @@
               </div>
             </div>
             <p class="rp-target-pill">
-              Cálculo para rango {{ progress.targetRankLabel }}
+              Este cálculo corresponde al rango {{ progress.targetRankLabel }}
             </p>
           </div>
 
@@ -93,88 +93,94 @@
         </div>
       </section>
 
-      <section class="rp-card rp-table-card">
-        <header class="rp-card-header">
-          <i class="fas fa-users"></i>
-          <h3>¿CÓMO SE ESTÁN CONTANDO MIS PUNTOS?</h3>
-          <button
-            type="button"
-            class="rp-info-btn"
-            title="VMP: máximo de puntos válidos por pierna según el rango objetivo"
-          >
-            <i class="fas fa-info-circle"></i>
-          </button>
-        </header>
+      <div class="rp-bottom-grid">
+        <section class="rp-card rp-table-card">
+          <header class="rp-card-header">
+            <i class="fas fa-users"></i>
+            <h3>¿CÓMO SE ESTÁN CONTANDO MIS PUNTOS?</h3>
+            <button
+              type="button"
+              class="rp-info-btn"
+              title="VMP: máximo de puntos válidos por pierna según el rango objetivo"
+            >
+              <i class="fas fa-info-circle"></i>
+            </button>
+          </header>
 
-        <div class="rp-table-wrap">
-          <table class="rp-table">
-            <thead>
-              <tr>
-                <th>Pierna</th>
-                <th>Puntos generados</th>
-                <th>Puntos válidos</th>
-                <th>Estado</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-if="!progress.legs.length">
-                <td colspan="4" class="rp-empty-legs">Sin piernas activas con puntos</td>
-              </tr>
-              <tr v-for="leg in progress.legs" :key="leg.letter">
-                <td>
-                  <span class="rp-leg-badge">{{ leg.letter }}</span>
-                </td>
-                <td>
-                  <template v-if="leg.personalAdded > 0">
-                    {{ formatNum(leg.generated) }} pts
-                    <span class="rp-personal-plus">
-                      + {{ formatNum(leg.personalAdded) }} personal
+          <div class="rp-table-wrap">
+            <table class="rp-table">
+              <thead>
+                <tr>
+                  <th>Pierna</th>
+                  <th>Puntos generados</th>
+                  <th>Puntos válidos</th>
+                  <th>Aplicación personal</th>
+                  <th>Estado</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-if="!progress.legs.length">
+                  <td colspan="5" class="rp-empty-legs">Sin piernas activas con puntos</td>
+                </tr>
+                <tr v-for="leg in progress.legs" :key="leg.letter">
+                  <td>
+                    <span class="rp-leg-badge">{{ leg.letter }}</span>
+                  </td>
+                  <td>
+                    <template v-if="leg.personalAdded > 0">
+                      {{ formatNum(leg.generated) }} pts
+                      <span class="rp-personal-plus">
+                        + {{ formatNum(leg.personalAdded) }} personal
+                      </span>
+                    </template>
+                    <template v-else>{{ formatNum(leg.generated) }} pts</template>
+                  </td>
+                  <td><strong class="rp-valid-pts">{{ formatNum(leg.valid) }} pts</strong></td>
+                  <td>
+                    <span v-if="leg.personalAdded > 0" class="rp-status-text">
+                      Incluye puntos personales
                     </span>
-                  </template>
-                  <template v-else>{{ formatNum(leg.generated) }} pts</template>
-                </td>
-                <td><strong class="rp-valid-pts">{{ formatNum(leg.valid) }} pts</strong></td>
-                <td>
-                  <span v-if="leg.statusType === 'vmp'" class="rp-status-badge vmp">
-                    <i class="fas fa-star"></i> {{ leg.status }}
-                  </span>
-                  <span v-else-if="leg.statusType === 'personal'" class="rp-status-text">
-                    {{ leg.status }}
-                  </span>
-                  <span v-else class="rp-status-dash">—</span>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <footer class="rp-table-footer">
-          <div class="rp-total-label">
-            <i class="fas fa-coins"></i>
-            <strong>TOTAL PUNTOS VÁLIDOS</strong>
+                    <span v-else class="rp-status-dash">—</span>
+                  </td>
+                  <td>
+                    <span v-if="leg.statusType === 'vmp'" class="rp-status-badge vmp">
+                      <i class="fas fa-star"></i> {{ leg.status }}
+                    </span>
+                    <span v-else class="rp-status-dash">—</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
-          <span class="rp-total-value">{{ formatNum(progress.validPoints) }} pts</span>
-        </footer>
-      </section>
 
-      <section class="rp-card rp-requirements-card">
-        <header class="rp-card-header">
-          <i class="fas fa-clipboard-check"></i>
-          <h3>ESTADO DE REQUISITOS</h3>
-        </header>
+          <footer class="rp-table-footer">
+            <div class="rp-total-label">
+              <i class="fas fa-coins"></i>
+              <strong>TOTAL PUNTOS VÁLIDOS</strong>
+            </div>
+            <span class="rp-total-value">{{ formatNum(progress.validPoints) }} pts</span>
+          </footer>
+        </section>
 
-        <ul class="rp-req-list">
-          <li v-for="req in progress.requirements" :key="req.key" :class="{ met: req.met }">
-            <i
-              :class="req.met ? 'fas fa-check-circle ok' : 'fas fa-exclamation-circle warn'"
-            ></i>
-            <span class="rp-req-label">{{ req.label }}</span>
-            <span class="rp-req-value" :class="req.met ? 'ok' : 'warn'">
-              {{ req.met && req.key !== 'points' ? req.display : req.display }}
-            </span>
-          </li>
-        </ul>
-      </section>
+        <section class="rp-card rp-requirements-card">
+          <header class="rp-card-header">
+            <i class="fas fa-clipboard-check"></i>
+            <h3>ESTADO DE REQUISITOS</h3>
+          </header>
+
+          <ul class="rp-req-list">
+            <li v-for="req in progress.requirements" :key="req.key" :class="{ met: req.met }">
+              <i
+                :class="req.met ? 'fas fa-check-circle ok' : 'fas fa-exclamation-circle warn'"
+              ></i>
+              <span class="rp-req-label">{{ req.label }}</span>
+              <span class="rp-req-value" :class="req.met ? 'ok' : 'warn'">
+                {{ req.display }}
+              </span>
+            </li>
+          </ul>
+        </section>
+      </div>
 
       <footer class="rp-tip-banner">
         <i class="fas fa-lightbulb"></i>
