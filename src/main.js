@@ -6,6 +6,7 @@ import api from "./api";
 import GAuth from "vue-google-oauth2";
 import * as Sentry from "@sentry/vue";
 import { Integrations } from "@sentry/tracing";
+import { startVersionCheck } from "./utils/version-check";
 
 
 
@@ -241,3 +242,4 @@ async function initializeApp() {
 
 // Inicializar la aplicación
 initializeApp();
+startVersionCheck();

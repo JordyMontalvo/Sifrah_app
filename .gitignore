@@ -22,3 +22,6 @@ yarn-error.log*
 *.sw?
 
 .vercel
+
+# Generado en cada build (prebuild)
+/public/version.json
