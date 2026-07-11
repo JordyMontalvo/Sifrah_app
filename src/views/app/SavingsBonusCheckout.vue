@@ -3,8 +3,18 @@
     <div class="savings-checkout">
       <header class="checkout-top">
         <div class="checkout-header">
-          <h1>Canje con <span class="highlight">Bono Ahorro</span></h1>
-          <p>{{ step === 1 ? 'Usa tu saldo acumulado para canjear productos increíbles.' : 'Revisa y confirma tu canje para completar el proceso.' }}</p>
+          <button
+            type="button"
+            class="checkout-back-btn"
+            aria-label="Volver"
+            @click="goBack"
+          >
+            <i class="fas fa-arrow-left"></i>
+          </button>
+          <div class="checkout-header-copy">
+            <h1>Canje con <span class="highlight">Bono Ahorro</span></h1>
+            <p>{{ step === 1 ? 'Usa tu saldo acumulado para canjear productos increíbles.' : 'Revisa y confirma tu canje para completar el proceso.' }}</p>
+          </div>
         </div>
       </header>
 
@@ -376,7 +386,10 @@
                 </div>
                 <div class="confirm-mobile-total-cell">
                   <span>Tu Bono Ahorro utilizado</span>
-                  <strong class="is-discount">- S/ {{ formatMoney(usedBonus) }}</strong>
+                  <strong class="coins is-discount">
+                    <img src="../../assets/img/coin-saldo-icon.png" alt="" />
+                    -{{ formatCoins(usedBonus) }}
+                  </strong>
                 </div>
                 <div class="confirm-mobile-total-cell">
                   <span>Saldo pendiente</span>
@@ -411,13 +424,12 @@
                 <button
                   type="button"
                   class="confirm-payment-option"
-                  :class="{ active: payMethod === 'card' }"
-                  @click="selectPayMethod('card')"
+                  :class="{ active: payMethod === 'credit-card' }"
+                  @click="selectPayMethod('credit-card')"
                 >
                   <span class="radio-dot"></span>
                   <i class="fas fa-credit-card"></i>
-                  <span>Tarjeta de crédito / débito</span>
-                  <i class="fas fa-chevron-down option-chevron"></i>
+                  <span>Tarjeta de crédito / débito (Izipay)</span>
                 </button>
               </div>
 
@@ -446,9 +458,62 @@
                 <div v-if="getBankInfo(selectedBank).cci" class="confirm-bank-info-row"><strong>CCI:</strong><span>{{ getBankInfo(selectedBank).cci }}</span></div>
               </div>
 
+              <div v-if="payMethod === 'bank' && selectedBank" class="confirm-voucher-fields">
+                <div class="confirm-voucher-field">
+                  <label>Número de Operación/Voucher</label>
+                  <input
+                    v-model="voucherNumber"
+                    type="text"
+                    inputmode="numeric"
+                    placeholder="Número de Operación/Voucher"
+                    @input="onlyNumbersVoucher"
+                  />
+                </div>
+                <div class="confirm-voucher-field">
+                  <label>Comprobante de Pago</label>
+                  <div class="confirm-voucher-upload">
+                    <input
+                      id="voucher-file-mobile"
+                      type="file"
+                      accept="image/*"
+                      @change="onVoucherFileChange"
+                    />
+                    <label for="voucher-file-mobile" class="confirm-voucher-file-btn">
+                      <i class="fas fa-upload"></i>
+                      <span>{{ voucherPreview ? 'Cambiar archivo' : 'Seleccionar archivo' }}</span>
+                    </label>
+                  </div>
+                  <img v-if="voucherPreview" :src="voucherPreview" class="confirm-voucher-preview" alt="Vista previa del voucher" />
+                </div>
+              </div>
+
+              <div v-if="payMethod === 'credit-card'" class="confirm-izipay">
+                <div v-if="izipayLoading" class="confirm-izipay-state">
+                  <i class="fas fa-spinner fa-spin"></i> Cargando pasarela de pago...
+                </div>
+                <div v-else-if="izipayError" class="confirm-izipay-error">{{ izipayError }}</div>
+                <div
+                  v-else-if="izipayFormToken"
+                  :key="izipayFormToken"
+                  class="kr-embedded"
+                  :kr-form-token="izipayFormToken"
+                >
+                  <div class="kr-pan"></div>
+                  <div class="kr-expiry"></div>
+                  <div class="kr-security-code"></div>
+                  <button class="kr-payment-button"></button>
+                  <div class="kr-form-error"></div>
+                </div>
+              </div>
+
               <p class="confirm-payment-note">
                 <i class="fas fa-info-circle"></i>
-                Una vez realizado el pago, confirma para finalizar tu canje.
+                <template v-if="payMethod === 'credit-card'">
+                  Completa el pago con tarjeta para finalizar tu canje.
+                </template>
+                <template v-else>
+                  Una vez realizado el pago, confirma para finalizar tu canje.
+                </template>
               </p>
             </section>
 
@@ -487,10 +552,20 @@
             </div>
 
             <div class="confirm-mobile-footer confirm-mobile-only">
-              <button type="button" class="continue-btn" :disabled="!canConfirmRedemption" @click="submitRedemption">
+              <button
+                v-if="payMethod !== 'credit-card' || cashToPay <= 0"
+                type="button"
+                class="continue-btn"
+                :disabled="!canConfirmRedemption"
+                @click="submitRedemption"
+              >
                 {{ submitting ? 'Procesando...' : 'Confirmar canje' }}
                 <i class="fas fa-arrow-right"></i>
               </button>
+              <p v-else class="confirm-payment-note confirm-izipay-hint">
+                <i class="fas fa-credit-card"></i>
+                Usa el botón de pago de Izipay para completar tu canje.
+              </p>
               <p class="confirm-secure"><i class="fas fa-lock"></i> Transacción 100% segura</p>
             </div>
           </div>
@@ -551,12 +626,12 @@
                   <button
                     type="button"
                     class="confirm-payment-option"
-                    :class="{ active: payMethod === 'card' }"
-                    @click="selectPayMethod('card')"
+                    :class="{ active: payMethod === 'credit-card' }"
+                    @click="selectPayMethod('credit-card')"
                   >
                     <span class="radio-dot"></span>
                     <i class="fas fa-credit-card"></i>
-                    <span>Tarjeta de crédito / débito</span>
+                    <span>Tarjeta de crédito / débito (Izipay)</span>
                   </button>
                 </div>
 
@@ -585,16 +660,79 @@
                   <div v-if="getBankInfo(selectedBank).cci" class="confirm-bank-info-row"><strong>CCI:</strong><span>{{ getBankInfo(selectedBank).cci }}</span></div>
                 </div>
 
+                <div v-if="payMethod === 'bank' && selectedBank" class="confirm-voucher-fields">
+                  <div class="confirm-voucher-field">
+                    <label>Número de Operación/Voucher</label>
+                    <input
+                      v-model="voucherNumber"
+                      type="text"
+                      inputmode="numeric"
+                      placeholder="Número de Operación/Voucher"
+                      @input="onlyNumbersVoucher"
+                    />
+                  </div>
+                  <div class="confirm-voucher-field">
+                    <label>Comprobante de Pago</label>
+                    <div class="confirm-voucher-upload">
+                      <input
+                        id="voucher-file-sidebar"
+                        type="file"
+                        accept="image/*"
+                        @change="onVoucherFileChange"
+                      />
+                      <label for="voucher-file-sidebar" class="confirm-voucher-file-btn">
+                        <i class="fas fa-upload"></i>
+                        <span>{{ voucherPreview ? 'Cambiar archivo' : 'Seleccionar archivo' }}</span>
+                      </label>
+                    </div>
+                    <img v-if="voucherPreview" :src="voucherPreview" class="confirm-voucher-preview" alt="Vista previa del voucher" />
+                  </div>
+                </div>
+
+                <div v-if="payMethod === 'credit-card'" class="confirm-izipay">
+                  <div v-if="izipayLoading" class="confirm-izipay-state">
+                    <i class="fas fa-spinner fa-spin"></i> Cargando pasarela de pago...
+                  </div>
+                  <div v-else-if="izipayError" class="confirm-izipay-error">{{ izipayError }}</div>
+                  <div
+                    v-else-if="izipayFormToken"
+                    :key="'side-' + izipayFormToken"
+                    class="kr-embedded"
+                    :kr-form-token="izipayFormToken"
+                  >
+                    <div class="kr-pan"></div>
+                    <div class="kr-expiry"></div>
+                    <div class="kr-security-code"></div>
+                    <button class="kr-payment-button"></button>
+                    <div class="kr-form-error"></div>
+                  </div>
+                </div>
+
                 <p class="confirm-payment-note">
                   <i class="fas fa-info-circle"></i>
-                  Una vez realizado el pago, confirma para finalizar tu canje.
+                  <template v-if="payMethod === 'credit-card'">
+                    Completa el pago con tarjeta para finalizar tu canje.
+                  </template>
+                  <template v-else>
+                    Una vez realizado el pago, confirma para finalizar tu canje.
+                  </template>
                 </p>
               </div>
 
-              <button type="button" class="continue-btn" :disabled="!canConfirmRedemption" @click="submitRedemption">
+              <button
+                v-if="payMethod !== 'credit-card' || cashToPay <= 0"
+                type="button"
+                class="continue-btn"
+                :disabled="!canConfirmRedemption"
+                @click="submitRedemption"
+              >
                 {{ submitting ? 'Procesando...' : 'Confirmar canje' }}
                 <i class="fas fa-arrow-right"></i>
               </button>
+              <p v-else class="confirm-payment-note confirm-izipay-hint">
+                <i class="fas fa-credit-card"></i>
+                Usa el botón de pago de Izipay para completar tu canje.
+              </p>
               <p class="confirm-secure"><i class="fas fa-lock"></i> Transacción 100% segura</p>
             </div>
           </aside>
@@ -607,6 +745,8 @@
 <script>
 import App from "@/views/layouts/App";
 import api from "@/api";
+import lib from "@/lib";
+import axios from "axios";
 import Swal from "sweetalert2";
 import {
   loadBonusCart,
@@ -634,6 +774,14 @@ export default {
       loadingPaymentMethods: false,
       showBankOptions: false,
       selectedBank: "",
+      voucherNumber: "",
+      voucherFile: null,
+      voucherPreview: null,
+      izipayFormToken: null,
+      izipayLoading: false,
+      izipayError: null,
+      izipayTransactionId: null,
+      izipayAuthorizationCode: null,
     };
   },
   computed: {
@@ -680,9 +828,21 @@ export default {
     },
     canConfirmRedemption() {
       if (this.submitting || !this.balanceLoaded) return false;
-      if (!this.hasEnoughBonus) return false;
+      if (!this.productsTotal) return false;
+      if (Number(this.savingsBalance) < 1) return false;
       if (this.deliveryMethod === "pickup" && !this.selectedOfficeId) return false;
-      return true;
+      if (this.hasEnoughBonus) return true;
+      if (this.payMethod === "bank") {
+        return !!(
+          this.selectedBank &&
+          String(this.voucherNumber || "").trim() &&
+          this.voucherFile
+        );
+      }
+      if (this.payMethod === "credit-card") {
+        return !!this.izipayTransactionId;
+      }
+      return false;
     },
     bonusHintText() {
       if (this.hasEnoughBonus) return "Suficiente para tu canje";
@@ -719,6 +879,9 @@ export default {
         saveBonusCart(this.session, cart);
       },
     },
+    cashToPay() {
+      this.resetIzipay();
+    },
   },
   async created() {
     this.cart = loadBonusCart(this.session);
@@ -727,6 +890,15 @@ export default {
       return;
     }
     await Promise.all([this.fetchBalance(), this.loadOffices()]);
+    if (Number(this.savingsBalance) < 1) {
+      await Swal.fire({
+        icon: "warning",
+        title: "Saldo insuficiente",
+        text: "Necesitas al menos 1 coin de Bono Ahorro para realizar un canje.",
+        confirmButtonColor: "#e91e63",
+      });
+      this.$router.replace("/savings-bonus");
+    }
   },
   methods: {
     async fetchBalance() {
@@ -803,6 +975,13 @@ export default {
       if (next < 1) return;
       this.$set(item, "qty", next);
     },
+    goBack() {
+      if (this.step === 2) {
+        this.step = 1;
+        return;
+      }
+      this.$router.push("/savings-bonus");
+    },
     removeItem(item) {
       const idx = this.cart.findIndex((p) => p.id === item.id);
       if (idx === -1) return;
@@ -822,6 +1001,15 @@ export default {
         return;
       }
       await this.fetchBalance();
+      if (Number(this.savingsBalance) < 1) {
+        Swal.fire({
+          icon: "warning",
+          title: "Saldo insuficiente",
+          text: "Necesitas al menos 1 coin de Bono Ahorro para continuar con el canje.",
+          confirmButtonColor: "#e91e63",
+        });
+        return;
+      }
       this.step = 2;
       if (this.cashToPay > 0) {
         if (this.payMethod === "bank") {
@@ -844,13 +1032,159 @@ export default {
       this.payMethod = method;
       if (method === "bank") {
         this.showBankOptions = true;
+        this.resetIzipay();
         if (!this.paymentMethods.length) {
           this.loadPaymentMethods();
         }
+      } else if (method === "credit-card") {
+        this.showBankOptions = false;
+        this.selectedBank = "";
+        this.clearVoucher();
+        this.initIzipay();
       } else {
         this.showBankOptions = false;
         this.selectedBank = "";
+        this.clearVoucher();
+        this.resetIzipay();
       }
+    },
+    resetIzipay() {
+      this.izipayFormToken = null;
+      this.izipayLoading = false;
+      this.izipayError = null;
+      this.izipayTransactionId = null;
+      this.izipayAuthorizationCode = null;
+    },
+    async initIzipay() {
+      if (this.cashToPay <= 0) return;
+      if (this.izipayFormToken || this.izipayLoading) return;
+
+      this.izipayLoading = true;
+      this.izipayError = null;
+
+      try {
+        const orderId = `SAVINGS-${Date.now()}`;
+        const amount = this.cashToPay;
+        const storeUser = this.$store.state.user || {};
+        const email =
+          storeUser.email ||
+          this.$store.state.email ||
+          "cliente@sifrah.com";
+        const customerName =
+          storeUser.name ||
+          this.$store.state.name ||
+          "Cliente";
+
+        const response = await axios.post("/app/izipay-token", {
+          amount,
+          email,
+          orderId,
+          customerName,
+        });
+
+        this.izipayFormToken = response.data.formToken;
+
+        if (!document.getElementById("izipay-script")) {
+          const script = document.createElement("script");
+          script.id = "izipay-script";
+          script.src =
+            "https://static.micuentaweb.pe/static/js/krypton-client/V4.0/stable/kr-payment-form.min.js";
+          script.setAttribute(
+            "kr-public-key",
+            "33003249:publickey_yekT6W03reoGaKT2dSrjdzE0oBJ2a7X2seEsnusIcExSO"
+          );
+          script.setAttribute("kr-post-url-success", "javascript:void(0);");
+          document.head.appendChild(script);
+
+          const style = document.createElement("link");
+          style.rel = "stylesheet";
+          style.href =
+            "https://static.micuentaweb.pe/static/js/krypton-client/V4.0/ext/classic-reset.css";
+          document.head.appendChild(style);
+
+          const scriptTheme = document.createElement("script");
+          scriptTheme.src =
+            "https://static.micuentaweb.pe/static/js/krypton-client/V4.0/ext/classic.js";
+          document.head.appendChild(scriptTheme);
+
+          script.onload = () => {
+            if (window.KR) {
+              window.KR.onSubmit(this.onIzipaySuccess);
+            }
+          };
+        } else if (window.KR) {
+          window.KR.onSubmit(this.onIzipaySuccess);
+        }
+      } catch (err) {
+        console.error("Error al generar token Izipay:", err);
+        const details =
+          (err &&
+            err.response &&
+            err.response.data &&
+            (err.response.data.error ||
+              (err.response.data.details &&
+                err.response.data.details.answer &&
+                err.response.data.details.answer.errorMessage))) ||
+          "";
+        this.izipayError = details
+          ? "No se pudo cargar Izipay: " + details
+          : "Ocurrió un error al cargar la pasarela de pago.";
+      } finally {
+        this.izipayLoading = false;
+      }
+    },
+    onIzipaySuccess(event) {
+      if (
+        event &&
+        event.clientAnswer &&
+        event.clientAnswer.orderStatus === "PAID"
+      ) {
+        const transaction =
+          event.clientAnswer.transactions &&
+          event.clientAnswer.transactions[0];
+        this.izipayTransactionId = transaction ? transaction.uuid : null;
+        this.izipayAuthorizationCode = transaction
+          ? transaction.authorizationCode
+          : null;
+        this.submitRedemption();
+      }
+      return false;
+    },
+    clearVoucher() {
+      this.voucherNumber = "";
+      this.voucherFile = null;
+      this.voucherPreview = null;
+    },
+    onlyNumbersVoucher(e) {
+      const cleaned = String(e.target.value || "").replace(/\D/g, "");
+      this.voucherNumber = cleaned;
+      e.target.value = cleaned;
+    },
+    onVoucherFileChange(e) {
+      const file = e.target.files && e.target.files[0];
+      if (!file) {
+        this.voucherFile = null;
+        this.voucherPreview = null;
+        return;
+      }
+      if (!String(file.type || "").startsWith("image/")) {
+        this.voucherFile = null;
+        this.voucherPreview = null;
+        e.target.value = "";
+        Swal.fire({
+          icon: "warning",
+          title: "Archivo no válido",
+          text: "Solo se permiten imágenes (JPG, PNG, WEBP, etc.) para el voucher.",
+          confirmButtonColor: "#e91e63",
+        });
+        return;
+      }
+      this.voucherFile = file;
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        this.voucherPreview = ev.target.result;
+      };
+      reader.readAsDataURL(file);
     },
     async loadPaymentMethods() {
       if (this.loadingPaymentMethods) return;
@@ -899,12 +1233,74 @@ export default {
 
       await this.fetchBalance();
 
-      if (!this.hasEnoughBonus) {
+      if (Number(this.savingsBalance) < 1) {
         await Swal.fire({
           icon: "warning",
           title: "Saldo insuficiente",
-          html: `Necesitas <strong>${this.formatCoins(this.productsTotal)}</strong> monedas de Bono Ahorro y tienes <strong>${this.formatCoins(this.savingsBalance)}</strong>. Reduce el carrito o acumula más saldo para confirmar el canje.`,
-          confirmButtonText: "Entendido",
+          text: "Necesitas al menos 1 coin de Bono Ahorro para realizar un canje.",
+          confirmButtonColor: "#e91e63",
+        });
+        return;
+      }
+
+      const cashDue = Math.max(0, this.productsTotal - this.savingsBalance);
+      const usedBonus = Math.min(this.savingsBalance, this.productsTotal);
+
+      if (cashDue > 0) {
+        if (this.payMethod === "bank") {
+          if (!this.selectedBank) {
+            await Swal.fire({
+              icon: "warning",
+              title: "Banco requerido",
+              text: "Selecciona el banco al que realizaste la transferencia.",
+              confirmButtonColor: "#e91e63",
+            });
+            return;
+          }
+          if (!String(this.voucherNumber || "").trim()) {
+            await Swal.fire({
+              icon: "warning",
+              title: "Número de voucher",
+              text: "Ingresa el número de operación/voucher.",
+              confirmButtonColor: "#e91e63",
+            });
+            return;
+          }
+          if (!this.voucherFile) {
+            await Swal.fire({
+              icon: "warning",
+              title: "Comprobante requerido",
+              text: "Sube la imagen del comprobante de pago.",
+              confirmButtonColor: "#e91e63",
+            });
+            return;
+          }
+        } else if (this.payMethod === "credit-card") {
+          if (!this.izipayTransactionId) {
+            await Swal.fire({
+              icon: "info",
+              title: "Pago con tarjeta",
+              text: "Completa el pago con Izipay para finalizar tu canje.",
+              confirmButtonColor: "#e91e63",
+            });
+            return;
+          }
+        } else {
+          await Swal.fire({
+            icon: "info",
+            title: "Método de pago",
+            text: "Selecciona transferencia bancaria o tarjeta para completar el saldo pendiente.",
+            confirmButtonColor: "#e91e63",
+          });
+          return;
+        }
+      }
+
+      if (this.productsTotal <= 0) {
+        await Swal.fire({
+          icon: "warning",
+          title: "Carrito vacío",
+          text: "Agrega productos para confirmar el canje.",
           confirmButtonColor: "#e91e63",
         });
         return;
@@ -919,7 +1315,21 @@ export default {
 
       this.submitting = true;
       try {
-        const { data } = await api.SavingsBonus.POST(this.session, {
+        let voucherUrl = null;
+        if (cashDue > 0 && this.payMethod === "bank" && this.voucherFile) {
+          voucherUrl = await lib.upload(
+            this.voucherFile,
+            this.voucherFile.name,
+            "savings-bonus"
+          );
+        }
+
+        const bankInfo =
+          cashDue > 0 && this.payMethod === "bank"
+            ? this.getBankInfo(this.selectedBank)
+            : null;
+
+        const payload = {
           products,
           office: this.selectedOfficeId,
           deliveryMethod: this.deliveryMethod,
@@ -927,7 +1337,24 @@ export default {
             officeId: this.selectedOfficeId,
             receiptType: this.receiptType,
           },
-        });
+          used_bonus: usedBonus,
+          cash_amount: cashDue,
+          pay_method: cashDue > 0 ? this.payMethod : "savings_bonus",
+        };
+
+        if (cashDue > 0 && this.payMethod === "bank") {
+          payload.bank = this.selectedBank;
+          payload.bank_info = bankInfo;
+          payload.voucher = voucherUrl;
+          payload.voucher_number = String(this.voucherNumber || "").trim();
+        }
+
+        if (cashDue > 0 && this.payMethod === "credit-card") {
+          payload.transaction_id = this.izipayTransactionId;
+          payload.authorization_code = this.izipayAuthorizationCode;
+        }
+
+        const { data } = await api.SavingsBonus.POST(this.session, payload);
 
         if (data.error) {
           Swal.fire({
@@ -940,6 +1367,8 @@ export default {
         }
 
         clearBonusCart(this.session);
+        this.clearVoucher();
+        this.resetIzipay();
         await Swal.fire({
           icon: "success",
           title: "Solicitud enviada",
@@ -969,14 +1398,18 @@ export default {
 tablet-break = 900px
 
 .savings-checkout
-  max-width 1280px
-  margin 0 auto
+  box-sizing border-box
+  width 100%
+  max-width 100%
+  min-width 0
+  margin 0
   padding 24px 20px 40px
+  overflow-x hidden
   font-family 'Inter', sans-serif
   color #2d3436
 
   @media (min-width tablet-break)
-    padding 28px 32px 48px
+    padding 28px 20px 48px
 
 .checkout-top
   margin-bottom 20px
@@ -985,7 +1418,53 @@ tablet-break = 900px
     margin-bottom 28px
 
 .checkout-header
+  display flex
+  align-items flex-start
+  gap 12px
   text-align left
+
+  @media (min-width tablet-break)
+    gap 14px
+
+.checkout-back-btn
+  flex-shrink 0
+  width 40px
+  height 40px
+  margin-top 2px
+  border none
+  border-radius 50%
+  background #fff
+  color #2d3436
+  box-shadow 0 2px 10px rgba(0, 0, 0, 0.08)
+  border 1px solid rgba(0, 0, 0, 0.06)
+  display inline-flex
+  align-items center
+  justify-content center
+  cursor pointer
+  transition background 0.2s, transform 0.2s, box-shadow 0.2s
+
+  i
+    font-size 0.95rem
+
+  &:hover
+    background #fff5f8
+    color #e91e63
+    box-shadow 0 4px 14px rgba(233, 30, 99, 0.15)
+
+  &:active
+    transform scale(0.96)
+
+  @media (min-width tablet-break)
+    width 44px
+    height 44px
+    margin-top 4px
+
+    i
+      font-size 1rem
+
+.checkout-header-copy
+  flex 1
+  min-width 0
 
   h1
     margin 0 0 6px
@@ -1104,11 +1583,13 @@ tablet-break = 900px
 
 .checkout-layout
   display block
+  width 100%
+  min-width 0
 
   @media (min-width tablet-break)
     display grid
-    grid-template-columns minmax(0, 1.55fr) minmax(300px, 0.72fr)
-    gap 22px
+    grid-template-columns minmax(0, 1.7fr) minmax(320px, 420px)
+    gap 24px
     align-items start
 
 .checkout-sidebar
@@ -2026,6 +2507,13 @@ tablet-break = 900px
     font-weight 800
     line-height 1
 
+    &.coins
+      img
+        width 1em
+        height 1em
+        object-fit contain
+        flex-shrink 0
+
     &.is-discount
       color #e91e63
 
@@ -2189,6 +2677,93 @@ tablet-break = 900px
     text-align right
     color #2d3436
     word-break break-word
+
+.confirm-voucher-fields
+  margin-top 12px
+  padding 14px
+  background #fff5f8
+  border 1px solid #f8d7e3
+  border-radius 12px
+  display flex
+  flex-direction column
+  gap 12px
+
+.confirm-voucher-field
+  display flex
+  flex-direction column
+  gap 6px
+
+  label
+    font-size 0.78rem
+    font-weight 700
+    color #2d3436
+
+  input[type="text"]
+    width 100%
+    border 1px solid #e0e0e0
+    border-radius 10px
+    padding 11px 12px
+    font-size 0.9rem
+    outline none
+    background #fff
+    box-sizing border-box
+
+    &:focus
+      border-color #e91e63
+
+.confirm-voucher-upload
+  input[type="file"]
+    display none
+
+.confirm-voucher-file-btn
+  display inline-flex
+  align-items center
+  justify-content center
+  gap 8px
+  width 100%
+  padding 12px
+  border 1px dashed #e91e63
+  border-radius 10px
+  background #fff
+  color #e91e63
+  font-size 0.88rem
+  font-weight 600
+  cursor pointer
+  box-sizing border-box
+
+  &:hover
+    background #fff0f5
+
+.confirm-voucher-preview
+  margin-top 8px
+  width 100%
+  max-height 180px
+  object-fit contain
+  border-radius 10px
+  border 1px solid #eceff1
+  background #fff
+
+.confirm-izipay
+  margin-top 12px
+  padding 14px
+  background #fff
+  border 1px solid #eceff1
+  border-radius 12px
+  text-align center
+
+.confirm-izipay-state
+  padding 18px 10px
+  color #636e72
+  font-size 0.9rem
+
+.confirm-izipay-error
+  padding 16px 10px
+  color #c62828
+  font-size 0.88rem
+
+.confirm-izipay-hint
+  margin 0 0 10px
+  text-align center
 
 .confirm-info-grid
   display grid
@@ -2362,8 +2937,16 @@ tablet-break = 900px
   .savings-checkout
     padding 16px 14px 28px
 
-  .checkout-header h1
+  .checkout-header-copy h1
     font-size 1.45rem
+
+  .checkout-back-btn
+    width 36px
+    height 36px
+    margin-top 1px
+
+    i
+      font-size 0.88rem
 
   .checkout-card
     padding 16px 14px

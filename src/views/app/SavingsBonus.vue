@@ -148,7 +148,14 @@
                 <span class="qty-value">{{ cartQty(product.id) }}</span>
                 <button type="button" class="qty-btn" @click="updateCartQty(product, 1)" aria-label="Aumentar cantidad">+</button>
               </div>
-              <button v-else type="button" class="redeem-btn" @click="addToCart(product)">
+              <button
+                v-else
+                type="button"
+                class="redeem-btn"
+                :disabled="!canRedeemWithBonus"
+                :title="canRedeemWithBonus ? '' : 'Necesitas al menos 1 coin de Bono Ahorro'"
+                @click="addToCart(product)"
+              >
                 Canjear <i class="fas fa-shopping-cart"></i>
               </button>
             </div>
@@ -222,6 +229,9 @@ export default {
     session() { return this.$store.state.session; },
     office_id() { return this.$store.state.office_id; },
     title() { return "Bono Ahorro"; },
+    canRedeemWithBonus() {
+      return Number(this.sifrahBalance) >= 1;
+    },
     cartCount() {
       return this.bonusCart.reduce((sum, item) => sum + (item.qty || 1), 0);
     },
@@ -410,6 +420,15 @@ export default {
       });
     },
     addToCart(product) {
+      if (!this.canRedeemWithBonus) {
+        Swal.fire({
+          icon: "warning",
+          title: "Saldo insuficiente",
+          text: "Necesitas al menos 1 coin de Bono Ahorro para canjear productos. Puedes completar el resto con dinero al pagar.",
+          confirmButtonColor: "#e91e63",
+        });
+        return;
+      }
       const existing = this.bonusCart.find((item) => item.id === product.id);
       if (existing) {
         existing.qty = (existing.qty || 1) + 1;
@@ -431,6 +450,15 @@ export default {
       return item ? (item.qty || 1) : 0;
     },
     updateCartQty(product, delta) {
+      if (delta > 0 && !this.canRedeemWithBonus) {
+        Swal.fire({
+          icon: "warning",
+          title: "Saldo insuficiente",
+          text: "Necesitas al menos 1 coin de Bono Ahorro para canjear productos.",
+          confirmButtonColor: "#e91e63",
+        });
+        return;
+      }
       const idx = this.bonusCart.findIndex((item) => item.id === product.id);
       if (idx === -1) return;
       const item = this.bonusCart[idx];
@@ -442,6 +470,15 @@ export default {
       this.$set(item, "qty", next);
     },
     openCart() {
+      if (!this.canRedeemWithBonus) {
+        Swal.fire({
+          icon: "warning",
+          title: "Saldo insuficiente",
+          text: "Necesitas al menos 1 coin de Bono Ahorro para continuar con el canje.",
+          confirmButtonColor: "#e91e63",
+        });
+        return;
+      }
       if (!this.bonusCart.length) {
         Swal.fire({
           icon: "info",
@@ -466,26 +503,20 @@ tablet-break = 900px
 .savings-bonus-container
   box-sizing border-box
   width 100%
-  max-width 1800px
-  margin 0 0 0 20px
+  max-width 100%
+  min-width 0
+  margin 0
   padding 20px
   background #fafafa
   min-height 100vh
+  overflow-x hidden
   font-family 'Inter', sans-serif
 
-  @media (max-width 1800px)
-    max-width 95%
-    padding 15px
-    margin 0 0 0 15px
-
   @media (max-width 768px)
-    max-width 100%
     padding 10px
-    margin 0 0 0 10px
 
   @media (max-width 480px)
     padding 8px
-    margin 0 0 0 8px
 
 .bonus-header
   margin-bottom 18px
@@ -506,9 +537,11 @@ tablet-break = 900px
 
 .hero-grid
   display grid
-  grid-template-columns 2.5fr 1fr
+  grid-template-columns minmax(0, 2.5fr) minmax(0, 1fr)
   gap 18px
   margin-bottom 18px
+  width 100%
+  min-width 0
 
   @media (min-width 901px)
     gap 20px
@@ -531,6 +564,9 @@ tablet-break = 900px
   box-sizing border-box
   min-height 230px
   height auto
+  min-width 0
+  width 100%
+  max-width 100%
 
   @media (min-width 901px)
     min-height 250px
@@ -632,6 +668,9 @@ tablet-break = 900px
   box-shadow 0 10px 24px rgba(48, 16, 80, 0.2)
   box-sizing border-box
   min-height 230px
+  min-width 0
+  width 100%
+  max-width 100%
 
   @media (min-width 901px)
     min-height 250px
@@ -736,12 +775,17 @@ tablet-break = 900px
   border-radius 14px
   padding 14px 20px
   margin-bottom 18px
+  width 100%
+  max-width 100%
+  min-width 0
+  box-sizing border-box
+  flex-wrap wrap
 
   .earn-info-text
     display flex
     align-items flex-start
     gap 12px
-    flex 1
+    flex 1 1 220px
     min-width 0
 
   .earn-info-icon
@@ -805,7 +849,9 @@ tablet-break = 900px
     background rgba(255, 255, 255, 0.55)
     border 1px solid #E8D5B5
     transition background 0.2s, color 0.2s
-    flex-shrink 0
+    flex 0 1 auto
+    max-width 100%
+    box-sizing border-box
 
     &.earn-info-link-inline
       display none
@@ -827,15 +873,21 @@ tablet-break = 900px
   gap 14px
   align-items center
   margin-bottom 14px
-  flex-wrap nowrap
+  flex-wrap wrap
+  width 100%
+  max-width 100%
+  min-width 0
+  box-sizing border-box
 
   @media (min-width 901px)
     margin-bottom 20px
     gap 16px
+    flex-wrap nowrap
 
 .search-bar
   flex 0 1 360px
-  min-width 200px
+  min-width 0
+  max-width 100%
   background white
   border-radius 999px
   padding 12px 18px
@@ -844,6 +896,7 @@ tablet-break = 900px
   gap 12px
   border 1px solid rgba(0,0,0,0.06)
   box-shadow 0 8px 20px rgba(0,0,0,0.04)
+  box-sizing border-box
   
   i
     color #b2bec3
@@ -979,15 +1032,17 @@ tablet-break = 900px
 
 .products-grid
   display grid
-  grid-template-columns repeat(auto-fill, minmax(200px, 1fr))
+  grid-template-columns repeat(auto-fill, minmax(min(200px, 100%), 1fr))
   gap 20px
+  width 100%
+  min-width 0
 
   @media (min-width 901px)
-    grid-template-columns repeat(3, 1fr)
+    grid-template-columns repeat(3, minmax(0, 1fr))
     gap 18px
 
   @media (min-width 1200px)
-    grid-template-columns repeat(6, 1fr)
+    grid-template-columns repeat(6, minmax(0, 1fr))
 
 .product-card
   background white
@@ -1082,9 +1137,16 @@ tablet-break = 900px
       gap 8px
       margin-top auto
       
-      &:hover
+      &:hover:not(:disabled)
         background #d81b60
         box-shadow 0 4px 12px rgba(233, 30, 99, 0.3)
+
+      &:disabled
+        background #cfd8dc
+        color #fff
+        cursor not-allowed
+        box-shadow none
+        opacity 0.85
 
     .cart-qty-control
       display flex
@@ -1129,12 +1191,17 @@ tablet-break = 900px
   border-radius 14px
   padding 14px 20px
   margin-top 8px
+  width 100%
+  max-width 100%
+  min-width 0
+  box-sizing border-box
+  flex-wrap wrap
 
   .saldo-info-text
     display flex
     align-items flex-start
     gap 12px
-    flex 1
+    flex 1 1 220px
     min-width 0
 
   .saldo-info-icon
@@ -1197,7 +1264,9 @@ tablet-break = 900px
     align-items center
     gap 6px
     transition 0.2s
-    flex-shrink 0
+    flex 0 1 auto
+    max-width 100%
+    box-sizing border-box
 
     &.saldo-info-btn-inline
       display none
