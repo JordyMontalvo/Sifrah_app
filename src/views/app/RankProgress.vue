@@ -30,13 +30,26 @@
             </p>
           </div>
 
-          <div class="rp-current-rank-box">
-            <span class="rp-current-label">RANGO EN TIEMPO REAL</span>
-            <div class="rp-current-rank">
-              <i class="fas fa-medal rp-medal-icon"></i>
-              <div>
-                <strong>{{ progress.currentRankLabel }}</strong>
-                <span>Rango actual</span>
+          <div class="rp-current-ranks-wrapper">
+            <div class="rp-current-rank-box">
+              <span class="rp-current-label">RANGO HISTÓRICO</span>
+              <div class="rp-current-rank">
+                <i class="fas fa-award rp-medal-icon"></i>
+                <div>
+                  <strong>{{ progress.historicRankLabel }}</strong>
+                  <span>Máximo alcanzado</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="rp-current-rank-box">
+              <span class="rp-current-label">TIEMPO REAL</span>
+              <div class="rp-current-rank">
+                <i class="fas fa-bolt rp-medal-icon" style="color: #FFC107;"></i>
+                <div>
+                  <strong>{{ progress.currentRankLabel }}</strong>
+                  <span>Proyectado actual</span>
+                </div>
               </div>
             </div>
           </div>
