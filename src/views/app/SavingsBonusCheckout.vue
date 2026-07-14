@@ -341,6 +341,49 @@
                   <label><input type="radio" v-model="receiptType" value="boleta" /> Boleta</label>
                   <label><input type="radio" v-model="receiptType" value="factura" /> Factura</label>
                 </div>
+
+                <div v-if="receiptType === 'boleta'" class="receipt-fields boleta-fields">
+                  <div class="delivery-form-group">
+                    <label>Documento</label>
+                    <input
+                      v-model="proofData.document"
+                      type="text"
+                      placeholder="Nro. de Documento"
+                      @input="onlyNumbers($event, 'proofData.document')"
+                    />
+                  </div>
+                </div>
+
+                <div v-if="receiptType === 'factura'" class="receipt-fields factura-fields">
+                  <div class="delivery-form-row">
+                    <div class="delivery-form-group">
+                      <label>Nro. RUC</label>
+                      <input
+                        v-model="proofData.ruc"
+                        type="text"
+                        placeholder="Número de RUC"
+                        maxlength="11"
+                        @input="onlyNumbersRUC($event, 'proofData.ruc')"
+                      />
+                    </div>
+                    <div class="delivery-form-group">
+                      <label>Razón Social</label>
+                      <input
+                        v-model="proofData.razonSocial"
+                        type="text"
+                        placeholder="Razón Social"
+                      />
+                    </div>
+                  </div>
+                  <div class="delivery-form-group">
+                    <label>Dirección Fiscal</label>
+                    <input
+                      v-model="proofData.direccionFiscal"
+                      type="text"
+                      placeholder="Dirección Fiscal"
+                    />
+                  </div>
+                </div>
               </div>
             </section>
 
@@ -668,7 +711,13 @@
                   <i class="fas fa-chevron-down confirm-info-chevron confirm-mobile-only"></i>
                 </div>
                 <p class="confirm-info-main">Tipo de comprobante: {{ receiptTypeLabel }}</p>
-                <p class="confirm-info-sub">Nro. de documento: {{ receiptDocumentNumber }}</p>
+                <p v-if="receiptType !== 'none'" class="confirm-info-sub">{{ receiptSummaryLine }}</p>
+                <p
+                  v-if="receiptType === 'factura' && proofData.direccionFiscal"
+                  class="confirm-info-sub"
+                >
+                  Dirección fiscal: {{ proofData.direccionFiscal }}
+                </p>
               </section>
             </div>
 
@@ -909,6 +958,12 @@ export default {
       deliveryZoneInfo: null,
       receiptExpanded: false,
       receiptType: "none",
+      proofData: {
+        document: "",
+        ruc: "",
+        razonSocial: "",
+        direccionFiscal: "",
+      },
       submitting: false,
       payMethod: "bank",
       confirmProductsExpanded: true,
@@ -941,6 +996,30 @@ export default {
     },
     receiptDocumentNumber() {
       return this.$store.state.dni || "—";
+    },
+    receiptSummaryLine() {
+      if (this.receiptType === "boleta") {
+        return `Nro. de documento: ${this.proofData.document || "—"}`;
+      }
+      if (this.receiptType === "factura") {
+        return `RUC: ${this.proofData.ruc || "—"} · ${this.proofData.razonSocial || "—"}`;
+      }
+      return "Sin datos de facturación";
+    },
+    isReceiptComplete() {
+      if (this.receiptType === "none") return true;
+      if (this.receiptType === "boleta") {
+        return !!(this.proofData.document && String(this.proofData.document).length > 0);
+      }
+      if (this.receiptType === "factura") {
+        return (
+          this.proofData.ruc &&
+          String(this.proofData.ruc).length === 11 &&
+          this.proofData.razonSocial &&
+          this.proofData.direccionFiscal
+        );
+      }
+      return true;
     },
     deliveryLabel() {
       return this.deliveryMethod === "pickup" ? "Retiro en tienda" : "Delivery";
@@ -1020,6 +1099,7 @@ export default {
       if (Number(this.savingsBalance) < 1) return false;
       if (this.deliveryMethod === "pickup" && !this.selectedOfficeId) return false;
       if (this.deliveryMethod === "delivery" && !this.isDeliveryComplete) return false;
+      if (!this.isReceiptComplete) return false;
       if (this.cashToPay <= 0) return true;
       if (this.payMethod === "bank") {
         return !!(
@@ -1076,6 +1156,14 @@ export default {
       this.resetIzipay();
       if (wasCard && this.cashToPay > 0) {
         this.$nextTick(() => this.initIzipay());
+      }
+    },
+    receiptType(newType) {
+      if (newType === "none") return;
+      this.receiptExpanded = true;
+      if (newType === "boleta" && !this.proofData.document) {
+        const dni = this.$store.state.dni || (this.$store.state.user && this.$store.state.user.dni);
+        if (dni) this.proofData.document = String(dni);
       }
     },
     checkoutIsNarrow(isNarrow, wasNarrow) {
@@ -1223,6 +1311,18 @@ export default {
         });
         return;
       }
+      if (!this.isReceiptComplete) {
+        Swal.fire({
+          icon: "warning",
+          title: "Comprobante incompleto",
+          text:
+            this.receiptType === "factura"
+              ? "Para factura completa RUC (11 dígitos), razón social y dirección fiscal."
+              : "Ingresa el número de documento para la boleta.",
+          confirmButtonColor: "#e91e63",
+        });
+        return;
+      }
       await this.fetchBalance();
       if (Number(this.savingsBalance) < 1) {
         Swal.fire({
@@ -1262,6 +1362,12 @@ export default {
     onlyNumbersPhone(event, fieldPath) {
       let value = String(event.target.value || "").replace(/[^0-9]/g, "");
       if (value.length > 9) value = value.substring(0, 9);
+      event.target.value = value;
+      this.setNestedField(fieldPath, value);
+    },
+    onlyNumbersRUC(event, fieldPath) {
+      let value = String(event.target.value || "").replace(/[^0-9]/g, "");
+      if (value.length > 11) value = value.substring(0, 11);
       event.target.value = value;
       this.setNestedField(fieldPath, value);
     },
@@ -1637,6 +1743,19 @@ export default {
         return;
       }
 
+      if (!this.isReceiptComplete) {
+        Swal.fire({
+          icon: "warning",
+          title: "Comprobante incompleto",
+          text:
+            this.receiptType === "factura"
+              ? "Para factura completa RUC (11 dígitos), razón social y dirección fiscal."
+              : "Ingresa el número de documento para la boleta.",
+          confirmButtonColor: "#e91e63",
+        });
+        return;
+      }
+
       await this.fetchBalance();
 
       if (Number(this.savingsBalance) < 1) {
@@ -1737,6 +1856,10 @@ export default {
 
         const deliveryInfo = {
           receiptType: this.receiptType,
+          proofDocument: this.proofData.document || null,
+          proofRUC: this.proofData.ruc || null,
+          proofRazonSocial: this.proofData.razonSocial || null,
+          proofDireccionFiscal: this.proofData.direccionFiscal || null,
         };
 
         if (this.deliveryMethod === "pickup") {
@@ -2736,7 +2859,8 @@ tablet-break = 900px
 .receipt-options
   display flex
   flex-wrap wrap
-  gap 16px
+  gap 14px 18px
+  margin-bottom 4px
   font-size 0.88rem
 
   label
@@ -2744,6 +2868,11 @@ tablet-break = 900px
     align-items center
     gap 6px
     cursor pointer
+
+.receipt-fields
+  margin-top 14px
+  padding-top 14px
+  border-top 1px solid rgba(232, 213, 181, 0.8)
 
 .checkout-summary-bar
   display grid
