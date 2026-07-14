@@ -168,7 +168,7 @@
                   type="button"
                   class="delivery-option"
                   :class="{ active: deliveryMethod === 'pickup' }"
-                  @click="deliveryMethod = 'pickup'"
+                  @click="selectDeliveryMethod('pickup')"
                 >
                   <span class="radio-dot"></span>
                   <div>
@@ -180,7 +180,7 @@
                   type="button"
                   class="delivery-option"
                   :class="{ active: deliveryMethod === 'delivery' }"
-                  @click="deliveryMethod = 'delivery'"
+                  @click="selectDeliveryMethod('delivery')"
                 >
                   <span class="radio-dot"></span>
                   <div>
@@ -200,8 +200,127 @@
                 <p v-if="selectedOffice" class="office-address">{{ selectedOffice.address }}</p>
               </div>
 
-              <div v-else class="delivery-note">
-                <p>El delivery para canjes con Bono Ahorro se coordinará al confirmar tu solicitud.</p>
+              <div v-else class="delivery-form">
+                <div class="delivery-form-section">
+                  <h4>Información del Receptor</h4>
+                  <div class="delivery-form-row">
+                    <div class="delivery-form-group">
+                      <label>Nombre Receptor</label>
+                      <input
+                        v-model="deliveryData.recipientName"
+                        type="text"
+                        placeholder="Nombre Completo"
+                        @input="onlyLetters($event, 'deliveryData.recipientName')"
+                      />
+                    </div>
+                    <div class="delivery-form-group">
+                      <label>Documento</label>
+                      <input
+                        v-model="deliveryData.document"
+                        type="text"
+                        placeholder="Nro. de Documento"
+                        @input="onlyNumbers($event, 'deliveryData.document')"
+                      />
+                    </div>
+                  </div>
+                  <div class="delivery-form-group">
+                    <label>Celular Receptor</label>
+                    <input
+                      v-model="deliveryData.recipientPhone"
+                      type="tel"
+                      placeholder="Celular Receptor"
+                      maxlength="9"
+                      @input="onlyNumbersPhone($event, 'deliveryData.recipientPhone')"
+                    />
+                  </div>
+                </div>
+
+                <div class="delivery-form-section">
+                  <h4>Ubicación de Entrega</h4>
+                  <div class="delivery-form-row">
+                    <div class="delivery-form-group">
+                      <label>Departamento</label>
+                      <select
+                        v-model="deliveryData.department"
+                        class="office-select"
+                        @change="onDepartmentChange"
+                      >
+                        <option value="">Selecciona</option>
+                        <option
+                          v-for="dept in availableDepartments"
+                          :key="dept.value"
+                          :value="dept.value"
+                        >
+                          {{ dept.name }}
+                        </option>
+                      </select>
+                    </div>
+                    <div class="delivery-form-group">
+                      <label>Provincia</label>
+                      <select
+                        v-model="deliveryData.province"
+                        class="office-select"
+                        @change="onProvinceChange"
+                      >
+                        <option value="">Selecciona</option>
+                        <option
+                          v-for="province in availableProvinces"
+                          :key="province.value"
+                          :value="province.value"
+                        >
+                          {{ province.name }}
+                        </option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="delivery-form-group">
+                    <label>Distrito</label>
+                    <select
+                      v-model="deliveryData.district"
+                      class="office-select"
+                      @change="onDistrictChange"
+                    >
+                      <option value="">Selecciona</option>
+                      <option
+                        v-for="district in availableDistricts"
+                        :key="district.value"
+                        :value="district.value"
+                      >
+                        {{ district.name }}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+
+                <div v-if="showAgencyField" class="delivery-form-section">
+                  <h4>Agencia de Transporte</h4>
+                  <div class="delivery-form-group">
+                    <label>Agencia</label>
+                    <select v-model="deliveryData.agency" class="office-select">
+                      <option value="">Seleccione el PDE</option>
+                      <option
+                        v-for="agency in availableAgencies"
+                        :key="agency._id || agency.agency_code"
+                        :value="agency.agency_code || agency.agency_id"
+                      >
+                        {{ agency.agency_name }}
+                      </option>
+                    </select>
+                  </div>
+                  <div class="delivery-note">
+                    <p>El costo de envío varía según la agencia y destino. Consulta directamente con la agencia seleccionada.</p>
+                  </div>
+                </div>
+
+                <div
+                  v-if="deliveryZoneInfo && deliveryData.department === 'lima'"
+                  class="delivery-zone-info"
+                >
+                  <p>
+                    Costo de delivery ({{ deliveryZoneInfo.zone_name || 'zona' }}):
+                    <strong>S/ {{ formatMoney(deliveryZoneInfo.price) }}</strong>
+                  </p>
+                </div>
               </div>
             </section>
 
@@ -275,6 +394,10 @@
                 <div class="sidebar-row">
                   <span>Dinero adicional a pagar</span>
                   <strong class="cash">S/ {{ formatMoney(cashToPay) }}</strong>
+                </div>
+                <div v-if="deliveryFee > 0" class="sidebar-row">
+                  <span>Costo de delivery</span>
+                  <strong class="cash">S/ {{ formatMoney(deliveryFee) }}</strong>
                 </div>
               </div>
 
@@ -770,6 +893,20 @@ export default {
       offices: [],
       selectedOfficeId: "",
       deliveryMethod: "pickup",
+      deliveryData: {
+        recipientName: "",
+        document: "",
+        recipientPhone: "",
+        department: "",
+        province: "",
+        district: "",
+        agency: "",
+      },
+      availableDepartments: [],
+      availableProvinces: [],
+      availableDistricts: [],
+      availableAgencies: [],
+      deliveryZoneInfo: null,
       receiptExpanded: false,
       receiptType: "none",
       submitting: false,
@@ -814,9 +951,30 @@ export default {
         return `${this.selectedOffice.name}${address}`;
       }
       if (this.deliveryMethod === "delivery") {
-        return "Recibirás tu pedido en la dirección que elijas.";
+        const parts = [];
+        if (this.deliveryData.recipientName) parts.push(this.deliveryData.recipientName);
+        if (this.deliveryData.district) parts.push(this.deliveryData.district);
+        if (this.deliveryData.province) parts.push(this.deliveryData.province);
+        if (this.deliveryData.department) parts.push(this.deliveryData.department);
+        if (this.showAgencyField && this.deliveryData.agency) {
+          parts.push(`Agencia: ${this.getAgencyName()}`);
+        }
+        return parts.length ? parts.join(" · ") : "Completa la dirección de entrega";
       }
       return "Selecciona un punto de entrega.";
+    },
+    showAgencyField() {
+      return (
+        (this.deliveryData.department && this.deliveryData.department !== "lima") ||
+        (this.deliveryData.province && this.deliveryData.province !== "lima")
+      );
+    },
+    deliveryFee() {
+      if (this.deliveryMethod !== "delivery") return 0;
+      if (this.deliveryZoneInfo && this.deliveryData.department === "lima") {
+        return Number(this.deliveryZoneInfo.price) || 0;
+      }
+      return 0;
     },
     productsTotal() {
       return this.cart.reduce(
@@ -827,18 +985,42 @@ export default {
     usedBonus() {
       return Math.min(this.savingsBalance, this.productsTotal);
     },
-    cashToPay() {
+    productCashDue() {
       return Math.max(0, this.productsTotal - this.savingsBalance);
     },
+    cashToPay() {
+      return this.productCashDue + this.deliveryFee;
+    },
     hasEnoughBonus() {
-      return this.productsTotal > 0 && this.savingsBalance >= this.productsTotal;
+      return (
+        this.productsTotal > 0 &&
+        this.savingsBalance >= this.productsTotal &&
+        this.deliveryFee <= 0
+      );
+    },
+    isDeliveryComplete() {
+      if (this.deliveryMethod !== "delivery") return true;
+      const d = this.deliveryData;
+      const basic =
+        d.recipientName &&
+        d.document &&
+        String(d.document).length > 0 &&
+        d.recipientPhone &&
+        String(d.recipientPhone).length >= 9 &&
+        d.department &&
+        d.province &&
+        d.district;
+      if (!basic) return false;
+      if (this.showAgencyField) return !!d.agency;
+      return true;
     },
     canConfirmRedemption() {
       if (this.submitting || !this.balanceLoaded) return false;
       if (!this.productsTotal) return false;
       if (Number(this.savingsBalance) < 1) return false;
       if (this.deliveryMethod === "pickup" && !this.selectedOfficeId) return false;
-      if (this.hasEnoughBonus) return true;
+      if (this.deliveryMethod === "delivery" && !this.isDeliveryComplete) return false;
+      if (this.cashToPay <= 0) return true;
       if (this.payMethod === "bank") {
         return !!(
           this.selectedBank &&
@@ -852,17 +1034,20 @@ export default {
       return false;
     },
     bonusHintText() {
-      if (this.hasEnoughBonus) return "Suficiente para tu canje";
+      if (this.productCashDue === 0 && this.productsTotal > 0) return "Suficiente para tu canje";
       if (this.productsTotal > 0) return "Saldo insuficiente";
       return "";
     },
     bonusHintClass() {
-      if (this.hasEnoughBonus) return "success";
+      if (this.productCashDue === 0 && this.productsTotal > 0) return "success";
       if (this.productsTotal > 0) return "warn";
       return "";
     },
     cashHintText() {
       if (this.productsTotal > 0 && this.cashToPay === 0) return "No es necesario";
+      if (this.deliveryFee > 0 && this.productCashDue === 0) {
+        return `Incluye delivery S/ ${this.formatMoney(this.deliveryFee)}`;
+      }
       return "";
     },
     cashHintClass() {
@@ -1029,6 +1214,15 @@ export default {
         });
         return;
       }
+      if (this.deliveryMethod === "delivery" && !this.isDeliveryComplete) {
+        Swal.fire({
+          icon: "warning",
+          title: "Dirección incompleta",
+          text: "Completa los datos del receptor y la ubicación de entrega.",
+          confirmButtonColor: "#e91e63",
+        });
+        return;
+      }
       await this.fetchBalance();
       if (Number(this.savingsBalance) < 1) {
         Swal.fire({
@@ -1047,6 +1241,136 @@ export default {
         this.loadPaymentMethods();
       }
       window.scrollTo({ top: 0, behavior: "smooth" });
+    },
+    selectDeliveryMethod(method) {
+      this.deliveryMethod = method;
+      if (method === "delivery") {
+        this.loadDepartments();
+      }
+    },
+    setNestedField(fieldPath, value) {
+      const pathParts = fieldPath.split(".");
+      if (pathParts.length === 2) {
+        this[pathParts[0]][pathParts[1]] = value;
+      }
+    },
+    onlyNumbers(event, fieldPath) {
+      const value = String(event.target.value || "").replace(/[^0-9]/g, "");
+      event.target.value = value;
+      this.setNestedField(fieldPath, value);
+    },
+    onlyNumbersPhone(event, fieldPath) {
+      let value = String(event.target.value || "").replace(/[^0-9]/g, "");
+      if (value.length > 9) value = value.substring(0, 9);
+      event.target.value = value;
+      this.setNestedField(fieldPath, value);
+    },
+    onlyLetters(event, fieldPath) {
+      const value = String(event.target.value || "").replace(
+        /[^a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]/g,
+        ""
+      );
+      event.target.value = value;
+      this.setNestedField(fieldPath, value);
+    },
+    getAgencyName() {
+      if (!this.availableAgencies || !this.deliveryData.agency) return this.deliveryData.agency || "";
+      const agency = this.availableAgencies.find(
+        (a) =>
+          a.agency_code === this.deliveryData.agency ||
+          a.agency_id === this.deliveryData.agency ||
+          a._id === this.deliveryData.agency
+      );
+      return agency ? agency.agency_name : this.deliveryData.agency;
+    },
+    async onDepartmentChange() {
+      this.deliveryData.province = "";
+      this.deliveryData.district = "";
+      this.deliveryData.agency = "";
+      this.deliveryZoneInfo = null;
+      this.availableProvinces = [];
+      this.availableDistricts = [];
+      this.availableAgencies = [];
+      if (!this.deliveryData.department) return;
+      await this.loadProvincesForDepartment(this.deliveryData.department);
+      if (this.deliveryData.department !== "lima") {
+        await this.loadAgenciesForDepartment(this.deliveryData.department);
+      }
+    },
+    async onProvinceChange() {
+      this.deliveryData.district = "";
+      this.deliveryZoneInfo = null;
+      this.availableDistricts = [];
+      if (!this.deliveryData.department || !this.deliveryData.province) return;
+      await this.loadDistrictsForProvince(
+        this.deliveryData.department,
+        this.deliveryData.province
+      );
+    },
+    async onDistrictChange() {
+      this.deliveryZoneInfo = null;
+      if (!this.deliveryData.district) return;
+      if (this.deliveryData.department === "lima") {
+        await this.loadZoneForDistrict(this.deliveryData.district);
+      }
+    },
+    async loadDepartments() {
+      try {
+        const { data } = await api.getDeliveryInfo({ type: "departments" });
+        this.availableDepartments = (data && data.departments) || [];
+      } catch (error) {
+        console.error("Error cargando departamentos:", error);
+        this.availableDepartments = [];
+      }
+    },
+    async loadProvincesForDepartment(department) {
+      try {
+        const { data } = await api.getDeliveryInfo({
+          type: "provinces",
+          department,
+        });
+        this.availableProvinces = (data && data.provinces) || [];
+      } catch (error) {
+        console.error("Error cargando provincias:", error);
+        this.availableProvinces = [];
+      }
+    },
+    async loadDistrictsForProvince(department, province) {
+      try {
+        const { data } = await api.getDeliveryInfo({
+          type: "districts",
+          department,
+          province,
+        });
+        this.availableDistricts = (data && data.districts) || [];
+      } catch (error) {
+        console.error("Error cargando distritos:", error);
+        this.availableDistricts = [];
+      }
+    },
+    async loadAgenciesForDepartment(department) {
+      try {
+        const { data } = await api.getDeliveryInfo({
+          type: "agencies-by-department",
+          department,
+        });
+        this.availableAgencies = (data && data.agencies) || [];
+      } catch (error) {
+        console.error("Error cargando agencias:", error);
+        this.availableAgencies = [];
+      }
+    },
+    async loadZoneForDistrict(district) {
+      try {
+        const { data } = await api.getDeliveryInfo({
+          type: "zone-by-district",
+          district,
+        });
+        this.deliveryZoneInfo = (data && data.zone) || null;
+      } catch (error) {
+        console.error("Error cargando zona:", error);
+        this.deliveryZoneInfo = null;
+      }
     },
     selectPayMethod(method) {
       if (this.payMethod === method) {
@@ -1303,6 +1627,16 @@ export default {
         return;
       }
 
+      if (this.deliveryMethod === "delivery" && !this.isDeliveryComplete) {
+        Swal.fire({
+          icon: "warning",
+          title: "Dirección incompleta",
+          text: "Completa los datos del receptor y la ubicación de entrega.",
+          confirmButtonColor: "#e91e63",
+        });
+        return;
+      }
+
       await this.fetchBalance();
 
       if (Number(this.savingsBalance) < 1) {
@@ -1315,7 +1649,7 @@ export default {
         return;
       }
 
-      const cashDue = Math.max(0, this.productsTotal - this.savingsBalance);
+      const cashDue = this.cashToPay;
       const usedBonus = Math.min(this.savingsBalance, this.productsTotal);
 
       if (cashDue > 0) {
@@ -1401,14 +1735,42 @@ export default {
             ? this.getBankInfo(this.selectedBank)
             : null;
 
+        const deliveryInfo = {
+          receiptType: this.receiptType,
+        };
+
+        if (this.deliveryMethod === "pickup") {
+          deliveryInfo.officeId = this.selectedOfficeId;
+        } else {
+          deliveryInfo.recipientName = this.deliveryData.recipientName;
+          deliveryInfo.document = this.deliveryData.document;
+          deliveryInfo.recipientPhone = this.deliveryData.recipientPhone;
+          deliveryInfo.department = this.deliveryData.department;
+          deliveryInfo.province = this.deliveryData.province;
+          deliveryInfo.district = this.deliveryData.district;
+          deliveryInfo.agency = this.deliveryData.agency || null;
+          deliveryInfo.deliveryPrice = this.deliveryFee;
+          deliveryInfo.deliveryType =
+            this.deliveryData.department === "lima" && this.deliveryZoneInfo
+              ? "zone"
+              : this.showAgencyField
+                ? "agency"
+                : "none";
+          if (this.deliveryZoneInfo) {
+            deliveryInfo.deliveryZone = {
+              zone_id: this.deliveryZoneInfo.zone_id,
+              zone_name: this.deliveryZoneInfo.zone_name,
+              price: this.deliveryZoneInfo.price,
+            };
+          }
+        }
+
         const payload = {
           products,
-          office: this.selectedOfficeId,
+          office:
+            this.deliveryMethod === "pickup" ? this.selectedOfficeId : null,
           deliveryMethod: this.deliveryMethod,
-          deliveryInfo: {
-            officeId: this.selectedOfficeId,
-            receiptType: this.receiptType,
-          },
+          deliveryInfo,
           used_bonus: usedBonus,
           cash_amount: cashDue,
           pay_method: cashDue > 0 ? this.payMethod : "savings_bonus",
@@ -2245,9 +2607,72 @@ tablet-break = 900px
   font-size 0.82rem
   color #636e72
 
+.delivery-form
+  margin-top 4px
+  display flex
+  flex-direction column
+  gap 16px
+
+.delivery-form-section
+  h4
+    margin 0 0 12px
+    font-size 0.95rem
+    font-weight 700
+    color #2d3436
+
+.delivery-form-row
+  display grid
+  grid-template-columns 1fr 1fr
+  gap 12px
+
+  @media (max-width 560px)
+    grid-template-columns 1fr
+
+.delivery-form-group
+  display flex
+  flex-direction column
+  gap 6px
+  margin-bottom 10px
+
+  label
+    font-size 0.82rem
+    font-weight 600
+    color #636e72
+
+  input
+    width 100%
+    box-sizing border-box
+    border 1px solid #dfe6e9
+    border-radius 10px
+    padding 11px 12px
+    font-size 0.92rem
+    outline none
+
+    &:focus
+      border-color #e91e63
+
+.delivery-zone-info
+  background #fff5f8
+  border 1px solid #f8bbd0
+  border-radius 10px
+  padding 12px 14px
+
+  p
+    margin 0
+    font-size 0.88rem
+    color #2d3436
+
 .delivery-note
   font-size 0.85rem
   color #636e72
+  background #f8f9fa
+  border-radius 10px
+  padding 12px 14px
+  margin-top 4px
+
+  p
+    margin 0
+    line-height 1.4
 
 .receipt-card
   padding 0
