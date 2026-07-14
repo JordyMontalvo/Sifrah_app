@@ -487,14 +487,17 @@
                 </div>
               </div>
 
-              <div v-if="payMethod === 'credit-card'" class="confirm-izipay">
+              <!-- Solo un formulario Izipay en el DOM (móvil); en desktop va en el sidebar -->
+              <div
+                v-if="payMethod === 'credit-card' && checkoutIsNarrow"
+                class="izipay-container confirm-izipay"
+              >
                 <div v-if="izipayLoading" class="confirm-izipay-state">
                   <i class="fas fa-spinner fa-spin"></i> Cargando pasarela de pago...
                 </div>
                 <div v-else-if="izipayError" class="confirm-izipay-error">{{ izipayError }}</div>
                 <div
                   v-else-if="izipayFormToken"
-                  :key="izipayFormToken"
                   class="kr-embedded"
                   :kr-form-token="izipayFormToken"
                 >
@@ -689,14 +692,16 @@
                   </div>
                 </div>
 
-                <div v-if="payMethod === 'credit-card'" class="confirm-izipay">
+                <div
+                  v-if="payMethod === 'credit-card' && !checkoutIsNarrow"
+                  class="izipay-container confirm-izipay"
+                >
                   <div v-if="izipayLoading" class="confirm-izipay-state">
                     <i class="fas fa-spinner fa-spin"></i> Cargando pasarela de pago...
                   </div>
                   <div v-else-if="izipayError" class="confirm-izipay-error">{{ izipayError }}</div>
                   <div
                     v-else-if="izipayFormToken"
-                    :key="'side-' + izipayFormToken"
                     class="kr-embedded"
                     :kr-form-token="izipayFormToken"
                   >
@@ -782,6 +787,8 @@ export default {
       izipayError: null,
       izipayTransactionId: null,
       izipayAuthorizationCode: null,
+      checkoutIsNarrow: typeof window !== "undefined" ? window.innerWidth < 900 : true,
+      _iziResizeHandler: null,
     };
   },
   computed: {
@@ -880,7 +887,17 @@ export default {
       },
     },
     cashToPay() {
+      const wasCard = this.payMethod === "credit-card";
       this.resetIzipay();
+      if (wasCard && this.cashToPay > 0) {
+        this.$nextTick(() => this.initIzipay());
+      }
+    },
+    checkoutIsNarrow(isNarrow, wasNarrow) {
+      if (isNarrow === wasNarrow) return;
+      if (this.payMethod === "credit-card" && this.izipayFormToken) {
+        this.$nextTick(() => this.attachIzipayForm());
+      }
     },
   },
   async created() {
@@ -898,6 +915,18 @@ export default {
         confirmButtonColor: "#e91e63",
       });
       this.$router.replace("/savings-bonus");
+    }
+  },
+  mounted() {
+    this.checkoutIsNarrow = window.innerWidth < 900;
+    this._iziResizeHandler = () => {
+      this.checkoutIsNarrow = window.innerWidth < 900;
+    };
+    window.addEventListener("resize", this._iziResizeHandler);
+  },
+  beforeDestroy() {
+    if (this._iziResizeHandler) {
+      window.removeEventListener("resize", this._iziResizeHandler);
     }
   },
   methods: {
@@ -1055,7 +1084,73 @@ export default {
       this.izipayTransactionId = null;
       this.izipayAuthorizationCode = null;
     },
+    loadIzipayAssets() {
+      return new Promise((resolve) => {
+        if (window.KR && document.getElementById("izipay-script")) {
+          resolve();
+          return;
+        }
+
+        if (!document.getElementById("izipay-classic-css")) {
+          const style = document.createElement("link");
+          style.id = "izipay-classic-css";
+          style.rel = "stylesheet";
+          style.href =
+            "https://static.micuentaweb.pe/static/js/krypton-client/V4.0/ext/classic-reset.css";
+          document.head.appendChild(style);
+        }
+
+        if (!document.getElementById("izipay-classic-js")) {
+          const scriptTheme = document.createElement("script");
+          scriptTheme.id = "izipay-classic-js";
+          scriptTheme.src =
+            "https://static.micuentaweb.pe/static/js/krypton-client/V4.0/ext/classic.js";
+          document.head.appendChild(scriptTheme);
+        }
+
+        let script = document.getElementById("izipay-script");
+        if (script) {
+          if (window.KR) {
+            resolve();
+          } else {
+            script.addEventListener("load", () => resolve(), { once: true });
+          }
+          return;
+        }
+
+        script = document.createElement("script");
+        script.id = "izipay-script";
+        script.src =
+          "https://static.micuentaweb.pe/static/js/krypton-client/V4.0/stable/kr-payment-form.min.js";
+        script.setAttribute(
+          "kr-public-key",
+          "33003249:publickey_yekT6W03reoGaKT2dSrjdzE0oBJ2a7X2seEsnusIcExSO"
+        );
+        script.setAttribute("kr-post-url-success", "javascript:void(0);");
+        script.onload = () => resolve();
+        script.onerror = () => resolve();
+        document.head.appendChild(script);
+      });
+    },
+    async attachIzipayForm() {
+      await this.$nextTick();
+      if (!this.izipayFormToken || !window.KR) return;
+
+      try {
+        if (typeof window.KR.setFormConfig === "function") {
+          await window.KR.setFormConfig({
+            formToken: this.izipayFormToken,
+          });
+        }
+        if (typeof window.KR.onSubmit === "function") {
+          window.KR.onSubmit(this.onIzipaySuccess);
+        }
+      } catch (err) {
+        console.error("Error adjuntando formulario Izipay:", err);
+      }
+    },
     async initIzipay() {
+      // Misma integración que Checkout.vue (tienda normal), con un solo .kr-embedded en DOM.
       if (this.cashToPay <= 0) return;
       if (this.izipayFormToken || this.izipayLoading) return;
 
@@ -1082,39 +1177,15 @@ export default {
           customerName,
         });
 
-        this.izipayFormToken = response.data.formToken;
-
-        if (!document.getElementById("izipay-script")) {
-          const script = document.createElement("script");
-          script.id = "izipay-script";
-          script.src =
-            "https://static.micuentaweb.pe/static/js/krypton-client/V4.0/stable/kr-payment-form.min.js";
-          script.setAttribute(
-            "kr-public-key",
-            "33003249:publickey_yekT6W03reoGaKT2dSrjdzE0oBJ2a7X2seEsnusIcExSO"
-          );
-          script.setAttribute("kr-post-url-success", "javascript:void(0);");
-          document.head.appendChild(script);
-
-          const style = document.createElement("link");
-          style.rel = "stylesheet";
-          style.href =
-            "https://static.micuentaweb.pe/static/js/krypton-client/V4.0/ext/classic-reset.css";
-          document.head.appendChild(style);
-
-          const scriptTheme = document.createElement("script");
-          scriptTheme.src =
-            "https://static.micuentaweb.pe/static/js/krypton-client/V4.0/ext/classic.js";
-          document.head.appendChild(scriptTheme);
-
-          script.onload = () => {
-            if (window.KR) {
-              window.KR.onSubmit(this.onIzipaySuccess);
-            }
-          };
-        } else if (window.KR) {
-          window.KR.onSubmit(this.onIzipaySuccess);
+        if (!response.data || !response.data.formToken) {
+          throw new Error("No se recibió formToken de Izipay");
         }
+
+        this.izipayFormToken = response.data.formToken;
+        this.izipayLoading = false;
+
+        await this.loadIzipayAssets();
+        await this.attachIzipayForm();
       } catch (err) {
         console.error("Error al generar token Izipay:", err);
         const details =
@@ -1125,15 +1196,16 @@ export default {
               (err.response.data.details &&
                 err.response.data.details.answer &&
                 err.response.data.details.answer.errorMessage))) ||
+          (err && err.message) ||
           "";
         this.izipayError = details
           ? "No se pudo cargar Izipay: " + details
           : "Ocurrió un error al cargar la pasarela de pago.";
-      } finally {
         this.izipayLoading = false;
       }
     },
     onIzipaySuccess(event) {
+      // Igual que tienda normal: al pagar OK, confirma el pedido automáticamente
       if (
         event &&
         event.clientAnswer &&
@@ -2743,13 +2815,21 @@ tablet-break = 900px
   border 1px solid #eceff1
   background #fff
 
-.confirm-izipay
+.confirm-izipay,
+.izipay-container
   margin-top 12px
   padding 14px
   background #fff
   border 1px solid #eceff1
   border-radius 12px
   text-align center
+
+  .kr-embedded
+    min-height 120px
+
+  .kr-payment-button
+    margin-top 8px
+    min-width 180px
 
 .confirm-izipay-state
   padding 18px 10px
