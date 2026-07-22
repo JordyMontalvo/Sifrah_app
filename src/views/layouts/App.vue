@@ -483,7 +483,11 @@
 
       <div class="content">
         <header v-if="($route.path !== '/audios' && $route.path !== '/libros') || !isMobile">
-          <p style="font-weight: bold; font-size: 20px">{{ $route.path === '/audios' ? 'Audio' : title }}</p>
+          <p
+            class="content-header-title"
+            :class="{ 'content-header-title--hidden': $route.path === '/security' && !isMobile }"
+            style="font-weight: bold; font-size: 20px"
+          >{{ $route.path === '/audios' ? 'Audio' : title }}</p>
           <div
           style="
               display: flex;
@@ -1638,6 +1642,12 @@ export default {
  };
 </script>
 <style scoped>
+.content-header-title--hidden {
+  visibility: hidden;
+  pointer-events: none;
+  user-select: none;
+}
+
 .header-photo-controls, .mobile-photo-controls, .controls {
   display: flex;
   gap: 12px;

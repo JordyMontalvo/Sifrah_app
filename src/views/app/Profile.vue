@@ -133,7 +133,7 @@
                     <i class="fas fa-key"></i> Cambiar contraseña
                   </router-link>
                   <router-link to="/security" class="profile-glass-link">
-                    <i class="fas fa-user-shield"></i> Persona de confianza
+                    <i class="fas fa-user-shield"></i> Legado SIFRAH
                   </router-link>
                 </div>
                 <div v-if="token" class="profile-glass-invite">

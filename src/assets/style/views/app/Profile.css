@@ -145,10 +145,13 @@
   gap: 8px;
   font-weight: 500;
   transition: color 0.2s;
+  outline: none;
 }
 
-.profile-glass-link:hover {
-  color: #fb8c00;
+.profile-glass-link:hover,
+.profile-glass-link:focus,
+.profile-glass-link:active {
+  color: #c2185b;
 }
 
 .profile-glass-invite {
