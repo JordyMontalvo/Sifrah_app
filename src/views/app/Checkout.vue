@@ -1098,6 +1098,28 @@ export default {
         
         this.izipayFormToken = response.data.formToken;
         
+        const attachForm = async () => {
+          await this.$nextTick();
+          if (window.KR) {
+            try {
+              if (typeof window.KR.setFormConfig === "function") {
+                await window.KR.setFormConfig({ formToken: this.izipayFormToken });
+              }
+              if (typeof window.KR.onSubmit === "function") {
+                window.KR.onSubmit(this.onIzipaySuccess);
+              }
+              if (typeof window.KR.attachForm === "function") {
+                const formElement = document.querySelector('.kr-embedded');
+                if (formElement) {
+                  await window.KR.attachForm(formElement);
+                }
+              }
+            } catch (err) {
+              console.error("Error attach Izipay:", err);
+            }
+          }
+        };
+
         // Cargar script de Izipay si no existe
         if (!document.getElementById('izipay-script')) {
           const script = document.createElement('script');
@@ -1118,12 +1140,10 @@ export default {
           document.head.appendChild(scriptTheme);
           
           script.onload = () => {
-            if (window.KR) {
-              window.KR.onSubmit(this.onIzipaySuccess);
-            }
+            attachForm();
           };
-        } else if (window.KR) {
-          window.KR.onSubmit(this.onIzipaySuccess);
+        } else {
+          attachForm();
         }
         
       } catch (err) {

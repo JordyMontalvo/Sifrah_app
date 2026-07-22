@@ -1575,6 +1575,12 @@ export default {
         if (typeof window.KR.onSubmit === "function") {
           window.KR.onSubmit(this.onIzipaySuccess);
         }
+        if (typeof window.KR.attachForm === "function") {
+          const formElement = document.querySelector('.kr-embedded');
+          if (formElement) {
+            await window.KR.attachForm(formElement);
+          }
+        }
       } catch (err) {
         console.error("Error adjuntando formulario Izipay:", err);
       }
