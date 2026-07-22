@@ -278,6 +278,8 @@
             v-model="sponsorCode"
             :class="{ error: error.sponsorCode }"
             @keydown="reset('sponsorCode')"
+            :disabled="disabled"
+            :readonly="disabled"
           />
           <svg 
             class="overflow-icon" 
