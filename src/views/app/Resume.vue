@@ -3,6 +3,7 @@
     <Spinner v-if="loading" :size="40" color="#e91e63" />
 
     <div v-else class="personal-view">
+      <div class="personal-row-layout">
       <article class="personal-card">
         <div class="personal-avatar-wrap">
           <img
@@ -127,6 +128,7 @@
           <span class="metric-card-value frontals-active-value">{{ formattedFrontalsActive }}</span>
           <span class="metric-card-caption">Con actividad<br />este mes</span>
         </article>
+      </div>
       </div>
     </div>
   </App>

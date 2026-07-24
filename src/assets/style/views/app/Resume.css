@@ -3,20 +3,36 @@
   max-width: none;
   width: 100%;
   box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
   overflow-x: hidden;
+}
+
+/* Desktop: perfil + 5 métricas en UNA sola fila */
+.personal-row-layout {
+  display: grid;
+  grid-template-columns: minmax(200px, 1.35fr) repeat(5, minmax(0, 1fr));
+  gap: 8px;
+  align-items: stretch;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.personal-stats {
+  display: contents;
 }
 
 .personal-card {
   display: flex;
-  align-items: center;
-  gap: 28px;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 10px;
   background: #ffffff;
-  border-radius: 20px;
-  padding: 28px 32px;
+  border-radius: 14px;
+  padding: 14px 12px;
   box-shadow: 0 8px 28px rgba(15, 23, 42, 0.08);
+  min-width: 0;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 .personal-avatar-wrap {
@@ -24,11 +40,11 @@
 }
 
 .personal-avatar {
-  width: 120px;
-  height: 120px;
+  width: 64px;
+  height: 64px;
   border-radius: 50%;
   object-fit: cover;
-  border: 3px solid #e91e63;
+  border: 2px solid #e91e63;
   display: block;
   background: #fce4ec;
 }
@@ -38,20 +54,20 @@
   align-items: center;
   justify-content: center;
   color: #e91e63;
-  font-size: 2.4rem;
+  font-size: 1.5rem;
 }
 
 .personal-info {
   min-width: 0;
-  flex: 1;
+  width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 6px;
 }
 
 .personal-name {
   margin: 0;
-  font-size: 1.75rem;
+  font-size: 1.05rem;
   font-weight: 700;
   color: #111827;
   line-height: 1.2;
@@ -61,34 +77,51 @@
 .personal-rank-badge {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 5px;
   align-self: flex-start;
-  padding: 6px 14px;
+  padding: 4px 8px;
   border-radius: 999px;
   background: #fff5f8;
   border: 1px solid #f8c8d8;
   color: #e91e63;
-  font-size: 0.95rem;
+  font-size: 0.65rem;
   font-weight: 600;
+  max-width: 100%;
+}
+
+.personal-rank-badge span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .personal-rank-badge i {
-  font-size: 0.85rem;
+  font-size: 0.7rem;
   color: #e91e63;
+  flex-shrink: 0;
 }
 
 .personal-row {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 6px;
   color: #374151;
-  font-size: 1rem;
+  font-size: 0.72rem;
   font-weight: 500;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.personal-row > span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .personal-row > i {
   color: #6b7280;
-  font-size: 0.95rem;
+  font-size: 0.75rem;
+  flex-shrink: 0;
 }
 
 .personal-icon-btn {
@@ -98,9 +131,9 @@
   margin: 0;
   cursor: pointer;
   color: #6b7280;
-  font-size: 0.95rem;
+  font-size: 0.75rem;
   line-height: 1;
-  transition: color 0.15s ease;
+  flex-shrink: 0;
 }
 
 .personal-icon-btn:hover,
@@ -111,26 +144,9 @@
 
 .personal-copied {
   color: #2e7d32;
-  font-size: 0.8rem;
+  font-size: 0.65rem;
   font-weight: 600;
-}
-
-/* Desktop: 5 cards siempre visibles en una fila, caben en el ancho del content */
-.personal-stats {
-  display: grid !important;
-  grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
-  gap: 8px;
-  width: 100%;
-  max-width: 100%;
-  box-sizing: border-box;
-  overflow: visible;
-}
-
-.personal-stats > .metric-card {
-  min-width: 0 !important;
-  max-width: 100%;
-  width: auto;
-  box-sizing: border-box;
+  flex-shrink: 0;
 }
 
 .metric-card {
@@ -141,8 +157,10 @@
   display: flex;
   flex-direction: column;
   gap: 6px;
-  min-height: 124px;
+  min-height: 0;
+  min-width: 0;
   overflow: hidden;
+  box-sizing: border-box;
 }
 
 .metric-card-header {
@@ -153,8 +171,8 @@
 }
 
 .metric-icon {
-  width: 30px;
-  height: 30px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -170,8 +188,8 @@
 }
 
 .metric-icon svg {
-  width: 16px;
-  height: 16px;
+  width: 15px;
+  height: 15px;
   transform: none !important;
 }
 
@@ -201,7 +219,7 @@
 }
 
 .metric-card-title {
-  font-size: 0.62rem;
+  font-size: 0.58rem;
   font-weight: 700;
   color: #111827;
   text-transform: uppercase;
@@ -210,14 +228,12 @@
   min-width: 0;
   overflow-wrap: break-word;
   word-break: break-word;
-  hyphens: auto;
 }
 
 .metric-card-value {
-  font-size: 1.4rem;
+  font-size: 1.25rem;
   font-weight: 700;
   line-height: 1.1;
-  padding-left: 0;
 }
 
 .points-card .points-value {
@@ -226,7 +242,6 @@
 
 .points-card .status-pill {
   align-self: flex-start;
-  margin-left: 0;
 }
 
 .volume-value {
@@ -246,9 +261,8 @@
 }
 
 .metric-card-caption {
-  padding-left: 0;
   color: #6b7280;
-  font-size: 0.68rem;
+  font-size: 0.62rem;
   font-weight: 500;
   line-height: 1.25;
 }
@@ -256,10 +270,10 @@
 .status-pill {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  padding: 4px 8px;
+  gap: 4px;
+  padding: 3px 7px;
   border-radius: 999px;
-  font-size: 0.72rem;
+  font-size: 0.68rem;
   font-weight: 600;
   line-height: 1;
   white-space: nowrap;
@@ -276,47 +290,88 @@
 }
 
 .status-dot {
-  width: 7px;
-  height: 7px;
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
   background: currentColor;
 }
 
-/* Pantallas desktop amplias: un poco más de aire */
-@media (min-width: 1400px) {
-  .personal-stats {
+@media (min-width: 1500px) {
+  .personal-row-layout {
     gap: 12px;
+    grid-template-columns: minmax(240px, 1.4fr) repeat(5, minmax(0, 1fr));
+  }
+
+  .personal-card {
+    padding: 18px 16px;
+  }
+
+  .personal-avatar {
+    width: 72px;
+    height: 72px;
+  }
+
+  .personal-name {
+    font-size: 1.2rem;
   }
 
   .metric-card {
-    padding: 16px 14px;
-    min-height: 140px;
-  }
-
-  .metric-icon {
-    width: 36px;
-    height: 36px;
-  }
-
-  .metric-icon svg {
-    width: 18px;
-    height: 18px;
+    padding: 14px 12px;
   }
 
   .metric-card-title {
-    font-size: 0.72rem;
+    font-size: 0.68rem;
   }
 
   .metric-card-value {
-    font-size: 1.65rem;
+    font-size: 1.45rem;
   }
 
   .metric-card-caption {
-    font-size: 0.78rem;
+    font-size: 0.72rem;
   }
 }
 
-/* Solo móvil: scroll horizontal si no caben */
+/* Tablet / móvil: perfil arriba, métricas abajo */
+@media (max-width: 1100px) {
+  .personal-row-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .personal-stats {
+    display: grid !important;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 8px;
+    width: 100%;
+  }
+
+  .personal-card {
+    flex-direction: row;
+    align-items: center;
+    gap: 16px;
+    padding: 18px 20px;
+  }
+
+  .personal-avatar {
+    width: 88px;
+    height: 88px;
+  }
+
+  .personal-name {
+    font-size: 1.35rem;
+  }
+
+  .personal-rank-badge {
+    font-size: 0.85rem;
+  }
+
+  .personal-row {
+    font-size: 0.9rem;
+  }
+}
+
 @media (max-width: 767px) {
   .personal-view {
     padding: 16px 12px 32px;
@@ -327,13 +382,12 @@
     flex-direction: column;
     align-items: center;
     text-align: center;
-    gap: 18px;
-    padding: 24px 20px;
+    gap: 14px;
+    padding: 20px 16px;
   }
 
   .personal-info {
     align-items: center;
-    width: 100%;
   }
 
   .personal-rank-badge {
@@ -342,20 +396,10 @@
 
   .personal-row {
     justify-content: center;
-    flex-wrap: wrap;
-  }
-
-  .personal-avatar {
-    width: 104px;
-    height: 104px;
-  }
-
-  .personal-name {
-    font-size: 1.45rem;
   }
 
   .personal-stats {
-    grid-template-columns: repeat(5, minmax(150px, 1fr)) !important;
+    grid-template-columns: repeat(5, minmax(140px, 1fr)) !important;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     padding-bottom: 6px;
