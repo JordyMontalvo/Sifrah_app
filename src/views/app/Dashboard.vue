@@ -376,43 +376,40 @@
 
           <!-- 5. Puntos Personales -->
           <div class="info-card personal-points-card">
-            <div class="personal-top-row">
-              <div class="personal-info-side">
-                <div class="personal-icon-wrapper">
-                  <svg viewBox="0 0 24 24" fill="#E91E63">
-                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
-                  </svg>
-                </div>
-                <div class="personal-text-block">
-                  <span class="dash-card-title">Puntos Personales</span>
-                  <div class="personal-points-value">
-                    <span class="dash-card-value pts-number">{{ points || 0 }}</span>
-                    <span class="dash-card-subtitle pts-label">PTS</span>
-                  </div>
-                </div>
-              </div>
-              <div class="merged-divider thin"></div>
-              <div class="personal-status-side" :class="{ 'is-active': activated }">
-                <div class="status-icon">
-                  <svg v-if="activated" viewBox="0 0 24 24" fill="#4caf50">
-                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
-                  </svg>
-                  <svg v-else viewBox="0 0 24 24" fill="#f44336">
-                    <circle cx="12" cy="12" r="10" />
-                    <path d="M15.59 7L12 10.59 8.41 7 7 8.41 10.59 12 7 15.59 8.41 17 12 13.41 15.59 17 17 15.59 13.41 12 17 8.41z" fill="#fff" />
-                  </svg>
-                </div>
-                <span class="status-text">{{ activated ? 'Activo' : 'Inactivo' }}</span>
-              </div>
-            </div>
-            <div class="personal-bottom-banner">
-              <div class="banner-icon-side">
-                <svg viewBox="0 0 24 24" class="briefcase-banner-svg">
-                  <path d="M7 6V5c0-1.1.9-2 2-2h6c1.1 0 2 .9 2 2v1h3c1.1 0 2 .9 2 2v10c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V8c0-1.1.9-2 2-2h3zm2-1v1h6V5H9zm-5 7h5v2h6v-2h5V8H4v4zm5 2v2h6v-2H9z" fill="#E91E63" />
+            <div class="personal-card-header">
+              <div class="personal-icon-wrapper" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
                 </svg>
               </div>
-              <span>{{ activationLevelLabel }}</span>
+              <span class="dash-card-title">Puntos Personales</span>
             </div>
+            <div class="personal-card-body">
+              <span class="dash-card-value pts-number">{{ points || 0 }}</span>
+              <span
+                class="personal-status-pill"
+                :class="activated ? 'is-active' : 'is-inactive'"
+              >
+                <span class="personal-status-dot" aria-hidden="true"></span>
+                {{ activated ? "Activo" : "Inactivo" }}
+              </span>
+            </div>
+          </div>
+
+          <!-- 6. Volumen Global -->
+          <div class="info-card global-volume-card">
+            <div class="global-volume-header">
+              <div class="global-volume-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z" />
+                </svg>
+              </div>
+              <span class="dash-card-title">Volumen Global</span>
+            </div>
+            <span class="dash-card-value global-volume-value">
+              {{ formattedGlobalVolume }}
+            </span>
+            <span class="global-volume-caption">Total de puntos<br />en tu equipo</span>
           </div>
 
           <!-- 7. Pack afiliación -->
@@ -584,17 +581,12 @@ export default {
         (img) => typeof img === "string" && img.trim() !== ""
       );
     },
-    activationLevelLabel() {
-      if (this.activated) {
-        if ((this.points || 0) >= 120) {
-          return "Activación Ejecutiva/Empresarial";
-        }
-        return "Activación Básica";
-      }
-      return this.formattedPlan;
-    },
     hasCustomRankImage() {
       return !!(this.historicalRankImage && String(this.historicalRankImage).trim());
+    },
+    formattedGlobalVolume() {
+      const n = Number(this.total_points) || 0;
+      return n.toLocaleString("es-PE");
     },
     totalEarnedFormatted() {
       const total = Number(this.totalEarned) || 0;

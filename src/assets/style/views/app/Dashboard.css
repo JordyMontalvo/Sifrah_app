@@ -613,11 +613,10 @@
     height: 25px !important;
   }
 
-  .personal-top-row {
-    padding: 10px 12px !important;
+  .personal-card-header {
+    gap: 10px;
   }
 
-  .personal-bottom-banner,
   .pack-banner-box {
     margin: 0 15px 15px 15px !important;
     min-height: 45px !important;
@@ -699,25 +698,29 @@
     order: 4;
   }
 
-  .merged-stats-card {
+  .global-volume-card {
     order: 5;
+  }
+
+  .merged-stats-card {
+    order: 6;
   }
 
   .merged-saldos-card,
   .saldo-disponible-half {
-    order: 6;
-  }
-
-  .saldo-no-disponible-half {
     order: 7;
   }
 
-  .pack-afiliacion-card {
+  .saldo-no-disponible-half {
     order: 8;
   }
 
-  .bono-ahorro-card {
+  .pack-afiliacion-card {
     order: 9;
+  }
+
+  .bono-ahorro-card {
+    order: 10;
   }
 }
 
@@ -1412,16 +1415,20 @@
     order: 4;
   }
 
-  .new-dashboard-grid > .pack-afiliacion-card {
+  .new-dashboard-grid > .global-volume-card {
     order: 5;
   }
 
-  .new-dashboard-grid > .merged-stats-card {
+  .new-dashboard-grid > .pack-afiliacion-card {
     order: 6;
   }
 
-  .new-dashboard-grid > .bono-ahorro-card {
+  .new-dashboard-grid > .merged-stats-card {
     order: 7;
+  }
+
+  .new-dashboard-grid > .bono-ahorro-card {
+    order: 8;
   }
 }
 
@@ -2086,138 +2093,141 @@
 
 /* Puntos Personales Card */
 .personal-points-card {
-  padding: 0 !important;
+  padding: 18px 20px !important;
   display: flex !important;
   flex-direction: column !important;
   min-height: 130px !important;
   justify-content: space-between;
+  gap: 12px;
 }
 
-.personal-top-row {
-  display: flex;
-  flex: 1;
-  padding: 8px 15px;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.personal-info-side {
+.personal-card-header {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
 }
 
 .personal-icon-wrapper {
-  width: 40px;
-  height: 40px;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: #fce4ec;
+  color: #e91e63;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
 }
 
 .personal-icon-wrapper svg {
-  width: 100%;
-  height: 100%;
+  width: 22px;
+  height: 22px;
 }
 
-.personal-text-block {
+.personal-card-body {
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-left: 54px;
 }
 
-.personal-points-value {
-  display: flex;
-  align-items: baseline;
-  gap: 4px;
+.personal-points-card .pts-number {
+  color: #e91e63;
+  font-weight: 700;
+  line-height: 1;
 }
 
-/* Standardized typography classes used in template */
+.personal-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.personal-status-pill.is-active {
+  color: #2e7d32;
+  background: #e8f5e9;
+}
+
+.personal-status-pill.is-inactive {
+  color: #c62828;
+  background: #ffebee;
+}
+
+.personal-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: currentColor;
+}
 
 .merged-divider.thin {
   height: 40px;
   margin: 0 10px;
 }
 
-.personal-status-side {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  justify-content: flex-start;
+/* Volumen Global Card */
+.global-volume-card {
+  padding: 18px 20px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+  gap: 10px;
+  min-height: 130px !important;
 }
 
-.status-icon {
-  width: 24px;
-  height: 24px;
-}
-
-.status-icon svg {
-  width: 100%;
-  height: 100%;
-}
-
-.status-text {
-  font-size: 18px;
-  font-weight: 500;
-  color: #f44336;
-}
-
-.personal-status-side.is-active .status-text {
-  color: #4caf50;
-}
-
-.personal-bottom-banner {
-  background: #242529;
-  color: #fff;
-  padding: 0 20px;
-  font-size: 18px;
-  font-weight: 500;
+.global-volume-header {
   display: flex;
   align-items: center;
   gap: 12px;
-  min-height: 52px;
-  margin: 0 15px 15px 15px;
-  border-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-  position: relative;
-  overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-.personal-bottom-banner::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: url('https://www.transparenttextures.com/patterns/carbon-fibre.png');
-  opacity: 0.45;
-  transform: none !important;
-  pointer-events: none;
-}
-
-.personal-bottom-banner span,
-.personal-bottom-banner .banner-icon-side {
-  position: relative;
-  z-index: 1;
-}
-
-.banner-icon-side {
-  width: 28px;
-  height: 28px;
+.global-volume-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: #ede7f6;
+  color: #5e35b1;
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
 }
 
-.briefcase-banner-svg {
-  width: 100%;
-  height: 100%;
+.global-volume-icon svg {
+  width: 22px;
+  height: 22px;
+}
+
+.global-volume-value {
+  color: #5e35b1 !important;
+  font-weight: 700;
+  line-height: 1.1;
+  padding-left: 54px;
+}
+
+.global-volume-caption {
+  padding-left: 54px;
+  color: #6b7280;
+  font-size: 0.92rem;
+  font-weight: 500;
+  line-height: 1.25;
 }
 
 @media (max-width: 992px) {
-  .personal-top-row {
-    flex-direction: row;
-    /* Keep horizontal on mobile if it fits, or adjust as needed */
-    padding: 10px 15px;
+  .personal-card-body {
+    padding-left: 0;
+  }
+
+  .global-volume-value,
+  .global-volume-caption {
+    padding-left: 0;
   }
 }
 
