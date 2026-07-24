@@ -694,33 +694,25 @@
     order: 3;
   }
 
-  .personal-points-card {
-    order: 4;
-  }
-
-  .global-volume-card {
-    order: 5;
-  }
-
   .merged-stats-card {
-    order: 6;
+    order: 4;
   }
 
   .merged-saldos-card,
   .saldo-disponible-half {
-    order: 7;
+    order: 5;
   }
 
   .saldo-no-disponible-half {
-    order: 8;
+    order: 6;
   }
 
   .pack-afiliacion-card {
-    order: 9;
+    order: 7;
   }
 
   .bono-ahorro-card {
-    order: 10;
+    order: 8;
   }
 }
 
@@ -1411,24 +1403,16 @@
     order: 3;
   }
 
-  .new-dashboard-grid > .personal-points-card {
+  .new-dashboard-grid > .pack-afiliacion-card {
     order: 4;
   }
 
-  .new-dashboard-grid > .global-volume-card {
+  .new-dashboard-grid > .merged-stats-card {
     order: 5;
   }
 
-  .new-dashboard-grid > .pack-afiliacion-card {
-    order: 6;
-  }
-
-  .new-dashboard-grid > .merged-stats-card {
-    order: 7;
-  }
-
   .new-dashboard-grid > .bono-ahorro-card {
-    order: 8;
+    order: 6;
   }
 }
 
@@ -2088,158 +2072,6 @@
     align-items: center;
     padding-left: 0;
     width: 100%;
-  }
-}
-
-/* Puntos Personales Card */
-.personal-points-card {
-  padding: 18px 20px !important;
-  display: flex !important;
-  flex-direction: column !important;
-  min-height: 130px !important;
-  justify-content: space-between;
-  gap: 12px;
-}
-
-.personal-card-header {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.personal-icon-wrapper {
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  background: #fce4ec;
-  color: #e91e63;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.personal-icon-wrapper svg {
-  width: 22px;
-  height: 22px;
-}
-
-.personal-card-body {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding-left: 54px;
-}
-
-.personal-points-card .pts-number {
-  color: #e91e63;
-  font-weight: 700;
-  line-height: 1;
-  padding-left: 54px;
-}
-
-.personal-points-card .personal-status-pill {
-  align-self: flex-start;
-  margin-left: 54px;
-}
-
-.personal-status-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 12px;
-  border-radius: 999px;
-  font-size: 0.9rem;
-  font-weight: 600;
-  line-height: 1;
-  white-space: nowrap;
-}
-
-.personal-status-pill.is-active {
-  color: #2e7d32;
-  background: #e8f5e9;
-}
-
-.personal-status-pill.is-inactive {
-  color: #c62828;
-  background: #ffebee;
-}
-
-.personal-status-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: currentColor;
-}
-
-.merged-divider.thin {
-  height: 40px;
-  margin: 0 10px;
-}
-
-/* Volumen Global Card */
-.global-volume-card {
-  padding: 18px 20px !important;
-  display: flex !important;
-  flex-direction: column !important;
-  justify-content: space-between !important;
-  gap: 10px;
-  min-height: 130px !important;
-}
-
-.global-volume-header {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.global-volume-icon {
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  background: #ede7f6;
-  color: #5e35b1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.global-volume-icon svg {
-  width: 22px;
-  height: 22px;
-}
-
-.global-volume-value {
-  color: #5e35b1 !important;
-  font-weight: 700;
-  line-height: 1.1;
-  padding-left: 54px;
-}
-
-.global-volume-caption {
-  padding-left: 54px;
-  color: #6b7280;
-  font-size: 0.92rem;
-  font-weight: 500;
-  line-height: 1.25;
-}
-
-@media (max-width: 992px) {
-  .personal-card-body {
-    padding-left: 0;
-  }
-
-  .personal-points-card .pts-number,
-  .personal-points-card .personal-status-pill {
-    padding-left: 0;
-    margin-left: 0;
-  }
-
-  .global-volume-value,
-  .global-volume-caption {
-    padding-left: 0;
   }
 }
 

@@ -47,18 +47,18 @@
       </article>
 
       <div class="personal-stats">
-        <article class="stat-card points-card">
-          <div class="stat-card-header">
-            <div class="stat-icon points-icon" aria-hidden="true">
+        <article class="metric-card points-card">
+          <div class="metric-card-header">
+            <div class="metric-icon points-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="currentColor">
                 <path
                   d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"
                 />
               </svg>
             </div>
-            <span class="stat-card-title">Puntos Personales</span>
+            <span class="metric-card-title">Puntos Personales</span>
           </div>
-          <span class="stat-card-value points-value">{{ points || 0 }}</span>
+          <span class="metric-card-value points-value">{{ points || 0 }}</span>
           <span
             class="status-pill"
             :class="activated ? 'is-active' : 'is-inactive'"
@@ -68,64 +68,64 @@
           </span>
         </article>
 
-        <article class="stat-card volume-card">
-          <div class="stat-card-header">
-            <div class="stat-icon volume-icon" aria-hidden="true">
+        <article class="metric-card volume-card">
+          <div class="metric-card-header">
+            <div class="metric-icon volume-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="currentColor">
                 <path
                   d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"
                 />
               </svg>
             </div>
-            <span class="stat-card-title">Volumen Global</span>
+            <span class="metric-card-title">Volumen Global</span>
           </div>
-          <span class="stat-card-value volume-value">{{ formattedVolume }}</span>
-          <span class="stat-card-caption">Total de puntos<br />en tu equipo</span>
+          <span class="metric-card-value volume-value">{{ formattedVolume }}</span>
+          <span class="metric-card-caption">Total de puntos<br />en tu equipo</span>
         </article>
 
-        <article class="stat-card team-card">
-          <div class="stat-card-header">
-            <div class="stat-icon team-icon" aria-hidden="true">
+        <article class="metric-card team-card">
+          <div class="metric-card-header">
+            <div class="metric-icon team-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="currentColor">
                 <path
                   d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"
                 />
               </svg>
             </div>
-            <span class="stat-card-title">Equipo Total</span>
+            <span class="metric-card-title">Equipo Total</span>
           </div>
-          <span class="stat-card-value team-value">{{ formattedTeam }}</span>
-          <span class="stat-card-caption">Personas en tu<br />equipo</span>
+          <span class="metric-card-value team-value">{{ formattedTeam }}</span>
+          <span class="metric-card-caption">Personas en tu<br />equipo</span>
         </article>
 
-        <article class="stat-card frontals-card">
-          <div class="stat-card-header">
-            <div class="stat-icon frontals-icon" aria-hidden="true">
+        <article class="metric-card frontals-card">
+          <div class="metric-card-header">
+            <div class="metric-icon frontals-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="currentColor">
                 <path
                   d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"
                 />
               </svg>
             </div>
-            <span class="stat-card-title">Frontales Totales</span>
+            <span class="metric-card-title">Frontales Totales</span>
           </div>
-          <span class="stat-card-value frontals-value">{{ formattedFrontals }}</span>
-          <span class="stat-card-caption">Directos en<br />tu red</span>
+          <span class="metric-card-value frontals-value">{{ formattedFrontals }}</span>
+          <span class="metric-card-caption">Directos en<br />tu red</span>
         </article>
 
-        <article class="stat-card frontals-active-card">
-          <div class="stat-card-header">
-            <div class="stat-icon frontals-active-icon" aria-hidden="true">
+        <article class="metric-card frontals-active-card">
+          <div class="metric-card-header">
+            <div class="metric-icon frontals-active-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="currentColor">
                 <path
                   d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"
                 />
               </svg>
             </div>
-            <span class="stat-card-title">Frontales<br />Activos</span>
+            <span class="metric-card-title">Frontales<br />Activos</span>
           </div>
-          <span class="stat-card-value frontals-active-value">{{ formattedFrontalsActive }}</span>
-          <span class="stat-card-caption">Con actividad<br />este mes</span>
+          <span class="metric-card-value frontals-active-value">{{ formattedFrontalsActive }}</span>
+          <span class="metric-card-caption">Con actividad<br />este mes</span>
         </article>
       </div>
     </div>
