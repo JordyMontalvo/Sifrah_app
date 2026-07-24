@@ -1,0 +1,148 @@
+.personal-view {
+  padding: 20px 16px 40px;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.personal-card {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 28px 32px;
+  box-shadow: 0 8px 28px rgba(15, 23, 42, 0.08);
+}
+
+.personal-avatar-wrap {
+  flex-shrink: 0;
+}
+
+.personal-avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #e91e63;
+  display: block;
+  background: #fce4ec;
+}
+
+.personal-avatar-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #e91e63;
+  font-size: 2.4rem;
+}
+
+.personal-info {
+  min-width: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.personal-name {
+  margin: 0;
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #111827;
+  line-height: 1.2;
+  word-break: break-word;
+}
+
+.personal-rank-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  align-self: flex-start;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: #fff5f8;
+  border: 1px solid #f8c8d8;
+  color: #e91e63;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.personal-rank-badge i {
+  font-size: 0.85rem;
+  color: #e91e63;
+}
+
+.personal-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #374151;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.personal-row > i {
+  color: #6b7280;
+  font-size: 0.95rem;
+}
+
+.personal-icon-btn {
+  border: none;
+  background: transparent;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  color: #6b7280;
+  font-size: 0.95rem;
+  line-height: 1;
+  transition: color 0.15s ease;
+}
+
+.personal-icon-btn:hover,
+.personal-icon-btn:focus {
+  color: #e91e63;
+  outline: none;
+}
+
+.personal-copied {
+  color: #2e7d32;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+@media (max-width: 640px) {
+  .personal-view {
+    padding: 16px 12px 32px;
+  }
+
+  .personal-card {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 18px;
+    padding: 24px 20px;
+  }
+
+  .personal-info {
+    align-items: center;
+    width: 100%;
+  }
+
+  .personal-rank-badge {
+    align-self: center;
+  }
+
+  .personal-row {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .personal-avatar {
+    width: 104px;
+    height: 104px;
+  }
+
+  .personal-name {
+    font-size: 1.45rem;
+  }
+}
