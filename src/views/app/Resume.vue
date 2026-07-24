@@ -122,7 +122,7 @@
                 />
               </svg>
             </div>
-            <span class="metric-card-title">Frontales<br />Activos</span>
+            <span class="metric-card-title">Frontales Activos</span>
           </div>
           <span class="metric-card-value frontals-active-value">{{ formattedFrontalsActive }}</span>
           <span class="metric-card-caption">Con actividad<br />este mes</span>
