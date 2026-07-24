@@ -1,6 +1,6 @@
 .personal-view {
   padding: 20px 16px 40px;
-  max-width: 920px;
+  max-width: 1100px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
@@ -115,7 +115,7 @@
 
 .personal-stats {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 16px;
 }
 
@@ -161,6 +161,11 @@
   color: #5e35b1;
 }
 
+.team-icon {
+  background: #e0e7ff;
+  color: #2563eb;
+}
+
 .stat-card-title {
   font-size: 0.95rem;
   font-weight: 700;
@@ -187,6 +192,10 @@
 
 .volume-value {
   color: #5e35b1;
+}
+
+.team-value {
+  color: #2563eb;
 }
 
 .stat-card-caption {
@@ -271,5 +280,11 @@
   .points-card .status-pill {
     padding-left: 0;
     margin-left: 0;
+  }
+}
+
+@media (min-width: 520px) and (max-width: 900px) {
+  .personal-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
