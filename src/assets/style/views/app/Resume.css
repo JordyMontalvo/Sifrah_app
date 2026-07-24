@@ -1,10 +1,11 @@
 .personal-view {
-  padding: 20px 16px 40px;
-  max-width: 1400px;
-  margin: 0 auto;
+  padding: 16px 12px 40px;
+  max-width: none;
+  width: 100%;
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 16px;
 }
 
 .personal-card {
@@ -114,37 +115,41 @@
 }
 
 .personal-stats {
-  display: flex;
-  flex-wrap: nowrap;
-  gap: 14px;
+  display: grid !important;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 10px;
   width: 100%;
+  box-sizing: border-box;
 }
 
 .personal-stats > .metric-card {
-  flex: 1 1 0;
   min-width: 0;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .metric-card {
   background: #ffffff;
-  border-radius: 20px;
-  padding: 18px 16px;
+  border-radius: 16px;
+  padding: 14px 12px;
   box-shadow: 0 8px 28px rgba(15, 23, 42, 0.08);
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  min-height: 150px;
+  gap: 8px;
+  min-height: 132px;
+  overflow: hidden;
 }
 
 .metric-card-header {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
+  min-width: 0;
 }
 
 .metric-icon {
-  width: 42px;
-  height: 42px;
+  width: 34px;
+  height: 34px;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -160,8 +165,8 @@
 }
 
 .metric-icon svg {
-  width: 22px;
-  height: 22px;
+  width: 18px;
+  height: 18px;
   transform: none !important;
 }
 
@@ -191,16 +196,18 @@
 }
 
 .metric-card-title {
-  font-size: 0.78rem;
+  font-size: 0.68rem;
   font-weight: 700;
   color: #111827;
   text-transform: uppercase;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.01em;
   line-height: 1.15;
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .metric-card-value {
-  font-size: 1.85rem;
+  font-size: 1.55rem;
   font-weight: 700;
   line-height: 1.1;
   padding-left: 0;
@@ -234,7 +241,7 @@
 .metric-card-caption {
   padding-left: 0;
   color: #6b7280;
-  font-size: 0.82rem;
+  font-size: 0.72rem;
   font-weight: 500;
   line-height: 1.25;
 }
@@ -243,9 +250,9 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 6px 12px;
+  padding: 5px 10px;
   border-radius: 999px;
-  font-size: 0.9rem;
+  font-size: 0.78rem;
   font-weight: 600;
   line-height: 1;
   white-space: nowrap;
@@ -266,6 +273,15 @@
   height: 8px;
   border-radius: 50%;
   background: currentColor;
+}
+
+@media (max-width: 900px) {
+  .personal-stats {
+    grid-template-columns: repeat(5, minmax(148px, 1fr));
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 6px;
+  }
 }
 
 @media (max-width: 720px) {
@@ -302,17 +318,6 @@
 
   .personal-name {
     font-size: 1.45rem;
-  }
-
-  .personal-stats {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    padding-bottom: 4px;
-  }
-
-  .personal-stats > .metric-card {
-    flex: 0 0 180px;
-    min-width: 180px;
   }
 
   .metric-card-value,
