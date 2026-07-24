@@ -112,6 +112,21 @@
           <span class="stat-card-value frontals-value">{{ formattedFrontals }}</span>
           <span class="stat-card-caption">Directos en<br />tu red</span>
         </article>
+
+        <article class="stat-card frontals-active-card">
+          <div class="stat-card-header">
+            <div class="stat-icon frontals-active-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path
+                  d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"
+                />
+              </svg>
+            </div>
+            <span class="stat-card-title">Frontales<br />Activos</span>
+          </div>
+          <span class="stat-card-value frontals-active-value">{{ formattedFrontalsActive }}</span>
+          <span class="stat-card-caption">Con actividad<br />este mes</span>
+        </article>
       </div>
     </div>
   </App>
@@ -140,6 +155,7 @@ export default {
       totalPoints: 0,
       team: 0,
       frontalsTotal: 0,
+      frontalsActive: 0,
       activated: false,
       copied: false,
     };
@@ -173,6 +189,9 @@ export default {
     },
     formattedFrontals() {
       return (Number(this.frontalsTotal) || 0).toLocaleString("es-PE");
+    },
+    formattedFrontalsActive() {
+      return (Number(this.frontalsActive) || 0).toLocaleString("es-PE");
     },
   },
   filters: {
@@ -243,6 +262,7 @@ export default {
       this.totalPoints = Number(data.total_points) || 0;
       this.team = Number(data.team) || 0;
       this.frontalsTotal = Number(data.frontals_total) || 0;
+      this.frontalsActive = Number(data.frontals_active) || 0;
       this.activated = !!data.activated;
     } catch (e) {
       console.error(e);

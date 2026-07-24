@@ -1,6 +1,6 @@
 .personal-view {
   padding: 20px 16px 40px;
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
@@ -121,7 +121,13 @@
 
 @media (min-width: 901px) {
   .personal-stats {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1100px) {
+  .personal-stats {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
   }
 }
 
@@ -177,12 +183,18 @@
   color: #0d9488;
 }
 
+.frontals-active-icon {
+  background: #ffe8d6;
+  color: #f57c00;
+}
+
 .stat-card-title {
   font-size: 0.95rem;
   font-weight: 700;
   color: #111827;
   text-transform: uppercase;
   letter-spacing: 0.02em;
+  line-height: 1.15;
 }
 
 .stat-card-value {
@@ -211,6 +223,10 @@
 
 .frontals-value {
   color: #0d9488;
+}
+
+.frontals-active-value {
+  color: #f57c00;
 }
 
 .stat-card-caption {
