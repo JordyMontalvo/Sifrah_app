@@ -2136,6 +2136,12 @@
   color: #e91e63;
   font-weight: 700;
   line-height: 1;
+  padding-left: 54px;
+}
+
+.personal-points-card .personal-status-pill {
+  align-self: flex-start;
+  margin-left: 54px;
 }
 
 .personal-status-pill {
@@ -2223,6 +2229,12 @@
 @media (max-width: 992px) {
   .personal-card-body {
     padding-left: 0;
+  }
+
+  .personal-points-card .pts-number,
+  .personal-points-card .personal-status-pill {
+    padding-left: 0;
+    margin-left: 0;
   }
 
   .global-volume-value,

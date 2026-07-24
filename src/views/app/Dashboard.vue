@@ -384,16 +384,14 @@
               </div>
               <span class="dash-card-title">Puntos Personales</span>
             </div>
-            <div class="personal-card-body">
-              <span class="dash-card-value pts-number">{{ points || 0 }}</span>
-              <span
-                class="personal-status-pill"
-                :class="activated ? 'is-active' : 'is-inactive'"
-              >
-                <span class="personal-status-dot" aria-hidden="true"></span>
-                {{ activated ? "Activo" : "Inactivo" }}
-              </span>
-            </div>
+            <span class="dash-card-value pts-number">{{ points || 0 }}</span>
+            <span
+              class="personal-status-pill"
+              :class="activated ? 'is-active' : 'is-inactive'"
+            >
+              <span class="personal-status-dot" aria-hidden="true"></span>
+              {{ activated ? "Activo" : "Inactivo" }}
+            </span>
           </div>
 
           <!-- 6. Volumen Global -->

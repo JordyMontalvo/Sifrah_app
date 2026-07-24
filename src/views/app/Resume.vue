@@ -45,6 +45,44 @@
           </div>
         </div>
       </article>
+
+      <div class="personal-stats">
+        <article class="stat-card points-card">
+          <div class="stat-card-header">
+            <div class="stat-icon points-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path
+                  d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"
+                />
+              </svg>
+            </div>
+            <span class="stat-card-title">Puntos Personales</span>
+          </div>
+          <span class="stat-card-value points-value">{{ points || 0 }}</span>
+          <span
+            class="status-pill"
+            :class="activated ? 'is-active' : 'is-inactive'"
+          >
+            <span class="status-dot" aria-hidden="true"></span>
+            {{ activated ? "Activo" : "Inactivo" }}
+          </span>
+        </article>
+
+        <article class="stat-card volume-card">
+          <div class="stat-card-header">
+            <div class="stat-icon volume-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path
+                  d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"
+                />
+              </svg>
+            </div>
+            <span class="stat-card-title">Volumen Global</span>
+          </div>
+          <span class="stat-card-value volume-value">{{ formattedVolume }}</span>
+          <span class="stat-card-caption">Total de puntos<br />en tu equipo</span>
+        </article>
+      </div>
     </div>
   </App>
 </template>
@@ -68,6 +106,9 @@ export default {
       rank: null,
       token: null,
       affiliationDate: null,
+      points: 0,
+      totalPoints: 0,
+      activated: false,
       copied: false,
     };
   },
@@ -82,7 +123,18 @@ export default {
       return "Personal";
     },
     fullName() {
-      return [this.name, this.lastName].filter(Boolean).join(" ") || "—";
+      const local = [this.name, this.lastName].filter(Boolean).join(" ");
+      if (local) return local;
+      const fromStore = [
+        this.$store.state.name,
+        this.$store.state.lastName,
+      ]
+        .filter(Boolean)
+        .join(" ");
+      return fromStore || "—";
+    },
+    formattedVolume() {
+      return (Number(this.totalPoints) || 0).toLocaleString("es-PE");
     },
   },
   filters: {
@@ -139,13 +191,19 @@ export default {
       this.$store.commit("SET_COUNTRY", data.country);
       this.$store.commit("SET_PHOTO", data.photo);
       if (data.token) this.$store.commit("SET_TOKEN", data.token);
+      if (data.total_points != null) {
+        this.$store.commit("SET_TOTAL_POINTS", data.total_points);
+      }
 
-      this.name = data.name;
-      this.lastName = data.lastName;
+      this.name = data.name || this.$store.state.name;
+      this.lastName = data.lastName || this.$store.state.lastName;
       this.photo = data.photo || this.$store.state.photo;
       this.rank = data.rank;
       this.token = data.token || this.$store.state.token;
       this.affiliationDate = data.affiliationDate;
+      this.points = Number(data.points) || 0;
+      this.totalPoints = Number(data.total_points) || 0;
+      this.activated = !!data.activated;
     } catch (e) {
       console.error(e);
     } finally {
@@ -162,10 +220,13 @@ export default {
         }, 2500);
       };
       if (navigator.clipboard && window.isSecureContext) {
-        navigator.clipboard.writeText(this.token).then(done).catch(() => {
-          this.fallbackCopy(this.token);
-          done();
-        });
+        navigator.clipboard
+          .writeText(this.token)
+          .then(done)
+          .catch(() => {
+            this.fallbackCopy(this.token);
+            done();
+          });
         return;
       }
       this.fallbackCopy(this.token);

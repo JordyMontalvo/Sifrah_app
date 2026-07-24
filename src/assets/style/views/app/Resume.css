@@ -1,7 +1,10 @@
 .personal-view {
   padding: 20px 16px 40px;
-  max-width: 720px;
+  max-width: 920px;
   margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
 .personal-card {
@@ -110,7 +113,120 @@
   font-weight: 600;
 }
 
-@media (max-width: 640px) {
+.personal-stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.stat-card {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 22px 24px;
+  box-shadow: 0 8px 28px rgba(15, 23, 42, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-height: 150px;
+}
+
+.stat-card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.stat-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.stat-icon svg {
+  width: 22px;
+  height: 22px;
+}
+
+.points-icon {
+  background: #fce4ec;
+  color: #e91e63;
+}
+
+.volume-icon {
+  background: #ede7f6;
+  color: #5e35b1;
+}
+
+.stat-card-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #111827;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.stat-card-value {
+  font-size: 2.1rem;
+  font-weight: 700;
+  line-height: 1.1;
+  padding-left: 54px;
+}
+
+.points-card .points-value {
+  color: #e91e63;
+}
+
+.points-card .status-pill {
+  align-self: flex-start;
+  margin-left: 54px;
+}
+
+.volume-value {
+  color: #5e35b1;
+}
+
+.stat-card-caption {
+  padding-left: 54px;
+  color: #6b7280;
+  font-size: 0.92rem;
+  font-weight: 500;
+  line-height: 1.25;
+}
+
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.status-pill.is-active {
+  color: #2e7d32;
+  background: #e8f5e9;
+}
+
+.status-pill.is-inactive {
+  color: #c62828;
+  background: #ffebee;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+@media (max-width: 720px) {
   .personal-view {
     padding: 16px 12px 32px;
   }
@@ -144,5 +260,16 @@
 
   .personal-name {
     font-size: 1.45rem;
+  }
+
+  .personal-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .stat-card-value,
+  .stat-card-caption,
+  .points-card .status-pill {
+    padding-left: 0;
+    margin-left: 0;
   }
 }
