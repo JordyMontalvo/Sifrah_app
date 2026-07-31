@@ -57,7 +57,7 @@
                   />
                 </svg>
               </div>
-              <span class="metric-card-title">Puntos<br class="metric-title-br" />Personales</span>
+              <span class="metric-card-title">Puntos <br class="metric-title-br" />Personales</span>
             </div>
             <span class="metric-card-value points-value">{{ formattedPoints }}</span>
             <span
@@ -81,7 +81,7 @@
                   />
                 </svg>
               </div>
-              <span class="metric-card-title">Volumen<br class="metric-title-br" />Global</span>
+              <span class="metric-card-title">Volumen <br class="metric-title-br" />Global</span>
             </div>
             <span class="metric-card-value volume-value">{{ formattedVolume }}</span>
             <span class="metric-card-caption">Total de puntos en tu equipo</span>
@@ -96,7 +96,7 @@
                   />
                 </svg>
               </div>
-              <span class="metric-card-title">Equipo<br class="metric-title-br" />Total</span>
+              <span class="metric-card-title">Equipo <br class="metric-title-br" />Total</span>
             </div>
             <span class="metric-card-value team-value">{{ formattedTeam }}</span>
             <span class="metric-card-caption">Personas en tu equipo</span>
@@ -111,7 +111,7 @@
                   />
                 </svg>
               </div>
-              <span class="metric-card-title">Frontales<br class="metric-title-br" />Totales</span>
+              <span class="metric-card-title">Frontales <br class="metric-title-br" />Totales</span>
             </div>
             <span class="metric-card-value frontals-value">{{ formattedFrontals }}</span>
             <span class="metric-card-caption">Directos en tu red</span>
@@ -126,7 +126,7 @@
                   />
                 </svg>
               </div>
-              <span class="metric-card-title">Frontales<br class="metric-title-br" />Activos</span>
+              <span class="metric-card-title">Frontales <br class="metric-title-br" />Activos</span>
             </div>
             <span class="metric-card-value frontals-active-value">{{ formattedFrontalsActive }}</span>
             <span class="metric-card-caption">Con actividad este mes</span>
