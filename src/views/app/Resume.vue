@@ -249,6 +249,19 @@
           <span class="info-panel-caption">Niveles con actividad en tu red</span>
         </article>
 
+        <article class="info-panel levels-panel">
+          <h3 class="info-panel-title">Profundidad Registrada</h3>
+          <div class="levels-icon" aria-hidden="true" style="color: #6366f1;">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2L2 7l10 5 10-5-10-5z" />
+              <path d="M2 17l10 5 10-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              <path d="M2 12l10 5 10-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <span class="info-panel-value levels-value" style="color: #4f46e5;">{{ totalDepthLevels }}</span>
+          <span class="info-panel-caption">Niveles con personas registradas</span>
+        </article>
+
         <article class="info-panel lines-chart-panel">
           <div class="lines-chart-header">
             <h3 class="info-panel-title">Distribución de puntos por línea (Top 5)</h3>
@@ -328,6 +341,7 @@ export default {
       legs: [],
       validPoints: 0,
       thresholdPoints: 0,
+      totalDepthLevels: 0,
     };
   },
   computed: {
@@ -569,6 +583,7 @@ export default {
         this.legs = Array.isArray(progress.legs) ? progress.legs : [];
         this.validPoints = Number(progress.validPoints) || 0;
         this.thresholdPoints = Number(progress.thresholdPoints) || 0;
+        this.totalDepthLevels = Number(progress.totalDepthLevels) || 0;
         if (!dash && progress.historicRankLabel) {
           this.historicalRankLabel = progress.historicRankLabel;
         }
