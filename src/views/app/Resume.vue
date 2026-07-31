@@ -189,22 +189,52 @@
           </div>
         </article>
 
-        <article class="info-panel next-points-panel">
-          <h3 class="info-panel-title">Puntos necesarios para el siguiente rango</h3>
-          <div class="next-rank-current">
-            <i class="fas fa-gem" aria-hidden="true"></i>
-            <span>Rango actual: <strong>{{ currentRankLabel }}</strong></span>
+        <article class="info-panel rank-progress-panel">
+          <div class="progress-card-header">
+            <div class="target-icon-circle">
+              <i class="fas fa-bullseye" aria-hidden="true"></i>
+            </div>
+            <h3 class="info-panel-title">Progreso de Rango</h3>
           </div>
-          <span class="info-panel-value next-points-value">{{ formattedPointsMissing }}</span>
-          <span class="info-panel-caption">{{ nextPointsCaption }}</span>
-          <div class="next-progress-row">
-            <div class="next-progress-bar">
+
+          <div class="progress-columns-row">
+            <div class="progress-col">
+              <span class="progress-col-label">Rango en tiempo real</span>
+              <div class="progress-col-value">
+                <i class="fas fa-award" :style="{ color: getRankColor(currentRankLabel) }" aria-hidden="true"></i>
+                <span :style="{ color: getRankColor(currentRankLabel) }">{{ currentRankLabel }}</span>
+              </div>
+            </div>
+            <div class="progress-divider-vertical"></div>
+            <div class="progress-col">
+              <span class="progress-col-label">Progreso hacia</span>
+              <div class="progress-col-value">
+                <i class="fas fa-award" :style="{ color: getRankColor(targetRankLabel) }" aria-hidden="true"></i>
+                <span :style="{ color: getRankColor(targetRankLabel) }">{{ targetRankLabel }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="progress-points-box">
+            <span class="points-box-label">PUNTOS VÁLIDOS</span>
+            <div class="points-box-value">
+              <strong class="points-current">{{ formatPointsValue(validPoints) }}</strong>
+              <span class="points-separator"> / </span>
+              <span class="points-required">{{ formatPointsValue(thresholdPoints) }} pts</span>
+            </div>
+            <span class="points-box-missing">
+              Te faltan <strong class="missing-highlight">{{ formatPointsValue(pointsMissing) }} pts</strong>
+            </span>
+          </div>
+
+          <div class="progress-bar-row">
+            <div class="progress-bar-track">
               <div
-                class="next-progress-fill"
+                class="progress-bar-fill"
                 :style="{ width: progressPercent + '%' }"
               ></div>
             </div>
-            <span class="next-progress-pct">{{ progressPercent }}%</span>
+            <span class="progress-bar-pct">{{ progressPercent }}%</span>
           </div>
         </article>
 
@@ -296,6 +326,8 @@ export default {
       progressPercent: 0,
       activeLevels: 0,
       legs: [],
+      validPoints: 0,
+      thresholdPoints: 0,
     };
   },
   computed: {
@@ -378,15 +410,6 @@ export default {
       if (this.historicalRankDate) return `Alcanzado el ${this.historicalRankDate}`;
       if (this.historicalRankSubtitle) return this.historicalRankSubtitle;
       return "Aún sin rango en historial";
-    },
-    formattedPointsMissing() {
-      return (Number(this.pointsMissing) || 0).toLocaleString("es-PE");
-    },
-    nextPointsCaption() {
-      if (!this.targetRankLabel || this.targetRankLabel === "—") {
-        return "Puntos para el siguiente rango";
-      }
-      return `Puntos para ${this.targetRankLabel}`;
     },
     lineBars() {
       const legs = Array.isArray(this.legs) ? this.legs : [];
@@ -544,12 +567,30 @@ export default {
         this.progressPercent = Number(progress.progressPercent) || 0;
         this.activeLevels = Number(progress.activeLevels) || 0;
         this.legs = Array.isArray(progress.legs) ? progress.legs : [];
+        this.validPoints = Number(progress.validPoints) || 0;
+        this.thresholdPoints = Number(progress.thresholdPoints) || 0;
         if (!dash && progress.historicRankLabel) {
           this.historicalRankLabel = progress.historicRankLabel;
         }
       } else {
         this.currentRankLabel = this.$options.filters._rank(this.rank);
       }
+    },
+    getRankColor(label) {
+      const l = String(label || "").toLowerCase();
+      if (l.includes("activo")) return "#4CAF50";
+      if (l.includes("bronce")) return "#CD7F32";
+      if (l.includes("plata")) return "#90A4AE";
+      if (l.includes("oro")) return "#FFD700";
+      if (l.includes("platino")) return "#cfd8dc";
+      if (l.includes("zafiro")) return "#0d47a1";
+      if (l.includes("ruby") || l.includes("rubí") || l.includes("rubi")) return "#d81b60";
+      if (l.includes("esmeralda")) return "#00c853";
+      if (l.includes("diamante")) return "#0097a7";
+      return "#e91e63";
+    },
+    formatPointsValue(val) {
+      return (Number(val) || 0).toLocaleString("es-PE");
     },
     copyCode() {
       if (!this.token) return;
