@@ -148,8 +148,43 @@
               :alt="historicalRankLabel"
               class="max-rank-image"
             />
-            <div v-else class="max-rank-fallback" aria-hidden="true">
+            <div v-else-if="isNoneRank" class="max-rank-fallback" aria-hidden="true">
               <i class="fas fa-trophy"></i>
+            </div>
+            <div v-else class="max-rank-svg-container" aria-hidden="true">
+              <svg viewBox="0 0 100 100" class="rank-trophy-svg">
+                <defs>
+                  <linearGradient id="goldTrophyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#FFF9C4" />
+                    <stop offset="50%" stop-color="#FBC02D" />
+                    <stop offset="100%" stop-color="#F57F17" />
+                  </linearGradient>
+                  <linearGradient id="silverTrophyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#FFFFFF" />
+                    <stop offset="50%" stop-color="#B0BEC5" />
+                    <stop offset="100%" stop-color="#37474F" />
+                  </linearGradient>
+                  <linearGradient id="bronzeTrophyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#FFE0B2" />
+                    <stop offset="50%" stop-color="#A1887F" />
+                    <stop offset="100%" stop-color="#4E342E" />
+                  </linearGradient>
+                  <linearGradient id="gemGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" :stop-color="gemGradients.start" />
+                    <stop offset="100%" :stop-color="gemGradients.end" />
+                  </linearGradient>
+                </defs>
+                <ellipse cx="50" cy="90" rx="30" ry="6" fill="#000" opacity="0.15" />
+                <path d="M 30,80 L 70,80 L 65,90 L 35,90 Z" fill="#5D4037" />
+                <rect x="35" y="72" width="30" height="8" rx="2" fill="#3E2723" />
+                <rect x="42" y="74" width="16" height="4" rx="1" fill="#FFD700" opacity="0.8" />
+                <path d="M 45,55 L 55,55 L 53,72 L 47,72 Z" :fill="'url(#' + trophyGradient + ')'" />
+                <path d="M 30,28 C 15,28 15,48 32,50" fill="none" :stroke="'url(#' + trophyGradient + ')'" stroke-width="4" stroke-linecap="round" />
+                <path d="M 70,28 C 85,28 85,48 68,50" fill="none" :stroke="'url(#' + trophyGradient + ')'" stroke-width="4" stroke-linecap="round" />
+                <path d="M 30,22 L 70,22 Q 70,55 50,55 Q 30,55 30,22 Z" :fill="'url(#' + trophyGradient + ')'" />
+                <ellipse cx="50" cy="22" rx="20" ry="4" fill="#F57F17" opacity="0.5" />
+                <polygon points="50,28 60,35 56,47 44,47 40,35" fill="url(#gemGrad)" stroke="#FFF" stroke-width="1" />
+              </svg>
             </div>
           </div>
         </article>
@@ -178,8 +213,6 @@
           <div class="levels-icon" aria-hidden="true">
             <svg viewBox="0 0 24 24" fill="currentColor">
               <path d="M12 3L2 8l10 5 10-5-10-5z" />
-              <path d="M2 12.5l10 5 10-5" fill="none" stroke="currentColor" stroke-width="2" />
-              <path d="M2 17l10 5 10-5" fill="none" stroke="currentColor" stroke-width="2" />
             </svg>
           </div>
           <span class="info-panel-value levels-value">{{ activeLevels }}</span>
@@ -191,23 +224,26 @@
             <h3 class="info-panel-title">Distribución de puntos por línea (Top 5)</h3>
             <router-link to="/rango" class="lines-chart-link">Ver todas →</router-link>
           </div>
-          <div v-if="lineBars.length" class="lines-chart">
+          <div class="lines-chart-body">
             <div
               v-for="bar in lineBars"
               :key="bar.key"
-              class="lines-chart-col"
+              class="line-bar-row"
             >
-              <span class="lines-chart-value">{{ bar.formatted }}</span>
-              <div class="lines-chart-track">
-                <div
-                  class="lines-chart-bar"
-                  :style="{ height: bar.heightPct + '%', background: bar.color }"
-                ></div>
+              <div class="line-bar-label-col">
+                <span class="line-bar-name">{{ bar.label }}</span>
+                <span class="line-bar-val">{{ bar.formatted }} pts</span>
               </div>
-              <span class="lines-chart-label">{{ bar.label }}</span>
+              <div class="line-bar-progress-col">
+                <div class="line-bar-track">
+                  <div
+                    class="line-bar-fill"
+                    :style="{ width: bar.heightPct + '%', backgroundColor: bar.color }"
+                  ></div>
+                </div>
+              </div>
             </div>
           </div>
-          <p v-else class="lines-chart-empty">Sin líneas con puntos este periodo</p>
         </article>
       </div>
     </div>
@@ -300,6 +336,43 @@ export default {
     },
     hasMaxRankImage() {
       return !!(this.historicalRankImage && String(this.historicalRankImage).trim());
+    },
+    historicalRankCode() {
+      const label = String(this.historicalRankLabel || "").toLowerCase();
+      if (label.includes("activo")) return "active";
+      if (label.includes("bronce")) return "star";
+      if (label.includes("plata")) return "silver";
+      if (label.includes("oro")) return "gold";
+      if (label.includes("platino")) return "platino";
+      if (label.includes("zafiro")) return "sapphire";
+      if (label.includes("ruby") || label.includes("rubí") || label.includes("rubi")) return "ruby";
+      if (label.includes("esmeralda")) return "emerald";
+      if (label.includes("diamante")) return "diamond";
+      if (label.includes("ninguno")) return "none";
+      return label;
+    },
+    isNoneRank() {
+      const code = this.historicalRankCode;
+      return !code || code === "none" || code === "ninguno";
+    },
+    gemGradients() {
+      const r = this.historicalRankCode;
+      if (r === "active") return { start: "#a5d6a7", end: "#2e7d32" };
+      if (r === "star") return { start: "#ffcc80", end: "#d84315" };
+      if (r === "silver") return { start: "#cfd8dc", end: "#37474f" };
+      if (r === "gold") return { start: "#fff59d", end: "#f57f17" };
+      if (r === "platino") return { start: "#e5e4e2", end: "#90a4ae" };
+      if (r === "sapphire") return { start: "#90caf9", end: "#0d47a1" };
+      if (r === "ruby") return { start: "#f8bbd0", end: "#c2185b" };
+      if (r === "emerald") return { start: "#b9f6ca", end: "#00c853" };
+      if (r === "diamond" || r.includes("diamante")) return { start: "#e0f7fa", end: "#0097a7" };
+      return { start: "#e0e0e0", end: "#9e9e9e" };
+    },
+    trophyGradient() {
+      const r = this.historicalRankCode;
+      if (r === "star") return "bronzeTrophyGrad";
+      if (r === "silver") return "silverTrophyGrad";
+      return "goldTrophyGrad";
     },
     maxRankDateText() {
       if (this.historicalRankDate) return `Alcanzado el ${this.historicalRankDate}`;
