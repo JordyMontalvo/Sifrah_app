@@ -262,30 +262,113 @@
           <span class="info-panel-caption">Niveles con personas registradas</span>
         </article>
 
-        <article class="info-panel lines-chart-panel">
-          <div class="lines-chart-header">
-            <h3 class="info-panel-title">Distribución de puntos por línea (Top 5)</h3>
-            <router-link to="/rango" class="lines-chart-link">Ver todas →</router-link>
-          </div>
-          <div class="lines-chart-body">
-            <div
-              v-for="bar in lineBars"
-              :key="bar.key"
-              class="line-bar-row"
-            >
-              <div class="line-bar-label-col">
-                <span class="line-bar-name">{{ bar.label }}</span>
-                <span class="line-bar-val">{{ bar.formatted }} pts</span>
+        <article class="info-panel growth-chart-panel">
+          <div class="growth-chart-header">
+            <div class="growth-header-left">
+              <div class="chart-icon-circle">
+                <i class="fas fa-chart-line" aria-hidden="true"></i>
               </div>
-              <div class="line-bar-progress-col">
-                <div class="line-bar-track">
-                  <div
-                    class="line-bar-fill"
-                    :style="{ width: bar.heightPct + '%', backgroundColor: bar.color }"
-                  ></div>
-                </div>
-              </div>
+              <h3 class="info-panel-title">Evolución de la Organización</h3>
             </div>
+            <div class="growth-header-right" title="Muestra el crecimiento de tu equipo en los últimos 6 meses">
+              <i class="fas fa-info-circle"></i>
+            </div>
+          </div>
+          
+          <p class="growth-chart-subtitle">
+            Visualiza la evolución del crecimiento de tu organización durante los últimos seis meses.
+          </p>
+
+          <div class="growth-chart-container">
+            <svg viewBox="0 0 500 200" class="growth-svg-chart">
+              <defs>
+                <linearGradient id="chartAreaGradient" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#e91e63" stop-opacity="0.25" />
+                  <stop offset="100%" stop-color="#e91e63" stop-opacity="0.00" />
+                </linearGradient>
+              </defs>
+
+              <!-- Grid horizontal lines -->
+              <g class="chart-grid">
+                <line
+                  v-for="line in chartPoints.gridLines"
+                  :key="'grid-' + line.y"
+                  x1="40"
+                  :y1="line.y"
+                  x2="460"
+                  :y2="line.y"
+                  stroke="#f1f5f9"
+                  stroke-width="1"
+                  stroke-dasharray="3,3"
+                />
+              </g>
+
+              <!-- Y Axis labels -->
+              <g class="chart-y-axis">
+                <text
+                  v-for="line in chartPoints.gridLines"
+                  :key="'lbl-' + line.y"
+                  x="30"
+                  :y="line.y + 4"
+                  text-anchor="end"
+                  font-size="10"
+                  fill="#64748b"
+                  font-weight="600"
+                >
+                  {{ line.value }}
+                </text>
+              </g>
+
+              <!-- Filled Area -->
+              <path :d="chartPoints.areaPath" fill="url(#chartAreaGradient)" />
+
+              <!-- Trend Line -->
+              <path :d="chartPoints.linePath" fill="none" stroke="#e91e63" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+
+              <!-- Data Dots & values / months labels -->
+              <g class="chart-dots">
+                <circle
+                  v-for="p in chartPoints.points"
+                  :key="'dot-' + p.x"
+                  :cx="p.x"
+                  :cy="p.y"
+                  r="6"
+                  fill="#e91e63"
+                  stroke="#ffffff"
+                  stroke-width="2.5"
+                />
+              </g>
+
+              <!-- X Axis labels inside SVG -->
+              <g class="chart-x-axis">
+                <!-- Value (Magenta) -->
+                <text
+                  v-for="p in chartPoints.points"
+                  :key="'x-val-' + p.x"
+                  :x="p.x"
+                  y="166"
+                  text-anchor="middle"
+                  font-size="11"
+                  fill="#e91e63"
+                  font-weight="800"
+                >
+                  {{ p.value }}
+                </text>
+                <!-- Month (Grey) -->
+                <text
+                  v-for="p in chartPoints.points"
+                  :key="'x-lbl-' + p.x"
+                  :x="p.x"
+                  y="184"
+                  text-anchor="middle"
+                  font-size="10"
+                  fill="#475569"
+                  font-weight="600"
+                >
+                  {{ p.label }}
+                </text>
+              </g>
+            </svg>
           </div>
         </article>
       </div>
@@ -342,6 +425,7 @@ export default {
       validPoints: 0,
       thresholdPoints: 0,
       totalDepthLevels: 0,
+      growthHistory: [],
     };
   },
   computed: {
@@ -425,40 +509,71 @@ export default {
       if (this.historicalRankSubtitle) return this.historicalRankSubtitle;
       return "Aún sin rango en historial";
     },
-    lineBars() {
-      const legs = Array.isArray(this.legs) ? this.legs : [];
-      const sorted = [...legs].sort(
-        (a, b) => (Number(b.generated) || 0) - (Number(a.generated) || 0)
-      );
-      const top = sorted.slice(0, 5);
-      const rest = sorted.slice(5);
-      const othersTotal = rest.reduce(
-        (sum, leg) => sum + (Number(leg.generated) || 0),
-        0
-      );
+    chartPoints() {
+      const history = Array.isArray(this.growthHistory) && this.growthHistory.length === 6
+        ? this.growthHistory
+        : [
+            { label: "Dic 2024", value: 0 },
+            { label: "Ene 2025", value: 0 },
+            { label: "Feb 2025", value: 0 },
+            { label: "Mar 2025", value: 0 },
+            { label: "Abr 2025", value: 0 },
+            { label: "May 2025", value: 0 }
+          ];
 
-      const bars = top.map((leg, i) => ({
-        key: `line-${i + 1}`,
-        label: `Línea ${i + 1}`,
-        value: Number(leg.generated) || 0,
-        color: LINE_COLORS[i] || LINE_COLORS[0],
-      }));
+      const values = history.map(h => h.value);
+      const maxVal = Math.max(...values, 10);
+      
+      // Calculate nice max Y axis (round up to next 10 or 100 or 1000)
+      let yAxisMax = 100;
+      if (maxVal > 100) {
+        yAxisMax = Math.ceil(maxVal / 100) * 100;
+      } else if (maxVal > 10) {
+        yAxisMax = Math.ceil(maxVal / 10) * 10;
+      }
+      
+      const width = 420;
+      const height = 110; // height of plot area
+      const xPadding = 40;
+      const yPadding = 25;
+      
+      const points = history.map((item, index) => {
+        const x = xPadding + index * (width / 5);
+        const y = yPadding + height - (item.value / yAxisMax) * height;
+        return {
+          x,
+          y,
+          label: item.label,
+          value: item.value
+        };
+      });
 
-      if (othersTotal > 0 || rest.length > 0) {
-        bars.push({
-          key: "others",
-          label: "Otras líneas",
-          value: othersTotal,
-          color: OTHER_COLOR,
+      // Construct SVG path for line
+      const linePath = points.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.y}`).join(' ');
+
+      // Construct SVG path for filled area (closed loop down to Y axis bottom)
+      const bottomY = yPadding + height;
+      const areaPath = `${linePath} L ${points[points.length - 1].x} ${bottomY} L ${points[0].x} ${bottomY} Z`;
+
+      // Y axis grid lines (e.g. 5 steps: 0, 25%, 50%, 75%, 100% of yAxisMax)
+      const gridLines = [];
+      for (let i = 0; i <= 4; i++) {
+        const pct = i / 4;
+        const y = yPadding + height - pct * height;
+        const val = Math.round(pct * yAxisMax);
+        gridLines.push({
+          y,
+          value: val.toLocaleString("es-PE")
         });
       }
 
-      const max = Math.max(...bars.map((b) => b.value), 1);
-      return bars.map((b) => ({
-        ...b,
-        formatted: b.value.toLocaleString("es-PE"),
-        heightPct: Math.max(8, Math.round((b.value / max) * 100)),
-      }));
+      return {
+        points,
+        linePath,
+        areaPath,
+        gridLines,
+        yAxisMax
+      };
     },
   },
   filters: {
@@ -564,6 +679,7 @@ export default {
           : null;
         this.historicalRankDate = dash.historicalRankDate || null;
         this.historicalRankSubtitle = dash.historicalRankSubtitle || "";
+        this.growthHistory = dash.growthHistory || [];
       }
 
       const progress =

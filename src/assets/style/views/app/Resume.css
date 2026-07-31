@@ -530,91 +530,71 @@
   text-align: left;
 }
 
-.lines-chart-panel {
-  gap: 12px;
-}
-
-.lines-chart-header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 10px;
-}
-
-.lines-chart-link {
-  color: #e91e63;
-  font-size: 0.72rem;
-  font-weight: 600;
-  text-decoration: none;
-  white-space: nowrap;
-  flex-shrink: 0;
-}
-
-.lines-chart-link:hover {
-  text-decoration: underline;
-}
-
-.lines-chart {
-  flex: 1;
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 6px;
-  min-height: 140px;
-  padding-top: 4px;
-}
-
-.lines-chart-col {
-  flex: 1;
-  min-width: 0;
+.growth-chart-panel {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  text-align: center;
-  gap: 6px;
-  height: 100%;
+  gap: 10px;
+  padding: 16px 14px !important;
 }
 
-.lines-chart-value {
-  font-size: 0.68rem;
-  font-weight: 700;
-  color: #374151;
-  line-height: 1;
-}
-
-.lines-chart-track {
-  flex: 1;
-  width: 100%;
-  max-width: 36px;
+.growth-chart-header {
   display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  min-height: 72px;
-}
-
-.lines-chart-bar {
+  align-items: center;
+  justify-content: space-between;
   width: 100%;
-  border-radius: 6px 6px 4px 4px;
-  min-height: 8px;
-  transition: height 0.35s ease;
 }
 
-.lines-chart-label {
-  font-size: 0.62rem;
-  font-weight: 600;
-  color: #6b7280;
-  line-height: 1.2;
-  max-width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+.growth-header-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
-.lines-chart-empty {
-  margin: auto 0;
-  text-align: center;
+.chart-icon-circle {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #fce4ec;
+  color: #e91e63;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+}
+
+.growth-header-right {
   color: #9ca3af;
-  font-size: 0.78rem;
+  cursor: help;
+  font-size: 0.95rem;
+  transition: color 0.2s;
+  display: flex;
+  align-items: center;
+}
+
+.growth-header-right:hover {
+  color: #6b7280;
+}
+
+.growth-chart-subtitle {
+  font-size: 0.72rem;
+  color: #6b7280;
+  line-height: 1.35;
+  margin: 0;
+  text-align: left;
+}
+
+.growth-chart-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-top: 6px;
+}
+
+.growth-svg-chart {
+  width: 100%;
+  height: auto;
+  overflow: visible;
 }
 
 @media (min-width: 1500px) {
