@@ -324,6 +324,16 @@
   box-sizing: border-box;
 }
 
+.personal-third-row {
+  display: grid;
+  grid-template-columns: minmax(280px, 520px) 1fr;
+  gap: 10px;
+  margin-top: 10px;
+  width: 100%;
+  box-sizing: border-box;
+  align-items: stretch;
+}
+
 .info-panel {
   background: #ffffff;
   border-radius: 14px;
@@ -768,6 +778,16 @@
     margin-top: 12px;
   }
 
+  .personal-third-row {
+    gap: 12px;
+    margin-top: 12px;
+    grid-template-columns: minmax(320px, 560px) 1fr;
+  }
+
+  .personal-third-row .growth-chart-panel {
+    max-width: 560px;
+  }
+
   .personal-card {
     padding: 18px 16px;
     gap: 16px;
@@ -868,10 +888,6 @@
     height: auto;
     min-height: 150px;
     max-height: none;
-  }
-
-  .lines-chart-panel {
-    grid-column: 1 / -1;
   }
 
   .personal-card {
@@ -1010,6 +1026,115 @@
     grid-template-columns: 1fr;
     padding: 0 12px;
     box-sizing: border-box;
+  }
+
+  .personal-third-row {
+    padding: 0 12px;
+    box-sizing: border-box;
+    margin-top: 10px;
+    grid-template-columns: 1fr;
+  }
+
+  .personal-third-row .growth-chart-panel {
+    max-width: none !important;
+    width: 100%;
+    min-height: 0 !important;
+    height: auto !important;
+    max-height: none !important;
+    padding: 14px 12px 12px !important;
+    gap: 6px;
+    display: flex;
+    flex-direction: column;
+    overflow: visible !important;
+  }
+
+  .personal-third-row .growth-chart-header {
+    margin-bottom: 2px;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .personal-third-row .growth-header-left {
+    gap: 8px;
+    align-items: flex-start;
+  }
+
+  .personal-third-row .chart-icon-circle {
+    width: 28px;
+    height: 28px;
+    font-size: 0.72rem;
+    margin-top: 1px;
+  }
+
+  .personal-third-row .growth-header-left .info-panel-title {
+    font-size: 0.72rem;
+    line-height: 1.25;
+    white-space: normal;
+    letter-spacing: 0.02em;
+  }
+
+  .personal-third-row .growth-header-right {
+    margin-top: 2px;
+    font-size: 0.85rem;
+  }
+
+  .personal-third-row .growth-info-tooltip {
+    width: min(260px, calc(100vw - 40px));
+    right: 0;
+    left: auto;
+    font-size: 0.68rem;
+  }
+
+  .personal-third-row .growth-chart-container {
+    min-height: 220px;
+    height: 220px;
+    width: 100%;
+    flex: 0 0 auto;
+    margin-top: 4px;
+  }
+
+  .personal-third-row .growth-svg-chart {
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    flex: none;
+  }
+
+  .personal-third-row .growth-svg-chart .chart-axis-label,
+  .personal-third-row .growth-svg-chart .chart-month-label {
+    font-size: 12px;
+  }
+
+  .personal-third-row .growth-svg-chart .chart-point-value {
+    font-size: 13px;
+  }
+
+  .personal-second-row .lines-chart-panel {
+    min-height: 200px;
+    padding: 14px 12px !important;
+  }
+
+  .lines-chart-header {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .lines-chart-body {
+    gap: 4px;
+    min-height: 160px;
+  }
+
+  .lines-chart-bar-track {
+    max-width: 28px;
+    min-height: 90px;
+  }
+
+  .lines-chart-value {
+    font-size: 0.65rem;
+  }
+
+  .lines-chart-label {
+    font-size: 0.58rem;
   }
 
   .info-panel {
@@ -1234,6 +1359,174 @@
   min-width: 32px;
   text-align: right;
   flex-shrink: 0;
+}
+
+/* Distribución de puntos por línea (Top 5) — 2ª fila, columna ancha */
+.personal-second-row .lines-chart-panel {
+  height: auto !important;
+  min-height: 168px;
+  max-height: none !important;
+  max-width: none;
+  width: 100%;
+  padding: 12px 14px !important;
+  gap: 10px;
+  overflow: visible !important;
+  box-sizing: border-box;
+}
+
+.personal-second-row .lines-chart-body {
+  min-height: 120px;
+}
+
+.personal-second-row .lines-chart-bar-track {
+  min-height: 72px;
+  max-width: 36px;
+}
+
+/* Evolución — 3ª fila, proporción limitada (como el ejemplo) */
+.personal-third-row .growth-chart-panel {
+  max-width: 560px;
+  width: 100%;
+  height: auto !important;
+  min-height: 0;
+  max-height: none !important;
+  padding: 14px 16px 12px !important;
+  gap: 8px;
+  overflow: visible !important;
+  box-sizing: border-box;
+}
+
+.personal-third-row .growth-chart-header {
+  align-items: center;
+}
+
+.personal-third-row .growth-header-left {
+  align-items: center;
+  gap: 10px;
+}
+
+.personal-third-row .growth-header-left .info-panel-title {
+  font-size: 0.72rem;
+  line-height: 1.25;
+  white-space: normal;
+}
+
+.personal-third-row .growth-chart-container {
+  min-height: 188px;
+  height: 188px;
+  flex: 0 0 auto;
+  width: 100%;
+}
+
+.personal-third-row .growth-svg-chart {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+}
+
+.personal-third-row .growth-svg-chart .chart-axis-label,
+.personal-third-row .growth-svg-chart .chart-month-label {
+  font-size: 12px;
+}
+
+.personal-third-row .growth-svg-chart .chart-point-value {
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.lines-chart-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.lines-chart-header .info-panel-title {
+  font-size: 0.72rem;
+  letter-spacing: 0.02em;
+}
+
+.lines-chart-link {
+  color: #e91e63;
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.lines-chart-link:hover {
+  color: #c2185b;
+  text-decoration: underline;
+}
+
+.lines-chart-body {
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  min-height: 180px;
+  padding-top: 4px;
+  box-sizing: border-box;
+}
+
+.lines-chart-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 0;
+}
+
+.lines-chart-value {
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: #1e293b;
+  line-height: 1;
+  white-space: nowrap;
+  margin-bottom: 6px;
+  flex-shrink: 0;
+}
+
+.lines-chart-bar-track {
+  flex: 1 1 auto;
+  width: 100%;
+  max-width: 42px;
+  min-height: 110px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 0;
+  box-sizing: border-box;
+}
+
+.lines-chart-bar {
+  width: 100%;
+  border-radius: 8px 8px 2px 2px;
+  min-height: 8px;
+  transition: height 0.45s ease;
+  background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.28), transparent);
+}
+
+.lines-chart-label {
+  font-size: 0.68rem;
+  font-weight: 500;
+  color: #64748b;
+  text-align: center;
+  line-height: 1.2;
+  margin-top: 8px;
+  flex-shrink: 0;
+  max-width: 100%;
+}
+
+.lines-chart-empty {
+  margin: 24px 0 8px;
+  text-align: center;
+  color: #94a3b8;
+  font-size: 0.85rem;
 }
 
 @media (min-width: 768px) {

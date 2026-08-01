@@ -293,6 +293,35 @@
           <span class="metric-card-caption">Niveles con personas en tu red</span>
         </article>
 
+        <article class="info-panel lines-chart-panel">
+          <div class="lines-chart-header">
+            <h3 class="info-panel-title">Distribución de puntos por línea (Top 5)</h3>
+            <router-link to="/rango" class="lines-chart-link">
+              Ver todas <span aria-hidden="true">→</span>
+            </router-link>
+          </div>
+
+          <div v-if="pointsByLineBars.length" class="lines-chart-body">
+            <div
+              v-for="bar in pointsByLineBars"
+              :key="bar.label"
+              class="lines-chart-col"
+            >
+              <span class="lines-chart-value">{{ bar.displayValue }}</span>
+              <div class="lines-chart-bar-track">
+                <div
+                  class="lines-chart-bar"
+                  :style="{ height: bar.heightPct + '%', background: bar.color }"
+                ></div>
+              </div>
+              <span class="lines-chart-label">{{ bar.label }}</span>
+            </div>
+          </div>
+          <p v-else class="lines-chart-empty">Aún no hay líneas con puntos para mostrar</p>
+        </article>
+      </div>
+
+      <div class="personal-third-row">
         <article class="info-panel growth-chart-panel">
           <div class="growth-chart-header">
             <div class="growth-header-left">
@@ -312,7 +341,11 @@
           </div>
 
           <div class="growth-chart-container">
-            <svg viewBox="0 0 640 128" class="growth-svg-chart" preserveAspectRatio="none">
+            <svg
+              :viewBox="chartPoints.viewBox"
+              class="growth-svg-chart"
+              preserveAspectRatio="xMidYMid meet"
+            >
               <defs>
                 <linearGradient id="chartAreaGradient" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="0%" stop-color="#e91e63" stop-opacity="0.22" />
@@ -385,7 +418,7 @@
                   v-for="p in chartPoints.points"
                   :key="'x-lbl-' + p.x"
                   :x="p.x"
-                  :y="chartPoints.plot.bottom + 16"
+                  :y="chartPoints.plot.bottom + chartPoints.monthLabelOffset"
                   text-anchor="middle"
                   class="chart-month-label"
                 >
@@ -451,6 +484,7 @@ export default {
       thresholdPoints: 0,
       totalDepthLevels: 0,
       growthHistory: [],
+      isMobileViewport: false,
     };
   },
   computed: {
@@ -534,6 +568,40 @@ export default {
       if (this.historicalRankSubtitle) return this.historicalRankSubtitle;
       return "Aún sin rango en historial";
     },
+    pointsByLineBars() {
+      const legs = Array.isArray(this.legs) ? [...this.legs] : [];
+      legs.sort((a, b) => (Number(b.generated) || 0) - (Number(a.generated) || 0));
+
+      const top5 = legs.slice(0, 5);
+      const rest = legs.slice(5);
+      const bars = top5.map((leg, index) => {
+        const value = Math.round(Number(leg.generated) || 0);
+        return {
+          label: `Línea ${index + 1}`,
+          value,
+          displayValue: value.toLocaleString("es-PE"),
+          color: LINE_COLORS[index] || OTHER_COLOR,
+        };
+      });
+
+      if (rest.length > 0) {
+        const otherValue = Math.round(
+          rest.reduce((sum, leg) => sum + (Number(leg.generated) || 0), 0)
+        );
+        bars.push({
+          label: "Otras líneas",
+          value: otherValue,
+          displayValue: otherValue.toLocaleString("es-PE"),
+          color: OTHER_COLOR,
+        });
+      }
+
+      const maxVal = Math.max(...bars.map((b) => b.value), 1);
+      return bars.map((b) => ({
+        ...b,
+        heightPct: Math.max(8, Math.round((b.value / maxVal) * 100)),
+      }));
+    },
     chartPoints() {
       const history = Array.isArray(this.growthHistory) && this.growthHistory.length === 6
         ? this.growthHistory
@@ -556,15 +624,19 @@ export default {
         yAxisMax = Math.ceil(maxVal / 10) * 10;
       }
 
-      // ViewBox 640x128 — proporciones de la card ancha
-      const plot = {
-        left: 36,
-        right: 628,
-        top: 16,
-        bottom: 100,
-      };
+      // Desktop: proporción cómoda (~2.6:1). Móvil: más alto.
+      const mobile = this.isMobileViewport;
+      const viewBox = mobile ? "0 0 360 220" : "0 0 520 200";
+      const plot = mobile
+        ? { left: 30, right: 346, top: 30, bottom: 172 }
+        : { left: 42, right: 492, top: 32, bottom: 158 };
       plot.width = plot.right - plot.left;
       plot.height = plot.bottom - plot.top;
+      const monthLabelOffset = mobile ? 22 : 20;
+      const valueLabelGap = mobile ? 14 : 12;
+      const minLabelY = mobile ? 16 : 14;
+      // Aire extra en extremos para que no se corten puntos/meses
+      const edgeInset = mobile ? 4 : 10;
 
       const monthShort = (label) => {
         const s = String(label || "");
@@ -572,12 +644,13 @@ export default {
         return m ? m[1] : s;
       };
 
-      const stepX = plot.width / Math.max(history.length - 1, 1);
+      const usableWidth = Math.max(plot.width - edgeInset * 2, 1);
+      const stepX = usableWidth / Math.max(history.length - 1, 1);
       const points = history.map((item, index) => {
         const value = Number(item.value) || 0;
-        const x = plot.left + index * stepX;
+        const x = plot.left + edgeInset + index * stepX;
         const y = plot.bottom - (value / yAxisMax) * plot.height;
-        const labelY = Math.max(12, y - 10);
+        const labelY = Math.max(minLabelY, y - valueLabelGap);
         return {
           x,
           y,
@@ -608,8 +681,17 @@ export default {
         gridLines,
         yAxisMax,
         plot,
+        viewBox,
+        monthLabelOffset,
       };
     },
+  },
+  mounted() {
+    this.updateGrowthViewport();
+    window.addEventListener("resize", this.updateGrowthViewport);
+  },
+  beforeDestroy() {
+    window.removeEventListener("resize", this.updateGrowthViewport);
   },
   filters: {
     date(val) {
@@ -694,6 +776,9 @@ export default {
     }
   },
   methods: {
+    updateGrowthViewport() {
+      this.isMobileViewport = window.innerWidth <= 767;
+    },
     async loadSecondRow() {
       const [dashRes, progressRes] = await Promise.all([
         api.dashboard(this.session).catch((e) => {
