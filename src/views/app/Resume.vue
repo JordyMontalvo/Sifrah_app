@@ -131,6 +131,22 @@
             <span class="metric-card-value frontals-active-value">{{ formattedFrontalsActive }}</span>
             <span class="metric-card-caption">Con actividad este mes</span>
           </article>
+
+          <!-- Solo móvil: al final del carrusel -->
+          <article class="metric-card levels-metric depth-metric levels-metric-mobile">
+            <div class="metric-card-header">
+              <div class="metric-icon levels-icon--depth" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 2L2 7l10 5 10-5-10-5z" />
+                  <path d="M2 17l10 5 10-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                  <path d="M2 12l10 5 10-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <span class="metric-card-title">Profundidad</span>
+            </div>
+            <span class="metric-card-value depth-value">{{ totalDepthLevels }}</span>
+            <span class="metric-card-caption">Niveles con personas en tu red</span>
+          </article>
         </div>
       </div>
 
@@ -197,20 +213,44 @@
             <h3 class="info-panel-title">Progreso de Rango</h3>
           </div>
 
-          <div class="progress-columns-row">
-            <div class="progress-col">
-              <span class="progress-col-label">Rango en tiempo real</span>
-              <div class="progress-col-value">
-                <i class="fas fa-award" :style="{ color: getRankColor(currentRankLabel) }" aria-hidden="true"></i>
-                <span :style="{ color: getRankColor(currentRankLabel) }">{{ currentRankLabel }}</span>
+          <div class="progress-main-grid">
+            <div class="progress-columns-row">
+              <div class="progress-col">
+                <span class="progress-col-label">Rango en tiempo real</span>
+                <div class="progress-col-value">
+                  <img
+                    v-if="currentRankImage"
+                    :src="currentRankImage"
+                    :alt="currentRankLabel"
+                    class="progress-rank-pin"
+                  />
+                  <i
+                    v-else
+                    class="fas fa-award"
+                    :style="{ color: getRankColor(currentRankLabel) }"
+                    aria-hidden="true"
+                  ></i>
+                  <span :style="{ color: getRankColor(currentRankLabel) }">{{ currentRankLabel }}</span>
+                </div>
               </div>
-            </div>
-            <div class="progress-divider-vertical"></div>
-            <div class="progress-col">
-              <span class="progress-col-label">Progreso hacia</span>
-              <div class="progress-col-value">
-                <i class="fas fa-award" :style="{ color: getRankColor(targetRankLabel) }" aria-hidden="true"></i>
-                <span :style="{ color: getRankColor(targetRankLabel) }">{{ targetRankLabel }}</span>
+              <div class="progress-divider-vertical"></div>
+              <div class="progress-col">
+                <span class="progress-col-label">Progreso hacia</span>
+                <div class="progress-col-value">
+                  <img
+                    v-if="targetRankImage"
+                    :src="targetRankImage"
+                    :alt="targetRankLabel"
+                    class="progress-rank-pin"
+                  />
+                  <i
+                    v-else
+                    class="fas fa-award"
+                    :style="{ color: getRankColor(targetRankLabel) }"
+                    aria-hidden="true"
+                  ></i>
+                  <span :style="{ color: getRankColor(targetRankLabel) }">{{ targetRankLabel }}</span>
+                </div>
               </div>
             </div>
           </div>
@@ -219,7 +259,7 @@
             <span class="points-box-label">PUNTOS VÁLIDOS</span>
             <div class="points-box-value">
               <strong class="points-current">{{ formatPointsValue(validPoints) }}</strong>
-              <span class="points-separator"> / </span>
+              <span class="points-separator">/</span>
               <span class="points-required">{{ formatPointsValue(thresholdPoints) }} pts</span>
             </div>
             <span class="points-box-missing">
@@ -238,28 +278,19 @@
           </div>
         </article>
 
-        <article class="info-panel levels-panel">
-          <h3 class="info-panel-title">Niveles Activos</h3>
-          <div class="levels-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 3L2 8l10 5 10-5-10-5z" />
-            </svg>
+        <article class="metric-card levels-metric depth-metric levels-metric-desktop">
+          <div class="metric-card-header">
+            <div class="metric-icon levels-icon--depth" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2L2 7l10 5 10-5-10-5z" />
+                <path d="M2 17l10 5 10-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                <path d="M2 12l10 5 10-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <span class="metric-card-title">Profundidad</span>
           </div>
-          <span class="info-panel-value levels-value">{{ activeLevels }}</span>
-          <span class="info-panel-caption">Niveles con actividad en tu red</span>
-        </article>
-
-        <article class="info-panel levels-panel">
-          <h3 class="info-panel-title">Profundidad Registrada</h3>
-          <div class="levels-icon" aria-hidden="true" style="color: #6366f1;">
-            <svg viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 2L2 7l10 5 10-5-10-5z" />
-              <path d="M2 17l10 5 10-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-              <path d="M2 12l10 5 10-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-            </svg>
-          </div>
-          <span class="info-panel-value levels-value" style="color: #4f46e5;">{{ totalDepthLevels }}</span>
-          <span class="info-panel-caption">Niveles con personas registradas</span>
+          <span class="metric-card-value depth-value">{{ totalDepthLevels }}</span>
+          <span class="metric-card-caption">Niveles con personas en tu red</span>
         </article>
 
         <article class="info-panel growth-chart-panel">
@@ -270,102 +301,95 @@
               </div>
               <h3 class="info-panel-title">Evolución de la Organización</h3>
             </div>
-            <div class="growth-header-right" title="Muestra el crecimiento de tu equipo en los últimos 6 meses">
-              <i class="fas fa-info-circle"></i>
+            <div class="growth-header-right" tabindex="0">
+              <i class="fas fa-info-circle" aria-hidden="true"></i>
+              <span class="growth-info-tooltip" role="tooltip">
+                Visualiza la evolución del crecimiento de tu organización durante los últimos seis meses.
+                Este gráfico muestra cómo ha variado la cantidad total de personas en tu equipo en cada cierre mensual,
+                permitiéndote identificar tendencias de crecimiento y medir el desarrollo de tu red a lo largo del tiempo.
+              </span>
             </div>
           </div>
-          
-          <p class="growth-chart-subtitle">
-            Visualiza la evolución del crecimiento de tu organización durante los últimos seis meses.
-          </p>
 
           <div class="growth-chart-container">
-            <svg viewBox="0 0 500 200" class="growth-svg-chart">
+            <svg viewBox="0 0 640 128" class="growth-svg-chart" preserveAspectRatio="none">
               <defs>
                 <linearGradient id="chartAreaGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stop-color="#e91e63" stop-opacity="0.25" />
-                  <stop offset="100%" stop-color="#e91e63" stop-opacity="0.00" />
+                  <stop offset="0%" stop-color="#e91e63" stop-opacity="0.22" />
+                  <stop offset="100%" stop-color="#e91e63" stop-opacity="0" />
                 </linearGradient>
               </defs>
 
-              <!-- Grid horizontal lines -->
               <g class="chart-grid">
                 <line
                   v-for="line in chartPoints.gridLines"
                   :key="'grid-' + line.y"
-                  x1="40"
+                  :x1="chartPoints.plot.left"
                   :y1="line.y"
-                  x2="460"
+                  :x2="chartPoints.plot.right"
                   :y2="line.y"
-                  stroke="#f1f5f9"
+                  stroke="#eef2f7"
                   stroke-width="1"
-                  stroke-dasharray="3,3"
                 />
               </g>
 
-              <!-- Y Axis labels -->
               <g class="chart-y-axis">
                 <text
                   v-for="line in chartPoints.gridLines"
                   :key="'lbl-' + line.y"
-                  x="30"
-                  :y="line.y + 4"
+                  :x="chartPoints.plot.left - 6"
+                  :y="line.y + 3.5"
                   text-anchor="end"
-                  font-size="10"
-                  fill="#64748b"
-                  font-weight="600"
+                  class="chart-axis-label"
                 >
                   {{ line.value }}
                 </text>
               </g>
 
-              <!-- Filled Area -->
               <path :d="chartPoints.areaPath" fill="url(#chartAreaGradient)" />
+              <path
+                :d="chartPoints.linePath"
+                fill="none"
+                stroke="#e91e63"
+                stroke-width="2.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                vector-effect="non-scaling-stroke"
+              />
 
-              <!-- Trend Line -->
-              <path :d="chartPoints.linePath" fill="none" stroke="#e91e63" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
-
-              <!-- Data Dots & values / months labels -->
               <g class="chart-dots">
-                <circle
-                  v-for="p in chartPoints.points"
-                  :key="'dot-' + p.x"
-                  :cx="p.x"
-                  :cy="p.y"
-                  r="6"
-                  fill="#e91e63"
-                  stroke="#ffffff"
-                  stroke-width="2.5"
-                />
+                <g v-for="p in chartPoints.points" :key="'dot-' + p.x">
+                  <circle
+                    :cx="p.x"
+                    :cy="p.y"
+                    :r="p.value > 0 ? 5 : 3.5"
+                    fill="#ffffff"
+                    stroke="#e91e63"
+                    :stroke-width="p.value > 0 ? 2.5 : 1.75"
+                    vector-effect="non-scaling-stroke"
+                  />
+                  <text
+                    v-if="p.value > 0"
+                    :x="p.x"
+                    :y="p.labelY"
+                    text-anchor="middle"
+                    class="chart-point-value"
+                  >
+                    {{ p.displayValue }}
+                  </text>
+                </g>
               </g>
 
-              <!-- X Axis labels inside SVG -->
               <g class="chart-x-axis">
-                <!-- Value (Magenta) -->
-                <text
-                  v-for="p in chartPoints.points"
-                  :key="'x-val-' + p.x"
-                  :x="p.x"
-                  y="166"
-                  text-anchor="middle"
-                  font-size="11"
-                  fill="#e91e63"
-                  font-weight="800"
-                >
-                  {{ p.value }}
-                </text>
-                <!-- Month (Grey) -->
                 <text
                   v-for="p in chartPoints.points"
                   :key="'x-lbl-' + p.x"
                   :x="p.x"
-                  y="184"
+                  :y="chartPoints.plot.bottom + 16"
                   text-anchor="middle"
-                  font-size="10"
-                  fill="#475569"
-                  font-weight="600"
+                  class="chart-month-label"
                 >
-                  {{ p.label }}
+                  {{ p.shortLabel || p.label }}
                 </text>
               </g>
             </svg>
@@ -417,10 +441,11 @@ export default {
       historicalRankDate: null,
       historicalRankSubtitle: "",
       currentRankLabel: "—",
+      currentRankImage: null,
       targetRankLabel: "—",
+      targetRankImage: null,
       pointsMissing: 0,
       progressPercent: 0,
-      activeLevels: 0,
       legs: [],
       validPoints: 0,
       thresholdPoints: 0,
@@ -521,58 +546,68 @@ export default {
             { label: "May 2025", value: 0 }
           ];
 
-      const values = history.map(h => h.value);
+      const values = history.map((h) => Number(h.value) || 0);
       const maxVal = Math.max(...values, 10);
-      
-      // Calculate nice max Y axis (round up to next 10 or 100 or 1000)
+
       let yAxisMax = 100;
       if (maxVal > 100) {
         yAxisMax = Math.ceil(maxVal / 100) * 100;
       } else if (maxVal > 10) {
         yAxisMax = Math.ceil(maxVal / 10) * 10;
       }
-      
-      const width = 420;
-      const height = 110; // height of plot area
-      const xPadding = 40;
-      const yPadding = 25;
-      
+
+      // ViewBox 640x128 — proporciones de la card ancha
+      const plot = {
+        left: 36,
+        right: 628,
+        top: 16,
+        bottom: 100,
+      };
+      plot.width = plot.right - plot.left;
+      plot.height = plot.bottom - plot.top;
+
+      const monthShort = (label) => {
+        const s = String(label || "");
+        const m = s.match(/^([A-Za-záéíóúÁÉÍÓÚ]{3})/);
+        return m ? m[1] : s;
+      };
+
+      const stepX = plot.width / Math.max(history.length - 1, 1);
       const points = history.map((item, index) => {
-        const x = xPadding + index * (width / 5);
-        const y = yPadding + height - (item.value / yAxisMax) * height;
+        const value = Number(item.value) || 0;
+        const x = plot.left + index * stepX;
+        const y = plot.bottom - (value / yAxisMax) * plot.height;
+        const labelY = Math.max(12, y - 10);
         return {
           x,
           y,
+          labelY,
           label: item.label,
-          value: item.value
+          shortLabel: monthShort(item.label),
+          value,
+          displayValue: value.toLocaleString("es-PE"),
         };
       });
 
-      // Construct SVG path for line
-      const linePath = points.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.y}`).join(' ');
+      const linePath = points
+        .map((p, i) => `${i === 0 ? "M" : "L"} ${p.x.toFixed(2)} ${p.y.toFixed(2)}`)
+        .join(" ");
 
-      // Construct SVG path for filled area (closed loop down to Y axis bottom)
-      const bottomY = yPadding + height;
-      const areaPath = `${linePath} L ${points[points.length - 1].x} ${bottomY} L ${points[0].x} ${bottomY} Z`;
+      const areaPath = `${linePath} L ${points[points.length - 1].x.toFixed(2)} ${plot.bottom} L ${points[0].x.toFixed(2)} ${plot.bottom} Z`;
 
-      // Y axis grid lines (e.g. 5 steps: 0, 25%, 50%, 75%, 100% of yAxisMax)
-      const gridLines = [];
-      for (let i = 0; i <= 4; i++) {
-        const pct = i / 4;
-        const y = yPadding + height - pct * height;
-        const val = Math.round(pct * yAxisMax);
-        gridLines.push({
-          y,
-          value: val.toLocaleString("es-PE")
-        });
-      }
+      // Solo 3 líneas de eje para menos ruido visual
+      const gridLines = [0, 0.5, 1].map((pct) => ({
+        y: plot.bottom - pct * plot.height,
+        value: Math.round(pct * yAxisMax).toLocaleString("es-PE"),
+      }));
 
       return {
         points,
         linePath,
         areaPath,
         gridLines,
-        yAxisMax
+        yAxisMax,
+        plot,
       };
     },
   },
@@ -692,10 +727,15 @@ export default {
 
       if (progress) {
         this.currentRankLabel = progress.currentRankLabel || this.$options.filters._rank(this.rank);
+        this.currentRankImage = progress.currentRankImage
+          ? String(progress.currentRankImage).trim() || null
+          : null;
         this.targetRankLabel = progress.targetRankLabel || "—";
+        this.targetRankImage = progress.targetRankImage
+          ? String(progress.targetRankImage).trim() || null
+          : null;
         this.pointsMissing = Number(progress.pointsMissing) || 0;
         this.progressPercent = Number(progress.progressPercent) || 0;
-        this.activeLevels = Number(progress.activeLevels) || 0;
         this.legs = Array.isArray(progress.legs) ? progress.legs : [];
         this.validPoints = Number(progress.validPoints) || 0;
         this.thresholdPoints = Number(progress.thresholdPoints) || 0;
@@ -705,6 +745,8 @@ export default {
         }
       } else {
         this.currentRankLabel = this.$options.filters._rank(this.rank);
+        this.currentRankImage = null;
+        this.targetRankImage = null;
       }
     },
     getRankColor(label) {
