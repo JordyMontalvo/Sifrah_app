@@ -1200,7 +1200,7 @@
   display: flex;
   flex-direction: column;
   gap: 0;
-  flex: 1 1 auto;
+  flex: 0 0 auto;
   min-height: 0;
   min-width: 0;
   margin-top: 0;
@@ -1288,7 +1288,8 @@
   min-width: 0;
   box-sizing: border-box;
   flex: 0 0 auto;
-  margin-top: 8px;
+  /* Empuja solo el cuadro hacia abajo; el aire libre queda arriba de él */
+  margin-top: auto;
   overflow: visible;
 }
 
@@ -1343,7 +1344,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-top: 8px;
+  margin-top: 6px;
   flex: 0 0 auto;
   width: 100%;
   min-width: 0;
@@ -1584,6 +1585,7 @@
 
   .progress-points-box {
     padding: 5px 8px;
+    margin-top: auto;
   }
 
   .points-current {
@@ -1591,7 +1593,7 @@
   }
 
   .progress-bar-row {
-    margin-top: 8px;
+    margin-top: 6px;
   }
 
   .progress-bar-track {
@@ -1622,7 +1624,7 @@
   }
 
   .progress-bar-row {
-    margin-top: 10px;
+    margin-top: 6px;
   }
 }
 
@@ -1665,6 +1667,7 @@
 
   .progress-points-box {
     padding: 12px 14px;
+    margin-top: 12px;
   }
 
   .points-current {
