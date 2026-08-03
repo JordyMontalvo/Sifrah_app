@@ -17,8 +17,14 @@
         <div class="rp-main-header">
           <div class="rp-target-zone">
             <div class="rp-target-top">
-              <div class="rp-target-icon">
-                <i class="fas fa-arrow-up"></i>
+              <div class="rp-target-icon" :class="{ 'rp-target-icon--pin': !!progress.targetRankImage }">
+                <img
+                  v-if="progress.targetRankImage"
+                  :src="progress.targetRankImage"
+                  :alt="progress.targetRankLabel"
+                  class="rp-rank-pin"
+                />
+                <i v-else class="fas fa-arrow-up" aria-hidden="true"></i>
               </div>
               <div class="rp-target-titles">
                 <span class="rp-target-label">PROGRESO HACIA</span>
@@ -34,7 +40,18 @@
             <div class="rp-current-rank-box">
               <span class="rp-current-label">TIEMPO REAL</span>
               <div class="rp-current-rank">
-                <i class="fas fa-bolt rp-medal-icon" style="color: #FFC107;"></i>
+                <img
+                  v-if="progress.currentRankImage"
+                  :src="progress.currentRankImage"
+                  :alt="progress.currentRankLabel"
+                  class="rp-medal-icon rp-rank-pin"
+                />
+                <i
+                  v-else
+                  class="fas fa-award rp-medal-icon"
+                  :style="{ color: rankColor(progress.currentRankLabel) }"
+                  aria-hidden="true"
+                ></i>
                 <div>
                   <strong>{{ progress.currentRankLabel }}</strong>
                   <span>Proyectado actual</span>
@@ -225,6 +242,19 @@ export default {
   methods: {
     formatNum(n) {
       return Number(n || 0).toLocaleString("es-PE");
+    },
+    rankColor(label) {
+      const l = String(label || "").toLowerCase();
+      if (l.includes("activo")) return "#4CAF50";
+      if (l.includes("bronce")) return "#CD7F32";
+      if (l.includes("plata")) return "#90A4AE";
+      if (l.includes("oro")) return "#FFD700";
+      if (l.includes("platino")) return "#cfd8dc";
+      if (l.includes("zafiro")) return "#0d47a1";
+      if (l.includes("ruby") || l.includes("rubí") || l.includes("rubi")) return "#d81b60";
+      if (l.includes("esmeralda")) return "#00c853";
+      if (l.includes("diamante")) return "#0097a7";
+      return "#e91e63";
     },
     async loadProgress() {
       try {

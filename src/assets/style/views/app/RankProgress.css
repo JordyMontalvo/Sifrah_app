@@ -83,6 +83,19 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  overflow: hidden;
+}
+
+.rp-target-icon--pin {
+  background: transparent;
+  border-radius: 0;
+}
+
+.rp-target-icon .rp-rank-pin {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  display: block;
 }
 
 .rp-target-label {
@@ -151,6 +164,15 @@
 .rp-medal-icon {
   font-size: 1.5rem;
   color: #cd7f32;
+  flex-shrink: 0;
+}
+
+.rp-medal-icon.rp-rank-pin,
+img.rp-medal-icon {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+  display: block;
 }
 
 .rp-current-rank strong {
@@ -515,6 +537,12 @@
     font-size: 2rem;
   }
 
+  .rp-medal-icon.rp-rank-pin,
+  img.rp-medal-icon {
+    width: 44px;
+    height: 44px;
+  }
+
   .rp-current-rank strong {
     font-size: 1.5rem;
   }
@@ -687,6 +715,12 @@
 
   .rp-medal-icon {
     font-size: 1.2rem;
+  }
+
+  .rp-medal-icon.rp-rank-pin,
+  img.rp-medal-icon {
+    width: 28px;
+    height: 28px;
   }
 
   .rp-current-rank strong {

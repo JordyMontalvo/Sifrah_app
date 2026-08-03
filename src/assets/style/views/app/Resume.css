@@ -388,9 +388,10 @@
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  gap: 8px;
+  gap: 12px;
   padding-top: 2px;
   min-height: 0;
+  min-width: 0;
 }
 
 .max-rank-text {
@@ -400,14 +401,16 @@
   justify-content: center;
   gap: 4px;
   min-width: 0;
-  flex: 1 1 auto;
+  flex: 1 1 0;
   text-align: left;
   z-index: 1;
+  padding-right: 4px;
 }
 
 .max-rank-image {
-  width: clamp(64px, 28%, 88px);
-  height: clamp(64px, 28%, 88px);
+  width: 64px;
+  height: 64px;
+  max-width: 42%;
   object-fit: contain;
   display: block;
   flex-shrink: 0;
@@ -416,22 +419,24 @@
 }
 
 .max-rank-fallback {
-  width: clamp(56px, 26%, 80px);
-  height: clamp(56px, 26%, 80px);
+  width: 64px;
+  height: 64px;
+  max-width: 42%;
   border-radius: 50%;
   background: linear-gradient(145deg, #fff3d6, #ffe0a3);
   color: #d4a017;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.6rem;
+  font-size: 1.5rem;
   flex-shrink: 0;
   box-shadow: 0 8px 20px rgba(212, 160, 23, 0.18);
 }
 
 .max-rank-svg-container {
-  width: clamp(64px, 28%, 88px);
-  height: clamp(64px, 28%, 88px);
+  width: 64px;
+  height: 64px;
+  max-width: 42%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -452,13 +457,17 @@
 }
 
 .max-rank-name {
-  font-size: clamp(1.2rem, 1.5vw, 1.45rem);
+  font-size: clamp(1.1rem, 1.35vw, 1.35rem);
   font-weight: 800;
   color: #e91e63;
   text-transform: uppercase;
   letter-spacing: 0.02em;
-  line-height: 1.1;
+  line-height: 1.15;
   text-align: left;
+  max-width: 100%;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  hyphens: auto;
 }
 
 .max-rank-date {
@@ -466,15 +475,17 @@
   color: #6b7280;
   font-weight: 500;
   text-align: left;
+  max-width: 100%;
+  overflow-wrap: break-word;
 }
 
-/* Desktop: rellenar el interior sin agrandar la card */
+/* Desktop: trofeo proporcionado sin invadir el texto */
 @media (min-width: 768px) {
   .max-rank-panel {
-    padding: 8px 10px !important;
+    padding: 10px 12px !important;
     justify-content: flex-start;
-    gap: 2px;
-    overflow: visible !important;
+    gap: 4px;
+    overflow: hidden !important;
   }
 
   .max-rank-panel .info-panel-title {
@@ -486,40 +497,42 @@
     flex: 1 1 auto;
     align-items: center;
     justify-content: space-between;
-    gap: 8px;
+    gap: 14px;
     padding-top: 0;
     margin-top: auto;
     margin-bottom: auto;
     min-height: 0;
-    overflow: visible;
+    overflow: hidden;
   }
 
   .max-rank-text {
     gap: 4px;
-    flex: 1 1 auto;
+    flex: 1 1 0;
     min-width: 0;
   }
 
   .max-rank-name {
-    font-size: clamp(1.45rem, 1.7vw, 1.75rem);
-    letter-spacing: 0.03em;
+    font-size: clamp(1.2rem, 1.35vw, 1.45rem);
+    letter-spacing: 0.02em;
   }
 
   .max-rank-date {
-    font-size: 0.78rem;
+    font-size: 0.75rem;
   }
 
   .max-rank-image,
   .max-rank-svg-container {
-    width: clamp(136px, 66%, 156px);
-    height: clamp(136px, 66%, 156px);
+    width: 76px;
+    height: 76px;
+    max-width: 38%;
     flex-shrink: 0;
   }
 
   .max-rank-fallback {
-    width: clamp(124px, 60%, 144px);
-    height: clamp(124px, 60%, 144px);
-    font-size: 2.7rem;
+    width: 72px;
+    height: 72px;
+    max-width: 38%;
+    font-size: 1.7rem;
   }
 }
 
@@ -846,18 +859,20 @@
 
   .max-rank-image,
   .max-rank-svg-container {
-    width: clamp(144px, 68%, 168px);
-    height: clamp(144px, 68%, 168px);
+    width: 84px;
+    height: 84px;
+    max-width: 40%;
   }
 
   .max-rank-fallback {
-    width: clamp(132px, 62%, 156px);
-    height: clamp(132px, 62%, 156px);
-    font-size: 2.85rem;
+    width: 80px;
+    height: 80px;
+    max-width: 40%;
+    font-size: 1.85rem;
   }
 
   .max-rank-name {
-    font-size: clamp(1.65rem, 2vw, 1.95rem);
+    font-size: clamp(1.25rem, 1.45vw, 1.5rem);
   }
 
   .max-rank-panel {
