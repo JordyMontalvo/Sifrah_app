@@ -1254,13 +1254,13 @@
 }
 
 .progress-col-value i {
-  font-size: 0.95rem;
+  font-size: 1.35rem;
   flex-shrink: 0;
 }
 
 .progress-rank-pin {
-  width: 22px;
-  height: 22px;
+  width: 32px;
+  height: 32px;
   object-fit: contain;
   flex-shrink: 0;
   display: block;
@@ -1579,8 +1579,8 @@
   }
 
   .progress-rank-pin {
-    width: 20px;
-    height: 20px;
+    width: 30px;
+    height: 30px;
   }
 
   .progress-points-box {
@@ -1619,8 +1619,8 @@
   }
 
   .progress-rank-pin {
-    width: 22px;
-    height: 22px;
+    width: 34px;
+    height: 34px;
   }
 
   .progress-bar-row {
@@ -1661,8 +1661,8 @@
   }
 
   .progress-rank-pin {
-    width: 28px;
-    height: 28px;
+    width: 36px;
+    height: 36px;
   }
 
   .progress-points-box {
