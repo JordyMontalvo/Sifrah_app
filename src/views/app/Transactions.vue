@@ -29,7 +29,15 @@
               transaction.virtual == true ? { opacity: 0.5 } : { opacity: 1 },
             ]"
           >
-            <td>{{ transaction.date | date }}</td>
+            <td>
+              <div>{{ transaction.date | date }}</div>
+              <div v-if="transaction.period_label" class="tx-cycle">
+                Ciclo: {{ transaction.period_label }}
+              </div>
+              <div v-else-if="transaction.period_key" class="tx-cycle">
+                Ciclo: {{ transaction.period_key }}
+              </div>
+            </td>
             <td>{{ transaction.user_name }}</td>
             <td>{{ transaction.name | op }}</td>
             <td>
@@ -179,6 +187,16 @@ export default {
   border-radius: 10px;
   padding: 4px 12px;
   font-size: 1.05em;
+}
+.tx-cycle {
+  display: inline-block;
+  margin-top: 4px;
+  padding: 2px 8px;
+  background-color: #ebf4ff;
+  color: #3182ce;
+  border-radius: 4px;
+  font-size: 0.85em;
+  font-weight: 500;
 }
 @media (max-width: 900px) {
   .collects-table {
