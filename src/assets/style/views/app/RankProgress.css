@@ -188,7 +188,7 @@ img.rp-medal-icon {
 
 .rp-stats-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 0;
   margin-bottom: 20px;
   border-top: 1px solid #f0f0f0;
@@ -732,12 +732,23 @@ img.rp-medal-icon {
   }
 
   .rp-stats-grid {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     gap: 0;
   }
 
   .rp-stat {
     padding: 12px 6px;
+    border-right: 1px solid #f0f0f0;
+    border-bottom: 1px solid #f0f0f0;
+  }
+
+  .rp-stat:nth-child(2n) {
+    border-right: none;
+  }
+
+  .rp-stat:nth-child(3),
+  .rp-stat:nth-child(4) {
+    border-bottom: none;
   }
 
   .rp-stat-label {

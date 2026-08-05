@@ -99,6 +99,16 @@
             </span>
             <span v-else class="rp-stat-hint warn">Aún no cumples el mínimo</span>
           </div>
+
+          <div class="rp-stat">
+            <span class="rp-stat-label">VPM (Máx. por pierna)</span>
+            <p class="rp-stat-value">
+              <strong>{{ formatNum(progress.vmp) }}</strong> pts
+            </p>
+            <span class="rp-stat-hint ok">
+              <i class="fas fa-info-circle"></i> Para {{ progress.targetRankLabel }}
+            </span>
+          </div>
         </div>
 
         <div class="rp-progress-row">
@@ -202,8 +212,16 @@
       </div>
 
       <footer class="rp-tip-banner">
-        <i class="fas fa-lightbulb"></i>
-        <p>{{ progress.tip }}</p>
+        <i class="fas fa-info-circle"></i>
+        <div class="rp-tip-content">
+          <p class="rp-tip-text" style="margin: 0; font-size: 0.85rem; color: #555; line-height: 1.45;">
+            <strong>Valor Máximo por Pierna (VPM):</strong> Es la cantidad máxima de puntos que se pueden validar de una sola línea de tu organización para calificar al rango objetivo. Los puntos que excedan este límite no se contabilizan para tu progreso, promoviendo un crecimiento equilibrado de tus líneas.
+          </p>
+          <p class="rp-tip-text" style="margin: 8px 0 0; font-size: 0.85rem; color: #555; line-height: 1.45; border-top: 1px dashed rgba(233, 30, 99, 0.15); padding-top: 8px;">
+            <i class="fas fa-lightbulb" style="color: #e91e63; font-size: 0.9rem; margin-right: 4px; display: inline; vertical-align: middle;"></i>
+            <span style="vertical-align: middle;">{{ progress.tip }}</span>
+          </p>
+        </div>
       </footer>
     </div>
 
