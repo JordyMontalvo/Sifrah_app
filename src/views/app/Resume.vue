@@ -291,34 +291,6 @@
           </div>
           <span class="metric-card-value depth-value">{{ totalDepthLevels }}</span>
           <span class="metric-card-caption">Niveles con personas en tu red</span>
-        </article>
-
-        <article class="info-panel lines-chart-panel">
-          <div class="lines-chart-header">
-            <h3 class="info-panel-title">Distribución de puntos por línea (Top 5)</h3>
-            <router-link to="/rango" class="lines-chart-link">
-              Ver todas <span aria-hidden="true">→</span>
-            </router-link>
-          </div>
-
-          <div v-if="pointsByLineBars.length" class="lines-chart-body">
-            <div
-              v-for="bar in pointsByLineBars"
-              :key="bar.label"
-              class="lines-chart-col"
-            >
-              <span class="lines-chart-value">{{ bar.displayValue }}</span>
-              <div class="lines-chart-bar-track">
-                <div
-                  class="lines-chart-bar"
-                  :style="{ height: bar.heightPct + '%', background: bar.color }"
-                ></div>
-              </div>
-              <span class="lines-chart-label">{{ bar.label }}</span>
-            </div>
-          </div>
-          <p v-else class="lines-chart-empty">Aún no hay líneas con puntos para mostrar</p>
-        </article>
       </div>
 
       <div class="personal-third-row">
