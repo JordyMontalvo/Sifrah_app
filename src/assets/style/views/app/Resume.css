@@ -1408,7 +1408,7 @@
 
 /* Evolución — en 2ª fila */
 .personal-second-row .growth-chart-panel {
-  max-width: 560px;
+  max-width: none;
   width: 100%;
   padding: 14px 16px 12px !important;
   gap: 8px;
