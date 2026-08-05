@@ -291,9 +291,8 @@
           </div>
           <span class="metric-card-value depth-value">{{ totalDepthLevels }}</span>
           <span class="metric-card-caption">Niveles con personas en tu red</span>
-      </div>
+        </article>
 
-      <div class="personal-third-row">
         <article class="info-panel growth-chart-panel">
           <div class="growth-chart-header">
             <div class="growth-header-left">

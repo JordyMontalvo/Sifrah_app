@@ -316,7 +316,7 @@
 /* Segunda fila — Evolución más ancha; tipografía alineada a 1ª fila */
 .personal-second-row {
   display: grid;
-  grid-template-columns: 1fr 1.25fr 1fr;
+  grid-template-columns: 0.95fr 1.1fr 0.95fr 1.9fr;
   gap: 10px;
   margin-top: 10px;
   align-items: stretch;
@@ -1399,8 +1399,8 @@
   max-width: 36px;
 }
 
-/* Evolución — 3ª fila, proporción limitada (como el ejemplo) */
-.personal-third-row .growth-chart-panel {
+/* Evolución — en 2ª fila */
+.personal-second-row .growth-chart-panel {
   max-width: 560px;
   width: 100%;
   height: auto !important;
@@ -1412,40 +1412,40 @@
   box-sizing: border-box;
 }
 
-.personal-third-row .growth-chart-header {
+.personal-second-row .growth-chart-header {
   align-items: center;
 }
 
-.personal-third-row .growth-header-left {
+.personal-second-row .growth-header-left {
   align-items: center;
   gap: 10px;
 }
 
-.personal-third-row .growth-header-left .info-panel-title {
+.personal-second-row .growth-header-left .info-panel-title {
   font-size: 0.72rem;
   line-height: 1.25;
   white-space: normal;
 }
 
-.personal-third-row .growth-chart-container {
+.personal-second-row .growth-chart-container {
   min-height: 188px;
   height: 188px;
   flex: 0 0 auto;
   width: 100%;
 }
 
-.personal-third-row .growth-svg-chart {
+.personal-second-row .growth-svg-chart {
   width: 100%;
   height: 100%;
   min-height: 0;
 }
 
-.personal-third-row .growth-svg-chart .chart-axis-label,
-.personal-third-row .growth-svg-chart .chart-month-label {
+.personal-second-row .growth-svg-chart .chart-axis-label,
+.personal-second-row .growth-svg-chart .chart-month-label {
   font-size: 12px;
 }
 
-.personal-third-row .growth-svg-chart .chart-point-value {
+.personal-second-row .growth-svg-chart .chart-point-value {
   font-size: 13px;
   font-weight: 800;
 }
