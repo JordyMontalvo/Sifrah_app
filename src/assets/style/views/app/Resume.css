@@ -1403,12 +1403,12 @@
 .personal-second-row .growth-chart-panel {
   max-width: 560px;
   width: 100%;
-  height: auto !important;
+  height: 168px !important;
   min-height: 0;
-  max-height: none !important;
+  max-height: 178px !important;
   padding: 14px 16px 12px !important;
   gap: 8px;
-  overflow: visible !important;
+  overflow: hidden !important;
   box-sizing: border-box;
 }
 
@@ -1428,9 +1428,9 @@
 }
 
 .personal-second-row .growth-chart-container {
-  min-height: 188px;
-  height: 188px;
-  flex: 0 0 auto;
+  min-height: 0;
+  height: auto;
+  flex: 1 1 auto;
   width: 100%;
 }
 
