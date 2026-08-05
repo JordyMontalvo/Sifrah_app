@@ -324,6 +324,13 @@
   box-sizing: border-box;
 }
 
+.personal-second-row .info-panel,
+.personal-second-row .levels-metric {
+  height: 230px !important;
+  max-height: 230px !important;
+  min-height: 230px !important;
+}
+
 .personal-third-row {
   display: grid;
   grid-template-columns: minmax(280px, 520px) 1fr;
@@ -1403,9 +1410,6 @@
 .personal-second-row .growth-chart-panel {
   max-width: 560px;
   width: 100%;
-  height: 168px !important;
-  min-height: 0;
-  max-height: 178px !important;
   padding: 14px 16px 12px !important;
   gap: 8px;
   overflow: hidden !important;
