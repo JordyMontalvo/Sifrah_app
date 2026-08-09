@@ -744,73 +744,411 @@ export default {
     downloadPdf() {
       if (!this.report) return;
       const doc = new jsPDF({ unit: "pt", format: "a4" });
-      const margin = 40;
-      let y = 48;
-      const line = (txt, size = 11, bold = false) => {
-        doc.setFont("helvetica", bold ? "bold" : "normal");
-        doc.setFontSize(size);
-        const lines = doc.splitTextToSize(String(txt), 515);
-        doc.text(lines, margin, y);
-        y += lines.length * (size + 4) + 4;
-        if (y > 780) {
+      const pageW = doc.internal.pageSize.getWidth();
+      const pageH = doc.internal.pageSize.getHeight();
+      const M = 40;
+      const contentW = pageW - M * 2;
+      const PINK = [233, 30, 99];
+      const DARK = [17, 24, 39];
+      const GRAY = [107, 114, 128];
+      const LINE = [229, 231, 235];
+      const BG = [249, 250, 251];
+      let y = M;
+
+      const ensure = (need = 40) => {
+        if (y + need > pageH - 48) {
           doc.addPage();
-          y = 48;
+          y = M;
         }
       };
 
-      line("Sifrah — Cierre de Mes", 16, true);
-      line(this.report.period_label || "", 12, true);
-      line(`${this.fullName}`, 11);
-      if (this.dni) line(`DNI: ${this.dni}`);
-      if (this.token) line(`Código: ${this.token}`);
-      line(`Rango del periodo: ${this.formatRank(this.report.rank) || "—"}`);
-      line(
-        `Periodo: ${this.formatRange(this.report.period_start, this.report.period_end)}`
+      const hrule = (gap = 10) => {
+        ensure(12);
+        doc.setDrawColor(...LINE);
+        doc.setLineWidth(0.7);
+        doc.line(M, y, pageW - M, y);
+        y += gap;
+      };
+
+      const sectionTitle = (txt) => {
+        ensure(28);
+        y += 6;
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(11);
+        doc.setTextColor(...DARK);
+        doc.text(String(txt), M, y);
+        y += 6;
+        doc.setDrawColor(...PINK);
+        doc.setLineWidth(1.5);
+        doc.line(M, y, M + 36, y);
+        y += 14;
+      };
+
+      const kvRow = (label, value, x, w) => {
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(8);
+        doc.setTextColor(...GRAY);
+        doc.text(String(label), x, y);
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(10);
+        doc.setTextColor(...DARK);
+        const lines = doc.splitTextToSize(String(value || "—"), w);
+        doc.text(lines, x, y + 12);
+        return lines.length;
+      };
+
+      // ── Encabezado (sin título "Cierre de Mes") ──
+      doc.setFillColor(...PINK);
+      doc.rect(0, 0, pageW, 6, "F");
+      y = 28;
+
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(18);
+      doc.setTextColor(...PINK);
+      doc.text("Sifrah", M, y);
+
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(9);
+      doc.setTextColor(...GRAY);
+      doc.text("Resumen de ganancias del periodo", M + 58, y - 1);
+
+      y += 18;
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(14);
+      doc.setTextColor(...DARK);
+      doc.text(this.report.period_label || "Periodo", M, y);
+      y += 8;
+      hrule(14);
+
+      // ── Socio ──
+      sectionTitle("Socio");
+      ensure(64);
+      const socioTop = y;
+      doc.setFillColor(...BG);
+      doc.roundedRect(M, socioTop - 4, contentW, 56, 4, 4, "F");
+      const colW = contentW / 2;
+      y = socioTop + 10;
+      kvRow("Nombre", this.fullName, M + 10, colW - 20);
+      kvRow(
+        "Rango del periodo",
+        this.formatRank(this.report.rank) || "—",
+        M + colW + 10,
+        colW - 20
       );
-      line(`Cierre: ${this.formatDateTime(this.report.closed_at)}`);
-      y += 8;
-      line(`Total generado: S/ ${this.money(this.report.totals.total)}`, 13, true);
-      y += 4;
-      line("Desglose", 12, true);
-      for (const b of this.report.breakdown || []) {
-        line(
-          `• ${b.label}: S/ ${this.money(b.amount)} (${b.percent}%)`
-        );
+      y = socioTop + 34;
+      kvRow("DNI", this.dni || "—", M + 10, colW - 20);
+      kvRow("Código", this.token || "—", M + colW + 10, colW - 20);
+      y = socioTop + 60;
+
+      // ── Periodo / cierre ──
+      sectionTitle("Periodo y cierre");
+      ensure(56);
+      const perTop = y;
+      doc.setFillColor(...BG);
+      doc.roundedRect(M, perTop - 4, contentW, 50, 4, 4, "F");
+      const q = contentW / 4;
+      y = perTop + 10;
+      kvRow(
+        "Periodo",
+        this.formatRange(this.report.period_start, this.report.period_end),
+        M + 10,
+        q - 16
+      );
+      kvRow(
+        "Fecha de cierre",
+        this.formatDateTime(this.report.closed_at),
+        M + q + 6,
+        q - 12
+      );
+      kvRow(
+        "Personas activas",
+        String(
+          this.report.org.active_people != null
+            ? this.report.org.active_people
+            : 0
+        ),
+        M + q * 2 + 6,
+        q - 12
+      );
+      kvRow(
+        "Estado",
+        this.report.payment_status_label || "En saldo",
+        M + q * 3 + 6,
+        q - 12
+      );
+      y = perTop + 54;
+
+      // ── Total ──
+      sectionTitle("Total generado");
+      ensure(36);
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(20);
+      doc.setTextColor(...PINK);
+      doc.text(`S/ ${this.money(this.report.totals.total)}`, M, y);
+      y += 14;
+      if (this.report.totals.growth_percent != null) {
+        const g = this.report.totals.growth_percent;
+        const prev = this.report.totals.prev_total;
+        let growthTxt =
+          g === 0
+            ? "Igual que el periodo anterior"
+            : `${Math.abs(g)}% ${g > 0 ? "más" : "menos"} que el periodo anterior`;
+        if (prev != null) growthTxt += ` (S/ ${this.money(prev)})`;
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(9);
+        doc.setTextColor(...GRAY);
+        doc.text(growthTxt, M, y);
+        y += 12;
       }
-      y += 6;
-      line("Volumen y organización", 12, true);
-      line(`Volumen total: ${this.fmtInt(this.report.volume.total_points)} pts`);
-      line(`Afiliación: ${this.fmtInt(this.report.volume.affiliation_points)} pts`);
-      line(`Reconsumo: ${this.fmtInt(this.report.volume.reconsumo_points)} pts`);
-      line(`Ventas realizadas (compras personales): S/ ${this.money(this.report.volume.personal_sales)}`);
-      line(`Personas activas: ${this.report.org.active_people}`);
-      line(`Niveles activos: ${this.report.org.active_levels}`);
-      line(`Frontales activos: ${this.report.org.active_frontals}`);
-      y += 8;
-      line("Detalle por concepto (resumen)", 12, true);
+      y += 4;
+
+      // ── Desglose tabla ──
+      sectionTitle("Desglose de comisiones");
+      const breakdown = this.report.breakdown || [];
+      ensure(20 + breakdown.length * 18);
+      // header
+      doc.setFillColor(...BG);
+      doc.rect(M, y - 10, contentW, 18, "F");
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(8);
+      doc.setTextColor(...GRAY);
+      doc.text("Concepto", M + 8, y);
+      doc.text("%", M + contentW * 0.58, y);
+      doc.text("Monto", pageW - M - 8, y, { align: "right" });
+      y += 12;
+      hrule(8);
+      breakdown.forEach((b, i) => {
+        ensure(18);
+        if (i % 2 === 1) {
+          doc.setFillColor(252, 252, 253);
+          doc.rect(M, y - 11, contentW, 16, "F");
+        }
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(9);
+        doc.setTextColor(...DARK);
+        doc.text(String(b.label || "—"), M + 8, y);
+        doc.setTextColor(...GRAY);
+        doc.text(`${b.percent != null ? b.percent : 0}%`, M + contentW * 0.58, y);
+        doc.setFont("helvetica", "bold");
+        doc.setTextColor(...DARK);
+        doc.text(`S/ ${this.money(b.amount)}`, pageW - M - 8, y, { align: "right" });
+        y += 16;
+      });
+      y += 4;
+
+      // ── Volumen ──
+      sectionTitle("Volumen y organización");
+      const vol = [
+        ["Volumen generado", `${this.fmtInt(this.report.volume.total_points)} pts`],
+        [
+          "Vol. afiliación",
+          `${this.fmtInt(this.report.volume.affiliation_points)} pts`,
+        ],
+        [
+          "Vol. reconsumo",
+          `${this.fmtInt(this.report.volume.reconsumo_points)} pts`,
+        ],
+        [
+          "Ventas realizadas",
+          `S/ ${this.money(this.report.volume.personal_sales)}`,
+        ],
+        [
+          "Niveles activos",
+          String(
+            this.report.org.active_levels != null
+              ? this.report.org.active_levels
+              : 0
+          ),
+        ],
+        [
+          "Frontales activos",
+          String(
+            this.report.org.active_frontals != null
+              ? this.report.org.active_frontals
+              : 0
+          ),
+        ],
+      ];
+      ensure(70);
+      const cellW = contentW / 3;
+      const cellH = 36;
+      vol.forEach((pair, i) => {
+        const col = i % 3;
+        const row = Math.floor(i / 3);
+        if (col === 0 && row > 0) y += cellH + 6;
+        if (col === 0) ensure(cellH + 8);
+        const x = M + col * cellW;
+        const yy = y;
+        doc.setFillColor(...BG);
+        doc.roundedRect(x + 2, yy, cellW - 6, cellH, 3, 3, "F");
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(7.5);
+        doc.setTextColor(...GRAY);
+        doc.text(pair[0], x + 10, yy + 14);
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(10);
+        doc.setTextColor(...DARK);
+        doc.text(pair[1], x + 10, yy + 28);
+      });
+      y += cellH + 12;
+
+      // ── Detalle por concepto ──
+      sectionTitle("Detalle por concepto");
       for (const tab of this.tabs) {
         const block = this.report.details[tab.key];
         if (!block) continue;
-        line(
-          `${tab.label}: S/ ${this.money(block.total)} · ${block.rows.length} registro(s)`,
-          11,
-          true
+        ensure(36);
+        doc.setFillColor(...BG);
+        doc.roundedRect(M, y - 4, contentW, 22, 3, 3, "F");
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(10);
+        doc.setTextColor(...DARK);
+        doc.text(tab.label, M + 8, y + 10);
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(8);
+        doc.setTextColor(...GRAY);
+        doc.text(
+          `${(block.rows || []).length} registro(s)`,
+          M + contentW * 0.45,
+          y + 10
         );
-        const top = (block.rows || []).slice(0, 25);
-        for (const r of top) {
-          line(
-            `  - ${r.name || r.label || "—"} ${r.dni ? "(" + r.dni + ")" : ""} · S/ ${this.money(r.amount)}`
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(10);
+        doc.setTextColor(...DARK);
+        doc.text(`S/ ${this.money(block.total)}`, pageW - M - 8, y + 10, {
+          align: "right",
+        });
+        y += 28;
+
+        const rows = (block.rows || []).slice(0, 20);
+        if (!rows.length) {
+          doc.setFont("helvetica", "normal");
+          doc.setFontSize(8);
+          doc.setTextColor(...GRAY);
+          doc.text("Sin movimientos en este concepto.", M + 4, y);
+          y += 14;
+          continue;
+        }
+
+        // mini table header
+        ensure(20);
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(7.5);
+        doc.setTextColor(...GRAY);
+        if (tab.key === "affiliations") {
+          doc.text("Fecha", M + 4, y);
+          doc.text("Persona / DNI", M + 70, y);
+          doc.text("Nivel", M + contentW * 0.55, y);
+          doc.text("Comisión", pageW - M - 4, y, { align: "right" });
+        } else if (tab.key === "residual") {
+          doc.text("Persona / DNI", M + 4, y);
+          doc.text("Nivel", M + contentW * 0.5, y);
+          doc.text("Comisión", pageW - M - 4, y, { align: "right" });
+        } else {
+          doc.text("Concepto", M + 4, y);
+          doc.text("Rango", M + contentW * 0.55, y);
+          doc.text("Monto", pageW - M - 4, y, { align: "right" });
+        }
+        y += 6;
+        hrule(6);
+
+        for (const r of rows) {
+          ensure(14);
+          doc.setFont("helvetica", "normal");
+          doc.setFontSize(8);
+          doc.setTextColor(...DARK);
+          if (tab.key === "affiliations") {
+            doc.text(this.formatDate(r.date), M + 4, y);
+            const who = `${r.name || "—"}${r.dni ? " · " + r.dni : ""}`;
+            doc.text(
+              doc.splitTextToSize(who, contentW * 0.4)[0],
+              M + 70,
+              y
+            );
+            doc.text(
+              r.level != null ? `N${r.level}` : "—",
+              M + contentW * 0.55,
+              y
+            );
+            doc.setFont("helvetica", "bold");
+            doc.text(`S/ ${this.money(r.amount)}`, pageW - M - 4, y, {
+              align: "right",
+            });
+          } else if (tab.key === "residual") {
+            const who = `${r.name || "—"}${r.dni ? " · " + r.dni : ""}`;
+            doc.text(doc.splitTextToSize(who, contentW * 0.45)[0], M + 4, y);
+            doc.text(
+              r.level != null ? `N${r.level}` : "—",
+              M + contentW * 0.5,
+              y
+            );
+            doc.setFont("helvetica", "bold");
+            doc.text(`S/ ${this.money(r.amount)}`, pageW - M - 4, y, {
+              align: "right",
+            });
+          } else {
+            doc.text(
+              doc.splitTextToSize(r.label || r.name || "—", contentW * 0.45)[0],
+              M + 4,
+              y
+            );
+            doc.text(this.formatRank(r.rank) || "—", M + contentW * 0.55, y);
+            doc.setFont("helvetica", "bold");
+            doc.text(`S/ ${this.money(r.amount)}`, pageW - M - 4, y, {
+              align: "right",
+            });
+          }
+          y += 13;
+        }
+        if ((block.rows || []).length > 20) {
+          ensure(12);
+          doc.setFont("helvetica", "normal");
+          doc.setFontSize(8);
+          doc.setTextColor(...GRAY);
+          doc.text(
+            `… y ${(block.rows || []).length - 20} registro(s) más`,
+            M + 4,
+            y
           );
+          y += 12;
         }
-        if (block.rows.length > 25) {
-          line(`  … y ${block.rows.length - 25} más`);
-        }
+        y += 6;
       }
-      y += 10;
-      line(
-        "Los montos corresponden al cierre del periodo y a las comisiones registradas.",
-        9
+
+      // ── Pie ──
+      ensure(36);
+      y += 8;
+      hrule(10);
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(8);
+      doc.setTextColor(...GRAY);
+      doc.text(
+        "Los montos mostrados ya incluyen impuestos de ley aplicables.",
+        M,
+        y
       );
+      y += 12;
+      doc.text(
+        `Generado ${new Date().toLocaleString("es-PE")} · Periodo ${
+          this.report.period_key || ""
+        }`,
+        M,
+        y
+      );
+
+      // Números de página
+      const totalPages = doc.internal.getNumberOfPages();
+      for (let p = 1; p <= totalPages; p++) {
+        doc.setPage(p);
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(8);
+        doc.setTextColor(...GRAY);
+        doc.text(`${p} / ${totalPages}`, pageW - M, pageH - 20, {
+          align: "right",
+        });
+        doc.setFillColor(...PINK);
+        doc.rect(0, pageH - 4, pageW, 4, "F");
+      }
 
       doc.save(`cierre-mes-${this.report.period_key || "periodo"}.pdf`);
     },
