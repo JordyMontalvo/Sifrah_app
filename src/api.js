@@ -274,8 +274,10 @@ class Collects {
 }
 
 class Closeds {
-  GET(session) {
-    return axios.get(`/app/closeds?session=${session}`);
+  GET(session, periodKey) {
+    let url = `/app/closeds?session=${session}`;
+    if (periodKey) url += `&period_key=${encodeURIComponent(periodKey)}`;
+    return axios.get(url);
   }
 }
 
