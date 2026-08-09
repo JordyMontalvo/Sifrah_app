@@ -39,6 +39,11 @@
       <div v-if="!report" class="cm-empty">
         <i class="fas fa-inbox"></i>
         <p>Aún no hay un cierre de mes con tu participación.</p>
+        <p v-if="loadError" class="cm-empty-hint">{{ loadError }}</p>
+        <p class="cm-empty-hint">
+          Solo aparecen periodos en los que figuraste en el cierre (rango distinto de none)
+          o con comisiones de residual / afiliación registradas.
+        </p>
       </div>
 
       <template v-else>
@@ -61,34 +66,36 @@
               </span>
             </div>
           </div>
-          <div class="cm-profile-stats">
-            <div class="cm-stat">
-              <i class="fas fa-calendar"></i>
-              <div>
-                <span class="cm-stat-label">Periodo</span>
-                <strong>{{ formatRange(report.period_start, report.period_end) }}</strong>
-              </div>
+
+          <div class="cm-profile-stat cm-profile-stat--period">
+            <i class="fas fa-calendar" aria-hidden="true"></i>
+            <div>
+              <span class="cm-stat-label">Periodo</span>
+              <strong>{{ formatRange(report.period_start, report.period_end) }}</strong>
             </div>
-            <div class="cm-stat">
-              <i class="fas fa-clock"></i>
-              <div>
-                <span class="cm-stat-label">Fecha de cierre</span>
-                <strong>{{ formatDateTime(report.closed_at) }}</strong>
-              </div>
+          </div>
+
+          <div class="cm-profile-stat">
+            <i class="fas fa-clock" aria-hidden="true"></i>
+            <div>
+              <span class="cm-stat-label">Fecha de cierre</span>
+              <strong>{{ formatDateTime(report.closed_at) }}</strong>
             </div>
-            <div class="cm-stat">
-              <i class="fas fa-users"></i>
-              <div>
-                <span class="cm-stat-label">Personas activas</span>
-                <strong>{{ report.org.active_people }}</strong>
-              </div>
+          </div>
+
+          <div class="cm-profile-stat">
+            <i class="fas fa-users" aria-hidden="true"></i>
+            <div>
+              <span class="cm-stat-label">Personas activas</span>
+              <strong>{{ report.org.active_people }}</strong>
             </div>
-            <div class="cm-stat">
-              <i class="fas fa-check-circle"></i>
-              <div>
-                <span class="cm-stat-label">Estado</span>
-                <strong class="cm-status-ok">{{ report.payment_status_label || "En saldo" }}</strong>
-              </div>
+          </div>
+
+          <div class="cm-profile-stat">
+            <i class="fas fa-check-circle" aria-hidden="true"></i>
+            <div>
+              <span class="cm-stat-label">Estado</span>
+              <span class="cm-status-pill">{{ report.payment_status_label || "En saldo" }}</span>
             </div>
           </div>
         </section>
@@ -101,14 +108,25 @@
             <p
               v-if="report.totals.growth_percent != null"
               class="cm-growth"
-              :class="{ neg: report.totals.growth_percent < 0 }"
+              :class="{
+                neg: report.totals.growth_percent < 0,
+                flat: report.totals.growth_percent === 0,
+              }"
             >
-              <template v-if="report.totals.growth_percent >= 0">↑ </template>
-              <template v-else>↓ </template>
-              {{ Math.abs(report.totals.growth_percent) }}%
-              {{ report.totals.growth_percent >= 0 ? "más" : "menos" }}
-              que el periodo anterior
-              <span v-if="report.totals.prev_total != null">
+              <span class="cm-growth-icon" aria-hidden="true">
+                <template v-if="report.totals.growth_percent > 0">↑</template>
+                <template v-else-if="report.totals.growth_percent < 0">↓</template>
+                <template v-else>=</template>
+              </span>
+              <template v-if="report.totals.growth_percent === 0">
+                Igual que el periodo anterior
+              </template>
+              <template v-else>
+                {{ Math.abs(report.totals.growth_percent) }}%
+                {{ report.totals.growth_percent > 0 ? "más" : "menos" }}
+                que el periodo anterior
+              </template>
+              <span v-if="report.totals.prev_total != null" class="cm-growth-prev">
                 (S/ {{ money(report.totals.prev_total) }})
               </span>
             </p>
@@ -154,10 +172,10 @@
             <small>{{ report.volume.reconsumo_share }}% del total</small>
           </article>
           <article class="cm-vol-card">
-            <div class="cm-vol-icon" style="background:#fff3e0;color:#ef6c00"><i class="fas fa-shopping-bag"></i></div>
-            <span class="cm-vol-label">Puntos personales</span>
-            <strong>{{ fmtInt(report.volume.personal_points) }} pts</strong>
-            <small>Reconsumo + afiliación propia</small>
+            <div class="cm-vol-icon" style="background:#fff3e0;color:#ef6c00"><i class="fas fa-shopping-cart"></i></div>
+            <span class="cm-vol-label">Ventas realizadas</span>
+            <strong>S/ {{ money(report.volume.personal_sales) }}</strong>
+            <small>Compras personales</small>
           </article>
           <article class="cm-vol-card">
             <div class="cm-vol-icon" style="background:#f3e5f5;color:#7b1fa2"><i class="fas fa-layer-group"></i></div>
@@ -197,19 +215,9 @@
               <p>{{ activeTabMeta.subtitle }}</p>
             </div>
             <div class="cm-detail-total">
-              Total: <strong>S/ {{ money(activeTabMeta.total) }}</strong>
+              Total generado
+              <strong>S/ {{ money(activeTabMeta.total) }}</strong>
             </div>
-          </div>
-
-          <div class="cm-detail-toolbar">
-            <button type="button" class="cm-btn cm-btn-soft" @click="downloadDetail">
-              <i class="fas fa-file-excel"></i>
-              Descargar detalle (Excel/CSV)
-            </button>
-            <label class="cm-search">
-              <i class="fas fa-search"></i>
-              <input v-model="search" type="search" placeholder="Buscar nombre o DNI..." />
-            </label>
           </div>
 
           <!-- Agrupado por nivel (afiliaciones / residuales) -->
@@ -220,52 +228,103 @@
             <div v-else class="cm-levels">
               <div
                 v-for="g in groupedLevels"
-                :key="g.level"
+                :key="g.key"
                 class="cm-level"
+                :class="{ open: isLevelOpen(g.key) }"
               >
                 <button
                   type="button"
                   class="cm-level-head"
-                  @click="toggleLevel(g.level)"
+                  @click="toggleLevel(g.key)"
                 >
-                  <span>
-                    <i
-                      class="fas"
-                      :class="openLevels[g.level] === false ? 'fa-chevron-right' : 'fa-chevron-down'"
-                    ></i>
-                    {{ g.level > 0 ? "Nivel " + g.level : "Sin nivel" }}
+                  <span class="cm-level-title">
+                    <i class="fas fa-users" aria-hidden="true"></i>
+                    {{ g.label }}
+                    <small v-if="g.rows.length" class="cm-level-count">({{ g.rows.length }})</small>
                   </span>
-                  <strong>S/ {{ money(g.total) }}</strong>
+                  <span class="cm-level-right">
+                    <span class="cm-level-total">
+                      Total generado: <strong>S/ {{ money(g.total) }}</strong>
+                    </span>
+                    <i
+                      class="fas cm-level-chevron"
+                      :class="isLevelOpen(g.key) ? 'fa-chevron-up' : 'fa-chevron-down'"
+                    ></i>
+                  </span>
                 </button>
-                <div v-show="openLevels[g.level] !== false" class="cm-table-wrap">
-                  <table class="cm-table">
+                <div v-show="isLevelOpen(g.key)" class="cm-table-wrap">
+                  <table
+                    class="cm-table"
+                    :class="activeTab === 'affiliations' ? 'cm-table--aff' : 'cm-table--res'"
+                  >
                     <thead>
-                      <tr>
-                        <th v-if="activeTab === 'affiliations'">Fecha</th>
-                        <th>Persona</th>
-                        <th>DNI</th>
-                        <th v-if="activeTab === 'residual'">PR / %</th>
-                        <th>Comisión</th>
+                      <tr v-if="activeTab === 'affiliations'">
+                        <th class="col-date">Fecha</th>
+                        <th class="col-name">Persona afiliada</th>
+                        <th class="col-pack">Paquete adquirido</th>
+                        <th class="col-pts">Puntos del paquete</th>
+                        <th class="col-amt">Comisión</th>
+                        <th class="col-pct">% Comisión</th>
+                      </tr>
+                      <tr v-else>
+                        <th class="col-name">Persona</th>
+                        <th class="col-dni">DNI</th>
+                        <th class="col-pr">PR</th>
+                        <th class="col-amt">Comisión</th>
+                        <th class="col-pct">% Comisión</th>
                       </tr>
                     </thead>
                     <tbody>
                       <tr v-for="row in g.rows" :key="row.id">
-                        <td v-if="activeTab === 'affiliations'">{{ formatDate(row.date) }}</td>
-                        <td>{{ row.name }}</td>
-                        <td>{{ row.dni || "—" }}</td>
-                        <td v-if="activeTab === 'residual'">
-                          <span v-if="row.pr != null">{{ fmtInt(row.pr) }}</span>
-                          <span v-if="row.percentage != null">
-                            · {{ (row.percentage * 100).toFixed(1) }}%
-                          </span>
-                          <span v-if="row.pr == null && row.percentage == null">—</span>
-                        </td>
-                        <td class="cm-td-amt">S/ {{ money(row.amount) }}</td>
+                        <template v-if="activeTab === 'affiliations'">
+                          <td class="col-date">{{ formatDate(row.date) }}</td>
+                          <td class="col-name">
+                            <span class="cm-cell-main">{{ row.name }}</span>
+                            <span v-if="row.dni" class="cm-cell-sub">DNI: {{ row.dni }}</span>
+                          </td>
+                          <td class="col-pack">{{ row.package || "—" }}</td>
+                          <td class="col-pts">
+                            <template v-if="row.points != null">{{ fmtInt(row.points) }} pts</template>
+                            <template v-else>—</template>
+                          </td>
+                          <td class="col-amt">S/ {{ money(row.amount) }}</td>
+                          <td class="col-pct">
+                            <template v-if="row.percentage != null">{{ formatPct(row.percentage) }}</template>
+                            <template v-else>—</template>
+                          </td>
+                        </template>
+                        <template v-else>
+                          <td class="col-name">{{ row.name }}</td>
+                          <td class="col-dni">{{ row.dni || "—" }}</td>
+                          <td class="col-pr">
+                            {{ row.pr != null ? fmtInt(row.pr) : "—" }}
+                          </td>
+                          <td class="col-amt">S/ {{ money(row.amount) }}</td>
+                          <td class="col-pct">
+                            <template v-if="row.percentage != null">{{ formatPct(row.percentage) }}</template>
+                            <template v-else>—</template>
+                          </td>
+                        </template>
                       </tr>
                     </tbody>
                   </table>
                 </div>
               </div>
+            </div>
+
+            <div class="cm-detail-footer-bar">
+              <button type="button" class="cm-btn-export" @click="downloadDetail">
+                <i class="fas fa-file-excel"></i>
+                Descargar detalle de {{ activeTab === 'affiliations' ? 'afiliaciones' : 'residuales' }} (Excel)
+              </button>
+              <label class="cm-search">
+                <input
+                  v-model="search"
+                  type="search"
+                  :placeholder="activeTab === 'affiliations' ? 'Buscar afiliado o DNI...' : 'Buscar nombre o DNI...'"
+                />
+                <i class="fas fa-search" aria-hidden="true"></i>
+              </label>
             </div>
           </template>
 
@@ -293,12 +352,12 @@
               </table>
             </div>
           </template>
-        </section>
 
-        <p class="cm-footnote">
-          Los montos mostrados corresponden al cierre del periodo seleccionado y ya
-          reflejan las comisiones registradas en tu cuenta.
-        </p>
+          <div class="cm-tax-note">
+            <i class="fas fa-info-circle" aria-hidden="true"></i>
+            <span>Los montos mostrados ya incluyen impuestos de ley aplicables.</span>
+          </div>
+        </section>
       </template>
     </div>
   </App>
@@ -325,6 +384,7 @@ export default {
       activeTab: "affiliations",
       search: "",
       openLevels: {},
+      loadError: null,
     };
   },
   computed: {
@@ -386,7 +446,7 @@ export default {
       const map = {
         affiliations: {
           title: "Detalle de Afiliaciones",
-          subtitle: "Comisiones por afiliaciones del periodo",
+          subtitle: "Comisiones por nuevas afiliaciones en tu red",
         },
         residual: {
           title: "Detalle de Residuales",
@@ -415,15 +475,79 @@ export default {
       return rows.filter((r) => {
         const name = String(r.name || r.label || "").toLowerCase();
         const dni = String(r.dni || "").toLowerCase();
-        return name.includes(q) || dni.includes(q);
+        const pack = String(r.package || "").toLowerCase();
+        return name.includes(q) || dni.includes(q) || pack.includes(q);
       });
     },
     groupedLevels() {
       if (this.activeTab !== "affiliations" && this.activeTab !== "residual") return [];
+
+      // Afiliaciones: igual al diseño — Niveles 1…6 y grupo 7 a 9
+      if (this.activeTab === "affiliations") {
+        const buckets = [];
+        for (let L = 1; L <= 6; L++) {
+          buckets.push({
+            key: String(L),
+            level: L,
+            label: "Nivel " + L,
+            rows: [],
+            total: 0,
+          });
+        }
+        buckets.push({
+          key: "7-9",
+          level: 7,
+          label: "Nivel 7 a 9",
+          rows: [],
+          total: 0,
+        });
+
+        for (const row of this.filteredRows) {
+          let L = row.level != null && row.level !== "" ? Number(row.level) : NaN;
+          if (Number.isNaN(L) || L < 1) L = 0;
+          const amount = Number(row.amount) || 0;
+          if (L >= 1 && L <= 6) {
+            buckets[L - 1].rows.push(row);
+            buckets[L - 1].total += amount;
+          } else if (L >= 7 && L <= 9) {
+            buckets[6].rows.push(row);
+            buckets[6].total += amount;
+          } else if (L > 9) {
+            buckets[6].rows.push(row);
+            buckets[6].total += amount;
+          } else {
+            // sin resolver: no mezclar con “Nivel 1”; van a un bucket extra solo si hay
+            let other = buckets.find((b) => b.key === "other");
+            if (!other) {
+              other = {
+                key: "other",
+                level: 0,
+                label: "Sin nivel",
+                rows: [],
+                total: 0,
+              };
+              buckets.push(other);
+            }
+            other.rows.push(row);
+            other.total += amount;
+          }
+        }
+        // Ocultar “Sin nivel” si quedó vacío; mantener 1–6 y 7–9 aunque estén en 0
+        return buckets.filter((b) => b.key !== "other" || b.rows.length);
+      }
+
       const map = {};
       for (const row of this.filteredRows) {
         const level = row.level != null && row.level !== "" ? Number(row.level) || 0 : 0;
-        if (!map[level]) map[level] = { level, rows: [], total: 0 };
+        if (!map[level]) {
+          map[level] = {
+            key: String(level),
+            level,
+            label: level > 0 ? "Nivel " + level : "Sin nivel",
+            rows: [],
+            total: 0,
+          };
+        }
         map[level].rows.push(row);
         map[level].total += Number(row.amount) || 0;
       }
@@ -491,9 +615,87 @@ export default {
       const b = end ? this.formatDate(end) : "—";
       return `${a} – ${b}`;
     },
-    toggleLevel(level) {
-      const cur = this.openLevels[level];
-      this.$set(this.openLevels, level, cur === false ? true : false);
+    formatPct(p) {
+      if (p == null || p === "") return "—";
+      const n = Number(p);
+      if (Number.isNaN(n)) return "—";
+      // 0–1 => porcentaje; 1–100 => ya es %
+      const pct = n > 0 && n <= 1 ? n * 100 : n;
+      return `${pct.toFixed(1)}%`;
+    },
+    isLevelOpen(key) {
+      if (this.openLevels[key] === true) return true;
+      if (this.openLevels[key] === false) return false;
+      // Por defecto solo Nivel 1 abierto
+      return String(key) === "1";
+    },
+    toggleLevel(key) {
+      this.$set(this.openLevels, key, !this.isLevelOpen(key));
+    },
+    downloadDetail() {
+      if (!this.report) return;
+      const rows = this.filteredRows;
+      const isAff = this.activeTab === "affiliations";
+      const isRes = this.activeTab === "residual";
+      let headers;
+      if (isAff) {
+        headers = [
+          "Fecha",
+          "Persona afiliada",
+          "DNI",
+          "Paquete",
+          "Puntos",
+          "Comisión",
+          "% Comisión",
+          "Nivel",
+        ];
+      } else if (isRes) {
+        headers = ["Persona", "DNI", "PR", "Comisión", "% Comisión", "Nivel"];
+      } else {
+        headers = ["Concepto", "Rango", "Monto"];
+      }
+      const lines = [headers.join(",")];
+      for (const r of rows) {
+        let cols;
+        if (isAff) {
+          cols = [
+            this.formatDate(r.date),
+            r.name || "",
+            r.dni || "",
+            r.package || "",
+            r.points != null ? r.points : "",
+            Number(r.amount || 0).toFixed(2),
+            r.percentage != null ? this.formatPct(r.percentage) : "",
+            r.level != null ? r.level : "",
+          ];
+        } else if (isRes) {
+          cols = [
+            r.name || "",
+            r.dni || "",
+            r.pr != null ? r.pr : "",
+            Number(r.amount || 0).toFixed(2),
+            r.percentage != null ? this.formatPct(r.percentage) : "",
+            r.level != null ? r.level : "",
+          ];
+        } else {
+          cols = [
+            r.label || r.name || "",
+            this.formatRank(r.rank) || "",
+            Number(r.amount || 0).toFixed(2),
+          ];
+        }
+        lines.push(
+          cols.map((c) => `"${String(c).replace(/"/g, '""')}"`).join(",")
+        );
+      }
+      const blob = new Blob(["\ufeff" + lines.join("\n")], {
+        type: "text/csv;charset=utf-8;",
+      });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = `cierre-${this.report.period_key || "mes"}-${this.activeTab}.csv`;
+      a.click();
+      URL.revokeObjectURL(a.href);
     },
     async load(periodKey) {
       this.loading = true;
@@ -514,15 +716,23 @@ export default {
         this.photo = data.photo || this.$store.state.photo || null;
         this.periods = data.periods || [];
         this.report = data.report || null;
+        this.loadError =
+          data.debug && data.debug.hint
+            ? data.debug.hint
+            : data.error
+              ? data.msg || "Error al cargar"
+              : null;
         if (this.report && this.report.period_key) {
           this.selectedPeriodKey = this.report.period_key;
         } else if (this.periods.length) {
           this.selectedPeriodKey = this.periods[0].period_key;
         }
         this.openLevels = {};
+        this.search = "";
       } catch (e) {
         console.error(e);
         this.report = null;
+        this.loadError = "No se pudo conectar con el servidor. Intenta de nuevo.";
       } finally {
         this.loading = false;
       }
@@ -530,30 +740,6 @@ export default {
     async onPeriodChange() {
       if (!this.selectedPeriodKey) return;
       await this.load(this.selectedPeriodKey);
-    },
-    downloadDetail() {
-      if (!this.report) return;
-      const rows = this.filteredRows;
-      const headers = ["Concepto", "Nombre", "DNI", "Nivel", "Monto"];
-      const lines = [headers.join(",")];
-      for (const r of rows) {
-        const cols = [
-          this.activeTabMeta.title,
-          r.name || r.label || "",
-          r.dni || "",
-          r.level != null ? r.level : "",
-          Number(r.amount || 0).toFixed(2),
-        ].map((c) => `"${String(c).replace(/"/g, '""')}"`);
-        lines.push(cols.join(","));
-      }
-      const blob = new Blob(["\ufeff" + lines.join("\n")], {
-        type: "text/csv;charset=utf-8;",
-      });
-      const a = document.createElement("a");
-      a.href = URL.createObjectURL(blob);
-      a.download = `cierre-${this.report.period_key || "mes"}-${this.activeTab}.csv`;
-      a.click();
-      URL.revokeObjectURL(a.href);
     },
     downloadPdf() {
       if (!this.report) return;
@@ -596,7 +782,7 @@ export default {
       line(`Volumen total: ${this.fmtInt(this.report.volume.total_points)} pts`);
       line(`Afiliación: ${this.fmtInt(this.report.volume.affiliation_points)} pts`);
       line(`Reconsumo: ${this.fmtInt(this.report.volume.reconsumo_points)} pts`);
-      line(`Puntos personales: ${this.fmtInt(this.report.volume.personal_points)} pts`);
+      line(`Ventas realizadas (compras personales): S/ ${this.money(this.report.volume.personal_sales)}`);
       line(`Personas activas: ${this.report.org.active_people}`);
       line(`Niveles activos: ${this.report.org.active_levels}`);
       line(`Frontales activos: ${this.report.org.active_frontals}`);
