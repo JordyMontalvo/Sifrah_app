@@ -90,14 +90,6 @@
               <strong>{{ report.org.active_people }}</strong>
             </div>
           </div>
-
-          <div class="cm-profile-stat">
-            <i class="fas fa-check-circle" aria-hidden="true"></i>
-            <div>
-              <span class="cm-stat-label">Estado</span>
-              <span class="cm-status-pill">{{ report.payment_status_label || "En saldo" }}</span>
-            </div>
-          </div>
         </section>
 
         <!-- Bloque 3: Total -->
@@ -163,19 +155,19 @@
             <div class="cm-vol-icon" style="background:#e8f5e9;color:#2e7d32"><i class="fas fa-user-plus"></i></div>
             <span class="cm-vol-label">Volumen por afiliación</span>
             <strong>{{ fmtInt(report.volume.affiliation_points) }} pts</strong>
-            <small>{{ report.volume.affiliation_share }}% del total</small>
+            <small>{{ report.volume.affiliation_share }}% del total · red</small>
           </article>
           <article class="cm-vol-card">
             <div class="cm-vol-icon" style="background:#e3f2fd;color:#1565c0"><i class="fas fa-redo"></i></div>
             <span class="cm-vol-label">Volumen por reconsumo</span>
             <strong>{{ fmtInt(report.volume.reconsumo_points) }} pts</strong>
-            <small>{{ report.volume.reconsumo_share }}% del total</small>
+            <small>{{ report.volume.reconsumo_share }}% del total · red</small>
           </article>
           <article class="cm-vol-card">
             <div class="cm-vol-icon" style="background:#fff3e0;color:#ef6c00"><i class="fas fa-shopping-cart"></i></div>
             <span class="cm-vol-label">Ventas realizadas</span>
-            <strong>S/ {{ money(report.volume.personal_sales) }}</strong>
-            <small>Compras personales</small>
+            <strong>{{ fmtInt(personalReconsumoPts) }} pts</strong>
+            <small>Compras personales (reconsumo propio)</small>
           </article>
           <article class="cm-vol-card">
             <div class="cm-vol-icon" style="background:#f3e5f5;color:#7b1fa2"><i class="fas fa-layer-group"></i></div>
@@ -557,6 +549,15 @@ export default {
       if (this.activeTab === "affiliations" || this.activeTab === "residual") return [];
       return this.filteredRows;
     },
+    personalReconsumoPts() {
+      if (!this.report || !this.report.volume) return 0;
+      const v = this.report.volume;
+      if (v.personal_reconsumo_points != null) {
+        return Number(v.personal_reconsumo_points) || 0;
+      }
+      // Fallback compat
+      return Number(v.personal_points) || 0;
+    },
     donutGradient() {
       const parts = (this.report && this.report.breakdown) || [];
       const withAmt = parts.filter((b) => Number(b.amount) > 0);
@@ -846,7 +847,7 @@ export default {
       const perTop = y;
       doc.setFillColor(...BG);
       doc.roundedRect(M, perTop - 4, contentW, 50, 4, 4, "F");
-      const q = contentW / 4;
+      const q = contentW / 3;
       y = perTop + 10;
       kvRow(
         "Periodo",
@@ -868,12 +869,6 @@ export default {
             : 0
         ),
         M + q * 2 + 6,
-        q - 12
-      );
-      kvRow(
-        "Estado",
-        this.report.payment_status_label || "En saldo",
-        M + q * 3 + 6,
         q - 12
       );
       y = perTop + 54;
@@ -950,7 +945,7 @@ export default {
         ],
         [
           "Ventas realizadas",
-          `S/ ${this.money(this.report.volume.personal_sales)}`,
+          `${this.fmtInt(this.personalReconsumoPts)} pts`,
         ],
         [
           "Niveles activos",

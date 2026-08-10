@@ -146,7 +146,7 @@
 
 .cm-profile {
   display: grid;
-  grid-template-columns: minmax(200px, 1.4fr) repeat(4, minmax(0, 1fr));
+  grid-template-columns: minmax(200px, 1.5fr) repeat(3, minmax(0, 1fr));
   align-items: center;
   gap: 0;
   padding: 0;
@@ -242,22 +242,6 @@
   line-height: 1.35;
 }
 
-.cm-status-pill {
-  display: inline-block;
-  background: #ecfdf5;
-  color: #059669;
-  border: 1px solid #a7f3d0;
-  font-size: 0.86rem;
-  font-weight: 700;
-  border-radius: 999px;
-  padding: 4px 12px;
-  line-height: 1.35;
-}
-
-.cm-status-ok {
-  color: #059669 !important;
-}
-
 /* Desktop: bloque socio + periodo más legible */
 @media (min-width: 1201px) {
   .cm-profile-who {
@@ -302,11 +286,6 @@
 
   .cm-profile-stat strong {
     font-size: 1.08rem;
-  }
-
-  .cm-status-pill {
-    font-size: 0.92rem;
-    padding: 6px 14px;
   }
 }
 
@@ -870,8 +849,7 @@
     border-bottom: 1px solid #e8edf3;
   }
 
-  .cm-profile-stat:nth-child(2),
-  .cm-profile-stat:nth-child(4) {
+  .cm-profile-stat:nth-child(2) {
     border-left: none;
   }
 }
