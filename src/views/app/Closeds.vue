@@ -412,13 +412,13 @@ export default {
         },
         {
           key: "rank_start",
-          label: "Bono Inicio de Rango",
+          label: "Bono Logro",
           icon: "fas fa-flag",
           count: (d.rank_start && d.rank_start.rows && d.rank_start.rows.length) || 0,
         },
         {
           key: "rank_lead",
-          label: "Bono Liderazgo",
+          label: "Bono Recalificación",
           icon: "fas fa-medal",
           count: (d.rank_lead && d.rank_lead.rows && d.rank_lead.rows.length) || 0,
         },
@@ -445,12 +445,12 @@ export default {
           subtitle: "Residual y generacional VIP del cierre",
         },
         rank_start: {
-          title: "Bono Inicio de Rango",
-          subtitle: "Recalificación / logro de rango",
+          title: "Bono Logro",
+          subtitle: "Bonos por logro de rango en el periodo",
         },
         rank_lead: {
-          title: "Bono Liderazgo",
-          subtitle: "Mantenimiento de rango en el cierre",
+          title: "Bono Recalificación",
+          subtitle: "Bonos por recalificación de rango en el cierre",
         },
         savings: {
           title: "Bono Ahorro",
