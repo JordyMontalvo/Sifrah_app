@@ -599,16 +599,20 @@ export default {
       if (!d) return "—";
       const x = new Date(d);
       if (Number.isNaN(x.getTime())) return "—";
-      return x.toLocaleDateString("es-PE");
+      return x.toLocaleDateString("es-PE", { timeZone: "America/Lima" });
     },
     formatDateTime(d) {
       if (!d) return "—";
       const x = new Date(d);
       if (Number.isNaN(x.getTime())) return "—";
       return (
-        x.toLocaleDateString("es-PE") +
+        x.toLocaleDateString("es-PE", { timeZone: "America/Lima" }) +
         " · " +
-        x.toLocaleTimeString("es-PE", { hour: "2-digit", minute: "2-digit" })
+        x.toLocaleTimeString("es-PE", {
+          timeZone: "America/Lima",
+          hour: "2-digit",
+          minute: "2-digit",
+        })
       );
     },
     formatRange(start, end) {
