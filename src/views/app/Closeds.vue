@@ -586,8 +586,9 @@ export default {
       return (Number(n) || 0).toLocaleString("es-PE");
     },
     formatRank(rank) {
-      if (!rank) return "";
-      const s = String(rank).toLowerCase();
+      if (rank == null || rank === "") return "";
+      const s = String(rank).toLowerCase().trim();
+      if (s === "none" || s === "null" || s === "undefined") return "Inactivo";
       if (s === "active" || s === "activo") return "Activo";
       return String(rank)
         .split(" ")
