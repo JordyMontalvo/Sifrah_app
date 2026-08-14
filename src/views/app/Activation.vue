@@ -210,7 +210,11 @@
                     >
                       <div class="card-corner"></div>
 
-                      <div v-if="isPromotionProduct(product)" class="promotion-label">
+                      <div
+                        v-if="isPromotionProduct(product)"
+                        class="promotion-label"
+                        :class="{ 'promotion-label--locked': !promotionEligible }"
+                      >
                         Promoción
                       </div>
                       <div v-else class="points-badge">
