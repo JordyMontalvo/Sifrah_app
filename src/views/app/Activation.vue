@@ -765,9 +765,12 @@ export default {
     },
     cartItems: {
       handler(newItems) {
-        if (this.removeIneligiblePromotions()) return;
-        // Sincronizar con el store cada vez que cambie el carrito
-        this.$store.commit('setCartItems', [...newItems]);
+        // Si deja de cumplir 160 pts, quitar promo y sincronizar el carrito filtrado
+        if (this.removeIneligiblePromotions()) {
+          this.$store.commit("setCartItems", [...this.cartItems]);
+          return;
+        }
+        this.$store.commit("setCartItems", [...newItems]);
       },
       deep: true
     },
@@ -798,7 +801,15 @@ export default {
         return;
       }
 
-      // success
+      // success / respuesta inválida (evita pantalla en blanco)
+      if (data.error || !Array.isArray(data.products)) {
+        this.error =
+          (data && data.msg) ||
+          "No se pudo cargar el catálogo. Intenta de nuevo.";
+        this.products = [];
+        return;
+      }
+
       this.$store.commit("SET_NAME", data.name);
       this.$store.commit("SET_LAST_NAME", data.lastName);
       this.$store.commit("SET_AFFILIATED", data.affiliated);
@@ -816,10 +827,11 @@ export default {
       this.promotionRequiredPoints =
         Number(promotionEligibility.required_points) || 160;
       if (promotionEligibility.accumulated_points != null) {
-        this.current_points = Number(promotionEligibility.accumulated_points) || 0;
+        this.current_points =
+          Number(promotionEligibility.accumulated_points) || 0;
       }
       this.current_profit = data.profit || 0;
-      this.products = data.products ? data.products.map((a) => ({ ...a, total: 0 })) : [];
+      this.products = data.products.map((a) => ({ ...a, total: 0 }));
       this.product = this.products.length > 0 ? this.products[0] : null;
 
       this.balance = data.balance || 0;
@@ -844,6 +856,8 @@ export default {
       const savedCartItems = this.$store.state.cartItems;
       if (savedCartItems && savedCartItems.length > 0) {
         this.cartItems = [...savedCartItems];
+        this.removeIneligiblePromotions();
+        this.$store.commit("setCartItems", [...this.cartItems]);
       }
       
       // Inicializar categorías seleccionadas por defecto
@@ -852,6 +866,7 @@ export default {
     } catch (error) {
       console.error('Error loading activation data:', error);
       this.error = "Error al cargar los datos. Por favor, intenta de nuevo.";
+      this.products = [];
     } finally {
       this.loading = false;
     }
