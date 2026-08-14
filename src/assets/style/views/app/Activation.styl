@@ -5014,31 +5014,39 @@
 
 }
 
-// Promociones en tienda
-.promotions-store-section
-  margin-bottom 28px
-  padding-bottom 20px
-  border-bottom 2px dashed rgba(233, 30, 99, 0.25)
-
-.promotions-title
-  color #e91e63
-  display flex
-  align-items center
-  gap 8px
-
-.promotions-subtitle
-  color #666
-  font-size 0.9rem
-  margin -8px 0 16px
-
 .promotions-locked
   margin-bottom 20px
 
 .product-catalog-card--promo
-  border 2px solid rgba(233, 30, 99, 0.35)
+  border 2px solid rgba(233, 30, 99, 0.45)
+  box-shadow 0 0 0 3px rgba(233, 30, 99, 0.08), 0 8px 20px rgba(233, 30, 99, 0.12)
 
-.promo-badge
-  background linear-gradient(135deg, #e91e63, #cf1658) !important
+  .card-corner
+    display none
+
+.product-catalog-card--promo-locked
+  .add-to-cart-btn
+    opacity 0.55
+    cursor not-allowed
+    background #9e9e9e !important
+
+.promotion-label
+  position absolute
+  top 10px
+  left 10px
+  z-index 3
+  background rgba(90, 90, 90, 0.92)
+  color #fff
+  font-size 0.68rem
+  font-weight 600
+  letter-spacing 0.02em
+  padding 4px 9px
+  border-radius 4px
+  line-height 1.2
+
+.product-catalog-card--promo .stock-badge
+  top 38px
+  left 10px
 
 .stock-badge
   position absolute
