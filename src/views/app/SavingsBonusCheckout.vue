@@ -80,7 +80,11 @@
                     <div class="qty-control">
                       <button type="button" @click="changeQty(item, -1)" :disabled="(item.qty || 1) <= 1">−</button>
                       <span>{{ item.qty || 1 }}</span>
-                      <button type="button" @click="changeQty(item, 1)">+</button>
+                      <button
+                        type="button"
+                        @click="changeQty(item, 1)"
+                        :disabled="(item.qty || 1) >= maxQtyForProduct(item)"
+                      >+</button>
                     </div>
                   </div>
 
@@ -109,7 +113,11 @@
                   <div class="qty-control cart-product-qty">
                     <button type="button" @click="changeQty(item, -1)" :disabled="(item.qty || 1) <= 1">−</button>
                     <span>{{ item.qty || 1 }}</span>
-                    <button type="button" @click="changeQty(item, 1)">+</button>
+                    <button
+                      type="button"
+                      @click="changeQty(item, 1)"
+                      :disabled="(item.qty || 1) >= maxQtyForProduct(item)"
+                    >+</button>
                   </div>
                   <div class="cart-product-price">
                     <img src="../../assets/img/coin-saldo-icon.png" alt="" />
@@ -937,6 +945,7 @@ export default {
     return {
       step: 1,
       cart: [],
+      catalogProducts: [],
       savingsBalance: 0,
       balanceLoaded: false,
       offices: [],
@@ -1180,6 +1189,17 @@ export default {
       return;
     }
     await Promise.all([this.fetchBalance(), this.loadOffices()]);
+    this.clampCartToPromotionLimits();
+    if (!this.cart.length) {
+      await Swal.fire({
+        icon: "warning",
+        title: "Promoción no disponible",
+        text: "Ya alcanzaste el límite de unidades para la promoción de tu carrito.",
+        confirmButtonColor: "#e91e63",
+      });
+      this.$router.replace("/savings-bonus");
+      return;
+    }
     if (Number(this.savingsBalance) < 1) {
       await Swal.fire({
         icon: "warning",
@@ -1209,10 +1229,49 @@ export default {
         if (data && !data.error && data.savingsBalance != null) {
           this.savingsBalance = Number(data.savingsBalance) || 0;
         }
+        if (data && !data.error && Array.isArray(data.products)) {
+          this.catalogProducts = data.products;
+        }
       } catch (e) {
-        console.error("Error cargando saldo:", e);
+        console.error("Error loading savings balance:", e);
       } finally {
         this.balanceLoaded = true;
+      }
+    },
+    clampCartToPromotionLimits() {
+      const byId = new Map(
+        (this.catalogProducts || []).map((p) => [String(p.id), p])
+      );
+      let changed = false;
+      this.cart = (this.cart || []).filter((item) => {
+        const product = byId.get(String(item.id));
+        if (!product) {
+          // Promo agotada ya no viene en el catálogo → sacar del carrito
+          if (this.isPromotionProduct(item)) {
+            changed = true;
+            return false;
+          }
+          return true;
+        }
+        item.is_promotion = product.is_promotion;
+        item.available_quantity = product.available_quantity;
+        item.promotion_remaining = product.promotion_remaining;
+        item.catalog_type = product.catalog_type;
+        item.type = product.type;
+        const max = this.maxQtyForProduct(item);
+        if (max < 1) {
+          changed = true;
+          return false;
+        }
+        const qty = Math.max(1, Number(item.qty) || 1);
+        if (qty > max) {
+          this.$set(item, "qty", max);
+          changed = true;
+        }
+        return true;
+      });
+      if (changed) {
+        saveBonusCart(this.session, this.cart);
       }
     },
     async loadOffices() {
@@ -1272,9 +1331,46 @@ export default {
     lineTotal(item) {
       return (Number(item.price) || 0) * (item.qty || 1);
     },
+    isPromotionProduct(product) {
+      if (!product) return false;
+      return (
+        product.is_promotion === true ||
+        product.catalog_type === "promotion" ||
+        product.type === "Promoción"
+      );
+    },
+    maxQtyForProduct(product) {
+      if (!product) return 10;
+      if (
+        this.isPromotionProduct(product) &&
+        product.promotion_remaining != null &&
+        product.promotion_remaining >= 0
+      ) {
+        return Math.max(0, Number(product.promotion_remaining) || 0);
+      }
+      const available = Number(product.available_quantity);
+      if (
+        this.isPromotionProduct(product) &&
+        Number.isFinite(available) &&
+        available > 0
+      ) {
+        return available;
+      }
+      return 10;
+    },
     changeQty(item, delta) {
       const next = (item.qty || 1) + delta;
       if (next < 1) return;
+      const max = this.maxQtyForProduct(item);
+      if (next > max) {
+        Swal.fire({
+          icon: "warning",
+          title: "Límite de promoción",
+          text: `Solo puedes canjear hasta ${max} unidad(es) de esta promoción.`,
+          confirmButtonColor: "#e91e63",
+        });
+        return;
+      }
       this.$set(item, "qty", next);
     },
     goBack() {

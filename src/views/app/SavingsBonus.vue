@@ -146,18 +146,30 @@
               <div v-if="cartQty(product.id) > 0" class="cart-qty-control">
                 <button type="button" class="qty-btn" @click="updateCartQty(product, -1)" aria-label="Disminuir cantidad">−</button>
                 <span class="qty-value">{{ cartQty(product.id) }}</span>
-                <button type="button" class="qty-btn" @click="updateCartQty(product, 1)" aria-label="Aumentar cantidad">+</button>
+                <button
+                  type="button"
+                  class="qty-btn"
+                  :disabled="cartQty(product.id) >= maxQtyForProduct(product)"
+                  @click="updateCartQty(product, 1)"
+                  aria-label="Aumentar cantidad"
+                >+</button>
               </div>
               <button
                 v-else
                 type="button"
                 class="redeem-btn"
-                :disabled="!canRedeemWithBonus"
-                :title="canRedeemWithBonus ? '' : 'Necesitas al menos 1 coin de Bono Ahorro'"
+                :disabled="!canRedeemWithBonus || maxQtyForProduct(product) < 1"
+                :title="redeemButtonTitle(product)"
                 @click="addToCart(product)"
               >
                 Canjear <i class="fas fa-shopping-cart"></i>
               </button>
+              <p
+                v-if="isPromotionProduct(product) && product.promotion_remaining != null"
+                class="promo-limit-hint"
+              >
+                Máx. {{ product.promotion_remaining }} por usuario
+              </p>
             </div>
           </div>
         </div>
@@ -364,11 +376,69 @@ export default {
         }
 
         this.sifrahBalance = balance;
+        this.clampCartToPromotionLimits();
       } catch (e) {
         console.error("Error fetching savings data:", e);
       } finally {
         this.loading = false;
       }
+    },
+    isPromotionProduct(product) {
+      if (!product) return false;
+      return (
+        product.is_promotion === true ||
+        product.catalog_type === "promotion" ||
+        product.type === "Promoción"
+      );
+    },
+    maxQtyForProduct(product) {
+      if (!product) return 10;
+      if (
+        this.isPromotionProduct(product) &&
+        product.promotion_remaining != null &&
+        product.promotion_remaining >= 0
+      ) {
+        return Math.max(0, Number(product.promotion_remaining) || 0);
+      }
+      const available = Number(product.available_quantity);
+      if (this.isPromotionProduct(product) && Number.isFinite(available) && available > 0) {
+        return available;
+      }
+      return 10;
+    },
+    redeemButtonTitle(product) {
+      if (!this.canRedeemWithBonus) {
+        return "Necesitas al menos 1 coin de Bono Ahorro";
+      }
+      if (this.isPromotionProduct(product) && this.maxQtyForProduct(product) < 1) {
+        return "Ya alcanzaste el límite de compra de esta promoción";
+      }
+      return "";
+    },
+    clampCartToPromotionLimits() {
+      const byId = new Map(
+        (this.featuredProducts || []).map((p) => [String(p.id), p])
+      );
+      let changed = false;
+      this.bonusCart = (this.bonusCart || []).filter((item) => {
+        const product = byId.get(String(item.id)) || item;
+        const max = this.maxQtyForProduct(product);
+        if (max < 1) {
+          changed = true;
+          return false;
+        }
+        const qty = Math.max(1, Number(item.qty) || 1);
+        if (qty > max) {
+          item.qty = max;
+          // refrescar metadatos de límite desde el catálogo
+          item.promotion_remaining = product.promotion_remaining;
+          item.available_quantity = product.available_quantity;
+          item.is_promotion = product.is_promotion;
+          changed = true;
+        }
+        return true;
+      });
+      if (changed) this.saveCart();
     },
     selectCategory(cat) {
       this.selectedCategory = cat;
@@ -429,11 +499,37 @@ export default {
         });
         return;
       }
+      const max = this.maxQtyForProduct(product);
+      if (max < 1) {
+        Swal.fire({
+          icon: "warning",
+          title: "Límite alcanzado",
+          text: `Ya alcanzaste el máximo de unidades permitidas para "${product.name}".`,
+          confirmButtonColor: "#e91e63",
+        });
+        return;
+      }
       const existing = this.bonusCart.find((item) => item.id === product.id);
+      const currentQty = existing ? existing.qty || 1 : 0;
+      if (currentQty >= max) {
+        Swal.fire({
+          icon: "warning",
+          title: "Límite de promoción",
+          text: `Solo puedes canjear hasta ${max} unidad(es) de esta promoción.`,
+          confirmButtonColor: "#e91e63",
+        });
+        return;
+      }
       if (existing) {
-        existing.qty = (existing.qty || 1) + 1;
+        existing.qty = currentQty + 1;
       } else {
-        this.bonusCart.push({ ...product, qty: 1 });
+        this.bonusCart.push({
+          ...product,
+          qty: 1,
+          is_promotion: !!product.is_promotion,
+          available_quantity: product.available_quantity,
+          promotion_remaining: product.promotion_remaining,
+        });
       }
       Swal.fire({
         toast: true,
@@ -462,9 +558,19 @@ export default {
       const idx = this.bonusCart.findIndex((item) => item.id === product.id);
       if (idx === -1) return;
       const item = this.bonusCart[idx];
+      const max = this.maxQtyForProduct(product);
       const next = (item.qty || 1) + delta;
       if (next <= 0) {
         this.bonusCart.splice(idx, 1);
+        return;
+      }
+      if (next > max) {
+        Swal.fire({
+          icon: "warning",
+          title: "Límite de promoción",
+          text: `Solo puedes canjear hasta ${max} unidad(es) de esta promoción.`,
+          confirmButtonColor: "#e91e63",
+        });
         return;
       }
       this.$set(item, "qty", next);
@@ -1174,12 +1280,27 @@ tablet-break = 900px
         &:hover
           background #fff5f8
 
+        &:disabled
+          color #b0bec5
+          cursor not-allowed
+          opacity 0.55
+
+          &:hover
+            background transparent
+
       .qty-value
         flex 0 0 36px
         text-align center
         font-size 1rem
         font-weight 700
         color #2d3436
+
+    .promo-limit-hint
+      margin 6px 0 0
+      font-size 0.72rem
+      color #9e9e9e
+      text-align center
+      line-height 1.3
 
 .saldo-info-bar
   display flex
