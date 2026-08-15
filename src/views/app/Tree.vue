@@ -677,13 +677,15 @@ const TreeNode = {
             style: { cursor: 'pointer', marginRight: '6px', color: '#00bcd4', fontSize: '18px', position: 'absolute', left: '3px', top: '8px' },
             on: { click: this.expandNode }
           }) : null,
-        h('i', { class: ['fas', 'fa-user', this.userStatusClasses], style: { fontSize: '24px', marginRight: '6px' } }),
-        h('i', { class: ['fas', 'fa-gem', this.node.rank], style: { fontSize: '16px', marginRight: '4px' } }),
-        h('span', { style: { fontWeight: 'bold', color: '#333' } }, this.node.name),
-        h('br'),
-        h('span', { style: { color: '#888', fontSize: '12px' } }, `Puntos personales: ${this.node.points}`),
-        (this.node.affiliation_points && this.node.affiliation_points > 0) ? h('span', { style: { color: '#ff9800', fontSize: '12px', marginLeft: '8px' } }, `Afiliación: ${this.node.affiliation_points}`) : null,
-        (this.node.total_points !== undefined) ? h('span', { style: { color: '#00bcd4', fontSize: '12px', marginLeft: '8px', fontWeight: 'bold' } }, `Total grupal: ${this.node.total_points}`) : null,
+        h('div', { style: { textAlign: 'center' } }, [
+          h('i', { class: ['fas', 'fa-user', this.userStatusClasses], style: { fontSize: '24px' } }),
+        ]),
+        h('div', { style: { fontWeight: 'bold', color: '#333', textAlign: 'center' } }, this.node.name),
+        h('div', { style: { textAlign: 'center' } }, [
+          h('span', { style: { color: '#888', fontSize: '12px' } }, `Puntos personales: ${this.node.points}`),
+          (this.node.affiliation_points && this.node.affiliation_points > 0) ? h('span', { style: { color: '#ff9800', fontSize: '12px', marginLeft: '8px' } }, `Afiliación: ${this.node.affiliation_points}`) : null,
+          (this.node.total_points !== undefined) ? h('span', { style: { color: '#00bcd4', fontSize: '12px', marginLeft: '8px', fontWeight: 'bold' } }, `Total grupal: ${this.node.total_points}`) : null,
+        ]),
       ]),
       this.loading ? h('div', { style: { color: '#00bcd4', fontSize: '12px', marginTop: '4px' } }, [
         h('i', { class: ['fas', 'fa-spinner', 'fa-spin'], style: { marginRight: '6px' } }), 'Cargando...']
