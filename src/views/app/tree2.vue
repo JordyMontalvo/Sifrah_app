@@ -146,6 +146,14 @@
     computed: {
       isSelected() {
         return this.selectedId === this.node.id
+      },
+      userStatusClasses() {
+        const isActive = !!(this.node.activated || this.node._activated)
+        const isAffiliated = !!this.node.affiliated
+        return {
+          act: isActive,
+          aff: isAffiliated && !isActive,
+        }
       }
     },
     methods: {
@@ -201,7 +209,7 @@
               style: { cursor: 'pointer', marginRight: '6px', color: '#00bcd4', fontSize: '18px', position: 'absolute', left: '3px', top: '8px' },
               on: { click: this.expandNode }
             }) : null,
-          h('i', { class: ['fas', 'fa-user-tie', { act: this.node.activated, aff: this.node.affiliated }], style: { fontSize: '24px', marginRight: '6px' } }),
+          h('i', { class: ['fas', 'fa-user', this.userStatusClasses], style: { fontSize: '24px', marginRight: '6px' } }),
           h('i', { class: ['fas', 'fa-gem', this.node.rank], style: { fontSize: '16px', marginRight: '4px' } }),
           h('span', { style: { fontWeight: 'bold', color: '#333' } }, this.node.name),
           h('br'),

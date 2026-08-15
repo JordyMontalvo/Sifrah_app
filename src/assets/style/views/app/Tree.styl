@@ -269,6 +269,21 @@
     position relative
     transition all 0.2s ease
     font-size 12px
+    // Estado del afiliado en el ícono de persona:
+    // blanco = registrado sin afiliación/compra
+    // amarillo (.aff) = desactivado
+    // verde (.act) = afiliado/activo del mes
+    > i.fa-user
+      font-size 24px
+      color #ffffff
+      -webkit-text-stroke 1px #9aa8b4
+      background transparent
+      &.aff
+        color #ffe400
+        -webkit-text-stroke 0
+      &.act
+        color #14ec42
+        -webkit-text-stroke 0
 
   .highlighted
     border 2px solid #ff5722 !important
