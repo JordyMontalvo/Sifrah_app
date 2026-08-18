@@ -185,8 +185,27 @@
                     class="notification is-warning is-light promotions-locked"
                   >
                     <strong>Promoción bloqueada:</strong> afíliate este mes o
-                    alcanza 160 puntos. Proyección actual:
-                    <strong>{{ promotionProjectedPoints }} pts</strong>.
+                    alcanza 160 puntos de reconsumo. Proyección actual:
+                    <strong>{{ promotionProjectedPoints }} pts</strong> (faltan {{ pointsToNextPromotionBlock }} pts para tu 1er cupo).
+                  </div>
+                  <div
+                    v-else-if="promotionEligible && hasPromotionProducts"
+                    class="notification is-success is-light promotions-unlocked"
+                    style="margin-bottom: 20px; border-radius: 8px; padding: 0.75rem 1rem; border-left: 4px solid #48c774;"
+                  >
+                    <strong>Promociones activas:</strong> Tienes <strong>{{ promotionTotalBlocks }} cupo(s)</strong> disponible(s)
+                    <span v-if="promotionAffiliatedCurrentPeriod && promotionReconsumptionBlocks > 0">
+                      (1 por afiliación + {{ promotionReconsumptionBlocks }} por reconsumo)
+                    </span>
+                    <span v-else-if="promotionAffiliatedCurrentPeriod">
+                      (1 por afiliación del mes)
+                    </span>
+                    <span v-else>
+                      ({{ promotionReconsumptionBlocks }} por reconsumo del mes)
+                    </span>.
+                    <span v-if="pointsToNextPromotionBlock > 0">
+                      ¡Suma <strong>{{ pointsToNextPromotionBlock }} pts</strong> más para desbloquear otro cupo adicional!
+                    </span>
                   </div>
 
                   <!-- Grid unificado: promociones primero, luego catálogo -->
@@ -204,7 +223,7 @@
                       class="product-catalog-card"
                       :class="{
                         'product-catalog-card--promo': isPromotionProduct(product),
-                        'product-catalog-card--promo-locked': isPromotionProduct(product) && !promotionEligible,
+                        'product-catalog-card--promo-locked': isPromotionProduct(product) && maxQtyForProduct(product) <= 0,
                       }"
                       @click="openProductModal(product)"
                     >
@@ -213,7 +232,7 @@
                       <div
                         v-if="isPromotionProduct(product)"
                         class="promotion-label"
-                        :class="{ 'promotion-label--locked': !promotionEligible }"
+                        :class="{ 'promotion-label--locked': maxQtyForProduct(product) <= 0 }"
                       >
                         Promoción
                       </div>
@@ -223,10 +242,19 @@
                       </div>
 
                       <div
-                        v-if="isPromotionProduct(product) && product.promotion_remaining != null"
+                        v-if="isPromotionProduct(product)"
                         class="stock-badge"
+                        :class="{ 'stock-badge--locked': maxQtyForProduct(product) <= 0 }"
                       >
-                        Quedan {{ product.promotion_remaining }} para ti
+                        <template v-if="maxQtyForProduct(product) > 0">
+                          Quedan {{ maxQtyForProduct(product) }} para ti
+                        </template>
+                        <template v-else-if="promotionEligible">
+                          Cupo agotado (+160 pts)
+                        </template>
+                        <template v-else>
+                          Desbloquea con 160 pts
+                        </template>
                       </div>
                       
                       <div class="product-image-container">
@@ -655,11 +683,26 @@ export default {
       return (Number(this.current_points) || 0) + this.promotionCartPoints;
     },
 
+    promotionReconsumptionBlocks() {
+      const pts = Math.max(0, this.promotionProjectedPoints);
+      const req = Number(this.promotionRequiredPoints) || 160;
+      return Math.floor(pts / req);
+    },
+
+    promotionTotalBlocks() {
+      const affBlocks = this.promotionAffiliatedCurrentPeriod ? 1 : 0;
+      return affBlocks + this.promotionReconsumptionBlocks;
+    },
+
     promotionEligible() {
-      return (
-        this.promotionAffiliatedCurrentPeriod ||
-        this.promotionProjectedPoints >= this.promotionRequiredPoints
-      );
+      return this.promotionTotalBlocks > 0;
+    },
+
+    pointsToNextPromotionBlock() {
+      const pts = Math.max(0, this.promotionProjectedPoints);
+      const req = Number(this.promotionRequiredPoints) || 160;
+      const nextTarget = (this.promotionReconsumptionBlocks + 1) * req;
+      return Math.max(0, nextTarget - pts);
     },
 
     hasPromotionProducts() {
@@ -915,34 +958,51 @@ export default {
 
     canAddProduct(product) {
       if (!product) return false;
-      if (this.isPromotionProduct(product) && !this.promotionEligible) {
-        return false;
+      if (this.isPromotionProduct(product)) {
+        if (!this.promotionEligible) return false;
+        const max = this.maxQtyForProduct(product);
+        const currentQty = this.getProductQuantity(product);
+        return max > currentQty;
       }
       return true;
     },
 
     removeIneligiblePromotions() {
-      if (this.promotionEligible) return false;
-      const hasPromotion = this.cartItems.some((item) =>
-        this.isPromotionProduct(item)
-      );
-      if (!hasPromotion) return false;
+      let changed = false;
+      this.cartItems = (this.cartItems || []).filter((item) => {
+        if (!this.isPromotionProduct(item)) return true;
+        const maxAllowed = this.maxQtyForProduct(item);
+        if (maxAllowed <= 0) {
+          changed = true;
+          return false;
+        }
+        if (item.total > maxAllowed) {
+          item.total = maxAllowed;
+          changed = true;
+        }
+        return true;
+      });
 
-      this.cartItems = this.cartItems.filter(
-        (item) => !this.isPromotionProduct(item)
-      );
-      this.error =
-        "La promoción se retiró del carrito porque tu total proyectado quedó por debajo de 160 puntos.";
-      return true;
+      if (changed) {
+        if (this.promotionTotalBlocks === 0) {
+          this.error =
+            "Las promociones se retiraron del carrito porque tu total proyectado quedó por debajo de 160 puntos.";
+        } else {
+          this.error =
+            "Se reajustaron las unidades de promoción en tu carrito al nuevo cupo disponible.";
+        }
+        return true;
+      }
+      return false;
     },
 
     maxQtyForProduct(product) {
-      if (
-        product &&
-        product.promotion_remaining != null &&
-        product.promotion_remaining > 0
-      ) {
-        return Math.min(10, product.promotion_remaining);
+      if (!product) return 10;
+      if (this.isPromotionProduct(product)) {
+        const baseQuota = Math.max(1, Number(product.available_quantity) || 1);
+        const totalAllowed = this.promotionTotalBlocks * baseQuota;
+        const purchased = Math.max(0, Number(product.promotion_purchased) || 0);
+        return Math.max(0, totalAllowed - purchased);
       }
       return 10;
     },
@@ -1308,14 +1368,27 @@ export default {
     },
     addToCart(product) {
       if (!this.canAddProduct(product)) {
-        this.error =
-          "Para agregar la promoción debes afiliarte este mes o alcanzar 160 puntos entre tu acumulado y el carrito.";
+        if (this.isPromotionProduct(product)) {
+          const max = this.maxQtyForProduct(product);
+          if (max <= 0) {
+            this.error =
+              "Para adquirir una promoción debes haberte afiliado este mes o alcanzar al menos 160 puntos de reconsumo entre tu acumulado y el carrito.";
+          } else {
+            this.error =
+              `Ya alcanzaste el límite de ${max} unidad(es) para esta promoción con tus cupos actuales. Suma 160 puntos más de reconsumo para desbloquear otro cupo.`;
+          }
+        }
         return;
       }
       const max = this.maxQtyForProduct(product);
       const existingItem = this.cartItems.find(item => item.id === product.id);
       if (existingItem) {
-        if (existingItem.total >= max) return;
+        if (existingItem.total >= max) {
+          if (this.isPromotionProduct(product)) {
+            this.error = `Solo puedes agregar hasta ${max} unidad(es) de esta promoción con tus cupos actuales. Suma 160 puntos más de reconsumo para habilitar más.`;
+          }
+          return;
+        }
         existingItem.total += 1;
       } else {
         this.cartItems.push({ ...product, total: 1 });
@@ -1333,15 +1406,17 @@ export default {
     },
     increaseQuantity(product) {
       const item = this.cartItems.find(item => item.id === product.id);
-      if (
-        item &&
-        this.canAddProduct(item) &&
-        item.total < this.maxQtyForProduct(item)
-      ) {
-        item.total += 1;
-        // Sincronizar con el store
-        this.$store.commit('setCartItems', [...this.cartItems]);
+      if (!item) return;
+      const max = this.maxQtyForProduct(item);
+      if (item.total >= max) {
+        if (this.isPromotionProduct(item)) {
+          this.error = `Solo puedes agregar hasta ${max} unidad(es) de esta promoción con tus cupos actuales. Suma 160 puntos más de reconsumo para habilitar otro cupo.`;
+        }
+        return;
       }
+      item.total += 1;
+      // Sincronizar con el store
+      this.$store.commit('setCartItems', [...this.cartItems]);
     },
     decreaseQuantity(product) {
       const item = this.cartItems.find(item => item.id === product.id);
