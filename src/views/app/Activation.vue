@@ -811,17 +811,6 @@ export default {
         }
       }
     },
-    cartItems: {
-      handler(newItems) {
-        // Si deja de cumplir 160 pts, quitar promo y sincronizar el carrito filtrado
-        if (this.removeIneligiblePromotions()) {
-          this.$store.commit("setCartItems", [...this.cartItems]);
-          return;
-        }
-        this.$store.commit("setCartItems", [...newItems]);
-      },
-      deep: true
-    },
     products: {
       handler(newProducts) {
         if (newProducts && newProducts.length > 0) {
@@ -969,32 +958,50 @@ export default {
     },
 
     removeIneligiblePromotions() {
-      let changed = false;
-      this.cartItems = (this.cartItems || []).filter((item) => {
-        if (!this.isPromotionProduct(item)) return true;
-        const maxAllowed = this.maxQtyForProduct(item);
-        if (maxAllowed <= 0) {
-          changed = true;
-          return false;
-        }
-        if (item.total > maxAllowed) {
-          item.total = maxAllowed;
-          changed = true;
-        }
-        return true;
-      });
+      const current = this.cartItems || [];
+      let needsChange = false;
 
-      if (changed) {
-        if (this.promotionTotalBlocks === 0) {
-          this.error =
-            "Las promociones se retiraron del carrito porque tu total proyectado quedó por debajo de 160 puntos.";
-        } else {
-          this.error =
-            "Se reajustaron las unidades de promoción en tu carrito al nuevo cupo disponible.";
+      for (const item of current) {
+        if (this.isPromotionProduct(item)) {
+          const maxAllowed = this.maxQtyForProduct(item);
+          if (maxAllowed <= 0 || item.total > maxAllowed) {
+            needsChange = true;
+            break;
+          }
         }
-        return true;
       }
-      return false;
+
+      if (!needsChange) return false;
+
+      const updated = [];
+      for (const item of current) {
+        if (!this.isPromotionProduct(item)) {
+          updated.push(item);
+          continue;
+        }
+        const maxAllowed = this.maxQtyForProduct(item);
+        if (maxAllowed <= 0) continue;
+        if (item.total > maxAllowed) {
+          updated.push({ ...item, total: maxAllowed });
+        } else {
+          updated.push(item);
+        }
+      }
+
+      this.cartItems = updated;
+      this.$store.commit("setCartItems", [...updated]);
+
+      const msg =
+        this.promotionTotalBlocks === 0
+          ? "Las promociones se retiraron del carrito porque tu total proyectado quedó por debajo de 160 puntos."
+          : "Se reajustaron las unidades de promoción en tu carrito al nuevo cupo disponible.";
+
+      if (this.$toast && typeof this.$toast.error === "function") {
+        this.$toast.error(msg);
+      } else {
+        this.error = msg;
+      }
+      return true;
     },
 
     maxQtyForProduct(product) {
@@ -1428,6 +1435,7 @@ export default {
       if (index >= 0 && index < this.cartItems.length) {
         this.cartItems.splice(index, 1);
         this.$store.commit("setCartItems", [...this.cartItems]);
+        this.removeIneligiblePromotions();
       }
     },
     getProductQuantity(product) {
@@ -1480,6 +1488,7 @@ export default {
           total: Number(item.total || 0) - 1,
         });
         this.$store.commit("setCartItems", [...this.cartItems]);
+        this.removeIneligiblePromotions();
       }
     },
     addToCartFromModal(product) {
