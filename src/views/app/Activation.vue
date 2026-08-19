@@ -246,15 +246,7 @@
                         class="stock-badge"
                         :class="{ 'stock-badge--locked': maxQtyForProduct(product) <= 0 }"
                       >
-                        <template v-if="maxQtyForProduct(product) > 0">
-                          Quedan {{ maxQtyForProduct(product) }} para ti
-                        </template>
-                        <template v-else-if="promotionEligible">
-                          Cupo agotado (+160 pts)
-                        </template>
-                        <template v-else>
-                          Desbloquea con 160 pts
-                        </template>
+                        Disponibles: {{ maxQtyForProduct(product) }}
                       </div>
                       
                       <div class="product-image-container">
