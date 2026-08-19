@@ -291,9 +291,9 @@
                           {{ getProductQuantity(product) }}
                         </span>
                         <button 
-                          @click.stop="addToCart(product)"
+                          @click.stop="increaseQuantity(product)"
                           class="qty-control-btn"
-                          :disabled="!canAddProduct(product) || getProductQuantity(product) >= maxQtyForProduct(product)"
+                          :disabled="isPromotionProduct(product) && getProductQuantity(product) >= maxQtyForProduct(product)"
                         >
                           +
                         </button>
@@ -303,7 +303,6 @@
                         <button 
                           @click.stop="addToCart(product)"
                           class="add-to-cart-btn"
-                          :disabled="!canAddProduct(product) || getProductQuantity(product) >= maxQtyForProduct(product)"
                         >
                           <i class="fas fa-shopping-cart"></i>
                           Agregar
@@ -764,10 +763,12 @@ export default {
       }
 
       return this.catalogProducts.map((product) => {
-        const cartItem = this.cartItems.find((item) => item.id === product.id);
+        const cartItem = this.cartItems.find(
+          (item) => String(item.id) === String(product.id)
+        );
         return {
           ...product,
-          total: cartItem ? cartItem.total : 0,
+          total: cartItem ? Number(cartItem.total) || 0 : 0,
         };
       });
     },
@@ -1367,68 +1368,118 @@ export default {
       body.classList.remove('product-modal-open');
     },
     addToCart(product) {
-      if (!this.canAddProduct(product)) {
-        if (this.isPromotionProduct(product)) {
-          const max = this.maxQtyForProduct(product);
-          if (max <= 0) {
-            this.error =
-              "Para adquirir una promoción debes haberte afiliado este mes o alcanzar al menos 160 puntos de reconsumo entre tu acumulado y el carrito.";
+      if (!product) return;
+      if (this.isPromotionProduct(product)) {
+        if (!this.promotionEligible) {
+          const msg =
+            "Para adquirir una promoción debes haberte afiliado este mes o alcanzar al menos 160 puntos de reconsumo entre tu acumulado y el carrito.";
+          if (this.$toast && typeof this.$toast.error === "function") {
+            this.$toast.error(msg);
           } else {
-            this.error =
-              `Ya alcanzaste el límite de ${max} unidad(es) para esta promoción con tus cupos actuales. Suma 160 puntos más de reconsumo para desbloquear otro cupo.`;
-          }
-        }
-        return;
-      }
-      const max = this.maxQtyForProduct(product);
-      const existingItem = this.cartItems.find(item => item.id === product.id);
-      if (existingItem) {
-        if (existingItem.total >= max) {
-          if (this.isPromotionProduct(product)) {
-            this.error = `Solo puedes agregar hasta ${max} unidad(es) de esta promoción con tus cupos actuales. Suma 160 puntos más de reconsumo para habilitar más.`;
+            this.error = msg;
           }
           return;
         }
-        existingItem.total += 1;
-      } else {
-        this.cartItems.push({ ...product, total: 1 });
+        const max = this.maxQtyForProduct(product);
+        const currentQty = this.getProductQuantity(product);
+        if (currentQty >= max) {
+          const msg =
+            max <= 0
+              ? "Para adquirir una promoción debes haberte afiliado este mes o alcanzar al menos 160 puntos de reconsumo."
+              : `Ya alcanzaste el límite de ${max} unidad(es) para esta promoción con tus cupos actuales. Suma 160 puntos más de reconsumo para desbloquear otro cupo.`;
+          if (this.$toast && typeof this.$toast.error === "function") {
+            this.$toast.error(msg);
+          } else {
+            this.error = msg;
+          }
+          return;
+        }
       }
-      this.$store.commit('setCartItems', [...this.cartItems]);
+      const max = this.maxQtyForProduct(product);
+      const existingIndex = this.cartItems.findIndex(
+        (item) => String(item.id) === String(product.id)
+      );
+      if (existingIndex !== -1) {
+        const existingItem = this.cartItems[existingIndex];
+        if (existingItem.total >= max) {
+          if (this.isPromotionProduct(product)) {
+            const msg = `Solo puedes agregar hasta ${max} unidad(es) de esta promoción con tus cupos actuales. Suma 160 puntos más de reconsumo para habilitar más.`;
+            if (this.$toast && typeof this.$toast.error === "function") {
+              this.$toast.error(msg);
+            } else {
+              this.error = msg;
+            }
+          }
+          return;
+        }
+        this.$set(this.cartItems, existingIndex, {
+          ...existingItem,
+          total: Number(existingItem.total || 0) + 1,
+        });
+      } else {
+        this.cartItems.push({
+          ...product,
+          total: 1,
+        });
+      }
+      this.$store.commit("setCartItems", [...this.cartItems]);
     },
     removeFromCart(index) {
-      this.cartItems.splice(index, 1);
-      // Sincronizar con el store
-      this.$store.commit('setCartItems', [...this.cartItems]);
+      if (index >= 0 && index < this.cartItems.length) {
+        this.cartItems.splice(index, 1);
+        this.$store.commit("setCartItems", [...this.cartItems]);
+      }
     },
     getProductQuantity(product) {
-      const item = this.cartItems.find(item => item.id === product.id);
-      return item ? item.total : 0;
+      if (!product) return 0;
+      const item = this.cartItems.find(
+        (item) => String(item.id) === String(product.id)
+      );
+      return item ? Number(item.total) || 0 : 0;
     },
     increaseQuantity(product) {
-      const item = this.cartItems.find(item => item.id === product.id);
-      if (!item) return;
+      if (!product) return;
+      const index = this.cartItems.findIndex(
+        (item) => String(item.id) === String(product.id)
+      );
+      if (index === -1) {
+        this.addToCart(product);
+        return;
+      }
+      const item = this.cartItems[index];
       const max = this.maxQtyForProduct(item);
       if (item.total >= max) {
         if (this.isPromotionProduct(item)) {
-          this.error = `Solo puedes agregar hasta ${max} unidad(es) de esta promoción con tus cupos actuales. Suma 160 puntos más de reconsumo para habilitar otro cupo.`;
+          const msg = `Solo puedes agregar hasta ${max} unidad(es) de esta promoción con tus cupos actuales. Suma 160 puntos más de reconsumo para habilitar otro cupo.`;
+          if (this.$toast && typeof this.$toast.error === "function") {
+            this.$toast.error(msg);
+          } else {
+            this.error = msg;
+          }
         }
         return;
       }
-      item.total += 1;
-      // Sincronizar con el store
-      this.$store.commit('setCartItems', [...this.cartItems]);
+      this.$set(this.cartItems, index, {
+        ...item,
+        total: Number(item.total || 0) + 1,
+      });
+      this.$store.commit("setCartItems", [...this.cartItems]);
     },
     decreaseQuantity(product) {
-      const item = this.cartItems.find(item => item.id === product.id);
-      if (item && item.total > 0) {
-        item.total -= 1;
-        // Si llega a 0, remover del carrito
-        if (item.total === 0) {
-          this.removeFromCart(this.cartItems.indexOf(item));
-        } else {
-          // Sincronizar con el store
-          this.$store.commit('setCartItems', [...this.cartItems]);
-        }
+      if (!product) return;
+      const index = this.cartItems.findIndex(
+        (item) => String(item.id) === String(product.id)
+      );
+      if (index === -1) return;
+      const item = this.cartItems[index];
+      if (item.total <= 1) {
+        this.removeFromCart(index);
+      } else {
+        this.$set(this.cartItems, index, {
+          ...item,
+          total: Number(item.total || 0) - 1,
+        });
+        this.$store.commit("setCartItems", [...this.cartItems]);
       }
     },
     addToCartFromModal(product) {
@@ -1487,7 +1538,7 @@ export default {
 
       // Transferir productos del carrito al array principal de productos
       this.products.forEach(product => {
-        const cartItem = this.cartItems.find(item => item.id === product.id);
+        const cartItem = this.cartItems.find(item => String(item.id) === String(product.id));
         if (cartItem) {
           product.total = cartItem.total;
         } else {
