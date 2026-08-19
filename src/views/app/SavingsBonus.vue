@@ -127,7 +127,29 @@
         </div>
 
         <div v-else class="products-grid">
-          <div v-for="product in sortedFilteredProducts" :key="product.id" class="product-card">
+          <div
+            v-for="product in sortedFilteredProducts"
+            :key="product.id"
+            class="product-card"
+            :class="{
+              'product-card--promo': isPromotionProduct(product),
+              'product-card--promo-locked': isPromotionProduct(product) && maxQtyForProduct(product) <= 0
+            }"
+          >
+            <div
+              v-if="isPromotionProduct(product)"
+              class="promotion-label"
+              :class="{ 'promotion-label--locked': maxQtyForProduct(product) <= 0 }"
+            >
+              Promoción
+            </div>
+            <div
+              v-if="isPromotionProduct(product)"
+              class="stock-badge"
+              :class="{ 'stock-badge--locked': maxQtyForProduct(product) <= 0 }"
+            >
+              Disponibles: {{ maxQtyForProduct(product) }}
+            </div>
             <div class="info-icon" @click="showProductDetail(product)">i</div>
             <div class="product-image">
               <img :src="product.img" :alt="product.name" />
@@ -164,12 +186,6 @@
               >
                 Canjear <i class="fas fa-shopping-cart"></i>
               </button>
-              <p
-                v-if="isPromotionProduct(product) && product.promotion_remaining != null"
-                class="promo-limit-hint"
-              >
-                Máx. {{ product.promotion_remaining }} por usuario
-              </p>
             </div>
           </div>
         </div>
@@ -1164,6 +1180,49 @@ tablet-break = 900px
   &:hover
     transform translateY(-5px)
     box-shadow 0 10px 25px rgba(0,0,0,0.1)
+
+  &--promo
+    border 2px solid #e91e63
+
+  &--promo-locked
+    opacity 0.75
+    border-color #b2bec3
+    .redeem-btn
+      background #cfd8dc !important
+      cursor not-allowed
+
+  .promotion-label
+    position absolute
+    top 10px
+    right 36px
+    z-index 3
+    background #e91e63
+    color #fff
+    border-radius 4px
+    padding 3px 8px
+    font-size 0.72rem
+    font-weight 700
+    line-height 1.2
+    box-shadow 0 2px 6px rgba(0, 0, 0, 0.15)
+    border 1px solid #fff
+
+    &--locked
+      background #757575
+
+  .stock-badge
+    position absolute
+    top 10px
+    left 10px
+    z-index 3
+    background rgba(17, 17, 17, 0.75)
+    color #fff
+    font-size 0.7rem
+    padding 3px 8px
+    border-radius 999px
+    font-weight 600
+
+    &--locked
+      background #757575
 
   .info-icon
     position absolute
