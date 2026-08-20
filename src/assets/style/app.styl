@@ -250,28 +250,54 @@ body, .app
 
 .footer-Dashboard
     position fixed
-    bottom 0
-    width 100%
+    bottom calc(12px + env(safe-area-inset-bottom, 0px))
+    left 16px
+    right 16px
+    width auto
     z-index 2100
-
-    display: flex;
-    justify-content: space-around;
-    border-top: solid 1px app-border;
-    background #111111
+    display flex
+    justify-content space-around
+    align-items center
+    gap 4px
+    background #ffffff
+    border-radius 999px
+    box-shadow 0 8px 28px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.06)
+    padding 8px 10px
+    border none
 
     a
       display flex
       flex-direction column
       align-items center
+      justify-content center
       text-align center
-      color white
+      color #222222
       font-size 11px
-      padding 6px 2px
+      font-weight 500
+      padding 4px 6px
       flex 1
-      transition all 0.3s ease
+      min-width 0
+      transition all 0.25s ease
+      text-decoration none
+      gap 2px
+
+      .footer-nav-icon-wrap
+        display flex
+        align-items center
+        justify-content center
+        width 42px
+        height 42px
+        border-radius 50%
+        transition background 0.25s ease
+
+      .footer-nav-label
+        line-height 1.1
+        white-space nowrap
 
       &.router-link-active, &.active
         color c-menu-active-pink
+        .footer-nav-icon-wrap
+          background rgba(233, 30, 99, 0.14)
         i
           color c-menu-active-pink
 
@@ -279,13 +305,18 @@ body, .app
       display flex
       align-items center
       justify-content center
-      font-size 22px
-      height 22px
-      width 22px
-      margin-bottom 0px
+      font-size 20px
+      height 20px
+      width 20px
+      color #222222
+      transition color 0.25s ease
 
     @media (min-width: d-break)
       display none
+
+@media (max-width: 767px)
+  .app > section .content
+    padding-bottom calc(88px + env(safe-area-inset-bottom, 0px)) !important
 
 
 // Cuando hay un modal de producto abierto, resetear el transform del content

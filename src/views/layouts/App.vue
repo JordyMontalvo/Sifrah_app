@@ -845,24 +845,34 @@
 
     <footer class="footer-Dashboard">
       <a @click="handleInicioClick" :class="{ 'active': $route.path === '/dashboard' || $route.path === '/' }">
-        <i class="fas fa-home"></i>
-        Inicio
+        <span class="footer-nav-icon-wrap">
+          <i class="fas fa-home"></i>
+        </span>
+        <span class="footer-nav-label">Inicio</span>
       </a>
       <router-link to="/activation" v-if="affiliated" @click.native="handleNavigationClick">
-        <i class="fas fa-shopping-bag"></i>
-        Compras
+        <span class="footer-nav-icon-wrap">
+          <i class="fas fa-shopping-bag"></i>
+        </span>
+        <span class="footer-nav-label">Compras</span>
       </router-link>
       <router-link to="/affiliation" v-if="!affiliated" @click.native="handleNavigationClick">
-        <i class="fas fa-shopping-bag"></i>
-        Plan
+        <span class="footer-nav-icon-wrap">
+          <i class="fas fa-shopping-bag"></i>
+        </span>
+        <span class="footer-nav-label">Plan</span>
       </router-link>
       <router-link to="/tree/red" v-if="tree" @click.native="handleNavigationClick">
-        <i class="fas fa-project-diagram"></i>
-        Red
+        <span class="footer-nav-icon-wrap">
+          <i class="fas fa-sitemap"></i>
+        </span>
+        <span class="footer-nav-label">Red</span>
       </router-link>
       <router-link to="/collect" v-if="tree" @click.native="handleNavigationClick">
-        <i class="fas fa-hand-holding-usd"></i>
-        Retiros
+        <span class="footer-nav-icon-wrap">
+          <i class="fas fa-wallet"></i>
+        </span>
+        <span class="footer-nav-label">Retiros</span>
       </router-link>
     </footer>
 
