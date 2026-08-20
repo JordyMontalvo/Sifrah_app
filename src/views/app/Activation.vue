@@ -1294,12 +1294,23 @@ export default {
           catalogContainer.style.setProperty('min-height', `${viewportHeight - 200}px`, 'important');
         }
         
+        // Forzar que la columna del carrito tenga la misma altura que el catálogo
+        const cartColumn = document.querySelector('.carrito-compras-container');
+        if (cartColumn) {
+          cartColumn.style.setProperty('align-self', 'stretch', 'important');
+          cartColumn.style.setProperty('height', 'auto', 'important');
+        }
+
+        if (catalogContainer) {
+          catalogContainer.style.setProperty('align-items', 'stretch', 'important');
+        }
+        
         // Forzar position sticky con estilos inline
         cart.style.setProperty('position', 'sticky', 'important');
-        cart.style.setProperty('top', '20px', 'important');
+        cart.style.setProperty('top', '16px', 'important');
         cart.style.setProperty('align-self', 'flex-start', 'important');
         cart.style.setProperty('z-index', '100', 'important');
-        cart.style.setProperty('transform', 'none', 'important');
+        cart.style.setProperty('max-height', 'calc(100vh - 32px)', 'important');
         
         console.log('Sticky cart configurado:', {
           position: cart.style.position,
