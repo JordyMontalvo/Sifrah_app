@@ -258,11 +258,11 @@ body, .app
     display flex
     justify-content space-around
     align-items center
-    gap 4px
+    gap 3px
     background #ffffff
     border-radius 999px
-    box-shadow 0 8px 28px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.06)
-    padding 8px 10px
+    box-shadow 0 8px 24px rgba(0, 0, 0, 0.1), 0 2px 8px rgba(0, 0, 0, 0.05)
+    padding 8px 8px
     border none
 
     a
@@ -274,30 +274,32 @@ body, .app
       color #222222
       font-size 11px
       font-weight 500
-      padding 4px 6px
+      padding 0
       flex 1
       min-width 0
       transition all 0.25s ease
       text-decoration none
-      gap 2px
+      background transparent
 
-      .footer-nav-icon-wrap
+      .footer-nav-item-inner
         display flex
+        flex-direction column
         align-items center
         justify-content center
-        width 42px
-        height 42px
-        border-radius 50%
-        transition background 0.25s ease
+        gap 6px
+        padding 8px 15px 7px
+        min-width 58px
+        border-radius 999px
+        transition background 0.25s ease, color 0.25s ease
 
       .footer-nav-label
-        line-height 1.1
+        line-height 1.05
         white-space nowrap
 
       &.router-link-active, &.active
         color c-menu-active-pink
-        .footer-nav-icon-wrap
-          background rgba(233, 30, 99, 0.14)
+        .footer-nav-item-inner
+          background rgba(233, 30, 99, 0.11)
         i
           color c-menu-active-pink
 

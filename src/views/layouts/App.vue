@@ -845,34 +845,34 @@
 
     <footer class="footer-Dashboard">
       <a @click="handleInicioClick" :class="{ 'active': $route.path === '/dashboard' || $route.path === '/' }">
-        <span class="footer-nav-icon-wrap">
+        <span class="footer-nav-item-inner">
           <i class="fas fa-home"></i>
+          <span class="footer-nav-label">Inicio</span>
         </span>
-        <span class="footer-nav-label">Inicio</span>
       </a>
       <router-link to="/activation" v-if="affiliated" @click.native="handleNavigationClick">
-        <span class="footer-nav-icon-wrap">
+        <span class="footer-nav-item-inner">
           <i class="fas fa-shopping-bag"></i>
+          <span class="footer-nav-label">Compras</span>
         </span>
-        <span class="footer-nav-label">Compras</span>
       </router-link>
       <router-link to="/affiliation" v-if="!affiliated" @click.native="handleNavigationClick">
-        <span class="footer-nav-icon-wrap">
+        <span class="footer-nav-item-inner">
           <i class="fas fa-shopping-bag"></i>
+          <span class="footer-nav-label">Plan</span>
         </span>
-        <span class="footer-nav-label">Plan</span>
       </router-link>
       <router-link to="/tree/red" v-if="tree" @click.native="handleNavigationClick">
-        <span class="footer-nav-icon-wrap">
+        <span class="footer-nav-item-inner">
           <i class="fas fa-sitemap"></i>
+          <span class="footer-nav-label">Red</span>
         </span>
-        <span class="footer-nav-label">Red</span>
       </router-link>
       <router-link to="/collect" v-if="tree" @click.native="handleNavigationClick">
-        <span class="footer-nav-icon-wrap">
+        <span class="footer-nav-item-inner">
           <i class="fas fa-wallet"></i>
+          <span class="footer-nav-label">Retiros</span>
         </span>
-        <span class="footer-nav-label">Retiros</span>
       </router-link>
     </footer>
 
