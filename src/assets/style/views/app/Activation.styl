@@ -4040,9 +4040,9 @@
   
   .cart-detail-interface-content {
     width: 100% !important;
-    height: 100dvh !important;
-    min-height: 100dvh !important;
-    max-height: 100dvh !important;
+    height: 100svh !important;
+    min-height: 100svh !important;
+    max-height: 100svh !important;
     border-radius: 0;
     overflow: hidden;
     animation: slideInRight 0.3s ease-out;
@@ -4054,7 +4054,7 @@
     flex: 1;
     overflow-y: auto;
     min-height: 0;
-    padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+    padding-bottom: 8px;
   }
   
   /* Asegurar que el carrito esté por encima de todo */
@@ -4100,23 +4100,23 @@
   
 
   .cart-detail-item {
-    padding: 12px;
-    margin-bottom: 10px;
-    gap: 8px 10px;
+    padding: 10px 12px;
+    margin-bottom: 8px;
+    gap: 6px 10px;
   }
   
   .cart-detail-item-image {
-    width: 68px;
-    height: 68px;
+    width: 62px;
+    height: 62px;
   }
   
   .cart-detail-item-info h4 {
     font-size: 0.88rem;
-    margin-bottom: 3px;
+    margin-bottom: 2px;
   }
   
   .cart-detail-item-details {
-    gap: 4px 8px;
+    gap: 2px 8px;
   }
   
   .cart-detail-item-price {
@@ -4125,54 +4125,62 @@
   
   .cart-detail-item-points {
     font-size: 0.72rem;
+    padding: 1px 7px;
+  }
+
+  .cart-detail-item-controls {
+    align-items: flex-start;
+    gap: 6px;
   }
   
   .cart-detail-quantity-controls .qty-control-btn {
-    width: 30px;
-    height: 30px;
+    width: 28px;
+    height: 28px;
     font-size: 0.85rem;
     border-radius: 8px;
   }
   
   .cart-detail-quantity-controls .quantity-display {
-    padding: 4px 8px;
+    padding: 3px 8px;
     font-size: 0.85rem;
-    min-width: 28px;
+    min-width: 26px;
     border-radius: 8px;
   }
 
   .remove-cart-item-btn {
-    width: 34px;
-    height: 34px;
+    width: 32px;
+    height: 32px;
     border-radius: 8px;
     font-size: 0.85rem;
     flex-shrink: 0;
   }
   
   .cart-detail-summary {
-    padding: 10px;
-    margin: 12px 0 0;
+    padding: 8px 10px;
+    margin: 8px 0 0;
   }
   
   .cart-detail-summary h3 {
-    font-size: 1rem;
-    margin-bottom: 10px;
+    font-size: 0.95rem;
+    margin-bottom: 6px;
   }
   
   .cart-detail-summary-details .summary-row {
-    padding: 6px 0;
-    font-size: 0.9rem;
+    padding: 4px 0;
+    font-size: 0.85rem;
   }
   
   .cart-detail-actions {
-    padding: 10px;
+    padding: 0;
     gap: 8px;
-    margin-bottom: 40px
+    margin-top: 10px;
+    margin-bottom: 0;
   }
 
   .cart-detail-footer {
-    padding: 10px;
-    padding-bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+    flex-shrink: 0;
+    padding: 8px 10px;
+    padding-bottom: calc(8px + env(safe-area-inset-bottom, 0px));
   }
   
   .go-to-pay-btn, .add-more-products-btn {

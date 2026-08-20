@@ -498,7 +498,7 @@
             </div>
           </div>
           
-          <div class="cart-detail-footer" style="padding: 10px">
+          <div class="cart-detail-footer">
             <!-- Resumen del carrito -->
             <div class="cart-detail-summary">
               <h3>Resumen</h3>
