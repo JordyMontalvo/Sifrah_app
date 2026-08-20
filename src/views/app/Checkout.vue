@@ -1073,20 +1073,43 @@ export default {
         }
         
         if (method === 'credit-card') {
-          this.initIzipay();
+          this.resetIzipay();
+          this.$nextTick(() => this.initIzipay());
         }
       }
       
     },
+
+    resetIzipay() {
+      this.izipayFormToken = null;
+      this.izipayLoading = false;
+      this.izipayError = null;
+      this.izipayTransactionId = null;
+      this.izipayAuthorizationCode = null;
+    },
+
+    refreshIzipayForRemaining() {
+      if (this.pay_method !== 'credit-card') return;
+      this.resetIzipay();
+      if (this.remaining > 0) {
+        this.$nextTick(() => this.initIzipay());
+      }
+    },
     
     async initIzipay() {
-      if (this.izipayFormToken) return; // Ya generado
+      // Cobrar solo el faltante (después de saldo), nunca el total de la compra
+      const amount = Number(this.remaining) || 0;
+      if (amount <= 0) {
+        this.resetIzipay();
+        return;
+      }
+
+      if (this.izipayFormToken) return; // Ya generado para este monto
       this.izipayLoading = true;
       this.izipayError = null;
       
       try {
         const orderId = `ORDER-${Date.now()}`;
-        const amount = this.finalTotal; // Total a pagar de la compra actual
         const email = this.billingData.email || (this.$store.state.user ? this.$store.state.user.email : null) || 'cliente@sifrah.com';
         
         const response = await axios.post('/app/izipay-token', {
@@ -1931,6 +1954,14 @@ export default {
           });
         }
       }
+    },
+
+    // Si cambia el uso de saldo o el monto faltante, regenerar Izipay con el monto correcto
+    check() {
+      this.refreshIzipayForRemaining();
+    },
+    remaining() {
+      this.refreshIzipayForRemaining();
     },
 
     // Computed para mostrar info de delivery
