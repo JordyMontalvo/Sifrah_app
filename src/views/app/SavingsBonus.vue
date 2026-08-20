@@ -1084,6 +1084,10 @@ tablet-break = 900px
 
 .featured-section
   margin-bottom 20px
+  width 100%
+  max-width 100%
+  min-width 0
+  box-sizing border-box
 
   .section-header
     display flex
@@ -1154,10 +1158,12 @@ tablet-break = 900px
 
 .products-grid
   display grid
-  grid-template-columns repeat(auto-fill, minmax(min(200px, 100%), 1fr))
+  grid-template-columns repeat(auto-fill, minmax(min(160px, 100%), 1fr))
   gap 20px
   width 100%
+  max-width 100%
   min-width 0
+  box-sizing border-box
 
   @media (min-width 901px)
     grid-template-columns repeat(3, minmax(0, 1fr))
@@ -1176,6 +1182,10 @@ tablet-break = 900px
   box-shadow 0 2px 8px rgba(0,0,0,0.04)
   display flex
   flex-direction column
+  min-width 0
+  max-width 100%
+  width 100%
+  box-sizing border-box
   
   &:hover
     transform translateY(-5px)
@@ -1264,6 +1274,8 @@ tablet-break = 900px
       margin 0 0 4px 0
       text-transform none
       line-height 1.3
+      overflow-wrap anywhere
+      word-break break-word
 
     .product-sub
       font-size 12px
@@ -1604,7 +1616,13 @@ tablet-break = 900px
     flex-direction column
     align-items flex-start
 
+  .savings-bonus-container
+    padding 10px 12px
+    box-sizing border-box
+
   .products-grid
-    grid-template-columns repeat(2, 1fr)
-    gap 12px
+    grid-template-columns repeat(2, minmax(0, 1fr))
+    gap 10px
+    width 100%
+    max-width 100%
 </style>
