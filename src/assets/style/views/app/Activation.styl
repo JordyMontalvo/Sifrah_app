@@ -3787,18 +3787,46 @@
     font-size: 1.05rem;
   }
   
-  /* Estilos para el botón del carrito móvil */
+  /* Barra de carrito móvil: normal en su sitio, fija solo al pasar ese punto */
+  .cart-button-mobile-anchor {
+    width: 100%;
+    margin: 15px 0;
+    position: relative;
+  }
+
+  .cart-button-mobile-sentinel {
+    width: 100%;
+    height: 1px;
+    margin: 0;
+    padding: 0;
+    pointer-events: none;
+  }
+
   .cart-button-container-mobile {
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    margin: 15px 0;
+    margin: 0;
     padding: 15px 20px;
     background: #fff;
     border-radius: 15px;
     box-shadow: 0 4px 12px rgba(233, 30, 99, 0.1);
     border: 1px solid rgba(233, 30, 99, 0.08);
+  }
+
+  .cart-button-container-mobile.is-stuck {
+    position: fixed !important;
+    top: 8px !important;
+    z-index: 2000 !important;
+    margin: 0 !important;
+    /* Mismo look que al inicio: no estirar ni agrandar */
+    box-sizing: border-box !important;
+    box-shadow: 0 4px 12px rgba(233, 30, 99, 0.1);
+  }
+
+  body.modal-open .cart-button-container-mobile.is-stuck {
+    display: none !important;
   }
   
   .cart-info-left {

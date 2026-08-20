@@ -167,17 +167,31 @@
                   </div>
 
 
-                  <div class="cart-button-container-mobile">
-                    <div class="cart-info-left">
-                      <div class="cart-price-info">
-                        <span class="total-price">Monto: S/ {{ cartTotal.toFixed(2) }}</span>
-                        <span class="total-items">Puntos: {{ cartPoints }} pts</span>
+                  <div
+                    class="cart-button-mobile-anchor"
+                    :style="mobileCartStuck ? { minHeight: mobileCartBarHeight + 'px' } : null"
+                  >
+                    <div
+                      ref="mobileCartSentinel"
+                      class="cart-button-mobile-sentinel"
+                      aria-hidden="true"
+                    ></div>
+                    <div
+                      class="cart-button-container-mobile"
+                      :class="{ 'is-stuck': mobileCartStuck }"
+                      :style="mobileCartStuckStyle"
+                    >
+                      <div class="cart-info-left">
+                        <div class="cart-price-info">
+                          <span class="total-price">Monto: S/ {{ cartTotal.toFixed(2) }}</span>
+                          <span class="total-items">Puntos: {{ cartPoints }} pts</span>
+                        </div>
                       </div>
+                      <button @click="openCartDetailModal" class="cart-square-btn">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span>Ver carrito</span>
+                      </button>
                     </div>
-                    <button @click="openCartDetailModal" class="cart-square-btn">
-                      <i class="fas fa-shopping-cart"></i>
-                      <span>Ver carrito</span>
-                    </button>
                   </div>
 
                   <div
@@ -568,6 +582,10 @@ export default {
               selectedProduct: null,
         imageLoaded: false,
         showCartDetailModal: false,
+        mobileCartStuck: false,
+        mobileCartBarHeight: 0,
+        mobileCartBarLeft: 0,
+        mobileCartBarWidth: 0,
         cartItems: [],
       searchTerm: "",
       selectedCategories: [],
@@ -595,6 +613,14 @@ export default {
     };
   },
   computed: {
+    mobileCartStuckStyle() {
+      if (!this.mobileCartStuck) return null;
+      return {
+        left: `${this.mobileCartBarLeft}px`,
+        width: `${this.mobileCartBarWidth}px`,
+        right: "auto",
+      };
+    },
     session() {
       return this.$store.state.session;
     },
@@ -808,9 +834,19 @@ export default {
         if (newProducts && newProducts.length > 0) {
           // Reinicializar categorías cuando cambien los productos
           this.initializeDefaultCategories();
+          this.$nextTick(() => {
+            if (window.innerWidth <= 900) {
+              this.setupStickyMobileCart();
+            }
+          });
         }
       },
       immediate: true
+    },
+    loading(isLoading) {
+      if (!isLoading && window.innerWidth <= 900) {
+        this.$nextTick(() => this.setupStickyMobileCart());
+      }
     },
     $route() {
       // Limpiar la clase modal-open cuando cambie la ruta
@@ -908,28 +944,23 @@ export default {
     document.body.classList.remove('modal-open');
     this.cleanupOrphanCartModal();
     
-    // Hacer el carrito fijo al hacer scroll en desktop
     this.$nextTick(() => {
       if (window.innerWidth >= 1024) {
         this.setupStickyCart();
+      } else {
+        this.setupStickyMobileCart();
       }
-      
-      // Escuchar cambios de tamaño de ventana
       window.addEventListener('resize', this.handleResize);
     });
   },
 
   beforeDestroy() {
-    // Limpiar las clases antes de destruir el componente
     document.body.classList.remove('modal-open');
     document.body.classList.remove('activation-view');
     this.cleanupOrphanCartModal();
-    
-    // Remover listener de resize
     window.removeEventListener('resize', this.handleResize);
-    
-    // Limpiar estilos del carrito
     this.removeStickyCart();
+    this.removeStickyMobileCart();
   },
 
   methods: {
@@ -1250,12 +1281,13 @@ export default {
 
 
 
-    // Métodos para el catálogo de productos
     handleResize() {
       if (window.innerWidth >= 1024) {
+        this.removeStickyMobileCart();
         this.setupStickyCart();
       } else {
         this.removeStickyCart();
+        this.setupStickyMobileCart();
       }
     },
     
@@ -1267,7 +1299,6 @@ export default {
           return;
         }
         
-        // Lista de todos los contenedores que pueden tener overflow
         const containersToFix = [
           '.app > section .content',
           '.app > section',
@@ -1280,7 +1311,6 @@ export default {
           '.carrito-compras-container'
         ];
         
-        // Remover overflow y transform de TODOS los contenedores
         containersToFix.forEach(selector => {
           const el = document.querySelector(selector);
           if (el) {
@@ -1291,36 +1321,24 @@ export default {
           }
         });
         
-        // Asegurar que catalog-container tenga altura suficiente
         const catalogContainer = document.querySelector('.catalog-container');
         if (catalogContainer) {
           const viewportHeight = window.innerHeight;
           catalogContainer.style.setProperty('min-height', `${viewportHeight - 200}px`, 'important');
+          catalogContainer.style.setProperty('align-items', 'stretch', 'important');
         }
         
-        // Forzar que la columna del carrito tenga la misma altura que el catálogo
         const cartColumn = document.querySelector('.carrito-compras-container');
         if (cartColumn) {
           cartColumn.style.setProperty('align-self', 'stretch', 'important');
           cartColumn.style.setProperty('height', 'auto', 'important');
         }
-
-        if (catalogContainer) {
-          catalogContainer.style.setProperty('align-items', 'stretch', 'important');
-        }
         
-        // Forzar position sticky con estilos inline
         cart.style.setProperty('position', 'sticky', 'important');
         cart.style.setProperty('top', '16px', 'important');
         cart.style.setProperty('align-self', 'flex-start', 'important');
         cart.style.setProperty('z-index', '100', 'important');
         cart.style.setProperty('max-height', 'calc(100vh - 32px)', 'important');
-        
-        console.log('Sticky cart configurado:', {
-          position: cart.style.position,
-          top: cart.style.top,
-          computedPosition: window.getComputedStyle(cart).position
-        });
       });
     },
     
@@ -1330,6 +1348,110 @@ export default {
       cart.style.position = '';
       cart.style.top = '';
       cart.style.alignSelf = '';
+    },
+
+    setupStickyMobileCart() {
+      this.removeStickyMobileCart();
+      this.$nextTick(() => {
+        if (window.innerWidth > 900) return;
+
+        const bar = document.querySelector('.cart-button-container-mobile');
+        const anchor = document.querySelector('.cart-button-mobile-anchor');
+        const sentinel = this.$refs.mobileCartSentinel || document.querySelector('.cart-button-mobile-sentinel');
+        if (!bar || !sentinel || !anchor) {
+          setTimeout(() => this.setupStickyMobileCart(), 120);
+          return;
+        }
+
+        const lockMetricsFromNaturalSize = () => {
+          // Medir siempre desde el ancla (queda en el flujo) o la barra si aún no está fija
+          const source = this.mobileCartStuck ? anchor : bar;
+          const rect = source.getBoundingClientRect();
+          if (rect.width > 0) {
+            this.mobileCartBarLeft = Math.round(rect.left);
+            this.mobileCartBarWidth = Math.round(rect.width);
+            this.mobileCartBarHeight = Math.round(rect.height || bar.offsetHeight || 72);
+          }
+        };
+
+        lockMetricsFromNaturalSize();
+
+        const applyStuck = (nextStuck) => {
+          if (nextStuck && !this.mobileCartStuck) {
+            // Capturar tamaño real justo antes de fijar
+            lockMetricsFromNaturalSize();
+          }
+          if (!nextStuck) {
+            this.mobileCartStuck = false;
+            return;
+          }
+          this.mobileCartStuck = true;
+        };
+
+        const syncStuck = () => {
+          if (this.showCartDetailModal) {
+            this.mobileCartStuck = false;
+            return;
+          }
+          const top = sentinel.getBoundingClientRect().top;
+          applyStuck(top <= 8);
+        };
+
+        if (typeof IntersectionObserver !== 'undefined') {
+          this._mobileCartObserver = new IntersectionObserver(
+            (entries) => {
+              const entry = entries[0];
+              if (!entry || this.showCartDetailModal) {
+                this.mobileCartStuck = false;
+                return;
+              }
+              applyStuck(!entry.isIntersecting && entry.boundingClientRect.top < 8);
+            },
+            {
+              root: null,
+              threshold: 0,
+              rootMargin: '-8px 0px 0px 0px',
+            }
+          );
+          this._mobileCartObserver.observe(sentinel);
+        }
+
+        this._mobileCartOnScroll = syncStuck;
+        this._mobileCartScrollTargets = [window];
+        const content = document.querySelector('.app > section .content');
+        if (content) this._mobileCartScrollTargets.push(content);
+        const appEl = document.querySelector('.app');
+        if (appEl) this._mobileCartScrollTargets.push(appEl);
+        this._mobileCartScrollTargets.forEach((target) => {
+          target.addEventListener('scroll', syncStuck, { passive: true });
+        });
+        const onResize = () => {
+          lockMetricsFromNaturalSize();
+          syncStuck();
+        };
+        window.addEventListener('resize', onResize, { passive: true });
+        this._mobileCartOnResize = onResize;
+        syncStuck();
+      });
+    },
+
+    removeStickyMobileCart() {
+      this.mobileCartStuck = false;
+      if (this._mobileCartObserver) {
+        this._mobileCartObserver.disconnect();
+        this._mobileCartObserver = null;
+      }
+      if (this._mobileCartOnScroll && this._mobileCartScrollTargets) {
+        this._mobileCartScrollTargets.forEach((target) => {
+          target.removeEventListener('scroll', this._mobileCartOnScroll);
+        });
+      }
+      if (this._mobileCartOnResize) {
+        window.removeEventListener('resize', this._mobileCartOnResize);
+      }
+      this._mobileCartOnScroll = null;
+      this._mobileCartOnResize = null;
+      this._mobileCartScrollTargets = null;
     },
     
     toggleCategory(category) {
