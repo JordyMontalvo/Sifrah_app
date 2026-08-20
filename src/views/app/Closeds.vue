@@ -21,8 +21,8 @@
               <option v-if="!periods.length" value="">Sin periodos cerrados</option>
               <option v-for="p in periods" :key="p.period_key" :value="p.period_key">
                 {{ p.period_label }}
-              </option>
-            </select>
+        </option>
+      </select>
           </label>
           <button
             type="button"
@@ -327,28 +327,28 @@
             </div>
             <div v-else class="cm-table-wrap">
               <table class="cm-table">
-                <thead>
-                  <tr>
+          <thead>
+            <tr>
                     <th>Concepto</th>
                     <th>Rango</th>
                     <th>Monto</th>
-                  </tr>
-                </thead>
-                <tbody>
+            </tr>
+          </thead>
+          <tbody>
                   <tr v-for="row in simpleRows" :key="row.id">
                     <td>{{ row.label || row.name || "—" }}</td>
                     <td>{{ formatRank(row.rank) || "—" }}</td>
                     <td class="cm-td-amt">S/ {{ money(row.amount) }}</td>
-                  </tr>
-                </tbody>
-              </table>
+            </tr>
+          </tbody>
+        </table>
             </div>
           </template>
 
           <div class="cm-tax-note">
             <i class="fas fa-info-circle" aria-hidden="true"></i>
             <span>Los montos mostrados ya incluyen impuestos de ley aplicables.</span>
-          </div>
+      </div>
         </section>
       </template>
     </div>
