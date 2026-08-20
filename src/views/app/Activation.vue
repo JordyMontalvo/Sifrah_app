@@ -815,6 +815,8 @@ export default {
     $route() {
       // Limpiar la clase modal-open cuando cambie la ruta
       document.body.classList.remove('modal-open');
+      this.showCartDetailModal = false;
+      this.cleanupOrphanCartModal();
     }
   },
   async created() {
@@ -904,6 +906,7 @@ export default {
   mounted() {
     // Asegurar que el scroll esté habilitado al montar el componente
     document.body.classList.remove('modal-open');
+    this.cleanupOrphanCartModal();
     
     // Hacer el carrito fijo al hacer scroll en desktop
     this.$nextTick(() => {
@@ -920,6 +923,7 @@ export default {
     // Limpiar las clases antes de destruir el componente
     document.body.classList.remove('modal-open');
     document.body.classList.remove('activation-view');
+    this.cleanupOrphanCartModal();
     
     // Remover listener de resize
     window.removeEventListener('resize', this.handleResize);
@@ -1565,6 +1569,7 @@ export default {
     },
 
           openCartDetailModal() {
+        this.cleanupOrphanCartModal();
         this.showCartDetailModal = true;
         document.body.classList.add('modal-open');
       },
@@ -1572,6 +1577,18 @@ export default {
       closeCartDetailModal() {
         this.showCartDetailModal = false;
         document.body.classList.remove('modal-open');
+        this.$nextTick(() => {
+          this.cleanupOrphanCartModal();
+        });
+      },
+
+      cleanupOrphanCartModal() {
+        // Limpia nodos sueltos si el modal quedó fuera del árbol de Vue
+        Array.from(document.body.children).forEach((el) => {
+          if (el.classList && el.classList.contains('cart-detail-interface')) {
+            el.remove();
+          }
+        });
       },
       
       scrollToProducts() {
@@ -1585,6 +1602,9 @@ export default {
     goToCheckout() {
       // Guardar los productos del carrito en el store para el checkout
       this.$store.commit('setCartItems', this.cartItems);
+      this.showCartDetailModal = false;
+      document.body.classList.remove('modal-open');
+      this.cleanupOrphanCartModal();
       // Redirigir al checkout
       this.$router.push('/checkout');
       
