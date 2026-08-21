@@ -1217,10 +1217,9 @@ newPhoto: null,
           return;
         }
 
-        // Registrar con FCM / APNs
-        await PushNotifications.register();
+        // IMPORTANTE: Registrar los listeners ANTES de llamar a register()
+        // para no perder el evento 'registration' si llega antes de que se añada el listener
 
-        // Obtener el token
         PushNotifications.addListener('registration', (token) => {
           console.log('Push registration success, token: ' + token.value);
           this.fcmToken = token.value;
@@ -1259,10 +1258,15 @@ newPhoto: null,
           console.log('Push action performed: ', notification);
           // Podríamos redirigir a alguna vista aquí si se desea
         });
+
+        // Registrar con FCM / APNs (después de los listeners)
+        await PushNotifications.register();
+
       } catch (error) {
         console.error('Error inicializando notificaciones push:', error);
       }
     },
+
     getLimaDateKey() {
       const parts = new Intl.DateTimeFormat("en-CA", {
         timeZone: "America/Lima",
