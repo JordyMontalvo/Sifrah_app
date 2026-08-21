@@ -1216,7 +1216,7 @@ export default {
           // Enviar el token al backend de Sifrah
           const userId = this.$store.state.user_id || this.$store.state._id;
           if (userId) {
-            api.post('/api/notifications/register', {
+            api.registerNotificationToken({
               userId: userId,
               fcmToken: token.value
             }).then(() => {

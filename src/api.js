@@ -72,6 +72,9 @@ class API {
   register(data) {
     return axios.post("/auth/register", data);
   }
+  registerNotificationToken(data) {
+    return axios.post("/notifications/register", data);
+  }
   login(data) {
     return axios.post("/auth/login", data);
   }
