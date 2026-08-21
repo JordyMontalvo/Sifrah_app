@@ -195,24 +195,24 @@ export default {
 
 @media (max-width: 768px) {
   .form {
-    padding: 8px;
+    padding: 12px 16px;
     height: 100%;
     min-height: 70vh;
     max-height: 70vh;
     justify-content: flex-start;
-    padding-top: 60px; /* Espacio para las pestañas */
-    padding-bottom: 8px;
-    overflow: hidden;
+    padding-top: 15px; /* Espacio limpio para mostrar las pestañas INICIO y REGISTRO */
+    padding-bottom: 12px;
+    overflow-y: auto;
     display: flex;
     flex-direction: column;
-    border-radius: 50px 50px 0 0 !important; /* Bordes más redondos en círculos */
+    border-radius: 40px 40px 0 0 !important; /* Bordes redondos de la tarjeta */
   }
 }
 
 @media (max-width: 480px) {
   .form {
-    padding: 10px;
-    padding-top: 15px; /* Menos espacio para pestañas más pequeñas */
+    padding: 10px 14px;
+    padding-top: 12px;
   }
 }
 @media (max-width: 1260px) {
