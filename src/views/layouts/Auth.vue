@@ -262,20 +262,19 @@ export default {
   .mobile-welcome-text {
     display: block !important;
     position: absolute;
-    top: 5vh !important;
-    left: 50%;
+    top: 150px !important;
+    left: 55%;
     transform: translateX(-50%);
     z-index: 1000;
     text-align: center;
     pointer-events: none;
-    width: 90%;
   }
   
   .mobile-welcome-text h1 {
     color: white;
-    font-size: 20px;
+    font-size: 24px;
     font-weight: 700;
-    margin: 0 0 4px 0;
+    margin: 0 0 8px 0;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
     font-family: 'Open Sans', sans-serif;
     text-align: center;
@@ -284,13 +283,13 @@ export default {
   
   .mobile-welcome-text p {
     color: white;
-    font-size: 13px;
+    font-size: 16px;
     font-weight: 600;
     margin: 0;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
     font-family: 'Open Sans', sans-serif;
     max-width: 350px;
-    line-height: 1.2;
+    line-height: 1.3;
     white-space: nowrap;
   }
   
