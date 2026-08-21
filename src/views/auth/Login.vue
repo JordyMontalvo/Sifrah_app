@@ -451,11 +451,17 @@ export default {
         }
 
         this.$store.commit("SET_SESSION", data.session);
+        if (dni) {
+          this.$store.commit("SET_DNI", dni);
+        }
         if (office_id) {
           this.$store.commit("SET_OFFICE_ID", { office_id, path });
         }
 
         this.applyUserToStore(data);
+        if (dni) {
+          this.$store.commit("SET_DNI", dni);
+        }
 
         if (data.affiliated === undefined || data.affiliated === null) {
           try {

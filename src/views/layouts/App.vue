@@ -1225,7 +1225,7 @@ newPhoto: null,
           this.fcmToken = token.value;
           
           // Enviar el token al backend de Sifrah
-          const dni = this.$store.state.dni;
+          const dni = this.$store.state.dni || localStorage.getItem('dni');
           if (dni) {
             api.registerNotificationToken({
               dni: dni,
