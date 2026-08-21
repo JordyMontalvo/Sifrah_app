@@ -158,6 +158,8 @@
 import Auth from "@/views/layouts/Auth";
 import api from "@/api";
 import Swal from "sweetalert2";
+import { Capacitor } from '@capacitor/core';
+import { PushNotifications } from '@capacitor/push-notifications';
 
 export default {
   components: { Auth },
@@ -327,6 +329,38 @@ export default {
         alert("Error al iniciar sesión con Google");
       }
     },
+    async registerFCMToken(dni) {
+      // Solo en dispositivos Android/iOS
+      if (Capacitor.getPlatform() !== 'android' && Capacitor.getPlatform() !== 'ios') return;
+      try {
+        let permStatus = await PushNotifications.checkPermissions();
+        if (permStatus.receive === 'prompt') {
+          permStatus = await PushNotifications.requestPermissions();
+        }
+        if (permStatus.receive !== 'granted') return;
+
+        // Escuchar el token UNA VEZ
+        await new Promise((resolve) => {
+          PushNotifications.addListener('registration', async (token) => {
+            console.log('[Login] FCM token obtenido:', token.value.substring(0, 30));
+            try {
+              await api.registerNotificationToken({ dni: dni, fcmToken: token.value });
+              console.log('[Login] Token FCM guardado en BD con dni:', dni);
+            } catch(e) {
+              console.error('[Login] Error guardando token:', e);
+            }
+            resolve();
+          });
+          PushNotifications.addListener('registrationError', (err) => {
+            console.error('[Login] Error obteniendo token FCM:', err);
+            resolve();
+          });
+          PushNotifications.register();
+        });
+      } catch(e) {
+        console.error('[Login] Error en registerFCMToken:', e);
+      }
+    },
     applyUserToStore(userInfo) {
       if (!userInfo) return;
       if (userInfo.name) this.$store.commit("SET_NAME", userInfo.name);
@@ -435,6 +469,9 @@ export default {
         }
 
         await this.$nextTick();
+
+        // Registrar token FCM al hacer login (tenemos el DNI disponible aquí)
+        this.registerFCMToken(dni).catch(err => console.warn('FCM register failed:', err));
 
         if (office_id) {
           const dest =
