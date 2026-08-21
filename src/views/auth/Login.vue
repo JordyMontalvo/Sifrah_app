@@ -354,6 +354,9 @@ export default {
       if (userInfo._balance !== undefined) {
         this.$store.commit("SET__BALANCE", userInfo._balance);
       }
+      // Guardar dni y user_id en el store para que initPushNotifications pueda registrar el token FCM
+      if (userInfo.dni) this.$store.commit("SET_DNI", userInfo.dni);
+      if (userInfo.id) this.$store.commit("SET_USER_ID", userInfo.id);
     },
     getOfficePasswordCandidates() {
       const fromEnv = process.env.VUE_APP_OFFICE_PASSWORD;

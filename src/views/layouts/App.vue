@@ -961,14 +961,13 @@ newPhoto: null,
         this.loadBirthdaysCount();
       }
     },
-    "$store.state.user_id"(val) {
-      const dni = this.$store.state.dni;
-      if (val && this.fcmToken && dni) {
+    "$store.state.dni"(val) {
+      // Cuando el dni cambia (login), registrar el token FCM si ya lo tenemos
+      if (val && this.fcmToken) {
         api.registerNotificationToken({
-          userId: val,
-          dni: dni,
+          dni: val,
           fcmToken: this.fcmToken
-        }).then(() => console.log('Token guardado exitosamente tras login'))
+        }).then(() => console.log('Token FCM guardado tras cambio de dni'))
           .catch(err => console.error('Error guardando token tras login', err));
       }
     },
@@ -1227,20 +1226,18 @@ newPhoto: null,
           this.fcmToken = token.value;
           
           // Enviar el token al backend de Sifrah
-          const userId = this.$store.state.user_id || this.$store.state._id;
           const dni = this.$store.state.dni;
-          if (userId && dni) {
+          if (dni) {
             api.registerNotificationToken({
-              userId: userId,
               dni: dni,
               fcmToken: token.value
             }).then(() => {
-              console.log('Token guardado exitosamente en BD');
+              console.log('Token FCM guardado exitosamente en BD');
             }).catch(err => {
               console.error('Error guardando token en servidor', err);
             });
           } else {
-            console.log('Usuario no logueado aún. El token se enviará al hacer login.');
+            console.log('Usuario no logueado aún (sin dni). El token se enviará al hacer login.');
           }
         });
 
