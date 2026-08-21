@@ -262,8 +262,8 @@ export default {
   .mobile-welcome-text {
     display: block !important;
     position: absolute;
-    bottom: calc(70vh + 10px) !important;
-    top: auto !important;
+    top: 130px !important;
+    bottom: auto !important;
     left: 55%;
     transform: translateX(-50%);
     z-index: 1000;

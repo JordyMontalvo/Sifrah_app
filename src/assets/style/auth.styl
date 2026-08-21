@@ -57,7 +57,7 @@
       top 0 !important
       left 0 !important
       width 100% !important
-      height 40vh !important
+      height 250px !important
       opacity 1 !important
       background-size cover !important
       background-position center center !important
@@ -66,7 +66,7 @@
     &::after
       content ''
       position absolute !important
-      top 10% !important
+      top 65px !important
       left 55% !important
       transform translate(-50%, -50%) !important
       width 120px !important
@@ -78,31 +78,30 @@
       opacity 0.9 !important
       
     >section
-      position absolute !important
-      bottom 0 !important
-      left 0 !important
+      position relative !important
+      margin-top 210px !important
       width 100% !important
-      height 70vh !important
+      min-height 500px !important
       background white !important
       backdrop-filter none !important
       z-index 2 !important
-      overflow hidden !important
-      border-radius 50px 50px 0 0 !important
+      overflow visible !important
+      border-radius 40px 40px 0 0 !important
       
   // Estilos específicos para la página de registro en móvil
   @media (max-width: 768px)
     &.register-page
       &::before
-        height 20vh !important
+        height 160px !important
         
       &::after
-        top 5% !important
+        top 35px !important
         left 30% !important
         width 60px !important
         height 60px !important
         
       >section
-        height 85vh !important
+        margin-top 140px !important
         top 15vh !important
         border-radius 40px 40px 0 0 !important
         // En registro móvil dejamos más aire debajo de las pestañas
