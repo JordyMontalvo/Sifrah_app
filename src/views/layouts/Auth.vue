@@ -299,6 +299,19 @@ export default {
   
 }
 
+/* Ocultar texto de bienvenida en móvil cuando el teclado táctil está abierto */
+@media (max-height: 550px) {
+  .mobile-welcome-text {
+    display: none !important;
+  }
+  .form {
+    min-height: 100vh !important;
+    max-height: none !important;
+    border-radius: 0 !important;
+    padding-top: 20px !important;
+  }
+}
+
 /* Estilos específicos para la página de registro en móvil */
 @media (max-width: 768px) {
   .auth.register-page .mobile-welcome-text {
