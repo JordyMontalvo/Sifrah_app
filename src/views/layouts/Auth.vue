@@ -262,7 +262,8 @@ export default {
   .mobile-welcome-text {
     display: block !important;
     position: absolute;
-    top: 150px !important;
+    bottom: calc(70vh + 10px) !important;
+    top: auto !important;
     left: 55%;
     transform: translateX(-50%);
     z-index: 1000;
@@ -302,7 +303,8 @@ export default {
 /* Estilos específicos para la página de registro en móvil */
 @media (max-width: 768px) {
   .auth.register-page .mobile-welcome-text {
-    top: 3vh !important;
+    bottom: calc(80vh + 10px) !important;
+    top: auto !important;
   }
 }
 
