@@ -1,0 +1,10 @@
+{
+  "appId": "com.sifrah.app",
+  "appName": "Sifrah",
+  "webDir": "dist",
+  "plugins": {
+    "Keyboard": {
+      "resize": "none"
+    }
+  }
+}
