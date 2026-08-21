@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Sifrah</string>
+    <string name="title_activity_main">Sifrah</string>
+    <string name="package_name">com.sifrah.app</string>
+    <string name="custom_url_scheme">com.sifrah.app</string>
+</resources>
