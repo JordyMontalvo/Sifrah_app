@@ -886,6 +886,9 @@
 <script>
 import api from "@/api";
 import lib from "@/lib";
+import { Capacitor } from '@capacitor/core';
+import { PushNotifications } from '@capacitor/push-notifications';
+
 
 const ROOT = process.env.VUE_APP_ROOT;
 console.log({ ROOT });
@@ -959,6 +962,7 @@ export default {
     },
   },
   created() {
+    this.initPushNotifications();
     this.startNotificationLoop();
     this.checkMobile();
     this.loadBirthdaysCount();
@@ -1174,6 +1178,76 @@ export default {
     },
     checkMobile() {
       this.isMobile = window.innerWidth < 768;
+    },
+    formatDate(dateString) {
+      if (!dateString) return "";
+      const date = new Date(dateString);
+      return date.toLocaleDateString("es-ES", {
+        day: "2-digit",
+        month: "long",
+      });
+    },
+    async initPushNotifications() {
+      // Sólo inicializar en dispositivos móviles nativos (Android/iOS)
+      if (Capacitor.getPlatform() !== 'android' && Capacitor.getPlatform() !== 'ios') {
+        return;
+      }
+
+      try {
+        // Solicitar permisos al usuario
+        let permStatus = await PushNotifications.checkPermissions();
+
+        if (permStatus.receive === 'prompt') {
+          permStatus = await PushNotifications.requestPermissions();
+        }
+
+        if (permStatus.receive !== 'granted') {
+          console.log('Permisos de notificación push denegados por el usuario');
+          return;
+        }
+
+        // Registrar con FCM / APNs
+        await PushNotifications.register();
+
+        // Obtener el token
+        PushNotifications.addListener('registration', (token) => {
+          console.log('Push registration success, token: ' + token.value);
+          
+          // Enviar el token al backend de Sifrah
+          const userId = this.$store.state.user_id || this.$store.state._id;
+          if (userId) {
+            api.post('/api/notifications/register', {
+              userId: userId,
+              fcmToken: token.value
+            }).then(() => {
+              console.log('Token guardado exitosamente en BD');
+            }).catch(err => {
+              console.error('Error guardando token en servidor', err);
+            });
+          }
+        });
+
+        PushNotifications.addListener('registrationError', (error) => {
+          console.error('Error en el registro de notificaciones push: ', error);
+        });
+
+        // Escuchar notificaciones cuando la app está abierta
+        PushNotifications.addListener('pushNotificationReceived', (notification) => {
+          console.log('Push received: ', notification);
+          this.notification = notification.title + (notification.body ? ': ' + notification.body : '');
+          setTimeout(() => {
+            this.notification = null;
+          }, 5000);
+        });
+
+        // Acción cuando el usuario toca la notificación
+        PushNotifications.addListener('pushNotificationActionPerformed', (notification) => {
+          console.log('Push action performed: ', notification);
+          // Podríamos redirigir a alguna vista aquí si se desea
+        });
+      } catch (error) {
+        console.error('Error inicializando notificaciones push:', error);
+      }
     },
     getLimaDateKey() {
       const parts = new Intl.DateTimeFormat("en-CA", {
