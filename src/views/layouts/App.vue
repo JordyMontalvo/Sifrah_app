@@ -903,11 +903,12 @@ export default {
   data() {
     return {
       // photo: 'https://ik.imagekit.io/asu/Lehaim/avatar_bEyc3MFLf.png',
-      newPhoto: null,
+newPhoto: null,
       photoState: "default",
       photoFile: null,
       c_affiliation_link: false,
       c_token_code: false,
+      fcmToken: null,
       activeProduct: false,
       startX: 0,
       endX: 0,
@@ -958,6 +959,15 @@ export default {
       if (path === "/birthdays" || path.startsWith("/birthdays/")) {
         this.markBirthdaysNotificationSeen();
         this.loadBirthdaysCount();
+      }
+    },
+    "$store.state.user_id"(val) {
+      if (val && this.fcmToken) {
+        api.registerNotificationToken({
+          userId: val,
+          fcmToken: this.fcmToken
+        }).then(() => console.log('Token guardado exitosamente tras login'))
+          .catch(err => console.error('Error guardando token tras login', err));
       }
     },
   },
@@ -1212,6 +1222,7 @@ export default {
         // Obtener el token
         PushNotifications.addListener('registration', (token) => {
           console.log('Push registration success, token: ' + token.value);
+          this.fcmToken = token.value;
           
           // Enviar el token al backend de Sifrah
           const userId = this.$store.state.user_id || this.$store.state._id;
@@ -1224,6 +1235,8 @@ export default {
             }).catch(err => {
               console.error('Error guardando token en servidor', err);
             });
+          } else {
+            console.log('Usuario no logueado aún. El token se enviará al hacer login.');
           }
         });
 
