@@ -962,9 +962,11 @@ newPhoto: null,
       }
     },
     "$store.state.user_id"(val) {
-      if (val && this.fcmToken) {
+      const dni = this.$store.state.dni;
+      if (val && this.fcmToken && dni) {
         api.registerNotificationToken({
           userId: val,
+          dni: dni,
           fcmToken: this.fcmToken
         }).then(() => console.log('Token guardado exitosamente tras login'))
           .catch(err => console.error('Error guardando token tras login', err));
@@ -1226,9 +1228,11 @@ newPhoto: null,
           
           // Enviar el token al backend de Sifrah
           const userId = this.$store.state.user_id || this.$store.state._id;
-          if (userId) {
+          const dni = this.$store.state.dni;
+          if (userId && dni) {
             api.registerNotificationToken({
               userId: userId,
+              dni: dni,
               fcmToken: token.value
             }).then(() => {
               console.log('Token guardado exitosamente en BD');
