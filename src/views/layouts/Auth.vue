@@ -262,19 +262,20 @@ export default {
   .mobile-welcome-text {
     display: block !important;
     position: absolute;
-    top: 150px;
-    left: 55%;
+    top: 5vh !important;
+    left: 50%;
     transform: translateX(-50%);
     z-index: 1000;
     text-align: center;
     pointer-events: none;
+    width: 90%;
   }
   
   .mobile-welcome-text h1 {
     color: white;
-    font-size: 24px;
+    font-size: 20px;
     font-weight: 700;
-    margin: 0 0 8px 0;
+    margin: 0 0 4px 0;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
     font-family: 'Open Sans', sans-serif;
     text-align: center;
@@ -283,13 +284,13 @@ export default {
   
   .mobile-welcome-text p {
     color: white;
-    font-size: 16px;
+    font-size: 13px;
     font-weight: 600;
     margin: 0;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
     font-family: 'Open Sans', sans-serif;
     max-width: 350px;
-    line-height: 1.3;
+    line-height: 1.2;
     white-space: nowrap;
   }
   
@@ -299,23 +300,10 @@ export default {
   
 }
 
-/* Ocultar texto de bienvenida en móvil cuando el teclado táctil está abierto */
-@media (max-height: 550px) {
-  .mobile-welcome-text {
-    display: none !important;
-  }
-  .form {
-    min-height: 100vh !important;
-    max-height: none !important;
-    border-radius: 0 !important;
-    padding-top: 20px !important;
-  }
-}
-
 /* Estilos específicos para la página de registro en móvil */
 @media (max-width: 768px) {
   .auth.register-page .mobile-welcome-text {
-    top: 40px !important;
+    top: 3vh !important;
   }
 }
 
