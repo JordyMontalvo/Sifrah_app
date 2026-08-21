@@ -1259,7 +1259,21 @@ newPhoto: null,
           // Podríamos redirigir a alguna vista aquí si se desea
         });
 
-        // Registrar con FCM / APNs (después de los listeners)
+        // Crear canal de notificación de alta prioridad (estilo WhatsApp)
+        if (Capacitor.getPlatform() === 'android') {
+          await PushNotifications.createChannel({
+            id: 'sifrah_alerts',
+            name: 'Notificaciones Sifrah',
+            description: 'Alertas y mensajes importantes de Sifrah',
+            importance: 5, // 5 = HIGH / HEADS-UP POPUP BANNER
+            visibility: 1,
+            vibration: true,
+            sound: 'default',
+            lights: true
+          });
+        }
+
+        // Registrar con FCM / APNs (después de los listeners y del canal)
         await PushNotifications.register();
 
       } catch (error) {

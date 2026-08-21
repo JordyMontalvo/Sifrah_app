@@ -6,6 +6,9 @@
   "plugins": {
     "Keyboard": {
       "resize": "none"
+    },
+    "PushNotifications": {
+      "presentationOptions": ["badge", "sound", "alert"]
     }
   }
 }
