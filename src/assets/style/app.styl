@@ -167,6 +167,20 @@ body, .app
       cursor pointer
       padding 4px
       
+    @media (max-width: 767px)
+      background #ffffff
+      color #111111
+      padding 10px 16px
+
+      .header-icon-link
+        color #111111
+
+      .header-photo-container
+        border 2.5px solid #e91e63
+
+      .header-photo-overlay
+        display none
+
     @media (min-width: d-break)
       .header-center
         display none
@@ -286,8 +300,8 @@ body, .app
         flex-direction column
         align-items center
         justify-content center
-        gap 6px
-        padding 8px 15px 7px
+        gap 5px
+        padding 8px 14px 6px
         min-width 58px
         border-radius 999px
         transition background 0.25s ease, color 0.25s ease
@@ -300,18 +314,33 @@ body, .app
         color c-menu-active-pink
         .footer-nav-item-inner
           background rgba(233, 30, 99, 0.11)
-        i
+        i, .footer-nav-icon
           color c-menu-active-pink
 
-    i
+    i, .footer-nav-icon
       display flex
       align-items center
       justify-content center
-      font-size 20px
-      height 20px
-      width 20px
+      font-size 24px
+      height 24px
+      width 24px
       color #222222
       transition color 0.25s ease
+
+    .footer-nav-icon.icon-retiros,
+    .footer-nav-icon.icon-red,
+    .footer-nav-icon.icon-inicio,
+    .footer-nav-icon.icon-compras
+      width 24px
+      height 24px
+      display block
+      overflow visible
+      flex-shrink 0
+
+    .footer-nav-icon.icon-red
+      circle, path
+        fill none
+        stroke currentColor
 
     @media (min-width: d-break)
       display none

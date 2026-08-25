@@ -444,6 +444,33 @@
     margin-right: 0 !important;
   }
 
+  .dashboard-mobile-hello {
+    display: block !important;
+    padding: 8px 16px 16px;
+  }
+
+  .dashboard-mobile-hello-title {
+    margin: 0;
+    font-size: 26px;
+    font-weight: 600;
+    color: #111111;
+    line-height: 1.2;
+    letter-spacing: -0.03em;
+  }
+
+  .dashboard-mobile-hello-sub {
+    margin: 8px 0 0;
+    font-size: 16px;
+    font-weight: 400;
+    color: #6b6b6b;
+    line-height: 1.4;
+  }
+
+  .banner-slider {
+    max-width: none;
+    margin: 0 12px 20px;
+  }
+
   .dashboard-container {
     padding: 10px 6px !important;
     width: 100% !important;

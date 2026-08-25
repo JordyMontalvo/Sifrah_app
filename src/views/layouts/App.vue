@@ -28,20 +28,23 @@
           alt=""
           class="logo logo-desktop"
         />
-        <!-- Logo SVG para móvil -->
         <svg
-          class="logo logo-mobile"
-          width="40"
-          height="40"
-          viewBox="0 0 40 40"
-          fill="none"
+          class="burger burger-mobile header-icon"
           xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.9"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          @click.stop="toggleMobileTabsMenu"
+          aria-label="Menú"
         >
-          <path d="M24.2028 0.240206C23.9626 1.43345 23.73 1.94377 23.3022 2.22144C23.1746 2.304 22.8294 2.43908 22.5442 2.50662C21.5536 2.76178 21.3885 2.80681 21.3885 2.85934C21.3885 2.92689 21.7112 3.04696 22.4016 3.23458C23.4823 3.51976 23.745 3.78992 24.0527 4.99818C24.2403 5.70362 24.3378 5.92876 24.4279 5.84621C24.4504 5.8237 24.563 5.43345 24.6756 4.97567C24.9908 3.72989 25.2084 3.50475 26.3416 3.21957C27.0921 3.03946 27.3172 2.9494 27.3172 2.85934C27.3172 2.7843 26.7318 2.58917 26.3041 2.52163C25.5161 2.40906 24.9908 1.96628 24.8031 1.28336C24.4804 0.067598 24.3003 -0.240094 24.2028 0.240206Z" fill="white"/>
-          <path d="M27.9476 4.16516C27.8275 4.64546 27.4523 5.05822 27.002 5.19331C26.6493 5.29837 26.6418 5.37342 26.9645 5.43346C27.3322 5.501 27.7525 5.88374 27.8425 6.23646C27.9026 6.44659 27.9626 6.52914 28.0677 6.52914C28.1727 6.52914 28.2328 6.44659 28.2928 6.23646C28.3829 5.89875 28.7881 5.51601 29.1333 5.44096C29.426 5.37342 29.396 5.29837 29.0433 5.1783C28.6906 5.05822 28.4504 4.81807 28.1953 4.31526L28.0076 3.94002L27.9476 4.16516Z" fill="white"/>
-          <path d="M28.0677 7.70738C28.0677 7.78242 28.0977 8.04509 28.1352 8.29274C28.3604 9.76366 28.4729 11.9175 28.4129 13.8087C28.3904 14.6942 28.3529 15.5198 28.3378 15.6473C28.3228 15.7674 28.2853 16.1051 28.2628 16.3978C27.9476 19.8124 27.0621 23.6398 25.9514 26.4166C23.8275 31.6924 20.6906 35.5123 16.3078 38.1614C15.715 38.5216 15.2347 38.8443 15.2347 38.8894C15.2347 38.9419 15.3322 38.9494 15.4973 38.9269C15.82 38.8744 17.336 38.2064 17.336 38.1164C17.336 38.0789 17.3585 38.0563 17.396 38.0638C17.426 38.0714 17.5311 38.0338 17.6362 37.9738C17.9138 37.8162 18.3266 37.5835 18.7168 37.3809C18.9045 37.2759 19.0621 37.1708 19.0621 37.1333C19.0621 37.1032 19.0996 37.0732 19.1521 37.0732C19.2196 37.0732 19.9326 36.6305 20.3754 36.3078C20.9682 35.8725 22.4542 34.6417 22.8894 34.2139C26.169 31.0019 28.2853 26.8068 29.1108 21.8687C29.5836 19.0545 29.6737 16.0226 29.3735 13.1558C29.2609 12.0301 28.8181 9.39593 28.6305 8.7055C28.4129 7.93252 28.0677 7.30963 28.0677 7.70738Z" fill="white"/>
-          <path d="M24.6155 8.59292C24.563 8.65296 24.5405 8.78054 24.563 8.8706C24.638 9.14827 24.4729 11.2796 24.3078 12.1351C23.6024 15.895 21.4861 18.6117 18.4016 19.7374C17.6211 20.0226 17.0733 20.1426 15.7525 20.3378C14.4542 20.5254 13.9814 20.638 13.2384 20.9456C12.0752 21.4335 11.2647 22.1464 10.8444 23.062C10.5292 23.7524 10.4016 24.3753 10.4617 24.9381C10.6418 26.6792 12.1953 27.4072 14.229 26.7017C14.7769 26.5141 15.2647 26.1764 15.6249 25.7261C16.2253 24.9907 15.9851 24.8481 15.0771 25.4034C14.4467 25.7862 13.7037 26.0038 13.2909 25.9288C12.4129 25.7637 12.0302 25.0057 12.4804 24.3228C12.8932 23.7074 13.7637 23.3096 15.017 23.167C16.1953 23.032 17.336 23.3246 18.199 23.9775C19.2647 24.788 20.0677 26.259 20.1652 27.5873C20.2478 28.7055 19.9251 29.8912 19.0621 31.6323C17.7712 34.2515 15.9026 36.4879 12.9983 38.8744C12.3303 39.4297 11.8125 39.91 11.8425 39.94C11.9251 40.0226 12.6831 39.8575 12.6831 39.7599C12.6831 39.7149 12.7056 39.6999 12.7356 39.7224C12.7581 39.7524 12.8932 39.6999 13.0358 39.6173C13.1709 39.5348 13.2834 39.4822 13.2834 39.5123C13.2834 39.5348 13.4861 39.4522 13.7337 39.3171C13.9814 39.1895 14.184 39.047 14.184 39.0094C14.184 38.9719 14.214 38.9569 14.2515 38.9794C14.2891 39.0019 14.3566 38.9719 14.4091 38.9119C14.4617 38.8518 14.5292 38.8218 14.5667 38.8443C14.6043 38.8668 14.6343 38.8443 14.6343 38.8068C14.6343 38.7618 14.6793 38.7243 14.7318 38.7243C14.7769 38.7243 15.0771 38.5592 15.3923 38.364C15.6999 38.1689 16.1202 37.9062 16.3228 37.7862C16.5255 37.6586 16.7431 37.5085 16.8031 37.4485C16.8707 37.3884 17.0208 37.2909 17.1258 37.2308C17.2384 37.1708 17.426 37.0357 17.5386 36.9306C17.6512 36.8181 17.8838 36.638 18.0489 36.5179C18.5067 36.1877 18.7168 35.9925 19.7375 34.9719C23.0771 31.6248 25.1709 27.167 25.8463 21.9813C26.3641 18.0488 26.1315 13.6661 25.2009 9.64358C24.9382 8.49537 24.8407 8.32276 24.6155 8.59292Z" fill="white"/>
-          <path d="M17.5536 12.5554C17.0133 12.7805 16.7281 12.9907 16.4354 13.3509C15.7375 14.244 15.6474 15.4672 16.2178 16.4879C16.4879 16.9607 16.8632 17.2984 17.411 17.5535C17.7712 17.7186 17.9213 17.7487 18.5742 17.7487C19.2272 17.7487 19.3772 17.7186 19.7375 17.5535C20.2628 17.3059 20.7281 16.8256 21.0283 16.2177C21.2384 15.8049 21.2684 15.6699 21.2684 15.1295C21.2684 14.6792 21.2234 14.4091 21.0958 14.0939C20.8857 13.5535 20.3303 12.9381 19.7975 12.6455C19.4523 12.4578 19.3097 12.4203 18.6868 12.4053C18.0714 12.3828 17.9138 12.4053 17.5536 12.5554Z" fill="white"/>
+          <path d="M4 7h16"/>
+          <path d="M4 12h16"/>
+          <path d="M4 17h16"/>
         </svg>
       </div>
       
@@ -91,27 +94,20 @@
           <i v-else class="fas fa-spinner fa-spin" style="color: white; opacity: 0.8;"></i>
         </div>
         <!-- Contenedor compartir con mensaje único -->
-        <div style="position: relative; display: inline-block;">
+        <div class="header-share-wrap" style="position: relative; display: inline-block;">
           <!-- Ícono compartir para desktop -->
           <i class="fas fa-share-alt header-icon header-icon-share-desktop" @click="copy_affiliation_link"></i>
-          <!-- SVG compartir para móvil -->
-          <svg
+          <img
             class="header-icon header-icon-share-mobile"
-            width="28"
-            height="28"
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
+            src="../../assets/img/compartir.svg"
+            alt="Compartir"
             @click="copy_affiliation_link"
-            style="cursor: pointer;"
-          >
-            <path d="M17 22C16.1667 22 15.4583 21.7083 14.875 21.125C14.2917 20.5417 14 19.8333 14 19C14 18.9 14.025 18.6667 14.075 18.3L7.05 14.2C6.78333 14.45 6.475 14.646 6.125 14.788C5.775 14.93 5.4 15.0007 5 15C4.16667 15 3.45833 14.7083 2.875 14.125C2.29167 13.5417 2 12.8333 2 12C2 11.1667 2.29167 10.4583 2.875 9.875C3.45833 9.29167 4.16667 9 5 9C5.4 9 5.775 9.071 6.125 9.213C6.475 9.355 6.78333 9.55067 7.05 9.8L14.075 5.7C14.0417 5.58333 14.021 5.471 14.013 5.363C14.005 5.255 14.0007 5.134 14 5C14 4.16667 14.2917 3.45833 14.875 2.875C15.4583 2.29167 16.1667 2 17 2C17.8333 2 18.5417 2.29167 19.125 2.875C19.7083 3.45833 20 4.16667 20 5C20 5.83333 19.7083 6.54167 19.125 7.125C18.5417 7.70833 17.8333 8 17 8C16.6 8 16.225 7.929 15.875 7.787C15.525 7.645 15.2167 7.44933 14.95 7.2L7.925 11.3C7.95833 11.4167 7.97933 11.5293 7.988 11.638C7.99667 11.7467 8.00067 11.8673 8 12C7.99933 12.1327 7.99533 12.2537 7.988 12.363C7.98067 12.4723 7.95967 12.5847 7.925 12.7L14.95 16.8C15.2167 16.55 15.525 16.3543 15.875 16.213C16.225 16.0717 16.6 16.0007 17 16C17.8333 16 18.5417 16.2917 19.125 16.875C19.7083 17.4583 20 18.1667 20 19C20 19.8333 19.7083 20.5417 19.125 21.125C18.5417 21.7083 17.8333 22 17 22Z" fill="white"/>
-          </svg>
+          />
           <span v-if="c_affiliation_link" style="position: absolute; top: 100%; right: -40px; margin-top: 5px; white-space: nowrap; color: #4CAF50; font-size: 12px; font-weight: 600; z-index: 1000; display: flex; align-items: center; gap: 4px;">
             Link copiado <i class="fas fa-check" style="color: #4CAF50;"></i>
           </span>
         </div>
-        <router-link to="/agenda" v-if="office_id == null" class="header-icon-link">
+        <router-link to="/agenda" v-if="office_id == null" class="header-icon-link header-agenda-link">
           <svg
             class="header-icon header-icon-agenda-mobile"
             width="28"
@@ -132,23 +128,23 @@
           aria-label="Cumpleaños de mi red"
         >
           <span class="header-notification-icon-wrap">
+            <img
+              class="header-icon header-icon-birthdays-notify-mobile"
+              src="../../assets/img/notificaciones.svg"
+              alt=""
+              aria-hidden="true"
+            />
             <svg
-              class="header-icon header-icon-birthdays-notify"
-              width="28"
-              height="28"
+              class="header-icon header-icon-birthdays-notify header-icon-birthdays-notify-desktop"
+              width="24"
+              height="24"
               viewBox="0 0 24 24"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
               aria-hidden="true"
             >
-              <path
-                d="M18.75 15.71V11.25C18.75 7.93 16.52 5.128 13.375 4.258V3.625C13.375 2.59 12.535 1.75 11.5 1.75C10.465 1.75 9.625 2.59 9.625 3.625V4.258C6.48 5.128 4.25 7.93 4.25 11.25V15.71L2.5 17.46V18.25H20.5V17.46L18.75 15.71Z"
-                fill="white"
-              />
-              <path
-                d="M11.5 21.25C12.8117 21.25 13.888 20.3064 14.117 19.063H8.883C9.112 20.3064 10.1883 21.25 11.5 21.25Z"
-                fill="white"
-              />
+              <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M10 21h4" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/>
             </svg>
             <span
               v-if="birthdaysBadgeCount > 0"
@@ -159,7 +155,7 @@
             </span>
           </span>
         </router-link>
-        <router-link to="/profile" v-if="office_id == null" class="header-icon-link">
+        <router-link to="/profile" v-if="office_id == null" class="header-icon-link header-cog-link">
           <!-- Ícono configuración para desktop -->
           <i class="fas fa-cog header-icon header-icon-cog-desktop"></i>
           <!-- SVG configuración para móvil -->
@@ -180,21 +176,6 @@
           class="burger fas fa-bars header-icon burger-desktop"
           @click.stop="toggleMobileTabsMenu"
         ></i>
-        <!-- SVG hamburguesa para móvil -->
-        <svg
-          class="burger burger-mobile header-icon"
-          width="40"
-          height="40"
-          viewBox="0 0 40 40"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          @click.stop="toggleMobileTabsMenu"
-          style="cursor: pointer;"
-        >
-          <rect x="10" y="12.5" width="20" height="3" rx="1.5" fill="white"/>
-          <rect x="10" y="18.5" width="20" height="3" rx="1.5" fill="white"/>
-          <rect x="10" y="24.5" width="20" height="3" rx="1.5" fill="white"/>
-        </svg>
       </div>
 
       <!-- <h4>{{ name }} {{ lastName }} <i class=""
@@ -691,16 +672,11 @@
           </router-link>
 
           <router-link to="/collect" v-if="tree" @click.native="handleNavigationClickAndClose" class="mobile-menu-item">
-            <!-- Mismo ícono SVG de RETIROS que en escritorio -->
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="width: 20px; margin-right: 12px;">
-              <g clip-path="url(#clip0_74_920)">
-                <path d="M11 8.5C11 10.71 9.21 12.5 7 12.5C4.79 12.5 3 10.71 3 8.5C3 6.29 4.79 4.5 7 4.5C9.21 4.5 11 6.29 11 8.5ZM11 15.22V20.5H0V18.5C0 16.29 3.13 14.5 7 14.5C8.5 14.5 9.87 14.77 11 15.22ZM24 20.5H13V3.5H24V20.5ZM16 12C16 11.337 16.2634 10.7011 16.7322 10.2322C17.2011 9.76339 17.837 9.5 18.5 9.5C19.163 9.5 19.7989 9.76339 20.2678 10.2322C20.7366 10.7011 21 11.337 21 12C21 12.663 20.7366 13.2989 20.2678 13.7678C19.7989 14.2366 19.163 14.5 18.5 14.5C17.837 14.5 17.2011 14.2366 16.7322 13.7678C16.2634 13.2989 16 12.663 16 12ZM22 7.5C21.4696 7.5 20.9609 7.28929 20.5858 6.91421C20.2107 6.53914 20 6.03043 20 5.5H17C17 6.61 16.11 7.5 15 7.5V16.5C15.5304 16.5 16.0391 16.7107 16.4142 17.0858C16.7893 17.4609 17 17.9696 17 18.5H20C20 17.4 20.9 16.5 22 16.5V7.5Z" fill="currentColor"/>
-              </g>
-              <defs>
-                <clipPath id="clip0_74_920">
-                  <rect width="24" height="24" fill="currentColor"/>
-                </clipPath>
-              </defs>
+            <svg class="icon-retiros" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="width: 20px; height: 20px; margin-right: 12px;" aria-hidden="true">
+              <path d="M4 7.5h13.5A2.5 2.5 0 0 1 20 10v8.5H4z"/>
+              <path d="M4 7.5 16 4.5v3"/>
+              <path d="M15.5 12.5H20v4h-4.5a2 2 0 0 1 0-4Z"/>
+              <circle cx="16.2" cy="14.5" r=".55" fill="currentColor" stroke="none"/>
             </svg>
             <span>RETIROS</span>
           </router-link>
@@ -846,13 +822,20 @@
     <footer class="footer-Dashboard">
       <a @click="handleInicioClick" :class="{ 'active': $route.path === '/dashboard' || $route.path === '/' }">
         <span class="footer-nav-item-inner">
-          <i class="fas fa-home"></i>
+          <svg class="footer-nav-icon icon-inicio" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M3 11.2 12 4l9 7.2"/>
+            <path d="M5.5 10.2V20h13v-9.8"/>
+            <path d="M9.5 20v-5.8h5V20"/>
+          </svg>
           <span class="footer-nav-label">Inicio</span>
         </span>
       </a>
       <router-link to="/activation" v-if="affiliated" @click.native="handleNavigationClick">
         <span class="footer-nav-item-inner">
-          <i class="fas fa-shopping-bag"></i>
+          <svg class="footer-nav-icon icon-compras" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M6.5 8h11l1 12h-13l1-12Z"/>
+            <path d="M9 8V6.5a3 3 0 0 1 6 0V8"/>
+          </svg>
           <span class="footer-nav-label">Compras</span>
         </span>
       </router-link>
@@ -864,13 +847,28 @@
       </router-link>
       <router-link to="/tree/red" v-if="tree" @click.native="handleNavigationClick">
         <span class="footer-nav-item-inner">
-          <i class="fas fa-sitemap"></i>
+          <svg class="footer-nav-icon icon-red" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="4.4" r="2.35" fill="none"/>
+            <circle cx="4.8" cy="19.4" r="2.35" fill="none"/>
+            <circle cx="12" cy="19.4" r="2.35" fill="none"/>
+            <circle cx="19.2" cy="19.4" r="2.35" fill="none"/>
+            <path d="M12 6.75V11.15"/>
+            <path d="M4.8 11.15h14.4"/>
+            <path d="M4.8 11.15v5.9"/>
+            <path d="M12 11.15v5.9"/>
+            <path d="M19.2 11.15v5.9"/>
+          </svg>
           <span class="footer-nav-label">Red</span>
         </span>
       </router-link>
       <router-link to="/collect" v-if="tree" @click.native="handleNavigationClick">
         <span class="footer-nav-item-inner">
-          <i class="fas fa-wallet"></i>
+          <svg class="footer-nav-icon icon-retiros" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path vector-effect="non-scaling-stroke" d="M4 7.5h13.5A2.5 2.5 0 0 1 20 10v8.5H4z"/>
+            <path vector-effect="non-scaling-stroke" d="M4 7.5 16 4.5v3"/>
+            <path vector-effect="non-scaling-stroke" d="M15.5 12.5H20v4h-4.5a2 2 0 0 1 0-4Z"/>
+            <circle cx="16.2" cy="14.5" r=".45" fill="currentColor" stroke="none"/>
+          </svg>
           <span class="footer-nav-label">Retiros</span>
         </span>
       </router-link>
@@ -1985,6 +1983,18 @@ newPhoto: null,
   fill: currentColor;
 }
 
+.mobile-menu-item.active svg.icon-retiros path,
+.mobile-menu-item.router-link-active svg.icon-retiros path {
+  fill: none;
+  stroke: currentColor;
+}
+
+.mobile-menu-item.active svg.icon-retiros circle,
+.mobile-menu-item.router-link-active svg.icon-retiros circle {
+  fill: currentColor;
+  stroke: none;
+}
+
 .mobile-menu-item-with-submenu {
   justify-content: space-between;
 }
@@ -2165,6 +2175,10 @@ newPhoto: null,
   flex-shrink: 0;
 }
 
+.header-icon-birthdays-notify-mobile {
+  display: none;
+}
+
 .header-notification-badge {
   position: absolute;
   top: -3px;
@@ -2205,7 +2219,7 @@ newPhoto: null,
 /* Estilos para móvil */
 @media (max-width: 767px) {
   .logo-mobile {
-    display: block;
+    display: none !important;
   }
 
   .logo-desktop {
@@ -2214,30 +2228,32 @@ newPhoto: null,
 
   .burger-mobile {
     display: block;
+    width: 30px;
+    height: 30px;
+    color: #111111;
+    flex-shrink: 0;
+    padding: 0;
   }
 
   .burger-desktop {
     display: none;
   }
 
-  .header-icon-cog-mobile {
-    display: block;
-  }
-
-  .header-icon-cog-desktop {
-    display: none;
+  .header-cog-link,
+  .header-agenda-link {
+    display: none !important;
   }
 
   .header-icon-share-mobile {
     display: block;
+    width: 30px;
+    height: 30px;
+    object-fit: contain;
+    cursor: pointer;
   }
 
   .header-icon-share-desktop {
     display: none;
-  }
-
-  .header-icon-agenda-mobile {
-    display: block;
   }
 
   .header-code-button-mobile {
@@ -2252,28 +2268,88 @@ newPhoto: null,
     display: none;
   }
 
-  .header-right {
-    gap: 2px;
-  }
-
   .app > header {
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
     align-items: center;
-    gap: 4px;
+    gap: 8px;
+    background: #ffffff;
+    color: #111111;
+    padding: 10px 16px;
+    box-shadow: none;
   }
 
   .header-left {
-    margin-right: auto;
+    margin-right: 0;
+    order: 1;
   }
 
-  .header-center {
+  .header-right {
     order: 2;
-    flex: 0 0 auto;
-    margin-right: 0;
-    padding-right: 0;
-    min-width: 0;
-    width: auto;
+    margin-left: auto;
+    padding-left: 0;
+    gap: 12px;
+    flex-shrink: 0;
+    align-items: center;
+  }
+
+  .header-share-wrap {
+    order: 1;
+    display: flex;
+    align-items: center;
+  }
+
+  .header-notification-btn {
+    order: 2;
+    color: #111111;
+  }
+
+  .header-photo-label {
+    order: 3;
+    margin-left: 0;
+    padding: 0;
+  }
+
+  .header-photo-controls {
+    order: 4;
+  }
+
+  .header-notification-icon-wrap {
+    width: 30px;
+    height: 30px;
+  }
+
+  .header-icon-birthdays-notify-desktop {
+    display: none;
+  }
+
+  .header-icon-birthdays-notify-mobile {
+    display: block;
+    width: 30px;
+    height: 30px;
+    object-fit: contain;
+  }
+
+  .header-notification-badge {
+    top: -4px;
+    right: -6px;
+    min-width: 16px;
+    height: 16px;
+    background: #e91e63;
+    border: 2px solid #ffffff;
+    font-size: 9px;
+    box-shadow: none;
+    animation: none;
+  }
+
+  .header-photo-container {
+    width: 36px;
+    height: 36px;
+    border: 2.5px solid #e91e63;
+  }
+
+  .header-icon-link {
+    color: #111111;
   }
 
   .header-user-info {
@@ -2283,19 +2359,6 @@ newPhoto: null,
     margin: 0;
     display: flex;
     align-items: center;
-  }
-
-  .header-right {
-    order: 3;
-    margin-left: 0;
-    padding-left: 0;
-    gap: 2px;
-    flex-shrink: 0;
-  }
-
-  .header-photo-label {
-    margin-left: 0;
-    padding: 0;
   }
 
   .header-code-button {
