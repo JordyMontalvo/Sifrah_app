@@ -680,6 +680,8 @@ export default {
     this.total_points = data.total_points;
     this.historicalRank = data.historicalRank || data.rank || "none";
     this.historicalRankLabel = data.historicalRankLabel || "Ninguno";
+    this.$store.commit("SET_HISTORICAL_RANK_LABEL", this.historicalRankLabel);
+    this.$store.commit("SET_RANK", this.historicalRank);
     this.historicalRankImage = data.historicalRankImage
       ? String(data.historicalRankImage).trim() || null
       : null;

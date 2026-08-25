@@ -730,98 +730,114 @@ table
   position fixed
   top 0
   left 0
+  right 0
+  bottom 0
   width 100%
   height 100%
-  background rgba(0, 0, 0, 0.5)
-  z-index 2000
+  background #000000
+  z-index 10000
   display flex
-  justify-content flex-end
-  backdrop-filter blur(3px)
+  align-items stretch
+  justify-content flex-start
+  backdrop-filter none
 
 .mobile-tabs-menu
-  width 280px
+  width 100%
   height 100%
-  background white
-  box-shadow -4px 0 15px rgba(0, 0, 0, 0.1)
+  background #000000
+  box-shadow none
   display flex
   flex-direction column
-  animation slideInRight 0.3s ease-out
+  animation none
+  overflow hidden
 
 .mobile-tabs-header
-  padding 20px
+  padding 20px 16px 16px
   display flex
-  justify-content space-between
+  justify-content flex-start
   align-items flex-start
-  border-bottom 1px solid #eee
+  border-bottom none
+  background #000000
+  position relative
 
 .mobile-menu-user-info
   display flex
-  flex-direction column
+  flex-direction row
+  align-items center
   gap 12px
+  text-decoration none
+  padding-right 40px
 
 .mobile-photo-label
   cursor pointer
-  width 60px
-  height 60px
+  width 52px
+  height 52px
 
 .mobile-photo-container
   position relative
-  width 60px
-  height 60px
+  width 52px
+  height 52px
   border-radius 50%
   overflow hidden
-  border 2px solid c-menu-active-pink
+  border 2px solid #e91e63
+  flex-shrink 0
 
 .mobile-menu-photo
   width 100%
   height 100%
   object-fit cover
+  display block
 
 .mobile-photo-overlay
-  position absolute
-  top 0
-  left 0
-  width 100%
-  height 100%
-  background rgba(0, 0, 0, 0.4)
-  display flex
-  align-items center
-  justify-content center
-  color white
-  font-size 18px
-  opacity 0
-  transition opacity 0.3s
-
-.mobile-photo-container:hover .mobile-photo-overlay,
-.mobile-photo-container:active .mobile-photo-overlay
-  opacity 1
-
-.mobile-photo-controls
-  display flex
-  gap 10px
-  margin-top 5px
-  
-  i
-    cursor pointer
-    font-size 20px
-    padding 5px
-    border-radius 50%
-    
-    &.photo-control-confirm
-      color #4CAF50
-    &.photo-control-cancel
-      color #f44336
+  display none !important
 
 .mobile-menu-name
-  font-weight 700
+  font-weight 600
   font-size 16px
   margin 0
-  color #333
+  color #ffffff
 
 .mobile-menu-email
+  display none
+
+.mobile-menu-rank
+  display flex
+  align-items center
+  gap 6px
+  margin 6px 0 0
+  color #ffffff
   font-size 13px
-  color #666
-  margin 4px 0 0 0
+  font-weight 500
+
+.mobile-menu-rank-label
+  color #ffffff
+  font-weight 500
+
+.mobile-menu-rank em
+  font-style normal
+  color #e91e63
+  font-weight 600
+
+.mobile-tabs-content
+  padding 0
+  gap 0
+
+.mobile-menu-item
+  padding 18px 20px
+  border-radius 0
+  border-bottom 1px solid rgba(255, 255, 255, 0.08)
+  font-weight 500
+  font-size 16px
+
+.mobile-menu-item:hover
+  background transparent
+  color #ffffff
+
+.mobile-menu-item.active,
+.mobile-menu-item.router-link-active
+  background linear-gradient(90deg, #4a1428 0%, #2a0f18 45%, #1a0c12 100%)
+  border-radius 0 18px 18px 0
+  border-bottom-color transparent
 
 @keyframes slideInRight
   from

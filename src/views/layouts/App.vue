@@ -70,7 +70,7 @@
       </div>
       
       <div class="header-right">
-        <label v-if="office_id == null" class="header-photo-label">
+        <label v-if="office_id == null" class="header-photo-label header-photo-label-desktop">
           <div class="header-photo-container">
             <img
               v-if="photoState == 'default'"
@@ -88,6 +88,25 @@
           </div>
           <input type="file" @change="changePhoto" style="display: none;" />
         </label>
+        <router-link
+          v-if="office_id == null"
+          to="/profile"
+          class="header-photo-label header-photo-label-mobile"
+          aria-label="Perfil"
+        >
+          <div class="header-photo-container">
+            <img
+              v-if="photoState == 'default'"
+              class="header-photo"
+              :src="photo"
+            />
+            <img
+              v-if="photoState == 'changed'"
+              class="header-photo"
+              :src="newPhoto"
+            />
+          </div>
+        </router-link>
         <div v-if="photoState == 'changed'" class="header-photo-controls">
           <i v-if="!sending" @click="cancelNewPhoto" class="fas fa-times photo-control-cancel"></i>
           <i v-if="!sending" @click="changeNewPhoto" class="fas fa-check photo-control-confirm"></i>
@@ -555,47 +574,48 @@
     >
       <div class="mobile-tabs-menu" @click.stop>
         <div class="mobile-tabs-header">
-          <div class="mobile-menu-user-info" v-if="office_id == null">
-            <label v-if="office_id == null" class="mobile-photo-label">
-              <div class="mobile-photo-container">
-                <img v-if="photoState == 'default'" class="mobile-menu-photo" :src="photo" />
-                <img v-if="photoState == 'changed'" class="mobile-menu-photo" :src="newPhoto" />
-                <div class="mobile-photo-overlay">
-                  <i class="fas fa-camera"></i>
-                </div>
-              </div>
-              <input type="file" @change="changePhoto" style="display: none;" />
-            </label>
-            <div v-if="photoState == 'changed'" class="mobile-photo-controls">
-              <i @click="cancelNewPhoto" class="fas fa-times photo-control-cancel"></i>
-              <i @click="changeNewPhoto" class="fas fa-check photo-control-confirm"></i>
+          <router-link
+            v-if="office_id == null"
+            to="/profile"
+            class="mobile-menu-user-info"
+            @click.native="handleNavigationClickAndClose"
+          >
+            <div class="mobile-photo-container">
+              <img v-if="photoState == 'default'" class="mobile-menu-photo" :src="photo" />
+              <img v-if="photoState == 'changed'" class="mobile-menu-photo" :src="newPhoto" />
             </div>
-            <div>
-              <p class="mobile-menu-name">{{ name }} {{ lastName }}</p>
-              <p class="mobile-menu-email">{{ email }}</p>
+            <div class="mobile-menu-user-text">
+              <p class="mobile-menu-name">{{ displayName }}</p>
+              <p class="mobile-menu-rank">
+                <i class="fas fa-certificate"></i>
+                <span class="mobile-menu-rank-label">Rango:</span>
+                <em>{{ rankLabel }}</em>
+              </p>
             </div>
-          </div>
-          <i class="fas fa-times" @click="closeMobileTabsMenu"></i>
+          </router-link>
+          <button type="button" class="mobile-tabs-close" @click="closeMobileTabsMenu" aria-label="Cerrar menú">
+            <i class="fas fa-times"></i>
+          </button>
         </div>
         
         <div class="mobile-tabs-content">
 
           <a @click="handleInicioClickAndClose" v-if="office_id == null" class="mobile-menu-item" :class="{ 'active': $route.path === '/dashboard' }">
-            <!-- Mismo ícono SVG que en el sidebar de escritorio -->
-            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" style="width: 20px; margin-right: 12px;">
-              <path d="M10 6V0H18V6H10ZM0 10V0H8V10H0ZM10 18V8H18V18H10ZM0 18V12H8V18H0ZM2 8H6V2H2V8ZM12 16H16V10H12V16ZM12 4H16V2H12V4ZM2 16H6V14H2V16Z" fill="white"/>
-            </svg>
-            <span>INICIO</span>
+            <span class="mobile-menu-item-main">
+              <i class="fas fa-home"></i>
+              <span>Inicio</span>
+            </span>
           </a>
 
-          <a @click.stop="toggleMobileSubmenu(0)" class="mobile-menu-item mobile-menu-item-with-submenu" :class="{ 'active': mobileSubmenus[0] }">
-            <span style="display: flex; align-items: center;">
-              <i class="fas fa-shopping-cart" style="width: 20px; margin-right: 12px;"></i>
-              PRODUCTOS
+          <a @click.stop="toggleMobileSubmenu(0)" class="mobile-menu-item mobile-menu-item-with-submenu" :class="{ 'is-open': mobileSubmenus[0] }">
+            <span class="mobile-menu-item-main">
+              <i class="fas fa-shopping-bag"></i>
+              <span>Productos</span>
             </span>
-            <i class="fa fa-angle-down" :class="{ 'rotated': mobileSubmenus[0] }"></i>
+            <i class="fa fa-angle-right" :class="{ 'rotated': mobileSubmenus[0] }"></i>
           </a>
           <div class="mobile-submenu" :class="{ 'active': mobileSubmenus[0] }">
+            <div class="mobile-submenu-inner">
             <router-link to="/activation" v-if="affiliated" @click.native="handleNavigationClickAndClose" class="mobile-submenu-item">
               <i class="fas fa-shopping-bag"></i>
               <span>Tienda</span>
@@ -616,16 +636,18 @@
               <i class="fas fa-history"></i>
               <span>Historial</span>
             </router-link>
+            </div>
           </div>
 
-          <a @click.stop="toggleMobileSubmenu(1)" v-if="tree" class="mobile-menu-item mobile-menu-item-with-submenu" :class="{ 'active': mobileSubmenus[1] }">
-            <span style="display: flex; align-items: center;">
-              <i class="fas fa-users" style="width: 20px; margin-right: 12px;"></i>
-              ORGANIZACIÓN
+          <a @click.stop="toggleMobileSubmenu(1)" v-if="tree" class="mobile-menu-item mobile-menu-item-with-submenu" :class="{ 'is-open': mobileSubmenus[1] }">
+            <span class="mobile-menu-item-main">
+              <i class="fas fa-users"></i>
+              <span>Organización</span>
             </span>
-            <i class="fa fa-angle-down" :class="{ 'rotated': mobileSubmenus[1] }"></i>
+            <i class="fa fa-angle-right" :class="{ 'rotated': mobileSubmenus[1] }"></i>
           </a>
           <div class="mobile-submenu" :class="{ 'active': mobileSubmenus[1] }" v-if="tree">
+            <div class="mobile-submenu-inner">
             <router-link to="/tree" @click.native="handleNavigationClickAndClose" class="mobile-submenu-item">
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M1 20V19.425C1 19.025 1.10833 18.6583 1.325 18.325C1.54167 17.9917 1.84167 17.7417 2.225 17.575C2.65833 17.3917 3.10433 17.25 3.563 17.15C4.02167 17.05 4.50067 17 5 17C5.49933 17 5.97867 17.05 6.438 17.15C6.89733 17.25 7.343 17.3917 7.775 17.575C8.15833 17.7417 8.45833 17.9917 8.675 18.325C8.89167 18.6583 9 19.025 9 19.425V20H1ZM11 20V19.425C11 19.025 11.1083 18.6583 11.325 18.325C11.5417 17.9917 11.8417 17.7417 12.225 17.575C12.6583 17.3917 13.1043 17.25 13.563 17.15C14.0217 17.05 14.5007 17 15 17C15.4993 17 15.9787 17.05 16.438 17.15C16.8973 17.25 17.343 17.3917 17.775 17.575C18.1583 17.7417 18.4583 17.9917 18.675 18.325C18.8917 18.6583 19 19.025 19 19.425V20H11ZM5 16C4.45 16 3.97933 15.8043 3.588 15.413C3.19667 15.0217 3.00067 14.5507 3 14C2.99933 13.4493 3.19533 12.9787 3.588 12.588C3.98067 12.1973 4.45133 12.0013 5 12C5.54867 11.9987 6.01967 12.1947 6.413 12.588C6.80633 12.9813 7.002 13.452 7 14C6.998 14.548 6.80233 15.019 6.413 15.413C6.02367 15.807 5.55267 16.0027 5 16ZM15 16C14.45 16 13.9793 15.8043 13.588 15.413C13.1967 15.0217 13.0007 14.5507 13 14C12.9993 13.4493 13.1953 12.9787 13.588 12.588C13.9807 12.1973 14.4513 12.0013 15 12C15.5487 11.9987 16.0197 12.1947 16.413 12.588C16.8063 12.9813 17.002 13.452 17 14C16.998 14.548 16.8023 15.019 16.413 15.413C16.0237 15.807 15.5527 16.0027 15 16ZM10 14L7 11L8.05 9.95001L9.25 11.125V9.00001H10.75V11.125L11.95 9.95001L13 11L10 14ZM0 8.00001V7.42501C0 7.02501 0.108333 6.65834 0.325 6.32501C0.541667 5.99167 0.841667 5.74167 1.225 5.57501C1.65833 5.39167 2.10433 5.25001 2.563 5.15001C3.02167 5.05001 3.50067 5.00001 4 5.00001C4.33333 5.00001 4.66267 5.02501 4.988 5.07501C5.31333 5.12501 5.62567 5.19167 5.925 5.27501C5.64167 5.55834 5.41667 5.88334 5.25 6.25001C5.08333 6.61667 5 7.00834 5 7.42501V8.00001H0ZM6 8.00001V7.42501C6 7.02501 6.10833 6.65834 6.325 6.32501C6.54167 5.99167 6.84167 5.74167 7.225 5.57501C7.65833 5.39167 8.10433 5.25001 8.563 5.15001C9.02167 5.05001 9.50067 5.00001 10 5.00001C10.4993 5.00001 10.9787 5.05001 11.438 5.15001C11.8973 5.25001 12.343 5.39167 12.775 5.57501C13.1583 5.74167 13.4583 5.99167 13.675 6.32501C13.8917 6.65834 14 7.02501 14 7.42501V8.00001H6ZM15 8.00001V7.42501C15 7.00834 14.9167 6.61667 14.75 6.25001C14.5833 5.88334 14.3583 5.55834 14.075 5.27501C14.375 5.19167 14.6877 5.12501 15.013 5.07501C15.3383 5.02501 15.6673 5.00001 16 5.00001C16.5 5.00001 16.9793 5.05001 17.438 5.15001C17.8967 5.25001 18.3423 5.39167 18.775 5.57501C19.1583 5.74167 19.4583 5.99167 19.675 6.32501C19.8917 6.65834 20 7.02501 20 7.42501V8.00001H15ZM4 4.00001C3.45 4.00001 2.97933 3.80434 2.588 3.41301C2.19667 3.02167 2.00067 2.55067 2 2.00001C1.99933 1.44934 2.19533 0.978673 2.588 0.588007C2.98067 0.19734 3.45133 0.00134009 4 6.75675e-06C4.54867 -0.00132658 5.01967 0.194673 5.413 0.588007C5.80633 0.98134 6.002 1.45201 6 2.00001C5.998 2.54801 5.80233 3.01901 5.413 3.41301C5.02367 3.80701 4.55267 4.00267 4 4.00001ZM10 4.00001C9.45 4.00001 8.97933 3.80434 8.588 3.41301C8.19667 3.02167 8.00067 2.55067 8 2.00001C7.99933 1.44934 8.19533 0.978673 8.588 0.588007C8.98067 0.19734 9.45133 0.00134009 10 6.75675e-06C10.5487 -0.00132658 11.0197 0.194673 11.413 0.588007C11.8063 0.98134 12.002 1.45201 12 2.00001C11.998 2.54801 11.8023 3.01901 11.413 3.41301C11.0237 3.80701 10.5527 4.00267 10 4.00001ZM16 4.00001C15.45 4.00001 14.9793 3.80434 14.588 3.41301C14.1967 3.02167 14.0007 2.55067 14 2.00001C13.9993 1.44934 14.1953 0.978673 14.588 0.588007C14.9807 0.19734 15.4513 0.00134009 16 6.75675e-06C16.5487 -0.00132658 17.0197 0.194673 17.413 0.588007C17.8063 0.98134 18.002 1.45201 18 2.00001C17.998 2.54801 17.8023 3.01901 17.413 3.41301C17.0237 3.80701 16.5527 4.00267 16 4.00001Z" fill="currentColor"/>
@@ -642,20 +664,18 @@
               <i class="fas fa-birthday-cake" style="width: 20px; margin-right: 12px;"></i>
               <span>Cumpleaños</span>
             </router-link>
+            </div>
           </div>
 
-          <a @click.stop="toggleMobileSubmenu(2)" v-if="tree" class="mobile-menu-item mobile-menu-item-with-submenu" :class="{ 'active': mobileSubmenus[2] }">
-            <span style="display: flex; align-items: center;">
-              <!-- Mismo ícono SVG de COMISIONES que en escritorio -->
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="width: 20px; margin-right: 12px;">
-                <path d="M12 12.5C11.0717 12.5 10.1815 12.8687 9.52513 13.5251C8.86875 14.1815 8.5 15.0717 8.5 16C8.5 16.9283 8.86875 17.8185 9.52513 18.4749C10.1815 19.1313 11.0717 19.5 12 19.5C12.9283 19.5 13.8185 19.1313 14.4749 18.4749C15.1313 17.8185 15.5 16.9283 15.5 16C15.5 15.0717 15.1313 14.1815 14.4749 13.5251C13.8185 12.8687 12.9283 12.5 12 12.5ZM10.5 16C10.5 15.6022 10.658 15.2206 10.9393 14.9393C11.2206 14.658 11.6022 14.5 12 14.5C12.3978 14.5 12.7794 14.658 13.0607 14.9393C13.342 15.2206 13.5 15.6022 13.5 16C13.5 16.3978 13.342 16.7794 13.0607 17.0607C12.7794 17.342 12.3978 17.5 12 17.5C11.6022 17.5 11.2206 17.342 10.9393 17.0607C10.658 16.7794 10.5 16.3978 10.5 16Z" fill="white"/>
-                <path d="M17.526 5.11618L14.347 0.65918L2.658 9.99718L2.01 9.99018V10.0002H1.5V22.0002H22.5V10.0002H21.538L19.624 4.40118L17.526 5.11618ZM19.425 10.0002H9.397L16.866 7.45418L18.388 6.96718L19.425 10.0002ZM15.55 5.79018L7.84 8.41818L13.946 3.54018L15.55 5.79018ZM3.5 18.1692V13.8292C3.92218 13.6802 4.30565 13.4386 4.62231 13.1221C4.93896 12.8056 5.18077 12.4223 5.33 12.0002H18.67C18.8191 12.4225 19.0609 12.806 19.3775 13.1227C19.6942 13.4393 20.0777 13.6811 20.5 13.8302V18.1702C20.0777 18.3193 19.6942 18.561 19.3775 18.8777C19.0609 19.1944 18.8191 19.5779 18.67 20.0002H5.332C5.18218 19.5779 4.93996 19.1943 4.62302 18.8775C4.30607 18.5608 3.9224 18.3188 3.5 18.1692Z" fill="white"/>
-              </svg>
-              COMISIONES
+          <a @click.stop="toggleMobileSubmenu(2)" v-if="tree" class="mobile-menu-item mobile-menu-item-with-submenu" :class="{ 'is-open': mobileSubmenus[2] }">
+            <span class="mobile-menu-item-main">
+              <i class="fas fa-wallet"></i>
+              <span>Comisiones</span>
             </span>
-            <i class="fa fa-angle-down" :class="{ 'rotated': mobileSubmenus[2] }"></i>
+            <i class="fa fa-angle-right" :class="{ 'rotated': mobileSubmenus[2] }"></i>
           </a>
           <div class="mobile-submenu" :class="{ 'active': mobileSubmenus[2] }" v-if="tree">
+            <div class="mobile-submenu-inner">
             <router-link to="/transfer" @click.native="handleNavigationClickAndClose" class="mobile-submenu-item">
               <i class="fas fa-wallet"></i>
               <span>Monedero</span>
@@ -664,40 +684,32 @@
               <i class="fas fa-exchange-alt"></i>
               <span>Movimientos</span>
             </router-link>
+            </div>
           </div>
 
           <router-link to="/rango" v-if="tree && affiliated" @click.native="handleNavigationClickAndClose" class="mobile-menu-item">
-            <i class="fas fa-trophy" style="width: 20px; margin-right: 12px;"></i>
-            <span>RANGO</span>
+            <span class="mobile-menu-item-main">
+              <i class="fas fa-trophy"></i>
+              <span>Rango</span>
+            </span>
           </router-link>
 
           <router-link to="/collect" v-if="tree" @click.native="handleNavigationClickAndClose" class="mobile-menu-item">
-            <svg class="icon-retiros" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="width: 20px; height: 20px; margin-right: 12px;" aria-hidden="true">
-              <path d="M4 7.5h13.5A2.5 2.5 0 0 1 20 10v8.5H4z"/>
-              <path d="M4 7.5 16 4.5v3"/>
-              <path d="M15.5 12.5H20v4h-4.5a2 2 0 0 1 0-4Z"/>
-              <circle cx="16.2" cy="14.5" r=".55" fill="currentColor" stroke="none"/>
-            </svg>
-            <span>RETIROS</span>
+            <span class="mobile-menu-item-main">
+              <i class="fas fa-money-bill-wave"></i>
+              <span>Retiros</span>
+            </span>
           </router-link>
 
-          <a @click.stop="toggleMobileSubmenu(3)" v-if="tree && office_id == null" class="mobile-menu-item mobile-menu-item-with-submenu" :class="{ 'active': mobileSubmenus[3] }">
-            <span style="display: flex; align-items: center;">
-          <svg style="width: 20px; margin-right: 12px;" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-<g clip-path="url(#clip0_74_983_mobile)">
-<path d="M20 12C20 12.5523 20.4477 13 21 13C21.5523 13 22 12.5523 22 12H20ZM12 22C12.5523 22 13 21.5523 13 21C13 20.4477 12.5523 20 12 20V22ZM19.1247 17.2191C18.6934 16.8741 18.0641 16.944 17.7191 17.3753C17.3741 17.8066 17.444 18.4359 17.8753 18.7809L19.1247 17.2191ZM20.3753 20.7809C20.8066 21.1259 21.4359 21.056 21.7809 20.6247C22.1259 20.1934 22.056 19.5641 21.6247 19.2191L20.3753 20.7809ZM7 7C6.44772 7 6 7.44772 6 8C6 8.55228 6.44772 9 7 9V7ZM17 9C17.5523 9 18 8.55228 18 8C18 7.44772 17.5523 7 17 7V9ZM7 11C6.44772 11 6 11.4477 6 12C6 12.5523 6.44772 13 7 13V11ZM11 13C11.5523 13 12 12.5523 12 12C12 11.4477 11.5523 11 11 11V13ZM22 12V4.5H20V12H22ZM22 4.5C22 3.83696 21.7366 3.20107 21.2678 2.73223L19.8536 4.14645C19.9473 4.24022 20 4.36739 20 4.5H22ZM21.2678 2.73223C20.7989 2.26339 20.163 2 19.5 2V4C19.6326 4 19.7598 4.05268 19.8536 4.14645L21.2678 2.73223ZM19.5 2H4.5V4H19.5V2ZM4.5 2C3.83696 2 3.20107 2.26339 2.73223 2.73223L4.14645 4.14645C4.24021 4.05268 4.36739 4 4.5 4V2ZM2.73223 2.73223C2.26339 3.20107 2 3.83696 2 4.5H4C4 4.36739 4.05268 4.24021 4.14645 4.14645L2.73223 2.73223ZM2 4.5V19.5H4V4.5H2ZM2 19.5C2 20.163 2.26339 20.7989 2.73223 21.2678L4.14645 19.8536C4.05268 19.7598 4 19.6326 4 19.5H2ZM2.73223 21.2678C3.20107 21.7366 3.83696 22 4.5 22V20C4.36739 20 4.24022 19.9473 4.14645 19.8536L2.73223 21.2678ZM4.5 22H12V20H4.5V22ZM18 16C18 17.1046 17.1046 18 16 18V20C18.2091 20 20 18.2091 20 16H18ZM16 18C14.8954 18 14 17.1046 14 16H12C12 18.2091 13.7909 20 16 20V18ZM14 16C14 14.8954 14.8954 14 16 14V12C13.7909 12 12 13.7909 12 16H14ZM16 14C17.1046 14 18 14.8954 18 16H20C20 13.7909 18.2091 12 16 12V14ZM17.8753 18.7809L20.3753 20.7809L21.6247 19.2191L19.1247 17.2191L17.8753 18.7809ZM7 9H17V7H7V9ZM7 13H11V11H7V13Z" fill="white"/>
-</g>
-<defs>
-<clipPath id="clip0_74_983_mobile">
-<rect width="24" height="24" fill="white"/>
-</clipPath>
-</defs>
-</svg>
-              RESUMEN
+          <a @click.stop="toggleMobileSubmenu(3)" v-if="tree && office_id == null" class="mobile-menu-item mobile-menu-item-with-submenu" :class="{ 'is-open': mobileSubmenus[3] }">
+            <span class="mobile-menu-item-main">
+              <i class="fas fa-chart-line"></i>
+              <span>Resumen</span>
             </span>
-            <i class="fa fa-angle-down" :class="{ 'rotated': mobileSubmenus[3] }"></i>
+            <i class="fa fa-angle-right" :class="{ 'rotated': mobileSubmenus[3] }"></i>
           </a>
           <div class="mobile-submenu" :class="{ 'active': mobileSubmenus[3] }" v-if="tree && office_id == null">
+            <div class="mobile-submenu-inner">
             <router-link to="/bonuses" v-if="affiliated" @click.native="handleNavigationClickAndClose" class="mobile-submenu-item">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <g clip-path="url(#clip0_74_1017_mobile)">
@@ -723,16 +735,18 @@
               </svg>
               <span>Cierre de Mes</span>
             </router-link>
+            </div>
           </div>
 
-          <a @click.stop="toggleMobileSubmenu(4)" v-if="office_id == null && affiliated" class="mobile-menu-item mobile-menu-item-with-submenu" :class="{ 'active': mobileSubmenus[4] || herramientasRouteActive }">
-            <span style="display: flex; align-items: center;">
-              <i class="fas fa-tools" style="width: 20px; margin-right: 12px;"></i>
-              HERRAMIENTAS
+          <a @click.stop="toggleMobileSubmenu(4)" v-if="office_id == null && affiliated" class="mobile-menu-item mobile-menu-item-with-submenu" :class="{ 'is-open': mobileSubmenus[4] }">
+            <span class="mobile-menu-item-main">
+              <i class="fas fa-tools"></i>
+              <span>Herramientas</span>
             </span>
-            <i class="fa fa-angle-down" :class="{ 'rotated': mobileSubmenus[4] || herramientasRouteActive }"></i>
+            <i class="fa fa-angle-right" :class="{ 'rotated': mobileSubmenus[4] }"></i>
           </a>
-          <div class="mobile-submenu" :class="{ 'active': mobileSubmenus[4] || herramientasRouteActive }" v-if="office_id == null && affiliated">
+          <div class="mobile-submenu" :class="{ 'active': mobileSubmenus[4] }" v-if="office_id == null && affiliated">
+            <div class="mobile-submenu-inner">
             <router-link to="/materials" @click.native="handleNavigationClickAndClose" class="mobile-submenu-item">
               <i class="fas fa-folder"></i>
               <span>Materiales</span>
@@ -749,35 +763,23 @@
               <i class="fas fa-share-alt"></i>
               <span>Compartir tienda</span>
             </router-link>
+            </div>
           </div>
 
           <a
             @click.stop="toggleMobileSubmenu(5)"
             v-if="office_id == null && affiliated"
             class="mobile-menu-item mobile-menu-item-with-submenu"
-            :class="{ 'active': mobileSubmenus[5] }"
+            :class="{ 'is-open': mobileSubmenus[5] }"
           >
-            <span style="display: flex; align-items: center;">
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-                style="width: 20px; margin-right: 12px; flex: 0 0 auto;"
-                fill="currentColor"
-                aria-hidden="true"
-              >
-                <path d="M12 3L1.5 8.5L12 14L22.5 8.5L12 3Z" />
-                <path d="M4 10V15.2C4 15.7 4.28 16.16 4.72 16.38L12 20L19.28 16.38C19.72 16.16 20 15.7 20 15.2V10L12 14L4 10Z" />
-                <path d="M22.5 8.5V14.2C22.5 14.64 22.14 15 21.7 15H21.3C20.86 15 20.5 14.64 20.5 14.2V9.55L22.5 8.5Z" />
-                <path d="M6.2 18.1C5.76 18.1 5.4 18.46 5.4 18.9V20.2C5.4 20.64 5.76 21 6.2 21H13.4C13.84 21 14.2 20.64 14.2 20.2V18.9C14.2 18.46 13.84 18.1 13.4 18.1H6.2Z" />
-                <path d="M15.6 18.35C15.6 17.6 16.2 17 16.95 17C17.7 17 18.3 17.6 18.3 18.35C18.3 19.1 17.7 19.7 16.95 19.7C16.2 19.7 15.6 19.1 15.6 18.35Z" />
-              </svg>
-              UNIVERSIDAD SIFRAH
+            <span class="mobile-menu-item-main">
+              <i class="fas fa-graduation-cap"></i>
+              <span>Universidad Sifrah</span>
             </span>
-            <i class="fa fa-angle-down" :class="{ 'rotated': mobileSubmenus[5] }"></i>
+            <i class="fa fa-angle-right" :class="{ 'rotated': mobileSubmenus[5] }"></i>
           </a>
           <div class="mobile-submenu" :class="{ 'active': mobileSubmenus[5] }" v-if="office_id == null && affiliated">
+            <div class="mobile-submenu-inner">
             <router-link to="/agenda" @click.native="handleNavigationClickAndClose" class="mobile-submenu-item">
               <i class="fas fa-calendar-alt"></i>
               <span>Agenda</span>
@@ -794,6 +796,7 @@
               <i class="fas fa-headphones"></i>
               <span>Audios</span>
             </router-link>
+            </div>
           </div>
 
           <router-link
@@ -803,18 +806,17 @@
             class="mobile-menu-item"
             :class="{ 'active': $route.path === '/profile' }"
           >
-            <i class="fas fa-user" style="width: 20px; margin-right: 12px;"></i>
-            <span>PERFIL</span>
-      </router-link>
-
-      <!-- Cerrar sesión (igual que en el sidebar de escritorio) -->
-      <a
-        @click="handleLogoutAndClose"
-        class="mobile-menu-item mobile-menu-item-logout"
-      >
-        <i class="fas fa-power-off" style="width: 20px; margin-right: 12px;"></i>
-        <span>CERRAR SESIÓN</span>
-      </a>
+            <span class="mobile-menu-item-main">
+              <i class="fas fa-user"></i>
+              <span>Perfil</span>
+            </span>
+          </router-link>
+        </div>
+        <div class="mobile-menu-footer">
+          <button type="button" class="mobile-logout-btn" @click="handleLogoutAndClose">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>Cerrar sesión</span>
+          </button>
         </div>
       </div>
     </div>
@@ -1007,6 +1009,33 @@ newPhoto: null,
     },
     lastName() {
       return this.$store.state.lastName;
+    },
+    displayName() {
+      return `${this.name || ""} ${this.lastName || ""}`.trim();
+    },
+    rankLabel() {
+      const label = String(this.$store.state.historicalRankLabel || "").trim();
+      if (label) return label;
+      const val = this.$store.state.rank;
+      if (!val) return "Ninguno";
+      const v = String(val).toLowerCase();
+      let result = "";
+      if (v == "none") result = "Ninguno";
+      else if (v == "active" || v == "activo") result = "Activo";
+      else if (v == "star" || v == "bronce") result = "Bronce";
+      else if (v == "master") result = "Master";
+      else if (v == "silver" || v == "plata") result = "Plata";
+      else if (v == "si") result = "Platino";
+      else if (v == "gold" || v == "oro") result = "Oro";
+      else if (v == "sapphire") result = "Zafiro";
+      else if (v == "rubi" || v == "ruby" || v == "rubí") result = "Ruby";
+      else if (v == "emerald" || v == "esmeralda") result = "Esmeralda";
+      else if (v == "diamond" || v == "diamante") result = "Diamante";
+      else if (v.includes("doble diamante")) result = "Doble diamante";
+      else if (v.includes("triple diamante")) result = "Triple diamante";
+      else if (v.includes("diamante estrella")) result = "Diamante estrella";
+      else result = v;
+      return result.charAt(0).toUpperCase() + result.slice(1).toLowerCase();
     },
     affiliated() {
       return this.$store.state.affiliated;
@@ -1348,7 +1377,16 @@ newPhoto: null,
       this.handleNavigationClick();
     },
     toggleMobileSubmenu(index) {
-      this.mobileSubmenus[index] = !this.mobileSubmenus[index];
+      const wasOpen = this.mobileSubmenus[index];
+      this.mobileSubmenus = {
+        0: false,
+        1: false,
+        2: false,
+        3: false,
+        4: false,
+        5: false,
+        [index]: !wasOpen,
+      };
     },
     handleLogoutAndClose() {
       this.closeMobileTabsMenu();
@@ -1854,26 +1892,22 @@ newPhoto: null,
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: #000000;
   z-index: 10000;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  align-items: stretch;
+  justify-content: flex-start;
   animation: fadeIn 0.3s ease;
 }
 
 .mobile-tabs-menu {
   width: 100%;
   height: 100%;
-  /* Usar el mismo fondo oscuro que el sidebar de escritorio */
-  background: #111111;
+  background: #000000;
   display: flex;
   flex-direction: column;
-  animation: slideUp 0.3s ease;
-  overflow-y: auto;
+  overflow: hidden;
   padding-top: 0;
-  -ms-overflow-style: none; /* IE/Edge legacy */
-  scrollbar-width: none; /* Firefox */
 }
 
 .mobile-tabs-menu::-webkit-scrollbar {
@@ -1884,181 +1918,269 @@ newPhoto: null,
 .mobile-tabs-header {
   display: flex;
   justify-content: flex-start;
-  align-items: center;
-  padding: 28px 20px 12px 20px;
-  border-bottom: 1px solid #2c2c2c;
-  /* Mantener la franja superior magenta como en el diseño actual */
-  background: #111111;
+  align-items: flex-start;
+  padding: 22px 16px 18px;
+  border-bottom: none;
+  background: #000000;
   position: relative;
 }
 
 .mobile-menu-user-info {
   display: flex;
+  flex-direction: row;
   align-items: center;
   gap: 12px;
   flex: 1;
   width: 100%;
-  padding-right: 40px;
+  padding-right: 44px;
+  text-decoration: none;
+}
+
+.mobile-photo-container {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid #e91e63;
+  flex-shrink: 0;
 }
 
 .mobile-menu-photo {
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
-  border: 2px solid rgba(255, 255, 255, 0.3);
+  display: block;
+  border: none;
+}
+
+.mobile-menu-user-text {
+  min-width: 0;
 }
 
 .mobile-menu-name {
-  color: white;
+  color: #ffffff;
   font-size: 16px;
   font-weight: 600;
   margin: 0;
+  line-height: 1.25;
+}
+
+.mobile-menu-rank {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 6px 0 0;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 500;
   line-height: 1.2;
 }
 
-.mobile-menu-email {
-  color: white;
+.mobile-menu-rank-label {
+  color: #ffffff;
+  font-weight: 500;
+}
+
+.mobile-menu-rank i {
+  color: #e91e63;
   font-size: 12px;
-  margin: 0;
-  opacity: 0.9;
-  line-height: 1.2;
-  margin-top: 2px;
+  position: static;
+  padding: 0;
 }
 
-.mobile-tabs-header i {
-  color: white;
-  font-size: 24px;
+.mobile-menu-rank em {
+  font-style: normal;
+  color: #e91e63;
+  font-weight: 600;
+}
+
+.mobile-tabs-close {
+  position: absolute;
+  top: 18px;
+  right: 10px;
+  z-index: 10;
+  background: none;
+  border: none;
+  color: #ffffff;
+  font-size: 22px;
   cursor: pointer;
   padding: 8px;
-  position: absolute;
-  top: 28px;
-  right: 20px;
-  z-index: 10;
-  transition: opacity 0.3s ease;
+  line-height: 1;
+}
+
+.mobile-tabs-close i {
+  color: inherit;
+  font-size: inherit;
+  position: static;
+  padding: 0;
 }
 
 .mobile-tabs-content {
   flex: 1;
-  padding: 20px;
+  padding: 4px 0 12px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .mobile-menu-item {
   display: flex;
   align-items: center;
-  padding: 16px 24px;
-  /* Estilo similar a los ítems del sidebar desktop */
+  justify-content: space-between;
+  padding: 16px 18px 16px 20px;
   background: transparent;
   border-radius: 0;
-  color: white;
+  color: #ffffff;
   font-size: 16px;
   font-weight: 500;
   text-decoration: none;
-  transition: all 0.3s ease;
-  border-bottom: 1px solid #1C1C1C;
-  margin-bottom: 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  margin: 0;
   cursor: pointer;
+  position: relative;
+  overflow: hidden;
 }
 
-.mobile-menu-item:hover,
+.mobile-menu-item-main {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+}
+
+.mobile-menu-item-main i,
+.mobile-menu-item-main svg {
+  width: 22px;
+  text-align: center;
+  font-size: 18px;
+  color: #ffffff;
+  flex-shrink: 0;
+}
+
+.mobile-menu-item .fa-angle-right,
+.mobile-menu-item .fa-angle-down {
+  color: #ffffff;
+  font-size: 16px;
+  opacity: 0.95;
+}
+
 .mobile-menu-item.router-link-active,
 .mobile-menu-item.active {
-  background: #1C1C1C;
-  border-color: #1C1C1C;
-  color: #E91E63;
+  background: linear-gradient(90deg, #5a1830 0%, #321018 50%, #1c0c12 100%);
+  border-radius: 0 20px 20px 0;
+  border-bottom-color: transparent;
+  color: #ffffff;
+  margin-right: 12px;
 }
 
-.mobile-menu-item.active i,
-.mobile-menu-item.router-link-active i,
-.mobile-menu-item.active svg,
-.mobile-menu-item.router-link-active svg {
-  color: #E91E63;
+.mobile-menu-item.router-link-active::before,
+.mobile-menu-item.active::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  border-radius: 0;
+  background: #e91e63;
 }
 
-.mobile-menu-item.active svg path,
-.mobile-menu-item.router-link-active svg path {
-  fill: currentColor;
-}
-
-.mobile-menu-item.active svg.icon-retiros path,
-.mobile-menu-item.router-link-active svg.icon-retiros path {
-  fill: none;
-  stroke: currentColor;
-}
-
-.mobile-menu-item.active svg.icon-retiros circle,
-.mobile-menu-item.router-link-active svg.icon-retiros circle {
-  fill: currentColor;
-  stroke: none;
+.mobile-menu-item.active .mobile-menu-item-main i,
+.mobile-menu-item.router-link-active .mobile-menu-item-main i,
+.mobile-menu-item.active .mobile-menu-item-main svg,
+.mobile-menu-item.router-link-active .mobile-menu-item-main svg {
+  color: #e91e63;
 }
 
 .mobile-menu-item-with-submenu {
   justify-content: space-between;
 }
 
-.mobile-menu-item-with-submenu i.fa-angle-down {
-  transition: transform 0.3s ease;
-  font-size: 18px;
+.mobile-menu-item-with-submenu i.fa-angle-right {
+  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+  font-size: 16px;
 }
 
-.mobile-menu-item-with-submenu i.fa-angle-down.rotated {
-  transform: rotate(180deg);
+.mobile-menu-item-with-submenu i.fa-angle-right.rotated {
+  transform: rotate(90deg);
+}
+
+.mobile-menu-footer {
+  flex-shrink: 0;
+  padding: 20px 20px calc(20px + env(safe-area-inset-bottom, 0px));
+  background: #000000;
+}
+
+.mobile-logout-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 14px 20px;
+  border: none;
+  border-radius: 28px;
+  background: #1c1c1c;
+  color: #e91e63;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.mobile-logout-btn i {
+  font-size: 16px;
+  color: #e91e63;
 }
 
 .mobile-menu-item-logout {
-  background: #111111 !important;
-  margin-top: 8px;
-}
-
-.mobile-menu-item-logout i {
-  color: #E91E63 !important;
+  display: none;
 }
 
 .mobile-submenu {
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.3s ease;
-  margin-left: 0;
-  margin-bottom: 0;
-  background: #1C1C1C;
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+  margin: 0;
+  background: #0a0a0a;
 }
 
 .mobile-submenu.active {
-  max-height: 500px;
-  border-radius: 8px;
-  margin: 5px 15px;
+  grid-template-rows: 1fr;
+}
+
+.mobile-submenu-inner {
+  overflow: hidden;
+  min-height: 0;
 }
 
 .mobile-submenu-item {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 12px 32px;
+  padding: 12px 20px 12px 56px;
   background: transparent;
   border-radius: 0;
-  color: white;
+  color: #ffffff;
   font-size: 14px;
   text-decoration: none;
-  transition: all 0.3s ease;
   margin-bottom: 0;
-  border-bottom: 1px solid #1C1C1C;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .mobile-submenu-item:hover {
-  background: #252525;
+  background: #151515;
 }
 
 .mobile-submenu-item.router-link-active {
-  background: linear-gradient(90deg, #f06292 0%, #ec407a 100%);
-  color: white !important;
-  border-radius: 6px;
-  margin: 4px 15px;
-  padding-left: 17px;
+  background: transparent;
+  color: #e91e63 !important;
+  border-radius: 0;
+  margin: 0;
+  padding-left: 56px;
   font-weight: 600;
-  border-bottom: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .mobile-submenu-item.router-link-active i,
@@ -2143,6 +2265,14 @@ newPhoto: null,
 
 .header-icon-share-desktop {
   display: block;
+}
+
+.header-photo-label-mobile {
+  display: none;
+}
+
+.header-photo-label-desktop {
+  display: flex;
 }
 
 .header-icon-agenda-mobile {
@@ -2240,7 +2370,9 @@ newPhoto: null,
   }
 
   .header-cog-link,
-  .header-agenda-link {
+  .header-agenda-link,
+  .header-photo-label-desktop,
+  .header-photo-controls {
     display: none !important;
   }
 
@@ -2304,14 +2436,15 @@ newPhoto: null,
     color: #111111;
   }
 
-  .header-photo-label {
+  .header-photo-label,
+  .header-photo-label-mobile {
     order: 3;
     margin-left: 0;
     padding: 0;
-  }
-
-  .header-photo-controls {
-    order: 4;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    cursor: pointer;
   }
 
   .header-notification-icon-wrap {
@@ -2346,6 +2479,16 @@ newPhoto: null,
     width: 36px;
     height: 36px;
     border: 2.5px solid #e91e63;
+    border-radius: 50%;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  .header-photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
   }
 
   .header-icon-link {
