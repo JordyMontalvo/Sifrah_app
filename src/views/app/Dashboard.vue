@@ -1,6 +1,10 @@
 <template>
   <App :session="session" :title="title">
     <div v-cloak>
+      <section class="dashboard-mobile-hello">
+        <h1 class="dashboard-mobile-hello-title">Hola{{ firstName ? `, ${firstName}` : "" }} 👋</h1>
+        <p class="dashboard-mobile-hello-sub">Este es el resumen de tu negocio hoy</p>
+      </section>
       <!-- Banner slider (mantener el existente) -->
       <div v-if="!loading && bannerImages.length > 0" class="banner-slider">
         <div class="slider-wrapper">
@@ -538,6 +542,12 @@ export default {
     title() {
       return "Dashboard";
     },
+    firstName() {
+      const raw = String(this.$store.state.name || "").trim();
+      if (!raw) return "";
+      const first = raw.split(/\s+/)[0];
+      return first.charAt(0).toUpperCase() + first.slice(1).toLowerCase();
+    },
     bannerImages() {
       return [this.banner.img, this.banner.img2, this.banner.img3].filter(
         (img) => typeof img === "string" && img.trim() !== ""
@@ -670,6 +680,8 @@ export default {
     this.total_points = data.total_points;
     this.historicalRank = data.historicalRank || data.rank || "none";
     this.historicalRankLabel = data.historicalRankLabel || "Ninguno";
+    this.$store.commit("SET_HISTORICAL_RANK_LABEL", this.historicalRankLabel);
+    this.$store.commit("SET_RANK", this.historicalRank);
     this.historicalRankImage = data.historicalRankImage
       ? String(data.historicalRankImage).trim() || null
       : null;
@@ -686,3 +698,34 @@ export default {
 </script>
 
 <style scoped src="../../assets/style/views/app/Dashboard.css"></style>
+<style scoped>
+@media (min-width: 768px) {
+  .dashboard-mobile-hello {
+    display: none !important;
+  }
+}
+
+@media (max-width: 767px) {
+  .dashboard-mobile-hello {
+    display: block !important;
+    padding: 8px 16px 16px;
+  }
+
+  .dashboard-mobile-hello-title {
+    margin: 0;
+    font-size: 26px;
+    font-weight: 600;
+    color: #111111;
+    line-height: 1.2;
+    letter-spacing: -0.03em;
+  }
+
+  .dashboard-mobile-hello-sub {
+    margin: 8px 0 0;
+    font-size: 16px;
+    font-weight: 400;
+    color: #6b6b6b;
+    line-height: 1.4;
+  }
+}
+</style>

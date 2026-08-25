@@ -573,14 +573,18 @@
     .card-icon
       width 60px
       height 60px
-      background #fff3e0
+      background transparent
       border-radius 50%
       display flex
       align-items center
       justify-content center
-      color #ff9800
+      color #e91e63
       font-size 28px
       margin-bottom 15px
+      .card-icon-svg
+        width 56px
+        height 56px
+        display block
     .card-content
       flex 1
     .card-value
@@ -1014,19 +1018,33 @@
     
     .summary-cards
       grid-template-columns repeat(2, 1fr)
-      gap 15px
+      gap 10px
     
     .summary-card
-      padding 15px
+      aspect-ratio 1 / 1
+      padding 10px 8px
+      justify-content center
+      gap 4px
+      min-height 0
       .card-icon
-        width 50px
-        height 50px
-        font-size 24px
-        margin-bottom 10px
+        width 62px
+        height 62px
+        font-size 20px
+        margin-bottom 0
+        flex-shrink 0
+        .card-icon-svg
+          width 62px
+          height 62px
+      .card-content
+        flex none
       .card-value
-        font-size 24px
+        font-size 22px
+        margin-bottom 2px
+        line-height 1.1
       .card-label
-        font-size 12px
+        font-size 10px
+        line-height 1.2
+        letter-spacing 0.2px
     
     .levels-chart
       padding 15px

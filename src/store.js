@@ -9,6 +9,8 @@ export default new Vuex.Store({
     office_id: null,
     name: null,
     lastName: null,
+    rank: null,
+    historicalRankLabel: null,
     affiliated: null,
     activated: null,
     _activated: null,
@@ -81,6 +83,22 @@ export default new Vuex.Store({
         localStorage.setItem('lastName', lastName)
       } else {
         localStorage.removeItem('lastName')
+      }
+    },
+    SET_RANK: (state, rank) => {
+      state.rank = rank
+      if (rank) {
+        localStorage.setItem('rank', rank)
+      } else {
+        localStorage.removeItem('rank')
+      }
+    },
+    SET_HISTORICAL_RANK_LABEL: (state, label) => {
+      state.historicalRankLabel = label
+      if (label) {
+        localStorage.setItem('historicalRankLabel', label)
+      } else {
+        localStorage.removeItem('historicalRankLabel')
       }
     },
     SET_AFFILIATED: (state, affiliated) => {
@@ -331,6 +349,12 @@ export default new Vuex.Store({
         const lastName = localStorage.getItem('lastName')
         if (lastName) commit('SET_LAST_NAME', lastName)
 
+        const rank = localStorage.getItem('rank')
+        if (rank) commit('SET_RANK', rank)
+
+        const historicalRankLabel = localStorage.getItem('historicalRankLabel')
+        if (historicalRankLabel) commit('SET_HISTORICAL_RANK_LABEL', historicalRankLabel)
+
         const affiliated = localStorage.getItem('affiliated')
         if (affiliated !== null) {
           const isAffiliated = affiliated === 'true'
@@ -400,6 +424,8 @@ export default new Vuex.Store({
       commit('SET_OFFICE_ID', { office_id: null, path: null })
       commit('SET_NAME', null)
       commit('SET_LAST_NAME', null)
+      commit('SET_RANK', null)
+      commit('SET_HISTORICAL_RANK_LABEL', null)
       commit('SET_AFFILIATED', null)
       commit('SET_ACTIVATED', null)
       commit('SET__ACTIVATED', null)

@@ -8,6 +8,10 @@
     "build": "vue-cli-service build"
   },
   "dependencies": {
+    "@capacitor/android": "^8.5.0",
+    "@capacitor/cli": "^8.5.0",
+    "@capacitor/core": "^8.5.0",
+    "@capacitor/push-notifications": "^8.1.2",
     "@sentry/tracing": "^6.19.7",
     "@sentry/vue": "^6.19.7",
     "axios": "^0.19.2",

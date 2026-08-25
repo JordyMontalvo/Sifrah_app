@@ -273,8 +273,8 @@
                       
                       <div class="product-catalog-info">
                         <h4 class="product-catalog-name">{{ product.name }}</h4>
-                        <div v-if="product.subdescription" class="product-catalog-info-text">
-                          {{ product.subdescription }}
+                        <div class="product-catalog-info-text">
+                          {{ product.subdescription || '\u00a0' }}
                         </div>
                         <div class="product-catalog-price">
                           <template v-if="isPromotionProduct(product)">

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "689012570646",
+    "project_id": "sifrah-notificaciones",
+    "storage_bucket": "sifrah-notificaciones.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:689012570646:android:9428907ca04f3a339f9337",
+        "android_client_info": {
+          "package_name": "com.sifrah.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAlvqfO0MVAxuVXL-IhncJRZbJYAt9H7as"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

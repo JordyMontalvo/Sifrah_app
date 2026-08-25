@@ -9,10 +9,6 @@
       <div v-else class="profile-glass-bg">
         <div class="profile-glass-card">
           <div class="profile-glass-header">
-            <div class="profile-glass-title">
-              <i class="fas fa-user-circle profile-glass-icon"></i>
-              <span>Perfil</span>
-            </div>
             <button
               class="profile-glass-save"
               :disabled="sending"
@@ -65,13 +61,15 @@
               </section>
               <section class="profile-glass-section">
                 <h3>Datos personales</h3>
-                <div class="glass-form-group">
-                  <label>Nombre</label>
-                  <input v-model="name" type="text" readonly/>
-                </div>
-                <div class="glass-form-group">
-                  <label>Apellido</label>
-                  <input v-model="lastName" type="text" readonly />
+                <div class="glass-form-row">
+                  <div class="glass-form-group">
+                    <label>Nombre</label>
+                    <input v-model="name" type="text" readonly/>
+                  </div>
+                  <div class="glass-form-group">
+                    <label>Apellido</label>
+                    <input v-model="lastName" type="text" readonly />
+                  </div>
                 </div>
                 <div class="glass-form-group">
                   <label>DNI</label>
