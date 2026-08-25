@@ -1,8 +1,7 @@
 <template>
   <App :session="session" :office_id="office_id" :title="title">
     <h4 class="tabs">
-      <router-link class="tab" to="/transfer"> Monedero </router-link>
-      &nbsp;&nbsp;
+      <router-link class="tab" exact to="/transfer">Monedero</router-link>
       <router-link class="tab" to="/transfers" v-if="!office_id">
         Transferencias
       </router-link>
@@ -20,32 +19,36 @@
             <div class="transfer-soft-balance">
               <small>Total disponible: S/. {{ balanceDisplay }}</small>
             </div>
-            <div class="soft-form-group">
-              <label>Usuario receptor (DNI)</label>
-              <input
-                v-model="dni"
-                placeholder="Usuario receptor"
-                oninput="this.value=this.value.replace(/(?![0-9])./gmi,'')"
-                @keydown="error = null"
-              />
-            </div>
-            <div class="soft-form-group">
-              <label>Monto a enviar</label>
-              <input
-                v-model.number="amount"
-                placeholder="Monto a enviar"
-                oninput="this.value=this.value.replace(/(?![0-9, '.'])./gmi,'')"
-                @keydown="error = null"
-              />
+            <div class="soft-form-row">
+              <div class="soft-form-group">
+                <label>DNI</label>
+                <input
+                  v-model="dni"
+                  placeholder="Receptor"
+                  inputmode="numeric"
+                  oninput="this.value=this.value.replace(/(?![0-9])./gmi,'')"
+                  @keydown="error = null"
+                />
+              </div>
+              <div class="soft-form-group">
+                <label>Monto</label>
+                <input
+                  v-model.number="amount"
+                  placeholder="S/. 0.00"
+                  inputmode="decimal"
+                  oninput="this.value=this.value.replace(/(?![0-9, '.'])./gmi,'')"
+                  @keydown="error = null"
+                />
+              </div>
             </div>
             <transition name="fade">
               <span v-if="error" class="soft-alert">{{ error }}</span>
             </transition>
             <div class="soft-form-group">
-              <label>Motivo de transferencia</label>
+              <label>Motivo</label>
               <textarea
                 v-model="desc"
-                placeholder="Motivo de transferencia"
+                placeholder="Motivo de la transferencia"
                 maxlength="30"
               ></textarea>
             </div>
@@ -268,31 +271,47 @@ export default {
 }
 .tabs {
   display: flex;
+  flex-wrap: nowrap;
   justify-content: center;
   align-items: center;
+  width: 100%;
+  box-sizing: border-box;
   margin-bottom: 24px;
 }
-.tab {
+.tabs .tab {
   display: flex;
   align-items: center;
-  font-size: 1.18rem;
-  font-weight: 600;
-  color: #fff;
-  background: #cf1658;
-  border-radius: 18px;
-  padding: 10px 28px;
+  justify-content: center;
+  min-height: 44px;
+  height: 44px;
+  padding: 0 20px;
   margin: 0 6px;
-  box-shadow: 0 2px 8px rgba(255, 152, 0, 0.07);
-  transition: all 0.18s;
+  box-sizing: border-box;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+  color: #e91e63;
+  background: #fce4ec;
+  border: none;
+  border-radius: 18px;
   text-decoration: none;
-  position: relative;
+  box-shadow: none;
+  transform: none !important;
+  transition: background-color 0.18s, color 0.18s;
 }
-.tab:hover,
-.tab.router-link-exact-active {
+.tabs .tab:hover,
+.tabs .tab:focus,
+.tabs .tab.router-link-active,
+.tabs .tab.router-link-exact-active {
   background: #e91e63;
   color: #fff;
-  box-shadow: 0 4px 16px rgba(255, 0, 221, 0.13);
-  transform: translateY(-2px) scale(1.04);
+  box-shadow: none;
+  transform: none !important;
+}
+.soft-form-row {
+  display: flex;
+  flex-direction: column;
 }
 .transfer-title {
   text-align: center;
@@ -331,16 +350,18 @@ export default {
   color: #222;
   padding: 14px 16px;
   outline: none;
+  box-sizing: border-box;
+  width: 100%;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04) inset;
-  transition: box-shadow 0.22s, background 0.22s, border 0.22s;
+  transition: box-shadow 0.22s, background-color 0.22s, border-color 0.22s;
 }
 .soft-form-group input:focus,
 .soft-form-group select:focus,
 .soft-form-group textarea:focus {
   background: #fff;
-  border: 2px solid #ff9800;
-  box-shadow: 0 0 0 4px rgba(255, 152, 0, 0.1),
-    0 4px 16px rgba(255, 152, 0, 0.13) inset;
+  border: 1.5px solid #e91e63;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04) inset,
+    0 0 0 3px rgba(233, 30, 99, 0.12);
 }
 .soft-form-group textarea {
   min-height: 48px;
@@ -356,7 +377,7 @@ export default {
   font-size: 1.13rem;
   font-weight: 700;
   margin-top: 18px;
-  box-shadow: 0 2px 8px rgba(255, 152, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(233, 30, 99, 0.18);
   cursor: pointer;
   transition: background 0.22s, box-shadow 0.22s, transform 0.22s;
   animation: button-fadein 0.7s 0.2s both;
@@ -366,12 +387,12 @@ export default {
   gap: 8px;
 }
 .soft-btn:active {
-  background: #fb8c00;
+  background: #cf1658;
 }
 .soft-btn:hover:not(:disabled) {
   background: #cf1658;
-  box-shadow: 0 6px 24px rgba(255, 152, 0, 0.18);
-  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 6px 24px rgba(233, 30, 99, 0.22);
+  transform: translateY(-2px);
 }
 .soft-alert {
   color: #e53935;
@@ -445,12 +466,12 @@ export default {
   border-radius: 50%;
   object-fit: cover;
   margin-bottom: 8px;
-  box-shadow: 0 2px 8px rgba(255, 152, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(233, 30, 99, 0.12);
 }
 .transfer-soft-name {
   font-size: 1.15rem;
   font-weight: 600;
-  color: #ff9800;
+  color: #e91e63;
   margin-bottom: 8px;
 }
 .transfer-soft-pass-group {
@@ -480,10 +501,108 @@ export default {
 .transfer-soft-cancel:hover {
   color: #b71c1c;
 }
-@media (max-width: 600px) {
+@media (max-width: 900px) {
+  .tabs {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    margin: 0 0 14px;
+    padding: 0;
+  }
+  .tabs .tab,
+  .tabs .tab:hover,
+  .tabs .tab.router-link-active,
+  .tabs .tab.router-link-exact-active {
+    width: 100%;
+    flex: none;
+    margin: 0;
+    height: 44px;
+    min-height: 44px;
+    padding: 0 16px;
+    font-size: 0.95rem;
+    border-radius: 14px;
+    transform: none !important;
+    box-shadow: none;
+  }
   .transfer-soft-section {
-    max-width: 98vw;
-    margin: 16px 0;
+    animation: none;
+  }
+  .transfer-soft-bg {
+    min-height: auto;
+    padding: 8px 0 28px;
+  }
+  .transfer-soft-section {
+    max-width: 100%;
+    margin: 0;
+    padding: 16px 14px 24px;
+    border-radius: 16px;
+    box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
+  }
+  .transfer-title {
+    font-size: 1.05rem;
+    margin-bottom: 10px;
+  }
+  .transfer-soft-balance {
+    margin-bottom: 12px;
+    text-align: left;
+    font-size: 0.92rem;
+  }
+  .soft-form-row {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .soft-form-row .soft-form-group {
+    flex: 1;
+    min-width: 0;
+  }
+  .soft-form-group {
+    margin-bottom: 12px;
+  }
+  .soft-form-group label {
+    font-size: 0.92rem;
+    margin-bottom: 6px;
+  }
+  .soft-form-group input,
+  .soft-form-group select,
+  .soft-form-group textarea {
+    padding: 11px 14px;
+    font-size: 1rem;
+    border-radius: 12px;
+  }
+  .soft-form-group textarea {
+    min-height: 72px;
+  }
+  .soft-btn {
+    margin-top: 8px;
+    padding: 13px 0;
+    font-size: 1.05rem;
+    transform: none;
+  }
+  .soft-btn:hover:not(:disabled) {
+    transform: none;
+  }
+  .transfer-soft-avatar {
+    height: 84px;
+    width: 84px;
+  }
+  .transfer-soft-confirm {
+    width: 100%;
+  }
+  .transfer-soft-confirm .soft-form-group {
+    width: 100%;
+  }
+  .transfer-soft-pass-group {
+    width: 100%;
+  }
+  .transfer-soft-pass-group input {
+    flex: 1;
+    min-width: 0;
+  }
+  .transfer-soft-actions {
+    width: 100%;
+    flex-direction: column-reverse;
+    gap: 10px;
   }
 }
 </style>

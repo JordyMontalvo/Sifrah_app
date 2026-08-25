@@ -1,9 +1,8 @@
 <template>
   <App :session="session" :title="title">
     <h4 class="tabs">
-      <router-link class="tab" to="/transfer"> Monedero </router-link>
-      &nbsp;&nbsp;
-      <router-link class="tab" to="/transfers"> Transferencias </router-link>
+      <router-link class="tab" exact to="/transfer">Monedero</router-link>
+      <router-link class="tab" to="/transfers">Transferencias</router-link>
     </h4>
 
     <Spinner v-if="loading" :size="40" :color="'#086eb6'" /> <br />
@@ -99,31 +98,43 @@ export default {
 }
 .tabs {
   display: flex;
+  flex-wrap: nowrap;
   justify-content: center;
   align-items: center;
+  width: 100%;
+  box-sizing: border-box;
   margin-bottom: 24px;
 }
-.tab {
+.tabs .tab {
   display: flex;
   align-items: center;
-  font-size: 1.18rem;
-  font-weight: 600;
-  color: #fff;
-  background: #cf1658;
-  border-radius: 18px;
-  padding: 10px 28px;
+  justify-content: center;
+  min-height: 44px;
+  height: 44px;
+  padding: 0 20px;
   margin: 0 6px;
-  box-shadow: 0 2px 8px rgba(255, 152, 0, 0.07);
-  transition: all 0.18s;
+  box-sizing: border-box;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+  color: #e91e63;
+  background: #fce4ec;
+  border: none;
+  border-radius: 18px;
   text-decoration: none;
-  position: relative;
+  box-shadow: none;
+  transform: none !important;
+  transition: background-color 0.18s, color 0.18s;
 }
-.tab:hover,
-.tab.router-link-exact-active {
+.tabs .tab:hover,
+.tabs .tab:focus,
+.tabs .tab.router-link-active,
+.tabs .tab.router-link-exact-active {
   background: #e91e63;
   color: #fff;
-  box-shadow: 0 4px 16px rgba(255, 152, 0, 0.13);
-  transform: translateY(-2px) scale(1.04);
+  box-shadow: none;
+  transform: none !important;
 }
 .scroll {
   overflow-x: auto;
@@ -179,11 +190,32 @@ export default {
   font-size: 1.05em;
 }
 @media (max-width: 900px) {
+  .tabs {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    margin: 0 0 14px;
+    padding: 0;
+  }
+  .tabs .tab,
+  .tabs .tab:hover,
+  .tabs .tab.router-link-active,
+  .tabs .tab.router-link-exact-active {
+    width: 100%;
+    margin: 0;
+    height: 44px;
+    min-height: 44px;
+    padding: 0 16px;
+    font-size: 0.95rem;
+    border-radius: 14px;
+    transform: none !important;
+    box-shadow: none;
+  }
   .collects-table {
     min-width: 700px;
   }
   .scroll {
-    padding: 0 8px;
+    padding: 0 8px 28px;
   }
 }
 </style>

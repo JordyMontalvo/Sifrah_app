@@ -2,35 +2,40 @@
   <App :session="session" :title="title">
     <Spinner v-if="loading" :size="40" :color="'#086eb6'" />
     <h4 class="tabs">
-      <router-link class="tab" to="/collect"> Nuevo Retiro </router-link>
-      &nbsp;&nbsp;
-      <router-link class="tab" to="/collects">
-        Historial de Retiros
-      </router-link>
+      <router-link class="tab" exact to="/collect">Nuevo Retiro</router-link>
+      <router-link class="tab" to="/collects">Historial de Retiros</router-link>
     </h4>
     <div class="collect-soft-bg">
       <section class="collect-soft-section">
-        <form v-if="!loading" class="collect-soft-form" @submit.prevent="POST">
+        <div v-if="!loading" class="collect-soft-form">
           <div class="collect-soft-col">
             <div class="collect-soft-radios">
-              <label :class="['soft-radio', { checked: !cash }]">
-                <input type="radio" :value="false" v-model="cash" />
+              <label
+                :class="['soft-radio', { checked: withdrawType === 'cash' }]"
+                @click.prevent="selectWithdrawType('cash')"
+              >
+                <input type="radio" :checked="withdrawType === 'cash'" />
                 <span class="soft-radio-custom"></span>
                 <span>Retirar en efectivo</span>
               </label>
-              <label :class="['soft-radio', { checked: cash }]">
-                <input type="radio" :value="true" v-model="cash" />
+              <label
+                :class="['soft-radio', { checked: withdrawType === 'bank' }]"
+                @click.prevent="selectWithdrawType('bank')"
+              >
+                <input type="radio" :checked="withdrawType === 'bank'" />
                 <span class="soft-radio-custom"></span>
                 <span>Retirar en cuenta bancaria</span>
               </label>
-              <router-link to="/transfer">
-                <label class="soft-radio">
-                  <input type="radio" disabled />
-                  <span class="soft-radio-custom"></span>
-                  <span>Transferir saldo</span>
-                </label>
-              </router-link>
+              <label
+                :class="['soft-radio', { checked: withdrawType === 'transfer' }]"
+                @click.prevent="selectWithdrawType('transfer')"
+              >
+                <input type="radio" :checked="withdrawType === 'transfer'" />
+                <span class="soft-radio-custom"></span>
+                <span>Transferir saldo</span>
+              </label>
             </div>
+            <template v-if="withdrawType !== 'transfer'">
             <div class="soft-form-group">
               <label>Oficina</label>
               <select
@@ -44,7 +49,7 @@
                 <option value="secondary">Ledezma</option>
               </select>
             </div>
-            <div v-if="cash">
+            <div v-if="cash" class="soft-form-row">
               <div class="soft-form-group">
                 <label>Banco</label>
                 <input
@@ -66,8 +71,9 @@
                 />
               </div>
             </div>
+            </template>
           </div>
-          <div class="collect-soft-col">
+          <form class="collect-soft-col" v-if="withdrawType !== 'transfer'" @submit.prevent="POST">
             <div v-if="cash" class="soft-form-group">
               <label>Número de cuenta</label>
               <input
@@ -111,8 +117,113 @@
                 ><i class="fas fa-spinner fa-spin"></i> Guardando...</span
               >
             </button>
+          </form>
+          <div class="collect-soft-col" v-else>
+            <form
+              v-if="!transferConfirmation"
+              class="collect-transfer-form"
+              @submit.prevent="validateTransfer"
+            >
+              <div class="collect-soft-balance">
+                <small>Total disponible: S/. {{ balance }}</small>
+              </div>
+              <div class="soft-form-row">
+                <div class="soft-form-group">
+                  <label>DNI</label>
+                  <input
+                    v-model="dni"
+                    placeholder="Receptor"
+                    inputmode="numeric"
+                    oninput="this.value=this.value.replace(/(?![0-9])./gmi,'')"
+                    @keydown="transferError = null"
+                  />
+                </div>
+                <div class="soft-form-group">
+                  <label>Monto</label>
+                  <input
+                    v-model.number="transferAmount"
+                    placeholder="S/. 0.00"
+                    inputmode="decimal"
+                    oninput="this.value=this.value.replace(/(?![0-9, '.'])./gmi,'')"
+                    @keydown="transferError = null"
+                  />
+                </div>
+              </div>
+              <transition name="fade">
+                <span v-if="transferError" class="soft-alert">{{ transferError }}</span>
+              </transition>
+              <div class="soft-form-group">
+                <label>Motivo</label>
+                <textarea
+                  v-model="transferDesc"
+                  placeholder="Motivo de la transferencia"
+                  maxlength="30"
+                ></textarea>
+              </div>
+              <button class="soft-btn" :disabled="validatingTransfer">
+                <span v-if="!validatingTransfer">Transferir</span>
+                <span v-else
+                  ><i class="fas fa-spinner fa-spin"></i> Validando...</span
+                >
+              </button>
+            </form>
+            <form
+              v-else
+              class="collect-transfer-form"
+              @submit.prevent="sendTransfer"
+            >
+              <div class="collect-transfer-confirm">
+                <img
+                  v-if="transferPhoto"
+                  :src="transferPhoto"
+                  class="collect-transfer-avatar"
+                />
+                <p class="collect-transfer-name">{{ transferName }}</p>
+                <div class="soft-form-group">
+                  <label>Contraseña</label>
+                  <div class="collect-transfer-pass">
+                    <input
+                      :type="showTransferPass ? 'text' : 'password'"
+                      placeholder="Confirmar contraseña"
+                      v-model="transferPassword"
+                      @keydown="transferError2 = null"
+                    />
+                    <i
+                      class="show far"
+                      :class="showTransferPass ? 'fa-eye-slash' : 'fa-eye'"
+                      @click="showTransferPass = !showTransferPass"
+                    ></i>
+                  </div>
+                </div>
+                <transition name="fade">
+                  <span v-if="transferError2" class="soft-alert">{{ transferError2 }}</span>
+                </transition>
+                <div class="collect-transfer-summary">
+                  <small>Monto a enviar: S/. {{ transferAmountDisplay }}</small>
+                  <br />
+                  <span><i>{{ transferDesc }}</i></span>
+                </div>
+                <div v-show="!transferDone" class="collect-transfer-actions">
+                  <small
+                    @click="transferConfirmation = false"
+                    class="collect-transfer-cancel"
+                  >
+                    <i class="fa fa-arrow-left"></i> Cancelar
+                  </small>
+                  <button class="soft-btn" :disabled="sendingTransfer">
+                    <span v-if="!sendingTransfer">Confirmar</span>
+                    <span v-else
+                      ><i class="fas fa-spinner fa-spin"></i> Confirmando...</span
+                    >
+                  </button>
+                </div>
+                <small class="soft-success" v-show="transferDone"
+                  >Transferencia exitosa</small
+                >
+              </div>
+            </form>
           </div>
-        </form>
+        </div>
       </section>
     </div>
   </App>
@@ -130,6 +241,7 @@ export default {
   },
   data() {
     return {
+      withdrawType: "bank",
       cash: true,
       bank: null,
       account: null,
@@ -153,11 +265,29 @@ export default {
       alert: null,
 
       success: false,
+
+      dni: null,
+      transferAmount: null,
+      transferDesc: null,
+      transferPassword: null,
+      transferName: null,
+      transferPhoto: null,
+      transferError: null,
+      transferError2: null,
+      transferConfirmation: false,
+      validatingTransfer: false,
+      sendingTransfer: false,
+      transferDone: false,
+      showTransferPass: false,
     };
   },
   computed: {
     session() {
       return this.$store.state.session;
+    },
+    transferAmountDisplay() {
+      const n = Number(this.transferAmount);
+      return Number.isFinite(n) ? n.toFixed(2) : "0.00";
     },
   },
   filters: {
@@ -197,7 +327,25 @@ export default {
     // this.amount  = data.balance
   },
   methods: {
+    isMobile() {
+      return typeof window !== "undefined" && window.innerWidth <= 900;
+    },
+    selectWithdrawType(type) {
+      if (type === "transfer" && !this.isMobile()) {
+        this.$router.push("/transfer");
+        return;
+      }
+      this.withdrawType = type;
+      this.cash = type === "bank";
+      if (type !== "transfer") {
+        this.transferConfirmation = false;
+        this.transferError = null;
+        this.transferError2 = null;
+        this.transferDone = false;
+      }
+    },
     async POST() {
+      if (this.withdrawType === "transfer") return;
       const {
         cash,
         bank,
@@ -257,6 +405,49 @@ export default {
       if (name == "amount") this.error.amount = false;
       if (name == "office") this.error.office = false;
     },
+    async validateTransfer() {
+      const dni = this.dni;
+      const amount = this.transferAmount;
+      const desc = this.transferDesc;
+
+      if (!dni) return (this.transferError = "Ingresar DNI");
+      if (!amount) return (this.transferError = "Ingresar monto");
+      if (amount > Number(this.balance))
+        return (this.transferError = "Monto inválido");
+
+      this.validatingTransfer = true;
+      const { data } = await api.Transfer.POST(this.session, {
+        dni,
+        amount,
+        desc,
+        type: "validate",
+      });
+      this.validatingTransfer = false;
+
+      if (data.error) return (this.transferError = "Usuario inválido");
+
+      this.transferConfirmation = true;
+      this.transferName = data._name;
+      this.transferPhoto = data._photo;
+    },
+    async sendTransfer() {
+      if (!this.transferPassword)
+        return (this.transferError2 = "Ingresar contraseña");
+
+      this.sendingTransfer = true;
+      const { data } = await api.Transfer.POST(this.session, {
+        dni: this.dni,
+        amount: this.transferAmount,
+        desc: this.transferDesc,
+        password: this.transferPassword,
+        type: "send",
+      });
+      this.sendingTransfer = false;
+
+      if (data.error) return (this.transferError2 = "Contraseña inválida");
+
+      this.transferDone = true;
+    },
   },
 };
 </script>
@@ -289,11 +480,55 @@ export default {
     transform: translateY(0) scale(1);
   }
 }
+.tabs {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 24px;
+}
+.tabs .tab {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  height: 44px;
+  padding: 0 20px;
+  margin: 0 6px;
+  box-sizing: border-box;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+  color: #e91e63;
+  background: #fce4ec;
+  border: none;
+  border-radius: 18px;
+  text-decoration: none;
+  box-shadow: none;
+  transform: none !important;
+  transition: background-color 0.18s, color 0.18s;
+}
+.tabs .tab:hover,
+.tabs .tab:focus,
+.tabs .tab.router-link-active,
+.tabs .tab.router-link-exact-active {
+  background: #e91e63;
+  color: #fff;
+  box-shadow: none;
+  transform: none !important;
+}
 .collect-soft-form {
   width: 100%;
   display: flex;
   flex-direction: row;
   gap: 32px;
+}
+.soft-form-row {
+  display: flex;
+  flex-direction: column;
 }
 .collect-soft-col {
   flex: 1 1 0;
@@ -312,19 +547,25 @@ export default {
   display: flex;
   align-items: center;
   gap: 8px;
+  min-height: 44px;
   font-size: 1.08rem;
   color: #444;
   cursor: pointer;
   position: relative;
   user-select: none;
-  padding: 6px 12px;
+  padding: 0 12px;
+  box-sizing: border-box;
   border-radius: 10px;
-  transition: background 0.18s, box-shadow 0.18s;
+  background: transparent;
+  box-shadow: none;
+  transform: none;
+  transition: background-color 0.18s;
 }
 .soft-radio.checked,
 .soft-radio:hover {
-  background: #f8f9fc;
-  box-shadow: 0 2px 8px rgba(255, 152, 0, 0.07);
+  background: #fce4ec;
+  box-shadow: none;
+  transform: none;
 }
 .soft-radio input[type="radio"] {
   display: none;
@@ -335,7 +576,7 @@ export default {
   border-radius: 50%;
   border: 2px solid #e91e63;
   background: #fff;
-  box-shadow: 0 1px 4px rgba(255, 152, 0, 0.08);
+  box-shadow: none;
   position: relative;
   transition: border 0.18s, box-shadow 0.18s;
   display: flex;
@@ -348,10 +589,9 @@ export default {
   width: 12px;
   height: 12px;
   border-radius: 50%;
-  background: #cf1658;
-  box-shadow: 0 2px 8px rgba(255, 152, 0, 0.13);
+  background: #e91e63;
+  box-shadow: none;
   margin: auto;
-  animation: radio-pop 0.25s;
 }
 @keyframes radio-pop {
   0% {
@@ -389,16 +629,32 @@ export default {
   color: #222;
   padding: 14px 16px;
   outline: none;
+  box-sizing: border-box;
+  width: 100%;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04) inset;
-  transition: box-shadow 0.22s, background 0.22s, border 0.22s;
+  transition: box-shadow 0.22s, background-color 0.22s, border-color 0.22s;
+}
+.soft-form-group select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  padding-right: 44px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23333333' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  background-size: 16px 16px;
+  cursor: pointer;
+}
+.soft-form-group select::-ms-expand {
+  display: none;
 }
 .soft-form-group input:focus,
 .soft-form-group select:focus,
 .soft-form-group textarea:focus {
   background: #fff;
-  border: 2px solid #ff9800;
-  box-shadow: 0 0 0 4px rgba(255, 152, 0, 0.1),
-    0 4px 16px rgba(255, 152, 0, 0.13) inset;
+  border: 1.5px solid #e91e63;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04) inset,
+    0 0 0 3px rgba(233, 30, 99, 0.12);
 }
 .soft-form-group textarea {
   min-height: 48px;
@@ -420,7 +676,7 @@ export default {
   font-size: 1.13rem;
   font-weight: 700;
   margin-top: 18px;
-  box-shadow: 0 2px 8px rgba(255, 152, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(233, 30, 99, 0.18);
   cursor: pointer;
   transition: background 0.22s, box-shadow 0.22s, transform 0.22s;
   animation: button-fadein 0.7s 0.2s both;
@@ -434,8 +690,8 @@ export default {
 }
 .soft-btn:hover:not(:disabled) {
   background: #cf1658;
-  box-shadow: 0 6px 24px rgba(255, 152, 0, 0.18);
-  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 6px 24px rgba(233, 30, 99, 0.22);
+  transform: translateY(-2px);
 }
 .soft-alert {
   color: #e53935;
@@ -497,13 +753,156 @@ export default {
     transform: translateY(0);
   }
 }
+.collect-transfer-form {
+  width: 100%;
+}
+.collect-transfer-confirm {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+.collect-transfer-avatar {
+  height: 84px;
+  width: 84px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 2px 8px rgba(233, 30, 99, 0.12);
+}
+.collect-transfer-name {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #e91e63;
+  margin: 0;
+}
+.collect-transfer-pass {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+.collect-transfer-pass input {
+  flex: 1;
+  min-width: 0;
+}
+.collect-transfer-pass i {
+  color: #888;
+  cursor: pointer;
+}
+.collect-transfer-summary {
+  margin: 4px 0 8px;
+  text-align: center;
+  color: #888;
+  font-size: 0.95rem;
+}
+.collect-transfer-actions {
+  width: 100%;
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 10px;
+}
+.collect-transfer-cancel {
+  color: #e53935;
+  cursor: pointer;
+  font-weight: 600;
+  text-align: center;
+}
+.collect-transfer-confirm .soft-form-group {
+  width: 100%;
+}
 @media (max-width: 900px) {
+  .tabs {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    margin: 0 0 14px;
+    padding: 0;
+  }
+  .tabs .tab,
+  .tabs .tab:hover,
+  .tabs .tab.router-link-active,
+  .tabs .tab.router-link-exact-active {
+    width: 100%;
+    margin: 0;
+    height: 44px;
+    min-height: 44px;
+    padding: 0 16px;
+    font-size: 0.95rem;
+    border-radius: 14px;
+    transform: none !important;
+    box-shadow: none;
+  }
+  .collect-soft-bg {
+    min-height: auto;
+    padding: 8px 0 28px;
+  }
+  .collect-soft-section {
+    animation: none;
+    padding: 16px 14px 24px;
+    border-radius: 16px;
+    box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
+  }
   .collect-soft-form {
     flex-direction: column;
     gap: 0;
   }
   .collect-soft-col {
     width: 100%;
+  }
+  .collect-soft-radios {
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 14px;
+  }
+  .soft-radio {
+    width: 100%;
+    min-height: 44px;
+    height: 44px;
+    padding: 0 12px;
+    font-size: 0.95rem;
+    margin: 0;
+  }
+  .soft-form-row {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .soft-form-row .soft-form-group {
+    flex: 1;
+    min-width: 0;
+  }
+  .soft-form-group {
+    margin-bottom: 12px;
+  }
+  .soft-form-group label {
+    font-size: 0.92rem;
+    margin-bottom: 6px;
+  }
+  .soft-form-group input,
+  .soft-form-group select,
+  .soft-form-group textarea {
+    padding: 11px 14px;
+    font-size: 1rem;
+    border-radius: 12px;
+  }
+  .soft-form-group select {
+    padding-right: 40px;
+    background-position: right 14px center;
+    background-size: 14px 14px;
+  }
+  .collect-soft-balance {
+    margin: 4px 0 12px;
+    text-align: left;
+    font-size: 0.92rem;
+  }
+  .soft-btn {
+    margin-top: 8px;
+    padding: 13px 0;
+    font-size: 1.05rem;
+    transform: none;
+  }
+  .soft-btn:hover:not(:disabled) {
+    transform: none;
   }
 }
 </style>
