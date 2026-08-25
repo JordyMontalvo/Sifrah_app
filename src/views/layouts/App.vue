@@ -566,10 +566,12 @@
       </div>
     </section>
 
-    <!-- Overlay para menú de tabs en móvil -->
+    <!-- Overlay para menú de tabs en móvil (se mantiene montado para evitar lag al abrir) -->
     <div 
-      v-if="showMobileTabsMenu" 
+      v-if="isMobile"
       class="mobile-tabs-overlay"
+      :class="{ 'is-open': showMobileTabsMenu }"
+      :aria-hidden="showMobileTabsMenu ? 'false' : 'true'"
       @click="closeMobileTabsMenu"
     >
       <div class="mobile-tabs-menu" @click.stop>
@@ -1115,6 +1117,9 @@ newPhoto: null,
           .catch(err => console.error('Error guardando token tras login', err));
       }
     },
+    showMobileTabsMenu(open) {
+      this.lockMobileNavScroll(!!open);
+    },
   },
   created() {
     this.initPushNotifications();
@@ -1145,6 +1150,7 @@ newPhoto: null,
     window.removeEventListener('touchmove', this.onDrag);
     window.removeEventListener('mouseup', this.stopDrag);
     window.removeEventListener('touchend', this.stopDrag);
+    this.lockMobileNavScroll(false);
   },
   computed: {
     // user
@@ -1360,6 +1366,13 @@ newPhoto: null,
     },
     checkMobile() {
       this.isMobile = window.innerWidth < 768;
+      if (!this.isMobile && this.showMobileTabsMenu) {
+        this.showMobileTabsMenu = false;
+      }
+    },
+    lockMobileNavScroll(lock) {
+      if (typeof document === "undefined") return;
+      document.documentElement.classList.toggle("mobile-nav-open", !!lock);
     },
     formatDate(dateString) {
       if (!dateString) return "";
@@ -1510,6 +1523,7 @@ newPhoto: null,
       }
     },
     closeMobileTabsMenu() {
+      if (!this.showMobileTabsMenu) return;
       this.showMobileTabsMenu = false;
     },
     handleInicioClickAndClose() {
@@ -2041,7 +2055,20 @@ newPhoto: null,
   display: flex;
   align-items: stretch;
   justify-content: flex-start;
-  animation: fadeIn 0.3s ease;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translate3d(-100%, 0, 0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  overscroll-behavior: contain;
+  transition: transform 0.3s cubic-bezier(0.32, 0.72, 0, 1), visibility 0s linear 0.3s;
+}
+
+.mobile-tabs-overlay.is-open {
+  visibility: visible;
+  pointer-events: auto;
+  transform: translate3d(0, 0, 0);
+  transition: transform 0.3s cubic-bezier(0.32, 0.72, 0, 1), visibility 0s linear 0s;
 }
 
 .mobile-tabs-menu {
@@ -2052,6 +2079,7 @@ newPhoto: null,
   flex-direction: column;
   overflow: hidden;
   padding-top: 0;
+  -webkit-overflow-scrolling: touch;
 }
 
 .mobile-tabs-menu::-webkit-scrollbar {
@@ -2151,6 +2179,8 @@ newPhoto: null,
   cursor: pointer;
   padding: 8px;
   line-height: 1;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .mobile-tabs-close i {
@@ -2167,7 +2197,9 @@ newPhoto: null,
   flex-direction: column;
   gap: 0;
   overflow-y: auto;
+  overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
 }
 
 .mobile-menu-item {
@@ -2189,8 +2221,11 @@ newPhoto: null,
   margin: 0;
   cursor: pointer;
   position: relative;
-  overflow: hidden;
   box-sizing: border-box;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .mobile-menu-item-main {
@@ -2217,6 +2252,7 @@ newPhoto: null,
   flex-shrink: 0;
   color: #ffffff;
   display: block;
+  pointer-events: none;
 }
 
 .mobile-menu-icon.icon-home-solid {
@@ -2229,11 +2265,13 @@ newPhoto: null,
   flex-shrink: 0;
   color: #ffffff;
   opacity: 0.95;
-  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none;
+  transform: translateZ(0) rotate(0deg);
+  transition: transform 0.22s ease-out;
 }
 
 .mobile-menu-chevron.rotated {
-  transform: rotate(180deg);
+  transform: translateZ(0) rotate(180deg);
 }
 
 .mobile-menu-item.router-link-active,
@@ -2301,6 +2339,8 @@ newPhoto: null,
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .mobile-logout-btn i {
@@ -2315,7 +2355,7 @@ newPhoto: null,
 .mobile-submenu {
   display: grid;
   grid-template-rows: 0fr;
-  transition: grid-template-rows 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: grid-template-rows 0.22s ease-out;
   margin: 0;
   background: #000000;
 }
@@ -2347,8 +2387,11 @@ newPhoto: null,
   margin: 0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   position: relative;
-  overflow: hidden;
   box-sizing: border-box;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .mobile-submenu-item span {
@@ -2559,6 +2602,8 @@ newPhoto: null,
     color: #111111;
     flex-shrink: 0;
     padding: 0;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
   }
 
   .burger-desktop {
@@ -2702,6 +2747,36 @@ newPhoto: null,
 
   .header-code-button {
     position: relative;
+  }
+
+  .mobile-menu-item:active,
+  .mobile-submenu-item:active {
+    background: rgba(255, 255, 255, 0.07);
+  }
+
+  .mobile-menu-item.active:active,
+  .mobile-menu-item.router-link-active:active,
+  .mobile-submenu-item.router-link-active:active {
+    background: linear-gradient(90deg, #7a1e42 0%, #4a1528 42%, #1c0c12 100%);
+  }
+
+  .mobile-logout-btn:active {
+    background: #262626;
+  }
+}
+
+html.mobile-nav-open,
+html.mobile-nav-open body {
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+@media (max-width: 767px) and (prefers-reduced-motion: reduce) {
+  .mobile-tabs-overlay,
+  .mobile-tabs-overlay.is-open,
+  .mobile-submenu,
+  .mobile-menu-chevron {
+    transition: none !important;
   }
 }
 
