@@ -2109,8 +2109,8 @@ newPhoto: null,
 }
 
 .mobile-photo-container {
-  width: 52px;
-  height: 52px;
+  width: 62px;
+  height: 62px;
   border-radius: 50%;
   overflow: hidden;
   border: 2px solid #e91e63;
