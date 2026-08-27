@@ -248,25 +248,17 @@ export default {
       try {
         await this.loadPdfScripts();
 
-        const res = await axios.get('/pdf-proxy', {
-          params: { url: originalUrl },
-          responseType: 'arraybuffer',
-          timeout: 60000,
-        });
+        const proxyUrl =
+          axios.defaults.baseURL +
+          '/pdf-proxy?url=' +
+          encodeURIComponent(originalUrl);
 
-        const bytes = new Uint8Array(res.data || []);
-        const magic = String.fromCharCode(
-          bytes[0] || 0,
-          bytes[1] || 0,
-          bytes[2] || 0,
-          bytes[3] || 0,
-          bytes[4] || 0
-        );
-        if (magic !== '%PDF-') {
-          throw new Error('El archivo no es un PDF válido');
-        }
-
-        this.pdfDoc = await window.pdfjsLib.getDocument({ data: bytes }).promise;
+        this.pdfDoc = await window.pdfjsLib.getDocument({
+          url: proxyUrl,
+          withCredentials: false,
+          disableRange: false,
+          disableStream: false,
+        }).promise;
         this.pages = this.pdfDoc.numPages;
         this.showPdf = true;
         this.loadingPdf = false;
