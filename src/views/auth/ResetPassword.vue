@@ -190,24 +190,20 @@ export default {
       this.error = null
 
       try {
-        // Aquí deberías hacer la llamada al backend para cambiar la contraseña
-        // Por ahora simulamos el éxito
-        await new Promise(resolve => setTimeout(resolve, 2000))
-        
-        this.passwordReset = true
-        
-        // Limpiar token del localStorage
-        localStorage.removeItem('resetToken')
-        
-        // En producción, aquí harías:
-        // const response = await api.post('/api/auth/reset-password', {
-        //   token: this.resetToken,
-        //   password: this.form.password
-        // })
-        
+        const response = await api.resetPassword({
+          token: this.resetToken,
+          password: this.form.password
+        })
+
+        if (response.data && !response.data.error) {
+          this.passwordReset = true
+          localStorage.removeItem('resetToken')
+        } else {
+          this.error = (response.data && response.data.msg) || 'Error al cambiar la contraseña. Intenta de nuevo.'
+        }
       } catch (error) {
         console.error('Error cambiando contraseña:', error)
-        this.error = (error.response && error.response.data && error.response.data.error) || 'Error al cambiar la contraseña. Intenta de nuevo.'
+        this.error = 'Error de conexión. Intenta de nuevo.'
       } finally {
         this.loading = false
       }

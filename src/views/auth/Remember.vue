@@ -125,40 +125,19 @@ export default {
       this.loading = true
 
       try {
-        // Primero validar que el email existe en el sistema
-        const validationResponse = await api.validateEmail(this.form.email.trim())
-        
-        if (!validationResponse.data.exists) {
-          this.showErrorNotification('Este email no está registrado en el sistema. Verifica tu email o regístrate.')
-          this.loading = false
-          return
-        }
+        const response = await api.forgotPassword({ email: this.form.email.trim() })
 
-        // Si el email existe, proceder con el envío
-        // Generar token temporal (en producción esto debería venir del backend)
-        const resetToken = this.generateResetToken()
-        
-        const response = await api.sendPasswordReset({
-          email: this.form.email,
-          name: 'Usuario', // En producción esto vendría de la base de datos
-          resetToken: resetToken
-        })
-
-        if (response.data.success) {
-          this.showSuccessNotification('Email de recuperación enviado correctamente. Revisa tu bandeja de entrada.')
-          // Aquí podrías guardar el token en localStorage o enviarlo al backend
-          localStorage.setItem('resetToken', resetToken)
-          // Limpiar el formulario después del éxito
+        if (response.data && !response.data.error) {
+          this.showSuccessNotification('Si el email está registrado, recibirás las instrucciones en tu bandeja de entrada.')
           this.form.email = ''
           this.errors = {}
         } else {
-          const errorMsg = response.data.error || 'Error desconocido al enviar el email'
+          const errorMsg = (response.data && response.data.msg) || 'Error al enviar el correo. Intenta de nuevo.'
           this.showErrorNotification(errorMsg)
         }
       } catch (error) {
         console.error('Error enviando email de recuperación:', error)
-        const errorMsg = (error.response && error.response.data && error.response.data.error) || 'Error de conexión. Intenta de nuevo.'
-        this.showErrorNotification(errorMsg)
+        this.showErrorNotification('Error de conexión. Intenta de nuevo.')
       } finally {
         this.loading = false
       }

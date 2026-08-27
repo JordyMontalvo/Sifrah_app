@@ -147,6 +147,14 @@ class API {
     return axios.post("/auth/validate-email", data);
   }
 
+  forgotPassword(data) {
+    return axios.post("/auth/forgot-password", data);
+  }
+
+  resetPassword(data) {
+    return axios.post("/auth/reset-password", data);
+  }
+
   reactivateRequest(data) {
     return axios.post("/auth/reactivate-request", data);
   }
