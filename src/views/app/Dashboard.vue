@@ -8,9 +8,12 @@
       <!-- Banner slider (mantener el existente) -->
       <div v-if="!loading && bannerImages.length > 0" class="banner-slider">
         <div class="slider-wrapper">
-          <transition name="carousel-3d" mode="out-in">
+          <div class="banner-preload" aria-hidden="true">
+            <img v-for="(src, idx) in bannerImages" :key="'preload-' + idx" :src="src" alt="" />
+          </div>
+          <transition name="banner-fade">
             <div class="banner-slide" :key="currentBanner">
-              <img :src="bannerImages[currentBanner]" class="banner-img" />
+              <img :src="bannerImages[currentBanner]" class="banner-img" alt="" decoding="async" />
             </div>
           </transition>
           <button
