@@ -30,9 +30,8 @@
       <p>"Tu momento de brillar es ahora."</p>
     </div>
 
-    <AuthTabs variant="mobile" />
-
     <section id="content-auth" class="auth-panel">
+      <AuthTabs variant="mobile" />
       <div class="content">
         <div class="form">
           <slot />

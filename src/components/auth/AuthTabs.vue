@@ -5,14 +5,16 @@
       class="auth-tab"
       :class="{ active: $route.path === '/login' || $route.path.startsWith('/login/') }"
     >
-      INICIO
+      <span class="auth-tab-label">INICIO</span>
+      <span class="auth-tab-line" aria-hidden="true"></span>
     </router-link>
     <router-link
       to="/register"
       class="auth-tab"
       :class="{ active: $route.path.startsWith('/register') }"
     >
-      REGISTRO
+      <span class="auth-tab-label">REGISTRO</span>
+      <span class="auth-tab-line" aria-hidden="true"></span>
     </router-link>
   </nav>
 </template>

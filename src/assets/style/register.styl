@@ -110,15 +110,20 @@ input[type="checkbox"]:checked
   display flex
   align-items center
   gap 8px
+  margin 0
+  padding 0
+  line-height 1.2
   cursor pointer
 
 .checkbox-input
   width 16px
   height 16px
+  margin 0
   border 2px solid #e91e63
   border-radius 0
   background white
   cursor pointer
+  flex-shrink 0
 
 .checkbox-text
   color #666
@@ -158,6 +163,8 @@ input[type="checkbox"]:checked
   margin 0 auto
   padding 0
   box-sizing border-box
+  min-width 0
+  overflow hidden
 
 .input-icon
 .overflow-icon
@@ -189,6 +196,13 @@ input[type="checkbox"]:checked
     color #e91e63
 
 .date-input
+  display block
+  min-width 0
+  max-width 100%
+  width 100%
+  appearance none
+  -webkit-appearance none
+
   &::-webkit-calendar-picker-indicator
     display none
     -webkit-appearance none
@@ -196,6 +210,16 @@ input[type="checkbox"]:checked
   &::-webkit-inner-spin-button
     display none
     -webkit-appearance none
+
+  &::-webkit-datetime-edit
+  &::-webkit-datetime-edit-fields-wrapper
+  &::-webkit-datetime-edit-text
+  &::-webkit-datetime-edit-month-field
+  &::-webkit-datetime-edit-day-field
+  &::-webkit-datetime-edit-year-field
+  &::-webkit-date-and-time-value
+    min-width 0
+    padding 0
 
 .input-container .input-register-new
   padding-right 50px
@@ -226,6 +250,15 @@ input[type="checkbox"]:checked
     margin-left auto
     margin-right auto
     box-sizing border-box
+    min-width 0
+
+  .form-field
+    overflow hidden
+
+  .date-input
+    min-width 0
+    max-width 100%
+    width 100%
 
   .form-row
     display flex
@@ -268,6 +301,10 @@ input[type="checkbox"]:checked
   .form-field
     margin-bottom 10px
 
+  .checkbox-field
+    margin-top 0
+    margin-bottom 10px
+
   .input-register-new
     font-size 15px
     padding 8px 10px
@@ -284,6 +321,10 @@ input[type="checkbox"]:checked
 
 @media (max-width: 480px)
   .form-field
+    margin-bottom 8px
+
+  .checkbox-field
+    margin-top 0
     margin-bottom 8px
 
   .form-row
