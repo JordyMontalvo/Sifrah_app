@@ -1,247 +1,136 @@
-// Estilos específicos para Login.vue
+.welcome-title-form
+  text-align center
+  margin 25px 0 60px 0
+
+  h1
+    font-size 32px
+    font-weight 900
+    color #111111
+    background linear-gradient(90deg, #111111 33%, #111111 25%, #e91e63 70%)
+    -webkit-background-clip text
+    background-clip text
+    -webkit-text-fill-color transparent
+    margin 0
+    font-family 'Open Sans', sans-serif
 
 .login-button
   border-radius 29px
-  width 460px
+  width 100%
+  max-width 509px
   height 50px
   background #e91e63
-  color white // Color del texto
-  border none // Sin borde
-  cursor pointer // Cambia el cursor al pasar sobre el botón
+  color white
+  border none
+  cursor pointer
+  margin 10px auto 8px
+  display block
   transition background 0.3s ease
-  margin-left 13px
-  margin-top 10px
-  transition all 0.3s ease // Transición suave para el hover
 
   &:hover
-    background #cf1658 // Color de fondo al hacer hover
+    background #cf1658
 
   &:disabled
     background #000
     opacity 0.7
     cursor not-allowed
 
-// Google Login Button Styles
-.google-login-btn
-  display flex
-  align-items center
-  justify-content center
-  width 200px
-  height 40px
-  margin 0 auto 8px auto
-  background #fff
-  color #444
-  border 1px solid #ddd
-  border-radius 20px
-  font-size 14px
-  font-weight 500
-  box-shadow 0 1px 2px rgba(0, 0, 0, 0.04)
-  cursor pointer
-  transition box-shadow 0.2s, border 0.2s
-  padding 0 10px
-  margin-bottom -22px
-
-  &:hover
-    box-shadow 0 2px 6px rgba(66, 133, 244, 0.12)
-    border 1px solid #bcbcbc
-
-.google-logo-img
-  width 18px
-  height 18px
-  margin-right 8px
-  display block
-
-.tab-login
-  font-size 15px
-  color rgba(137, 136, 141, 1)
-  text-decoration none
-  padding 8px 24px
-  border-bottom solid 2px rgba(137, 136, 141, 1)
-  margin-top 0
-  margin-bottom 12px
-
-  &.active
-    color #e91e63
-    border-bottom solid 4px #e91e63
-    font-weight bold
-    position relative
-
-    &::after
-      content ''
-      position absolute
-      bottom -4px
-      left 50%
-      transform translateX(-50%)
-      width 100% // Barra que cubre todo el ancho de la pestaña
-      height 4px
-      background-color #e91e63
-      border-radius 2px
-
 .label-login-2
-  font-size 12px
-  color rgba(137, 136, 141, 1)
-  display block
-  margin-right 460px
-  margin-top 10px
-
 .label-login
   font-size 12px
   color rgba(137, 136, 141, 1)
   display block
-  margin-right 430px
+  text-align left
+  width 100%
+  max-width 509px
+  margin-left auto
+  margin-right auto
 
-// Iconos de DNI y contraseña: un poco más grandes
-// y con más separación del borde derecho
+.label-login-2
+  margin-top 10px
+  margin-bottom 4px
+
+.label-login
+  margin-bottom 4px
+
+.input
+  border 2px solid #e91e63
+  padding-right 44px
+  width 100%
+  max-width 509px
+  box-sizing border-box
+
+.input-wrapper
+  position relative
+  display block
+  width 100%
+  max-width 509px
+  margin 0 auto 16px
+  line-height 0
+
+  .input
+    display block
+    margin 0
+    line-height normal
+
+.forgot-password
+  display block
+  color rgba(137, 136, 141, 1)
+  margin 24px auto 20px
+  text-align center
+  width 100%
+  max-width 509px
+
+  a
+    color #e91e63
+    text-decoration none
+
+    &:hover
+      text-decoration underline
+
 .dni-icon
-  right 18px !important
-  width 25px !important
-  height 25px !important
+.show
+  position absolute
+  right 18px
+  width 25px
+  height 25px
   top 50%
   transform translateY(-50%)
+  margin 0
+  padding 0
+  display block
+
+.dni-icon
+  pointer-events none
 
 .show
-  right 18px !important
-  width 25px !important
-  height 25px !important
-  top 50%
-  transform translateY(-50%)
+  cursor pointer
 
-@media (max-width: 1260px)
-  .logos
-    display none
-
-@media (min-width: 1260px)
-  .tab-login
-    display none
-
-@media (max-width: 1260px)
-  .login-button
-    width 255px
-
-@media (max-width: 1260px)
-  .label-login
-    margin-right 190px
-
-@media (max-width: 1260px)
-  .label-login-2
-    margin-right 230px
-    margin-top -13px
-
-@media (max-width: 1024px)
-  .input-wrapper
-    max-width 400px !important
-  
-  .icon
-    right 15px !important
-    font-size 16px !important
-  
-  .dni-icon
-    right 16px !important
-    width 24px !important
-    height 24px !important
-  
-  .show
-    right 16px !important
-    width 24px !important
-    height 24px !important
-  
-  .input
-    padding-right 45px !important
-    width 100% !important
-    box-sizing border-box !important
-  
-  .input.pass
-    padding-right 45px !important
-    width 100% !important
-    box-sizing border-box !important
-
-// Ajustes para móviles más pequeños
-@media (max-width: 768px)
-  .input-wrapper
-    max-width 350px !important
-  
-  .icon
-    right 12px !important
-    font-size 15px !important
-  
-  .dni-icon
-    right 14px !important
-    width 23px !important
-    height 23px !important
-  
-  .show
-    right 14px !important
-    width 23px !important
-    height 23px !important
-  
-  .input
-    padding-right 40px !important
-    width 100% !important
-    box-sizing border-box !important
-  
-  .input.pass
-    padding-right 40px !important
-    width 100% !important
-    box-sizing border-box !important
-
-// Ajustes adicionales para móviles más pequeños
-@media (max-width: 480px)
-  .input-wrapper
-    max-width 320px !important
-  
-  .icon
-    right 10px !important
-    font-size 14px !important
-  
-  .dni-icon
-    margin-top 0px
-    right 12px !important
-    width 22px !important
-    height 22px !important
-    
-  
-  .show
-    margin-top 0px
-    right 12px !important 
-    width 22px !important
-    height 22px !important
-  
-  .input
-    padding-right 90px !important
-  
-  .input.pass
-    padding-right 90px !important
-
-// Ajustes de margin-top para móvil
-@media (max-width: 768px)
-  .social
-    margin-top -30px !important
-  
-  .login-link
-    margin-top -10px !important
-
-@media (max-width: 375px)
-  .input-wrapper
-    max-width 300px !important
-  
-  .icon
-    right 8px !important
-    font-size 13px !important
-  
-  .dni-icon
-    right 10px !important
-    width 21px !important
-    height 21px !important
-  
-  .show
-    right 10px !important
-    width 21px !important
-    height 21px !important
-  
-  .input
-    padding-right 30px !important
-  
-// Ocultar título del formulario en móvil
-@media (max-width: 768px)
+@media (max-width: 900px)
   .welcome-title-form
     display none
+
+@media (max-width: 899px)
+  .input-wrapper
+  .label-login
+  .label-login-2
+  .login-button
+    width 78%
+    max-width 300px
+
+  .input
+    width 100%
+    max-width 100%
+    margin-left 0
+    margin-right 0
+    box-sizing border-box
+
+  .input-wrapper
+    .dni-icon
+    .show
+      top 50%
+      right 12px
+      width 22px
+      height 22px
+      margin 0
+      padding 0
+      transform translateY(-50%)

@@ -12,33 +12,15 @@
     </section>
 
     <section v-else>
-      <div style="display: flex; justify-content: center">
-        <router-link
-          to="/login"
-          class="tab-login"
-          :class="{ active: $route.path === '/login' }"
-        >
-          INICIO
-        </router-link>
-        <router-link
-          to="/register"
-          class="tab-login"
-          :class="{ active: $route.path === '/register' }"
-        >
-          REGISTRO
-        </router-link>
-      </div>
-
       <div class="welcome-title-form">
         <h1>BIENVENIDO</h1>
       </div>
 
         <label class="label-login-2" for="dni">DNI:</label>
-        <div class="input-wrapper" style="position: relative; display: inline-block;">
+        <div class="input-wrapper">
           <input
             id="dni"
             class="input"
-            style="border: solid 2px #e91e63;  padding-right: 40px;"
             placeholder="Dni"
             oninput="this.value=this.value.replace(/(?![0-9])./gmi,'')"
             v-model="dni"
@@ -56,17 +38,15 @@
             <path d="M16.5625 14.625C16.5625 20.2072 21.0211 24.75 26.5 24.75C31.9789 24.75 36.4375 20.2072 36.4375 14.625C36.4375 9.04275 31.9789 4.5 26.5 4.5C21.0211 4.5 16.5625 9.04275 16.5625 14.625ZM44.1667 47.25H46.375V45C46.375 36.3172 39.4386 29.25 30.9167 29.25H22.0833C13.5592 29.25 6.625 36.3172 6.625 45V47.25H44.1667Z" fill="#e91e6382"/>
           </svg>
         </div>
-        <br />
      
 
       <div v-if="!office_id">
         <label class="label-login" for="password">Contraseña:</label>
-        <div class="input-wrapper" style="position: relative; display: inline-block;">
+        <div class="input-wrapper">
           <input
             id="password"
             :type="show ? 'text' : 'password'"
             class="input pass"
-            style="border: solid 2px #e91e63; padding-right: 40px;"
             placeholder="*************"
             v-model="password"
             :class="{ error: error.password }"
@@ -84,7 +64,6 @@
             <path d="M27 20.25C25.2098 20.25 23.4929 20.9612 22.227 22.227C20.9612 23.4929 20.25 25.2098 20.25 27C20.25 28.7902 20.9612 30.5071 22.227 31.773C23.4929 33.0388 25.2098 33.75 27 33.75C28.7902 33.75 30.5071 33.0388 31.773 31.773C33.0388 30.5071 33.75 28.7902 33.75 27C33.75 25.2098 33.0388 23.4929 31.773 22.227C30.5071 20.9612 28.7902 20.25 27 20.25ZM27 38.25C24.0163 38.25 21.1548 37.0647 19.045 34.955C16.9353 32.8452 15.75 29.9837 15.75 27C15.75 24.0163 16.9353 21.1548 19.045 19.045C21.1548 16.9353 24.0163 15.75 27 15.75C29.9837 15.75 32.8452 16.9353 34.955 19.045C37.0647 21.1548 38.25 24.0163 38.25 27C38.25 29.9837 37.0647 32.8452 34.955 34.955C32.8452 37.0647 29.9837 38.25 27 38.25ZM27 10.125C15.75 10.125 6.1425 17.1225 2.25 27C6.1425 36.8775 15.75 43.875 27 43.875C38.25 43.875 47.8575 36.8775 51.75 27C47.8575 17.1225 38.25 10.125 27 10.125Z" fill="#e91e6382"/>
           </svg>
         </div>
-        <br />
       </div>
 
       <p class="alert">{{ alert | alert }}</p>
@@ -95,81 +74,41 @@
       <button class="login-button" v-show="sending" disabled>
         Validando datos ...
       </button>
-      <br /><br />
 
      <!-- <button class="google-login-btn" id="g_id_signin"></button> -->
-     <!-- <br /><br /> -->
 
-      <small style="color: rgba(137, 136, 141, 1)"
+      <small class="forgot-password"
         >¿Olvidaste tu contraseña?
-        <router-link to="/remember" style="color: #e91e63"
-          >Ingresa Aquí</router-link
-        ></small
-      >
-      <br /><br />
+        <router-link to="/remember">Ingresa Aquí</router-link>
+      </small>
     </section>
     <footer v-if="!office_id">
-      <br />
-      <header>
-        <div class="social" style="margin-top: -15px">
-          <a
-            class="fab fa-facebook-square social-icon facebook"
-            :href="fb"
-            target="_blank"
-          ></a>
-          <!-- <a
-            class="fab fa-instagram social-icon instagram"
-            :href="is"
-            target="_blank"
-          ></a>-->
-          <a
-            class="fab fa-youtube social-icon youtube"
-            :href="yt"
-            target="_blank"
-          ></a>
-          <a
-            class="fab fa-tiktok social-icon tiktok"
-            :href="tk"
-            target="_blank"
-          ></a>
-          <a
-            class="fab fa-whatsapp social-icon whatsapp"
-            :href="wsp_pe"
-            target="_blank"
-          ></a>
-        </div>
-        <br />
-        <div class="login-link">
-          <small style="color: rgba(137, 136, 141, 1)">
-            ¿No tienes cuenta?
-            <router-link
-              to="/register"
-              style="text-decoration: underline"
-              >Regístrate</router-link
-            >
-          </small>
-        </div>
-      </header>
+      <AuthSocial />
+      <div class="login-link">
+        <small>
+          ¿No tienes cuenta?
+          <router-link to="/register">Regístrate</router-link>
+        </small>
+      </div>
     </footer>
   </Auth>
 </template>
 
 <script>
 import Auth from "@/views/layouts/Auth";
+import AuthSocial from "@/components/auth/AuthSocial";
 import api from "@/api";
 import Swal from "sweetalert2";
 import { Capacitor } from '@capacitor/core';
 import { PushNotifications } from '@capacitor/push-notifications';
 
 export default {
-  components: { Auth },
+  components: { Auth, AuthSocial },
   data() {
     return {
-      // username:    null,
       dni: null,
       password: null,
       error: {
-        // username:     false,
         dni: false,
         password: false,
       },
@@ -195,25 +134,6 @@ export default {
     },
     effectiveOfficeId() {
       return this.office_id || this.$route.query.office_id || "central";
-    },
-    // social
-    fb() {
-      return this.$store.state.fb;
-    },
-    is() {
-      return this.$store.state.is;
-    },
-    tk() {
-      return this.$store.state.tk;
-    },
-    yt() {
-      return this.$store.state.yt;
-    },
-    wsp_pe() {
-      return this.$store.state.wsp_pe;
-    },
-    wsp_bo() {
-      return this.$store.state.wsp_bo;
     },
   },
   filters: {
@@ -243,15 +163,6 @@ export default {
       localStorage.removeItem("path");
     }
 
-    if (!this.isOfficeEmbed) {
-      setTimeout(() => {
-        const logoAuth = document.getElementById("logo-auth");
-        if (logoAuth) logoAuth.style.order = 0;
-
-        const contentAuth = document.getElementById("content-auth");
-        if (contentAuth) contentAuth.style.order = 1;
-      }, 100);
-    }
   },
   watch: {
     "$route.query.dni"(nextDni) {
@@ -280,7 +191,9 @@ export default {
   },
   methods: {
     renderGoogleButton() {
+      const button = document.getElementById("g_id_signin");
       if (
+        button &&
         window.google &&
         window.google.accounts &&
         window.google.accounts.id
@@ -290,10 +203,12 @@ export default {
             "511469100162-s6f2f9qbkr533hbvaoevbr6m0mhfdrvk.apps.googleusercontent.com",
           callback: this.handleGoogleCredentialResponse,
         });
-        window.google.accounts.id.renderButton(
-          document.getElementById("g_id_signin"),
-          { theme: "outline", size: "large", text: "signin_with", width: 200 }
-        );
+        window.google.accounts.id.renderButton(button, {
+          theme: "outline",
+          size: "large",
+          text: "signin_with",
+          width: 200,
+        });
       }
     },
     async handleGoogleCredentialResponse(response) {
@@ -576,7 +491,6 @@ export default {
     reset(name) {
       this.alert = null;
 
-      // if(name == 'username') this.error.username = false
       if (name == "dni") this.error.dni = false;
       if (name == "password") this.error.password = false;
     },

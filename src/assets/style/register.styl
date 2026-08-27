@@ -1,86 +1,206 @@
-// Estilos específicos para Register.vue
-
 input[type="checkbox"]:checked
   accent-color #e91e63
 
-.register-button
-  // Color de fondo normal
-  background #e91e63
-  width 460px // Ancho del botón
-  height 50px // Altura del botón
-  color white // Color del texto
-  border none // Sin borde
-  cursor pointer // Cambia el cursor al pasar sobre el botón
-  transition background 0.3s ease
-  border-radius 18px
-  margin 8px 0
-  transition all 0.3s ease // Transición suave para el hover
+.register-title-form
+  text-align center
+  margin 25px 0 30px 0
 
-  &:hover
-    background #cf1658 // Color de fondo al hacer hover
+  h1
+    font-size 32px
+    font-weight 900
+    color #111111
+    background linear-gradient(90deg, #111111 33%, #111111 25%, #e91e63 70%)
+    -webkit-background-clip text
+    background-clip text
+    -webkit-text-fill-color transparent
+    margin 0
+    font-family 'Open Sans', sans-serif
 
-.tab-login
-  font-size 15px
-  color rgba(137, 136, 141, 1)
-  text-decoration none
-  padding 10px 20px
-  border-bottom solid 2px rgba(137, 136, 141, 1)
-
-  &.active
-    color #4b2e12 // marrón oscuro
-    border-bottom solid 4px #ffb57a // barra amarilla más gruesa
-    font-weight bold
-    position relative
-
-    &::after
-      content ''
-      position absolute
-      bottom -4px
-      left 50%
-      transform translateX(-50%)
-      width 100% // Barra que cubre todo el ancho de la pestaña
-      height 4px
-      background-color #FFD900
-      border-radius 2px
-
-@media (min-width: 1260px)
-  .tab-login
+  @media (max-width: 768px)
     display none
 
-@media (max-width: 1260px)
-  .logos
-    display none
+.form-field
+  position relative
+  width 100%
+  max-width 509px
+  margin 0 auto 15px
+  box-sizing border-box
 
-@media (max-width: 1260px)
-  .label-register
-    margin-left 20px
-    // margin-top: 5px;
-    white-space nowrap
+.form-row
+  display flex
+  gap 12px
+  align-items stretch
+  width 100%
+  max-width 509px
+  margin-left auto
+  margin-right auto
+  box-sizing border-box
 
-@media (max-width: 1024px)
-  .register-button
+  .form-field
+    flex 1 1 0
+    min-width 0
+    width auto
+    max-width none
     margin-left 0
     margin-right 0
-    margin 8px auto
-    display block
+    margin-bottom 15px
 
-@media (max-width: 768px)
-  .register-button
-    width 90%
-    max-width 400px
-    margin 8px auto
+  .input-container
+    width 100%
+    max-width none
+    min-width 0
+    margin 0
 
-@media (max-width: 480px)
-  .register-button
-    width 95%
-    max-width 350px
-    margin 8px auto
+  .input-register-new
+    width 100%
+    max-width 100%
+    min-width 0
+    box-sizing border-box
 
-@media (max-width: 375px)
-  .register-button
-    width 95%
-    max-width 320px
-    margin 8px auto
+.input-register-new
+  width 100%
+  max-width 100%
+  padding 10px 16px
+  height 45px
+  border 2px solid #e91e63
+  border-radius 10px
+  font-size 14px
+  font-family 'Open Sans', sans-serif
+  background white
+  color #333
+  transition all 0.3s ease
+
+  &:focus
+    outline none
+    border-color #e91e63
+    box-shadow 0 0 0 3px rgba(210, 9, 182, 0.1)
+
+  &::placeholder
+    color #999
+
+  &.error
+    border-color #e74c3c
+
+.select-field
+  appearance none
+  background-image url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23e91e63' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e")
+  background-repeat no-repeat
+  background-position right 18px center
+  background-size 25px
+  padding-right 50px
+
+.checkbox-field
+  width 100%
+  max-width 509px
+  margin 0 auto 15px
+  display flex
+  justify-content flex-start
+  box-sizing border-box
+
+.terms-field
+  width 100%
+  max-width 509px
+  margin-left auto
+  margin-right auto
+  display flex
+  justify-content center
+  box-sizing border-box
+
+.checkbox-label
+  display flex
+  align-items center
+  gap 8px
+  cursor pointer
+
+.checkbox-input
+  width 16px
+  height 16px
+  border 2px solid #e91e63
+  border-radius 0
+  background white
+  cursor pointer
+
+.checkbox-text
+  color #666
+  font-size 14px
+  font-family 'Open Sans', sans-serif
+
+.register-button
+  width 100%
+  max-width 509px
+  height 50px
+  padding 15px
+  background #e91e63
+  color white
+  border none
+  border-radius 29px
+  font-size 16px
+  font-weight bold
+  font-family 'Open Sans', sans-serif
+  cursor pointer
+  transition all 0.3s ease
+  margin 8px auto 20px
+  display block
+
+  &:hover
+    background #e91e63
+
+  &:disabled
+    background #000
+    opacity 0.7
+    cursor not-allowed
+
+.input-container
+  position relative
+  display block
+  width 100%
+  max-width 509px
+  margin 0 auto
+  padding 0
+  box-sizing border-box
+
+.input-icon
+.overflow-icon
+  position absolute
+  top 50%
+  right 18px
+  width 25px
+  height 25px
+  margin 0
+  padding 0
+  transform translateY(-50%)
+  display flex
+  align-items center
+  justify-content center
+  color #e91e6382
+  font-size 20px
+  line-height 1
+  z-index 10
+  pointer-events none
+  box-sizing border-box
+
+.password-icon
+.calendar-icon
+  pointer-events auto
+  cursor pointer
+  transition color 0.3s ease
+
+  &:hover
+    color #e91e63
+
+.date-input
+  &::-webkit-calendar-picker-indicator
+    display none
+    -webkit-appearance none
+
+  &::-webkit-inner-spin-button
+    display none
+    -webkit-appearance none
+
+.input-container .input-register-new
+  padding-right 50px
+  box-sizing border-box
+  width 100%
 
 .alert-message
   background-color #fee
@@ -94,209 +214,122 @@ input[type="checkbox"]:checked
   max-width 280px
   width 100%
 
-// Contenedor para input con icono
-.input-container
-  position relative
-  display block
-  width 80%
-  max-width 509px
-  margin 0
-  margin-left auto
-  margin-right auto
-  padding 0
-
-// Iconos dentro de los campos
-.input-icon
-  position absolute
-  right 18px
-  top 50%
-  transform translateY(-50%)
-  pointer-events none
-  color #e91e6382
-  font-size 23px
-  z-index 10
-  margin 0
-  padding 0
-  width auto
-  height auto
-  line-height 1
-  display inline-block
-
-// Icono de contraseña con cursor pointer
-.password-icon
-  cursor pointer
-  pointer-events auto
-  transition color 0.3s ease
-  
-  &:hover
-    color #e91e63
-
-// Ocultar icono nativo del input date y dar funcionalidad al icono personalizado
-.date-input
-  &::-webkit-calendar-picker-indicator
-    display none
-    -webkit-appearance none
-  
-  &::-webkit-inner-spin-button
-    display none
-    -webkit-appearance none
-
-// Icono de calendario personalizado
-.calendar-icon
-  cursor pointer
-  pointer-events auto
-  transition color 0.3s ease
-  
-  &:hover
-    color #e91e63
-
-// Icono de contraseña con cursor pointer
-.show-icon
-  cursor pointer
-  pointer-events auto
-  transition color 0.3s ease
-
-  &:hover
-    color #e91e63
-
-// Iconos que se desbordan - posicionamiento específico
-.overflow-icon
-  position absolute
-  right 18px
-  top 50%
-  transform translateY(-50%)
-  pointer-events auto
-  color #e91e6382
-  font-size 23px
-  z-index 10
-
-// Ajustar padding de inputs para dar espacio al icono
-.input-container .input-register-new
-  padding-right 40px
-  box-sizing border-box
-  width 100%
-
-// En filas de 2 columnas, el contenedor debe ocupar su columna
-.form-row
+@media (max-width: 899px)
   .input-container
+  .form-row
+  .form-field
+  .checkbox-field
+  .terms-field
+  .register-button
     width 100%
-    max-width 250px
+    max-width 100%
+    margin-left auto
+    margin-right auto
+    box-sizing border-box
 
-// Responsive para iconos
-@media (min-width: 1110px) and (max-width: 1199px)
-  .input-icon
-    right 16px
-    font-size 24px
-  
-  .input-container .input-register-new
-    padding-right 43px
-  
-  .input-container
-    width 80%
-    max-width 509px
-  
   .form-row
-    .input-container
-      width 100%
-      max-width 250px
+    display flex
+    flex-wrap nowrap
+    gap 8px
 
-@media (min-width: 1200px)
-  .input-icon
-    right 18px
-    font-size 23px
-  
-  .input-container .input-register-new
-    padding-right 40px
-  
-  .input-container
-    width 80%
-    max-width 509px
-  
-  .form-row
-    .input-container
-      width 100%
-      max-width 250px
+    .form-field
+      flex 1 1 0
+      min-width 0
+      max-width none
+      width auto
+      margin-bottom 10px
 
-@media (min-width: 769px) and (max-width: 1109px)
-  .input-icon
-    right 14px
-    font-size 23px
-  
-  .input-container .input-register-new
-    padding-right 42px
-  
-  .input-container
-    width 90%
-    max-width 400px
-  
-  .form-row
-    .input-container
-      width 100%
-      max-width 180px
-
-@media (max-width: 768px)
-  .input-icon
-    right 14px
-    font-size 21px
-    top 42% !important
-    transform translateY(-50%) !important
-  
-  .overflow-icon
-    top 42% !important
-    transform translateY(-50%) !important
-    font-size 21px
-    right 14px
-  
-  .input-container .input-register-new
-    padding-right 35px
-  
-  .input-container
-    width 90%
-    max-width 400px
-  
-  .form-row
-    .input-container
-      width 100%
-      max-width 180px
-
-@media (max-width: 480px)
-  .input-icon
-    right 12px
-    font-size 20px
-    top 42% !important
-    transform translateY(-50%) !important
-  
-  .overflow-icon
-    top 42% !important
-    transform translateY(-50%) !important
-    font-size 20px
-    right 12px
-
-@media (max-width: 375px)
-  .input-icon
-    right 10px
-  
-  .overflow-icon
-    right 10px
-  
-  .input-container .input-register-new
-    padding-right 30px
-  
-  .input-container
-    width 95%
-    max-width 350px
-  
-  .form-row
     .input-container
       width 100%
       max-width 100%
-    
-// Ocultar título del formulario en móvil
-@media (max-width: 768px)
-  .register-title-form
-    display none
+      overflow hidden
 
-// Pantalla de confirmación (registro por patrocinador)
+    .input-register-new
+      min-width 0
+      max-width 100%
+      padding-left 10px
+
+  .input-icon
+  .overflow-icon
+    right 12px
+    width 22px
+    height 22px
+    font-size 18px
+
+  .input-container .input-register-new
+    padding-right 44px
+
+  .select-field
+    min-width 0
+    background-size 22px
+    background-position right 12px center
+    padding-right 44px
+
+  .form-field
+    margin-bottom 10px
+
+  .input-register-new
+    font-size 15px
+    padding 8px 10px
+    height 42px
+
+  .register-button
+    width 90%
+    max-width 400px
+    height 42px
+    padding 10px
+    margin-bottom 12px
+    border-radius 25px
+    font-size 15px
+
+@media (max-width: 480px)
+  .form-field
+    margin-bottom 8px
+
+  .form-row
+    gap 8px
+
+    .form-field
+      margin-bottom 8px
+
+  .input-register-new
+    padding 8px 10px
+    font-size 14px
+    height 42px
+
+  .register-button
+    width 95%
+    max-width 350px
+    height 38px
+    font-size 14px
+    padding 8px
+    margin-bottom 10px
+    border-radius 20px
+
+@media (max-width: 375px)
+  .form-field
+    margin-bottom 6px
+
+  .form-row
+    gap 6px
+
+    .form-field
+      margin-bottom 6px
+
+  .input-register-new
+    padding 7px 9px
+    font-size 13px
+    height 40px
+
+  .register-button
+    width 95%
+    max-width 320px
+    height 35px
+    font-size 13px
+    padding 6px
+    margin-bottom 8px
+    border-radius 18px
+
 .register-success
   max-width 520px
   margin 0 auto
