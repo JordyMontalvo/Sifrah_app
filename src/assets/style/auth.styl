@@ -266,9 +266,10 @@
     .auth-mobile-copy
       display block
       position absolute
-      top 5vw
+      top auto
       left 0
       right 0
+      bottom calc(100% - 76vw + var(--auth-tabs-overlap) + 8vw)
       z-index 3
       text-align center
       pointer-events none
@@ -305,6 +306,7 @@
       grid-column 1
       position relative
       top auto
+      bottom auto
       padding-top 3.5vw
       padding-bottom 10px
       z-index 3
