@@ -150,8 +150,8 @@
 
 .profile-hero-badge-icon,
 .profile-hero-badge-pin {
-  width: 16px;
-  height: 16px;
+  width: 20px;
+  height: 20px;
   display: block;
   flex-shrink: 0;
   object-fit: contain;

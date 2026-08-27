@@ -57,13 +57,13 @@
             </p>
             <span class="profile-hero-badge" v-if="badgeLabel">
               <img
-                v-if="rankPinImage"
+                v-if="showRankIcon && rankPinImage"
                 :src="rankPinImage"
                 :alt="badgeLabel"
                 class="profile-hero-badge-pin"
               />
               <svg
-                v-else
+                v-else-if="showRankIcon"
                 class="profile-hero-badge-icon"
                 viewBox="0 0 24 24"
                 aria-hidden="true"
@@ -686,6 +686,47 @@ function countryFlagKey(country) {
   return COUNTRY_ALIASES[normalized] || "";
 }
 
+const JUNK_RANK_LABELS = new Set([
+  "",
+  "default",
+  "none",
+  "ninguno",
+  "null",
+  "user",
+  "cliente vip",
+]);
+
+function formatRankLabel(raw) {
+  if (raw == null) return "";
+  const value = String(raw).trim();
+  if (!value) return "";
+  const v = value.toLowerCase();
+  if (JUNK_RANK_LABELS.has(v)) return "";
+  const map = {
+    active: "Activo",
+    activo: "Activo",
+    star: "Bronce",
+    bronce: "Bronce",
+    silver: "Plata",
+    plata: "Plata",
+    gold: "Oro",
+    oro: "Oro",
+    ruby: "Rubí",
+    rubi: "Rubí",
+    "rubí": "Rubí",
+    emerald: "Esmeralda",
+    esmeralda: "Esmeralda",
+    diamond: "Diamante",
+    diamante: "Diamante",
+  };
+  if (map[v]) return map[v];
+  if (v.includes("doble")) return "Doble diamante";
+  if (v.includes("triple")) return "Triple diamante";
+  if (v.includes("imperial")) return "Diamante imperial";
+  if (v.includes("embajador")) return "Embajador Sifrah";
+  return value;
+}
+
 export default {
   components: {
     App,
@@ -727,6 +768,7 @@ export default {
       newPhoto: null,
       photoFile: null,
       rankPinImage: null,
+      currentRankLabel: "",
       oldPassword: "",
       newPassword: "",
       confirmPassword: "",
@@ -773,16 +815,14 @@ export default {
       return (key && COUNTRY_FLAG_SVG[key]) || "";
     },
     badgeLabel() {
-      const label = String(this.$store.state.historicalRankLabel || "").trim();
-      if (label && label.toLowerCase() !== "ninguno") return label;
-      const val = this.$store.state.rank;
-      if (val && String(val).toLowerCase() !== "none") {
-        return String(val);
-      }
-      const plan = this.$store.state.plan;
-      if (plan && typeof plan === "object" && plan.name) return plan.name;
-      if (typeof plan === "string" && plan && plan !== "null") return plan;
-      return "Cliente VIP";
+      const fromProgress = formatRankLabel(this.currentRankLabel);
+      if (fromProgress) return fromProgress;
+      const fromStore = formatRankLabel(this.$store.state.rank);
+      if (fromStore) return fromStore;
+      return "Ninguno";
+    },
+    showRankIcon() {
+      return String(this.badgeLabel).toLowerCase() !== "ninguno";
     },
   },
   watch: {
@@ -844,9 +884,6 @@ export default {
     if (this.account) this.account_disabled = true;
     if (this.ibk) this.ibk_disabled = true;
     if (this.account_holder) this.account_holder_disabled = true;
-    this.setRankPin(
-      data.currentRankImage || data.historicalRankImage || data.rankImage
-    );
     this.loadRankPin();
   },
   methods: {
@@ -857,10 +894,10 @@ export default {
     async loadRankPin() {
       try {
         const { data } = await api.RankProgress.GET(this.session);
-        if (data && data.progress) {
-          this.setRankPin(
-            data.progress.currentRankImage || data.progress.historicalRankImage
-          );
+        if (data && !data.error && data.progress) {
+          const progress = data.progress;
+          this.currentRankLabel = progress.currentRankLabel || "";
+          this.setRankPin(progress.currentRankImage);
         }
       } catch (e) {
         console.error("Error loading rank pin:", e);
