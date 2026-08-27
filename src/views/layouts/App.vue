@@ -2091,7 +2091,7 @@ newPhoto: null,
   display: flex;
   justify-content: flex-start;
   align-items: flex-start;
-  padding: 20px 16px 14px;
+  padding: 20px 16px 26px;
   border-bottom: none;
   background: #000000;
   position: relative;
@@ -2192,7 +2192,7 @@ newPhoto: null,
 
 .mobile-tabs-content {
   flex: 1;
-  padding: 0 0 8px;
+  padding: 10px 0 8px;
   display: flex;
   flex-direction: column;
   gap: 0;
@@ -2206,8 +2206,8 @@ newPhoto: null,
   display: flex;
   align-items: center;
   justify-content: space-between;
-  min-height: 56px;
-  height: 56px;
+  min-height: 64px;
+  height: 64px;
   padding: 0 18px 0 20px;
   background: transparent;
   border-radius: 0;
@@ -2373,8 +2373,8 @@ newPhoto: null,
   display: flex;
   align-items: center;
   gap: 16px;
-  min-height: 52px;
-  height: 52px;
+  min-height: 58px;
+  height: 58px;
   padding: 0 18px 0 52px;
   background: transparent;
   border-radius: 0;
