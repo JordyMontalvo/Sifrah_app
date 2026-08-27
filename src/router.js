@@ -34,7 +34,6 @@ import Materials from './views/app/Materials.vue'
 import FlyerEditor from './views/app/FlyerEditor.vue'
 import WhatsAppLinkGenerator from './views/app/WhatsAppLinkGenerator.vue'
 import Profile from './views/app/Profile.vue'
-import Password from './views/app/Password.vue'
 import Security from './views/app/Security.vue'
 import Resume from './views/app/Resume.vue'
 import frontales from './views/app/frontales.vue'
@@ -254,8 +253,7 @@ const routes = [
   },
   {
     path: '/password',
-    component: Password,
-    meta: { requiresAuth: true }
+    redirect: { path: '/profile', query: { tab: 'seguridad' } }
   },
   {
     path: '/security',
