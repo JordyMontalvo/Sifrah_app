@@ -151,9 +151,26 @@
 </template>
 
 <script>
-// PDF.js CDN Links
+import axios from 'axios';
+
 const PDFJS_URL = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js';
 const PDFJS_WORKER_URL = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+
+function resolvePdfUrl(raw) {
+  if (!raw) return '';
+  try {
+    const parsed = new URL(raw);
+    if (parsed.hostname.includes('drive.google.com')) {
+      const id =
+        (parsed.pathname.match(/\/d\/([^/]+)/) || [])[1] ||
+        parsed.searchParams.get('id');
+      if (id) return `https://drive.google.com/uc?export=download&id=${id}`;
+    }
+  } catch (e) {
+    return raw;
+  }
+  return raw;
+}
 
 export default {
   props: {
@@ -212,34 +229,48 @@ export default {
     },
     async loadPdfScripts() {
       if (window.pdfjsLib) return;
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
         const script = document.createElement('script');
         script.src = PDFJS_URL;
         script.onload = () => {
           window.pdfjsLib.GlobalWorkerOptions.workerSrc = PDFJS_WORKER_URL;
           resolve();
         };
+        script.onerror = () => reject(new Error('No se pudo cargar el lector PDF'));
         document.head.appendChild(script);
       });
     },
     async startReading() {
-      const originalUrl = this.book.pdfUrl || this.book.url;
+      const originalUrl = resolvePdfUrl(this.book.pdfUrl || this.book.url);
       if (!originalUrl) return;
-      
+
       this.loadingPdf = true;
       try {
         await this.loadPdfScripts();
-        
-        // Proxy URL para evitar CORS. Usa el mismo backend que el resto de la app.
-        const BACKEND_URL = (process.env.VUE_APP_SERVER || 'https://api.serve-sifrah.xyz') + '/api';
-        const proxyUrl = `${BACKEND_URL}/pdf-proxy?url=${encodeURIComponent(originalUrl)}`;
 
-        this.pdfDoc = await window.pdfjsLib.getDocument(proxyUrl).promise;
+        const res = await axios.get('/pdf-proxy', {
+          params: { url: originalUrl },
+          responseType: 'arraybuffer',
+          timeout: 60000,
+        });
+
+        const bytes = new Uint8Array(res.data || []);
+        const magic = String.fromCharCode(
+          bytes[0] || 0,
+          bytes[1] || 0,
+          bytes[2] || 0,
+          bytes[3] || 0,
+          bytes[4] || 0
+        );
+        if (magic !== '%PDF-') {
+          throw new Error('El archivo no es un PDF válido');
+        }
+
+        this.pdfDoc = await window.pdfjsLib.getDocument({ data: bytes }).promise;
         this.pages = this.pdfDoc.numPages;
         this.showPdf = true;
         this.loadingPdf = false;
-        
-        // Wait for DOM then init observer
+
         this.$nextTick(() => {
           this.initObserver();
         });
