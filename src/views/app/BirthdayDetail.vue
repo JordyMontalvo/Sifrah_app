@@ -16,14 +16,10 @@
       <section class="profile-overview">
         <div class="profile-avatar-wrap">
           <img
-            v-if="member.photo"
-            :src="member.photo"
+            :src="displayPhoto(member.photo)"
             :alt="member.fullName"
             class="profile-avatar"
           />
-          <div v-else class="profile-avatar profile-avatar-placeholder">
-            <i class="fas fa-user"></i>
-          </div>
           <span class="birthday-icon-badge">
             <i class="fas fa-birthday-cake"></i>
           </span>
@@ -151,6 +147,12 @@ export default {
     },
   },
   methods: {
+    displayPhoto(photo) {
+      if (!photo || photo.includes("avatar_cWVgh_GNP.png") || photo.includes("avatar_bEyc3MFLf.png")) {
+        return "/avatar.png";
+      }
+      return photo;
+    },
     async loadMember() {
       try {
         const { data } = await api.Birthdays.GET(this.session, this.memberId);

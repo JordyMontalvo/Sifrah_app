@@ -2267,7 +2267,7 @@ newPhoto: null,
   opacity: 0.95;
   pointer-events: none;
   transform: translateZ(0) rotate(0deg);
-  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: transform 0.28s cubic-bezier(0.32, 0.72, 0, 1);
 }
 
 .mobile-menu-chevron.rotated {
@@ -2355,7 +2355,7 @@ newPhoto: null,
 .mobile-submenu {
   display: grid;
   grid-template-rows: 0fr;
-  transition: grid-template-rows 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: grid-template-rows 0.28s cubic-bezier(0.32, 0.72, 0, 1);
   margin: 0;
   background: #000000;
 }

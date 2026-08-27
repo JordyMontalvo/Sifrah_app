@@ -56,14 +56,10 @@
             <div class="card-member">
               <div class="card-avatar-wrap">
                 <img
-                  v-if="person.photo"
-                  :src="person.photo"
+                  :src="displayPhoto(person.photo)"
                   :alt="person.fullName"
                   class="card-avatar"
                 />
-                <div v-else class="card-avatar card-avatar-placeholder">
-                  <i class="fas fa-user"></i>
-                </div>
               </div>
 
               <div class="card-info">
@@ -198,6 +194,12 @@ export default {
       const query = { category: "Cumpleaños" };
       if (name) query.nombre = name;
       this.$router.push({ path: "/flyer-editor", query });
+    },
+    displayPhoto(photo) {
+      if (!photo || photo.includes("avatar_cWVgh_GNP.png") || photo.includes("avatar_bEyc3MFLf.png")) {
+        return "/avatar.png";
+      }
+      return photo;
     },
     formatBirthDay(person) {
       const day = person.birthDay;
