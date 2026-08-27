@@ -145,27 +145,27 @@
           <section class="profile-block">
             <h3 class="profile-block-title">Datos personales</h3>
             <div class="profile-card">
-              <div class="profile-row">
+              <div class="profile-row profile-row-edit">
                 <span class="profile-row-icon">
                   <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.4" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M5.2 19.2c.8-3.4 3.4-5.2 6.8-5.2s6 1.8 6.8 5.2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
                 </span>
                 <div class="profile-row-body">
-                  <span class="profile-row-label">Nombre</span>
-                  <span class="profile-row-value">{{ name || '—' }}</span>
+                  <label class="profile-row-label" for="profile-name">Nombre</label>
+                  <input id="profile-name" v-model="name" type="text" class="profile-row-input" autocomplete="given-name" />
                 </div>
                 <i class="fas fa-chevron-right profile-row-chevron"></i>
               </div>
-              <div class="profile-row">
+              <div class="profile-row profile-row-edit">
                 <span class="profile-row-icon">
                   <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.4" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M5.2 19.2c.8-3.4 3.4-5.2 6.8-5.2s6 1.8 6.8 5.2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
                 </span>
                 <div class="profile-row-body">
-                  <span class="profile-row-label">Apellido</span>
-                  <span class="profile-row-value">{{ lastName || '—' }}</span>
+                  <label class="profile-row-label" for="profile-lastname">Apellido</label>
+                  <input id="profile-lastname" v-model="lastName" type="text" class="profile-row-input" autocomplete="family-name" />
                 </div>
                 <i class="fas fa-chevron-right profile-row-chevron"></i>
               </div>
-              <div class="profile-row">
+              <div class="profile-row profile-row-locked">
                 <span class="profile-row-icon">
                   <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5" width="17" height="14" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M7 10h4M7 13.5h10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
                 </span>
@@ -173,18 +173,29 @@
                   <span class="profile-row-label">DNI</span>
                   <span class="profile-row-value">{{ dni || '—' }}</span>
                 </div>
-                <i class="fas fa-chevron-right profile-row-chevron"></i>
               </div>
-              <div class="profile-row profile-row-edit">
+              <div class="profile-row profile-row-edit" @click="openBirthdatePicker">
                 <span class="profile-row-icon">
                   <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8 3.5v3M16 3.5v3M4 9.5h16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
                 </span>
                 <div class="profile-row-body">
                   <label class="profile-row-label" for="profile-birthdate">Fecha de nacimiento</label>
-                  <span class="profile-row-value">{{ birthdateDisplay }}</span>
-                  <input id="profile-birthdate" v-model="birthdate" type="date" class="profile-row-date" />
+                  <input
+                    id="profile-birthdate"
+                    ref="birthdateInput"
+                    v-model="birthdate"
+                    type="date"
+                    class="profile-row-input profile-row-input-date"
+                  />
                 </div>
-                <i class="fas fa-chevron-right profile-row-chevron"></i>
+                <button
+                  type="button"
+                  class="profile-row-chevron-btn"
+                  aria-label="Editar fecha de nacimiento"
+                  @click.stop="openBirthdatePicker"
+                >
+                  <i class="fas fa-chevron-right profile-row-chevron"></i>
+                </button>
               </div>
               <div class="profile-row profile-row-edit">
                 <span class="profile-row-icon">
@@ -686,6 +697,12 @@ function countryFlagKey(country) {
   return COUNTRY_ALIASES[normalized] || "";
 }
 
+function toDateInputValue(raw) {
+  if (!raw) return "";
+  const iso = String(raw).match(/^(\d{4})-(\d{2})-(\d{2})/);
+  return iso ? `${iso[1]}-${iso[2]}-${iso[3]}` : "";
+}
+
 const JUNK_RANK_LABELS = new Set([
   "",
   "default",
@@ -867,7 +884,7 @@ export default {
     this.lastName = data.lastName;
     this.email = data.email;
     this.phone = data.phone;
-    this.birthdate = data.birthdate;
+    this.birthdate = toDateInputValue(data.birthdate);
     this.address = data.address;
     this.token = data.token;
     this.bank = data.bank;
@@ -959,6 +976,8 @@ export default {
       }
 
       const {
+        name,
+        lastName,
         email,
         phone,
         birthdate,
@@ -975,6 +994,8 @@ export default {
       } = this;
       this.sending = true;
       await api.Profile.UPDATE(this.session, {
+        name,
+        lastName,
         email,
         phone,
         birthdate,
@@ -989,6 +1010,9 @@ export default {
         city,
         country,
       });
+      this.$store.commit("SET_NAME", name);
+      this.$store.commit("SET_LAST_NAME", lastName);
+      this.$store.commit("SET_BIRTHDATE", birthdate);
       this.sending = false;
       this.showToast = true;
       setTimeout(() => (this.showToast = false), 3000);
@@ -1043,6 +1067,20 @@ export default {
       this.photoState = "default";
       this.newPhoto = null;
       this.photoFile = null;
+    },
+    openBirthdatePicker() {
+      const el = this.$refs.birthdateInput;
+      if (!el) return;
+      if (typeof el.showPicker === "function") {
+        try {
+          el.showPicker();
+          return;
+        } catch (e) {
+          /* iOS / Safari a veces bloquea showPicker */
+        }
+      }
+      el.focus();
+      el.click();
     },
     resetPasswordError() {
       this.passwordError = "";
