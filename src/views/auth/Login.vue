@@ -66,7 +66,7 @@
         </div>
       </div>
 
-      <p class="alert">{{ alert | alert }}</p>
+      <p v-if="alert" class="alert">{{ alert | alert }}</p>
 
       <button class="login-button" v-show="!sending" @click="submit">
         Iniciar sesión
