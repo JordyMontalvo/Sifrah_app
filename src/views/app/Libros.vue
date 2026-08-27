@@ -8,10 +8,6 @@
             <i class="fas fa-arrow-left"></i>
           </button>
           <h1 class="header-title">Libros</h1>
-          <div class="header-actions">
-            <i class="far fa-bell"></i>
-            <i class="fas fa-share-alt"></i>
-          </div>
         </div>
         <p class="header-subtitle">{{ sectionSubtitle }}</p>
       </header>

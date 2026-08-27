@@ -52,16 +52,6 @@
     margin-left: 0px;
 }
 
-.header-actions {
-    display: flex;
-    gap: 15px;
-}
-
-.header-actions i {
-    font-size: 20px;
-    color: #333;
-}
-
 /* Search Bar */
 .search-container {
     width: 100%;
@@ -293,8 +283,7 @@
         padding: 0 0 20px 0;
     }
 
-    .header-top .back-btn,
-    .header-top .header-actions {
+    .header-top .back-btn {
         display: none;
     }
 

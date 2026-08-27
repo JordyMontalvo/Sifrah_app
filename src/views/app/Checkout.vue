@@ -130,16 +130,33 @@
             <div class="checkout-process">
 
             <!-- Barra de progreso (visible solo en pasos 1 y 2) -->
-            <div v-if="currentStep !== 3" class="top-progress-bar" :style="{ '--current-step': currentStep }">
-              <div class="progress-step" :class="{ active: currentStep >= 1 }">
+            <div
+              v-if="currentStep !== 3"
+              class="top-progress-bar"
+              role="navigation"
+              aria-label="Progreso del checkout"
+            >
+              <div class="step-connector connector-1-2" aria-hidden="true">
+                <span
+                  class="step-connector-fill"
+                  :class="{ 'is-half': currentStep === 1, 'is-full': currentStep > 1 }"
+                ></span>
+              </div>
+              <div class="step-connector connector-2-3" aria-hidden="true">
+                <span
+                  class="step-connector-fill"
+                  :class="{ 'is-half': currentStep === 2, 'is-full': currentStep > 2 }"
+                ></span>
+              </div>
+              <div class="progress-step" :class="{ active: currentStep === 1, complete: currentStep > 1 }" :aria-current="currentStep === 1 ? 'step' : null">
                 <div class="step-number">1</div>
                 <div class="step-label">Despacho</div>
               </div>
-              <div class="progress-step" :class="{ active: currentStep >= 2 }">
+              <div class="progress-step" :class="{ active: currentStep === 2, complete: currentStep > 2 }" :aria-current="currentStep === 2 ? 'step' : null">
                 <div class="step-number">2</div>
                 <div class="step-label">Facturación</div>
               </div>
-              <div class="progress-step" :class="{ active: currentStep >= 3 }">
+              <div class="progress-step" :class="{ active: currentStep === 3, complete: currentStep > 3 }" :aria-current="currentStep === 3 ? 'step' : null">
                 <div class="step-number">3</div>
                 <div class="step-label">Pago</div>
               </div>
