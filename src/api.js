@@ -214,7 +214,11 @@ class Profile {
     return axios.get(`/app/profile?session=${session}`);
   }
   UPDATE(session, data) {
-    return axios.post(`/app/profile?session=${session}`, data);
+    return axios.post(
+      `/app/profile?session=${session}`,
+      JSON.parse(JSON.stringify(data || {})),
+      { headers: { "Content-Type": "application/json" } }
+    );
   }
 }
 class Password {

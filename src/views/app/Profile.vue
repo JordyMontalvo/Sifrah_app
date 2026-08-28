@@ -953,6 +953,15 @@ export default {
           this.saveError = data.msg || "No se pudieron guardar los datos";
           return;
         }
+        if (
+          data &&
+          payload.lastName &&
+          data.lastName != null &&
+          String(data.lastName) !== String(payload.lastName)
+        ) {
+          this.saveError = "El servidor no guardó los cambios. Intenta de nuevo.";
+          return;
+        }
         if (this.bank) this.bank_disabled = true;
         if (this.account_type) this.account_type_disabled = true;
         if (this.account) this.account_disabled = true;
