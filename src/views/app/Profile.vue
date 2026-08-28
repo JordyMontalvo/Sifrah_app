@@ -55,22 +55,8 @@
               ></span>
               {{ locationLine }}
             </p>
-            <span class="profile-hero-badge" v-if="badgeLabel">
-              <img
-                v-if="showRankIcon && rankPinImage"
-                :src="rankPinImage"
-                :alt="badgeLabel"
-                class="profile-hero-badge-pin"
-              />
-              <svg
-                v-else-if="showRankIcon"
-                class="profile-hero-badge-icon"
-                viewBox="0 0 24 24"
-                aria-hidden="true"
-              >
-                <path d="M12 3.2 20.2 12 12 20.8 3.8 12 12 3.2Z" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/>
-              </svg>
-              {{ badgeLabel }}
+            <span class="profile-hero-badge" v-if="packageLabel">
+              {{ packageLabel }}
             </span>
           </div>
         </section>
@@ -605,6 +591,7 @@
             <span v-if="!sending"><i class="fas fa-save"></i> Guardar cambios</span>
             <span v-else><i class="fas fa-spinner fa-spin"></i> Guardando...</span>
           </button>
+          <p v-if="saveError" class="password-alert">{{ saveError }}</p>
         </div>
 
         <transition name="fade">
@@ -703,45 +690,25 @@ function toDateInputValue(raw) {
   return iso ? `${iso[1]}-${iso[2]}-${iso[3]}` : "";
 }
 
-const JUNK_RANK_LABELS = new Set([
-  "",
-  "default",
-  "none",
-  "ninguno",
-  "null",
-  "user",
-  "cliente vip",
-]);
-
-function formatRankLabel(raw) {
-  if (raw == null) return "";
+function formatPlanLabel(plan) {
+  if (!plan || plan === "none" || plan === "null") return "Ninguno";
+  let raw = plan;
+  if (typeof plan === "object") {
+    raw = plan.name || plan.id || "";
+  }
   const value = String(raw).trim();
-  if (!value) return "";
+  if (!value) return "Ninguno";
   const v = value.toLowerCase();
-  if (JUNK_RANK_LABELS.has(v)) return "";
-  const map = {
-    active: "Activo",
-    activo: "Activo",
-    star: "Bronce",
-    bronce: "Bronce",
-    silver: "Plata",
-    plata: "Plata",
-    gold: "Oro",
-    oro: "Oro",
-    ruby: "Rubí",
-    rubi: "Rubí",
-    "rubí": "Rubí",
-    emerald: "Esmeralda",
-    esmeralda: "Esmeralda",
-    diamond: "Diamante",
-    diamante: "Diamante",
-  };
-  if (map[v]) return map[v];
-  if (v.includes("doble")) return "Doble diamante";
-  if (v.includes("triple")) return "Triple diamante";
-  if (v.includes("imperial")) return "Diamante imperial";
-  if (v.includes("embajador")) return "Embajador Sifrah";
-  return value;
+  if (v === "none" || v === "default" || v === "null" || v === "ninguno") {
+    return "Ninguno";
+  }
+  if (v === "early") return "Cliente preferente";
+  if (v === "basic") return "Ejecutivo";
+  if (v === "standard") return "Distribuidor";
+  if (v === "business") return "Empresarial";
+  if (v === "master") return "Empresario";
+  if (typeof plan === "object" && plan.name) return String(plan.name).trim();
+  return value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
 }
 
 export default {
@@ -784,8 +751,6 @@ export default {
       photoState: "default",
       newPhoto: null,
       photoFile: null,
-      rankPinImage: null,
-      currentRankLabel: "",
       oldPassword: "",
       newPassword: "",
       confirmPassword: "",
@@ -795,6 +760,7 @@ export default {
       passwordSending: false,
       passwordError: "",
       passwordSuccess: false,
+      saveError: "",
     };
   },
   computed: {
@@ -831,15 +797,8 @@ export default {
       const key = countryFlagKey(this.country);
       return (key && COUNTRY_FLAG_SVG[key]) || "";
     },
-    badgeLabel() {
-      const fromProgress = formatRankLabel(this.currentRankLabel);
-      if (fromProgress) return fromProgress;
-      const fromStore = formatRankLabel(this.$store.state.rank);
-      if (fromStore) return fromStore;
-      return "Ninguno";
-    },
-    showRankIcon() {
-      return String(this.badgeLabel).toLowerCase() !== "ninguno";
+    packageLabel() {
+      return formatPlanLabel(this.$store.state.plan);
     },
   },
   watch: {
@@ -860,65 +819,57 @@ export default {
       this.$router.push("/login");
     if (data.error && data.msg == "unverified user")
       this.$router.push("/verify");
-    this.$store.commit("SET_NAME", data.name);
-    this.$store.commit("SET_LAST_NAME", data.lastName);
-    this.$store.commit("SET_AFFILIATED", data.affiliated);
-    this.$store.commit("SET__ACTIVATED", data._activated);
-    this.$store.commit("SET_ACTIVATED", data.activated);
-    this.$store.commit("SET_PLAN", data.plan);
-    this.$store.commit("SET_COUNTRY", data.country);
-    this.$store.commit("SET_PHOTO", data.photo);
-    this.$store.commit("SET_TREE", data.tree);
-    this.$store.commit("SET_CITY", data.city);
-    this.$store.commit("SET_EMAIL", data.email);
-    this.$store.commit("SET_BIRTHDATE", data.birthdate);
-    this.$store.commit("SET_DNI", data.dni);
-    this.$store.commit("SET_TOKEN", data.token);
-    if (data.rank) this.$store.commit("SET_RANK", data.rank);
-    if (data.historicalRankLabel) {
-      this.$store.commit("SET_HISTORICAL_RANK_LABEL", data.historicalRankLabel);
-    }
-    this.country = data.country;
-    this.dni = data.dni;
-    this.name = data.name;
-    this.lastName = data.lastName;
-    this.email = data.email;
-    this.phone = data.phone;
-    this.birthdate = toDateInputValue(data.birthdate);
-    this.address = data.address;
-    this.token = data.token;
-    this.bank = data.bank;
-    this.account_type = data.account_type;
-    this.account = data.account;
-    this.ibk = data.ibk;
-    this.account_holder = data.account_holder || data.titular || null;
-    this.yape = data.yape || null;
-    this.plin = data.plin || null;
-    this.city = data.city;
-    this.updateCities();
-    if (this.bank) this.bank_disabled = true;
-    if (this.account_type) this.account_type_disabled = true;
-    if (this.account) this.account_disabled = true;
-    if (this.ibk) this.ibk_disabled = true;
-    if (this.account_holder) this.account_holder_disabled = true;
-    this.loadRankPin();
+    if (data.error) return;
+    this.applyProfile(data);
   },
   methods: {
-    setRankPin(url) {
-      const src = url ? String(url).trim() : "";
-      if (src) this.rankPinImage = src;
+    textValue(value) {
+      if (value == null || value === "null" || value === "undefined") return "";
+      return String(value).trim();
     },
-    async loadRankPin() {
-      try {
-        const { data } = await api.RankProgress.GET(this.session);
-        if (data && !data.error && data.progress) {
-          const progress = data.progress;
-          this.currentRankLabel = progress.currentRankLabel || "";
-          this.setRankPin(progress.currentRankImage);
-        }
-      } catch (e) {
-        console.error("Error loading rank pin:", e);
+    applyProfile(data) {
+      if (!data) return;
+      this.$store.commit("SET_NAME", data.name);
+      this.$store.commit("SET_LAST_NAME", data.lastName);
+      this.$store.commit("SET_AFFILIATED", data.affiliated);
+      this.$store.commit("SET__ACTIVATED", data._activated);
+      this.$store.commit("SET_ACTIVATED", data.activated);
+      this.$store.commit("SET_PLAN", data.plan);
+      this.$store.commit("SET_COUNTRY", data.country);
+      this.$store.commit("SET_PHOTO", data.photo);
+      this.$store.commit("SET_TREE", data.tree);
+      this.$store.commit("SET_CITY", data.city);
+      this.$store.commit("SET_EMAIL", data.email);
+      this.$store.commit("SET_BIRTHDATE", data.birthdate);
+      this.$store.commit("SET_DNI", data.dni);
+      this.$store.commit("SET_TOKEN", data.token);
+      if (data.rank) this.$store.commit("SET_RANK", data.rank);
+      if (data.historicalRankLabel) {
+        this.$store.commit("SET_HISTORICAL_RANK_LABEL", data.historicalRankLabel);
       }
+      this.country = data.country;
+      this.dni = data.dni;
+      this.name = data.name;
+      this.lastName = data.lastName;
+      this.email = data.email;
+      this.phone = data.phone;
+      this.birthdate = toDateInputValue(data.birthdate);
+      this.address = data.address;
+      this.token = data.token;
+      this.bank = data.bank;
+      this.account_type = data.account_type;
+      this.account = data.account;
+      this.ibk = data.ibk;
+      this.account_holder = data.account_holder || data.titular || null;
+      this.yape = data.yape || null;
+      this.plin = data.plin || null;
+      this.city = data.city;
+      this.updateCities();
+      if (this.bank) this.bank_disabled = true;
+      if (this.account_type) this.account_type_disabled = true;
+      if (this.account) this.account_disabled = true;
+      if (this.ibk) this.ibk_disabled = true;
+      if (this.account_holder) this.account_holder_disabled = true;
     },
     updateCities() {
       const countryCities = {
@@ -975,47 +926,47 @@ export default {
         }
       }
 
-      const {
-        name,
-        lastName,
-        email,
-        phone,
-        birthdate,
-        address,
-        bank,
-        account_type,
-        account,
-        ibk,
-        account_holder,
-        yape,
-        plin,
-        city,
-        country,
-      } = this;
+      const payload = {
+        name: this.textValue(this.name),
+        lastName: this.textValue(this.lastName),
+        email: this.textValue(this.email),
+        phone: this.textValue(this.phone),
+        birthdate: this.textValue(this.birthdate),
+        address: this.textValue(this.address),
+        bank: this.textValue(this.bank),
+        account_type: this.textValue(this.account_type),
+        account: this.textValue(this.account),
+        ibk: this.textValue(this.ibk),
+        account_holder: this.textValue(this.account_holder),
+        titular: this.textValue(this.account_holder),
+        yape: this.textValue(this.yape),
+        plin: this.textValue(this.plin),
+        city: this.textValue(this.city),
+        country: this.textValue(this.country),
+      };
+
       this.sending = true;
-      await api.Profile.UPDATE(this.session, {
-        name,
-        lastName,
-        email,
-        phone,
-        birthdate,
-        address,
-        bank,
-        account_type,
-        account,
-        ibk,
-        account_holder,
-        yape,
-        plin,
-        city,
-        country,
-      });
-      this.$store.commit("SET_NAME", name);
-      this.$store.commit("SET_LAST_NAME", lastName);
-      this.$store.commit("SET_BIRTHDATE", birthdate);
-      this.sending = false;
-      this.showToast = true;
-      setTimeout(() => (this.showToast = false), 3000);
+      this.saveError = "";
+      try {
+        const { data } = await api.Profile.UPDATE(this.session, payload);
+        if (data && data.error) {
+          this.saveError = data.msg || "No se pudieron guardar los datos";
+          return;
+        }
+        if (data && (data.lastName !== undefined || data.yape !== undefined || data.account_holder !== undefined)) {
+          this.applyProfile(data);
+        } else {
+          const fresh = await api.Profile.GET(this.session);
+          if (fresh.data && !fresh.data.error) this.applyProfile(fresh.data);
+        }
+        this.showToast = true;
+        setTimeout(() => (this.showToast = false), 3000);
+      } catch (e) {
+        console.error("Error updating profile:", e);
+        this.saveError = "Error de conexión. Intenta nuevamente.";
+      } finally {
+        this.sending = false;
+      }
     },
     copy_token() {
       lib.copy("token");
