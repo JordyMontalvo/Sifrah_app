@@ -1022,7 +1022,7 @@
       </router-link>
     </footer>
 
-    <a v-if="!isMobile" href="https://wa.me/message/JCHJIVLZGG6MK1" target="_blank" class="wsp fab fa-whatsapp"></a>
+    <a v-if="!isMobile" :href="wsp || $store.state.wsp_pe" target="_blank" class="wsp fab fa-whatsapp"></a>
     
     <!-- Panel de Debug (solo visible en desarrollo o cuando se habilite) -->
     <DebugPanel />

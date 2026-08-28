@@ -35,7 +35,7 @@ export default new Vuex.Store({
     is: 'https://www.instagram.com/sifrahcorp',
     tk: 'https://www.tiktok.com/@sifrah.corp',
     yt: 'https://www.youtube.com/@SIFRAHCORP',
-    wsp_pe: 'https://wa.me/qr/PYSNS6G6AYACB1',
+    wsp_pe: 'https://wa.me/51947254429',
     wsp_bo: '',
     wsp_ec: '',
     site: '',

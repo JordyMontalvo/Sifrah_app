@@ -461,7 +461,7 @@ export default {
       const msg = encodeURIComponent(
         `Hola, soy ${this.userFullName}. Deseo solicitar un cambio de beneficiario del Legado SIFRAH.`
       );
-      window.open(`https://wa.me/message/JCHJIVLZGG6MK1?text=${msg}`, "_blank");
+      window.open(`https://wa.me/51947254429?text=${msg}`, "_blank");
     },
   },
 };
