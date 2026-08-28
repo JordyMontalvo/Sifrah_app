@@ -284,7 +284,7 @@
               <label class="bank-field-label" for="profile-bank">Banco</label>
               <div class="bank-field-control bank-field-select">
                 <select id="profile-bank" v-model="bank" :disabled="bank_disabled">
-                  <option value="null" disabled>Selecciona tu banco</option>
+                  <option :value="null" disabled>Selecciona tu banco</option>
                   <option value="BCP">BCP</option>
                   <option value="INTERBANK">INTERBANK</option>
                   <option value="BBVA">BBVA</option>
@@ -302,7 +302,7 @@
               <label class="bank-field-label" for="profile-account-type">Tipo de cuenta</label>
               <div class="bank-field-control bank-field-select">
                 <select id="profile-account-type" v-model="account_type" :disabled="account_type_disabled">
-                  <option value="null" disabled>Selecciona el tipo de cuenta</option>
+                  <option :value="null" disabled>Selecciona el tipo de cuenta</option>
                   <option value="Ahorros">Ahorros</option>
                   <option value="Corriente">Corriente</option>
                 </select>
@@ -953,12 +953,11 @@ export default {
           this.saveError = data.msg || "No se pudieron guardar los datos";
           return;
         }
-        if (data && (data.lastName !== undefined || data.yape !== undefined || data.account_holder !== undefined)) {
-          this.applyProfile(data);
-        } else {
-          const fresh = await api.Profile.GET(this.session);
-          if (fresh.data && !fresh.data.error) this.applyProfile(fresh.data);
-        }
+        if (this.bank) this.bank_disabled = true;
+        if (this.account_type) this.account_type_disabled = true;
+        if (this.account) this.account_disabled = true;
+        if (this.ibk) this.ibk_disabled = true;
+        if (this.account_holder) this.account_holder_disabled = true;
         this.showToast = true;
         setTimeout(() => (this.showToast = false), 3000);
       } catch (e) {
