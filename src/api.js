@@ -211,13 +211,15 @@ class API {
 
 class Profile {
   GET(session) {
-    return axios.get(`/app/profile?session=${session}`);
+    return axios.get(`/app/profile?session=${session}&_=${Date.now()}`, {
+      headers: { "Cache-Control": "no-cache", Pragma: "no-cache" },
+    });
   }
   UPDATE(session, data) {
     return axios.post(
-      `/app/profile?session=${session}`,
+      `/app/profile?session=${session}&_=${Date.now()}`,
       JSON.parse(JSON.stringify(data || {})),
-      { headers: { "Content-Type": "application/json" } }
+      { headers: { "Content-Type": "application/json", "Cache-Control": "no-cache" } }
     );
   }
 }
