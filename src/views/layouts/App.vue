@@ -485,7 +485,7 @@
         <header v-if="($route.path !== '/audios' && $route.path !== '/libros') || !isMobile">
           <p
             class="content-header-title"
-            :class="{ 'content-header-title--hidden': $route.path === '/security' && !isMobile }"
+            :class="{ 'content-header-title--hidden': hideContentTitle }"
             style="font-weight: bold; font-size: 20px"
           >{{ $route.path === '/audios' ? 'Audio' : title }}</p>
           <div
@@ -1201,6 +1201,13 @@ newPhoto: null,
     },
     country() {
       return this.$store.state.country;
+    },
+    hideContentTitle() {
+      if (this.$route.path === "/security" && !this.isMobile) return true;
+      if (this.isMobile && (this.$route.path === "/collect" || this.$route.path === "/collects")) {
+        return true;
+      }
+      return false;
     },
     photo() {
       const p = this.$store.state.photo;

@@ -283,7 +283,7 @@
               </span>
               <label class="bank-field-label" for="profile-bank">Banco</label>
               <div class="bank-field-control bank-field-select">
-                <select id="profile-bank" v-model="bank" :disabled="bank_disabled">
+                <select id="profile-bank" v-model="bank">
                   <option :value="null" disabled>Selecciona tu banco</option>
                   <option value="BCP">BCP</option>
                   <option value="INTERBANK">INTERBANK</option>
@@ -301,7 +301,7 @@
               </span>
               <label class="bank-field-label" for="profile-account-type">Tipo de cuenta</label>
               <div class="bank-field-control bank-field-select">
-                <select id="profile-account-type" v-model="account_type" :disabled="account_type_disabled">
+                <select id="profile-account-type" v-model="account_type">
                   <option :value="null" disabled>Selecciona el tipo de cuenta</option>
                   <option value="Ahorros">Ahorros</option>
                   <option value="Corriente">Corriente</option>
@@ -323,7 +323,6 @@
                   type="text"
                   inputmode="numeric"
                   placeholder="Ej. 1234 5678 9012 3456"
-                  :readonly="account_disabled"
                 />
               </div>
             </div>
@@ -345,7 +344,6 @@
                   type="text"
                   inputmode="numeric"
                   placeholder="Ej. 002 123 012345678901 55"
-                  :readonly="ibk_disabled"
                 />
               </div>
             </div>
@@ -364,7 +362,6 @@
                   v-model="account_holder"
                   type="text"
                   placeholder="Nombre completo del titular"
-                  :readonly="account_holder_disabled"
                 />
               </div>
             </div>
@@ -737,11 +734,6 @@ export default {
       account_holder: null,
       yape: null,
       plin: null,
-      bank_disabled: false,
-      account_type_disabled: false,
-      account_disabled: false,
-      ibk_disabled: false,
-      account_holder_disabled: false,
       loading: true,
       sending: false,
       c_token: false,
@@ -865,11 +857,6 @@ export default {
       this.plin = data.plin || null;
       this.city = data.city;
       this.updateCities();
-      if (this.bank) this.bank_disabled = true;
-      if (this.account_type) this.account_type_disabled = true;
-      if (this.account) this.account_disabled = true;
-      if (this.ibk) this.ibk_disabled = true;
-      if (this.account_holder) this.account_holder_disabled = true;
     },
     updateCities() {
       const countryCities = {
@@ -962,11 +949,6 @@ export default {
           this.saveError = "El servidor no guardó los cambios. Intenta de nuevo.";
           return;
         }
-        if (this.bank) this.bank_disabled = true;
-        if (this.account_type) this.account_type_disabled = true;
-        if (this.account) this.account_disabled = true;
-        if (this.ibk) this.ibk_disabled = true;
-        if (this.account_holder) this.account_holder_disabled = true;
         this.showToast = true;
         setTimeout(() => (this.showToast = false), 3000);
       } catch (e) {

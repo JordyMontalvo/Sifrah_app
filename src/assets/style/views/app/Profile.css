@@ -736,8 +736,19 @@
   border-radius: 18px;
   font-size: 1rem;
   box-shadow: 0 2px 16px rgba(0, 0, 0, 0.12);
-  z-index: 300;
+  z-index: 2200;
   border: 1.5px solid #e3e7ee;
+}
+
+@media (max-width: 767px) {
+  .glass-toast {
+    left: 16px;
+    right: 16px;
+    transform: none;
+    bottom: calc(96px + env(safe-area-inset-bottom, 0px));
+    text-align: center;
+    padding: 14px 20px;
+  }
 }
 
 .loading-container {
