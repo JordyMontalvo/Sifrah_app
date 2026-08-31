@@ -22,8 +22,10 @@
                 v-model="form.email"
                 type="email"
                 required
+                autocomplete="email"
                 placeholder="tu@email.com"
                 :class="{ 'error': errors.email }"
+                @input="errors.email = ''"
                 @blur="validateEmail"
               />
             </div>
@@ -119,25 +121,33 @@ export default {
       return true
     },
 
+    apiErrorMessage(data, fallback) {
+      if (!data) return fallback
+      if (typeof data.msg === 'string' && data.msg) return data.msg
+      if (typeof data.error === 'string' && data.error) return data.error
+      return fallback
+    },
+
     async submitForm() {
       if (!this.validateEmail()) return
 
       this.loading = true
+      const email = String(this.form.email || '').trim()
 
       try {
-        const response = await api.forgotPassword({ email: this.form.email.trim() })
+        const response = await api.forgotPassword({ email })
+        const data = (response && response.data) || {}
 
-        if (response.data && !response.data.error) {
+        if (!data.error) {
           this.showSuccessNotification('Si el email está registrado, recibirás las instrucciones en tu bandeja de entrada.')
           this.form.email = ''
           this.errors = {}
         } else {
-          const errorMsg = (response.data && response.data.msg) || 'Error al enviar el correo. Intenta de nuevo.'
-          this.showErrorNotification(errorMsg)
+          this.showErrorNotification(this.apiErrorMessage(data, 'Error al enviar el correo. Intenta de nuevo.'))
         }
       } catch (error) {
-        console.error('Error enviando email de recuperación:', error)
-        this.showErrorNotification('Error de conexión. Intenta de nuevo.')
+        const data = error && error.response && error.response.data
+        this.showErrorNotification(this.apiErrorMessage(data, 'Error de conexión. Intenta de nuevo.'))
       } finally {
         this.loading = false
       }
