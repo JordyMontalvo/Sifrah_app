@@ -125,7 +125,7 @@ export default {
         // Solo redirigir si es necesario y no estamos ya en la ruta correcta
         // Permitir acceso a checkout y activation para que usuarios nuevos puedan pagar su paquete de afiliación
         else if (!affiliated) {
-          const allowedRoutesForNonAffiliated = ['/affiliation', '/profile', '/password', '/security', '/checkout', '/activation'];
+          const allowedRoutesForNonAffiliated = ['/affiliation', '/profile', '/password', '/security', '/checkout', '/activation', '/terminos', '/privacidad', '/terms', '/privacy'];
           if (!allowedRoutesForNonAffiliated.includes(this.$route.path)) {
             console.log('AppInitializer: Usuario no afiliado, redirigiendo a affiliation...');
             this.$router.push('/affiliation');
@@ -143,6 +143,9 @@ export default {
         else if (this.$route.path.startsWith('/tienda/')) {
           console.log('AppInitializer: Permitiendo acceso a tienda compartida sin sesión');
           // No redirigir
+        }
+        else if (['/terminos', '/privacidad', '/terms', '/privacy'].includes(this.$route.path)) {
+          // Documentos legales públicos
         }
         // Si no hay sesión y no está en login, redirigir a login
         else if (this.$route.path !== '/login' && this.$route.path !== '/welcome' && this.$route.path !== '/register' && this.$route.path !== '/remember' && this.$route.path !== '/reset-password') {
@@ -233,7 +236,7 @@ export default {
         
         // Si no está afiliado y no está en una ruta permitida
         // Permitir acceso a checkout y activation para que usuarios nuevos puedan pagar su paquete de afiliación
-        const allowedRoutesForNonAffiliated = ['/affiliation', '/profile', '/password', '/security', '/checkout', '/activation'];
+        const allowedRoutesForNonAffiliated = ['/affiliation', '/profile', '/password', '/security', '/checkout', '/activation', '/terminos', '/privacidad', '/terms', '/privacy'];
         if (!affiliated && !allowedRoutesForNonAffiliated.includes(this.$route.path)) {
           console.log('AppInitializer: Redirección por cambio de ruta - usuario no afiliado');
           this.$router.push('/affiliation');

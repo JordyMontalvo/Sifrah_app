@@ -591,6 +591,12 @@
           <p v-if="saveError" class="password-alert">{{ saveError }}</p>
         </div>
 
+        <p class="legal-inline profile-legal">
+          <router-link to="/terminos">Términos y condiciones</router-link>
+          <span>·</span>
+          <router-link to="/privacidad">Política de privacidad</router-link>
+        </p>
+
         <transition name="fade">
           <div v-if="showToast" class="glass-toast">
             ¡Datos guardados correctamente!

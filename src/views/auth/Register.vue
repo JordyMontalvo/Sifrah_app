@@ -287,7 +287,12 @@
       <div class="terms-field">
         <label class="checkbox-label">
           <input type="checkbox" v-model="acceptTerms" class="checkbox-input" />
-          <span class="checkbox-text">Acepto los términos de uso</span>
+          <span class="checkbox-text">
+            Acepto los
+            <router-link class="legal-link" to="/terminos" @click.native.stop>términos y condiciones</router-link>
+            y la
+            <router-link class="legal-link" to="/privacidad" @click.native.stop>política de privacidad</router-link>
+          </span>
         </label>
       </div>
 
@@ -434,7 +439,7 @@ export default {
         return;
       }
       if (!acceptTerms) {
-        this.alert = "Debes aceptar los términos.";
+        this.alert = "Debes aceptar los términos y la política de privacidad.";
         return;
       }
 

@@ -10,6 +10,8 @@ import OfficeEmbed from './views/auth/OfficeEmbed.vue'
 import Register from './views/auth/Register.vue'
 import Remember from './views/auth/Remember.vue'
 import ResetPassword from './views/auth/ResetPassword.vue'
+import Terms from './views/legal/Terms.vue'
+import Privacy from './views/legal/Privacy.vue'
 // Aux
 import Logout from './views/auxi/Logout.vue'
 // import Verify from './views/auxi/Verify.vue'
@@ -116,6 +118,18 @@ const routes = [
     path: '/reset-password',
     component: ResetPassword,
     meta: { requiresNoAuth: true }
+  },
+  {
+    path: '/terminos',
+    alias: '/terms',
+    component: Terms,
+    meta: { public: true }
+  },
+  {
+    path: '/privacidad',
+    alias: '/privacy',
+    component: Privacy,
+    meta: { public: true }
   },
   // Aux
   {
@@ -483,7 +497,7 @@ router.beforeEach(async (to, from, next) => {
 
   // Permitir acceso explícito a checkout y activation para usuarios no afiliados
   // Esto permite que usuarios nuevos puedan pagar su paquete de afiliación
-  const allowedRoutesForNonAffiliated = ['/affiliation', '/profile', '/password', '/security', '/checkout', '/activation']
+  const allowedRoutesForNonAffiliated = ['/affiliation', '/profile', '/password', '/security', '/checkout', '/activation', '/terminos', '/privacidad', '/terms', '/privacy']
   if (session && (affiliated === false || affiliated === null) && !allowedRoutesForNonAffiliated.includes(to.path)) {
     console.log('Router Guard: Usuario autenticado pero no afiliado, redirigiendo a /affiliation')
     next({ path: '/affiliation' })

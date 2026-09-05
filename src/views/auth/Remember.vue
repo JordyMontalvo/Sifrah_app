@@ -353,6 +353,25 @@ export default {
   color: #f7971e !important;
 }
 
+.legal-inline {
+  margin: 8px 0 0;
+  text-align: center;
+  font-size: 12px;
+  color: #888;
+}
+
+.legal-inline a {
+  color: #e91e63 !important;
+  font-weight: inherit;
+  display: inline !important;
+  gap: 0;
+}
+
+.legal-inline span {
+  margin: 0 6px;
+  color: #ccc;
+}
+
 /* Estados de carga, éxito y error */
 .loading-state,
 .success-state,

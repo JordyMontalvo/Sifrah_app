@@ -427,6 +427,28 @@
   width: 100%;
 }
 
+.profile-legal {
+  margin: 18px 0 8px;
+  text-align: center;
+  font-size: 13px;
+  color: #888;
+}
+
+.profile-legal a {
+  color: #e91e63;
+  font-weight: inherit;
+  text-decoration: none;
+}
+
+.profile-legal a:hover {
+  text-decoration: underline;
+}
+
+.profile-legal span {
+  margin: 0 6px;
+  color: #ccc;
+}
+
 .profile-bank-panels {
   display: flex;
   flex-direction: column;
