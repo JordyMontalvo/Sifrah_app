@@ -600,6 +600,7 @@
               <i class="fas fa-times"></i>
             </button>
             <a
+              v-if="wsp || $store.state.wsp_pe"
               :href="wsp || $store.state.wsp_pe"
               target="_blank"
               rel="noopener noreferrer"

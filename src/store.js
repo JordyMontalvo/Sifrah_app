@@ -324,6 +324,17 @@ export default new Vuex.Store({
       state.education = false
       state.universidad = false
     },
+    SET_SOCIAL_LINKS: (state, links) => {
+      if (!links) return
+      if (typeof links.facebook === 'string') state.fb = links.facebook
+      if (typeof links.youtube === 'string') state.yt = links.youtube
+      if (typeof links.tiktok === 'string') state.tk = links.tiktok
+      if (typeof links.whatsapp === 'string') {
+        state.wsp_pe = links.whatsapp
+        state.wsp_bo = links.whatsapp
+        state.wsp_ec = links.whatsapp
+      }
+    },
   },
   actions: {
     // Acción para restaurar el estado desde localStorage

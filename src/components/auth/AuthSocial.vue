@@ -1,24 +1,28 @@
 <template>
   <div class="social">
     <a
+      v-if="fb"
       class="fab fa-facebook-square social-icon facebook"
       :href="fb"
       target="_blank"
       rel="noopener"
     ></a>
     <a
+      v-if="yt"
       class="fab fa-youtube social-icon youtube"
       :href="yt"
       target="_blank"
       rel="noopener"
     ></a>
     <a
+      v-if="tk"
       class="fab fa-tiktok social-icon tiktok"
       :href="tk"
       target="_blank"
       rel="noopener"
     ></a>
     <a
+      v-if="wsp_pe"
       class="fab fa-whatsapp social-icon whatsapp"
       :href="wsp_pe"
       target="_blank"

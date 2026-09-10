@@ -28,6 +28,7 @@ export default {
       
       // Esperar un poco para que el router se inicialice completamente
       await this.$nextTick();
+      await this.loadSocialLinks();
       
       // Verificar si hay una sesión activa
       const session = this.$store.state.session || localStorage.getItem('session');
@@ -181,6 +182,16 @@ export default {
   },
   
   methods: {
+    async loadSocialLinks() {
+      try {
+        const { data } = await api.socialLinks();
+        if (data && !data.error && data.links) {
+          this.$store.commit("SET_SOCIAL_LINKS", data.links);
+        }
+      } catch (err) {
+        console.warn("AppInitializer: No se pudieron cargar los enlaces de redes", err);
+      }
+    },
     setupInactivityTimeout() {
       const EVENTS = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart'];
       this.resetTimeout = this.resetTimeout.bind(this);

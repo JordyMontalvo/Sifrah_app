@@ -78,6 +78,9 @@ class API {
   login(data) {
     return axios.post("/auth/login", data);
   }
+  socialLinks() {
+    return axios.get("/app/social-links");
+  }
   loginWithGoogle(id_token) {
     return axios.post("/auth/login-google", { id_token });
   }
