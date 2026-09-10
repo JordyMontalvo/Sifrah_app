@@ -595,9 +595,21 @@
               </p>
             </div>
           </router-link>
-          <button type="button" class="mobile-tabs-close" @click="closeMobileTabsMenu" aria-label="Cerrar menú">
-            <i class="fas fa-times"></i>
-          </button>
+          <div class="mobile-tabs-header-actions">
+            <button type="button" class="mobile-tabs-close" @click="closeMobileTabsMenu" aria-label="Cerrar menú">
+              <i class="fas fa-times"></i>
+            </button>
+            <a
+              :href="wsp || $store.state.wsp_pe"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="mobile-tabs-support"
+              aria-label="Soporte por WhatsApp"
+            >
+              <i class="fab fa-whatsapp" aria-hidden="true"></i>
+              <span>Soporte</span>
+            </a>
+          </div>
         </div>
         
         <div class="mobile-tabs-content">
@@ -2096,12 +2108,21 @@ newPhoto: null,
 
 .mobile-tabs-header {
   display: flex;
-  justify-content: flex-start;
+  justify-content: space-between;
   align-items: flex-start;
   padding: 20px 16px 26px;
   border-bottom: none;
   background: #000000;
   position: relative;
+}
+
+.mobile-tabs-header-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  flex-shrink: 0;
+  gap: 8px;
+  margin-top: -4px;
 }
 
 .mobile-menu-user-info {
@@ -2110,8 +2131,8 @@ newPhoto: null,
   align-items: center;
   gap: 12px;
   flex: 1;
-  width: 100%;
-  padding-right: 44px;
+  min-width: 0;
+  padding-right: 12px;
   text-decoration: none;
 }
 
@@ -2175,16 +2196,15 @@ newPhoto: null,
 }
 
 .mobile-tabs-close {
-  position: absolute;
-  top: 18px;
-  right: 10px;
+  position: static;
   z-index: 10;
   background: none;
   border: none;
   color: #ffffff;
   font-size: 22px;
   cursor: pointer;
-  padding: 8px;
+  padding: 4px 0 0;
+  margin: 0;
   line-height: 1;
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
@@ -2195,6 +2215,43 @@ newPhoto: null,
   font-size: inherit;
   position: static;
   padding: 0;
+}
+
+.mobile-tabs-support {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 16px 0 0;
+  padding: 0;
+  background: none;
+  border: none;
+  box-shadow: none;
+  outline: none;
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.mobile-tabs-support i {
+  color: #ffffff !important;
+  font-size: 16px;
+  position: static;
+  padding: 0;
+  margin: 0;
+  background: none;
+  border: none;
+}
+
+.mobile-tabs-support span {
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 500;
 }
 
 .mobile-tabs-content {
