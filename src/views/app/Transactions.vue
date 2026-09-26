@@ -93,7 +93,7 @@
 
           <!-- Balance neto + chevron -->
           <div class="cycle-right">
-            <span class="cycle-net" :class="cycleNet(cycle) >= 0 ? 'net-pos' : 'net-neg'">
+            <span class="cycle-net" :class="cycleNetClass(cycle)">
               {{ cycleNet(cycle) >= 0 ? '+' : '' }}{{ cycleNet(cycle).toFixed(2) }}
             </span>
             <svg
@@ -116,6 +116,7 @@
               v-for="(tx, ti) in visibleItems(cycle)"
               :key="ti"
               class="tx-row"
+              :class="{ 'tx-row--pending': isVirtual(tx) }"
             >
               <!-- Fecha -->
               <div class="tx-date">
@@ -281,6 +282,21 @@ export default {
       const items = this.search ? cycle.filteredItems : cycle.items;
       return cycle.showAll ? items : items.slice(0, 5);
     },
+    isVirtual(tx) {
+      const v = tx && tx.virtual;
+      return v === true || v === 1 || v === "true" || v === "1";
+    },
+    cycleItems(cycle) {
+      return this.search ? cycle.filteredItems : cycle.items;
+    },
+    cycleAllVirtual(cycle) {
+      const items = this.cycleItems(cycle);
+      return items.length > 0 && items.every((tx) => this.isVirtual(tx));
+    },
+    cycleNetClass(cycle) {
+      if (this.cycleAllVirtual(cycle)) return "net-pending";
+      return this.cycleNet(cycle) >= 0 ? "net-pos" : "net-neg";
+    },
     showPerson(tx) {
       return tx.user_name && !NO_PERSON_OPS.has(tx.name);
     },
@@ -297,8 +313,7 @@ export default {
       return text.replace(new RegExp(`(${q})`, "gi"), '<mark class="hl">$1</mark>');
     },
     cycleNet(cycle) {
-      const items = this.search ? cycle.filteredItems : cycle.items;
-      return items.reduce((s, t) => s + (t.type === "in" ? 1 : -1) * Number(t.value || 0), 0);
+      return this.cycleItems(cycle).reduce((s, t) => s + (t.type === "in" ? 1 : -1) * Number(t.value || 0), 0);
     },
   },
   filters: {
@@ -551,6 +566,7 @@ export default {
 }
 .net-pos { color: #2e7d32; }
 .net-neg { color: #c62828; }
+.net-pending { color: #c5c5c5; }
 .chevron {
   width: 18px;
   height: 18px;
@@ -573,6 +589,27 @@ export default {
   transition: background 0.15s;
 }
 .tx-row:active { background: #fafafa; }
+
+/* Saldo no disponible: la fila completa queda desvanecida */
+.tx-row--pending .tx-day,
+.tx-row--pending .tx-name {
+  color: #c5c5c5;
+}
+.tx-row--pending .tx-month,
+.tx-row--pending .tx-person {
+  color: #d4d4d4;
+}
+.tx-row--pending .tx-amount-pill {
+  background: #f3f3f3;
+  color: #c5c5c5;
+}
+.tx-row--pending .tx-chevron {
+  color: #e4e4e4;
+}
+.tx-row--pending :deep(.hl) {
+  background: #f3f3f3;
+  color: #9a9a9a;
+}
 
 /* Date */
 .tx-date {
