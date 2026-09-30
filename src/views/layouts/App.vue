@@ -482,14 +482,17 @@
       </div>
 
       <div class="content">
-        <header v-if="($route.path !== '/audios' && $route.path !== '/libros') || !isMobile">
+        <header v-if="($route.path !== '/audios' && $route.path !== '/libros' && $route.path !== '/tools') || !isMobile">
           <p
+            v-if="$route.path !== '/tools'"
             class="content-header-title"
             :class="{ 'content-header-title--hidden': hideContentTitle }"
             style="font-weight: bold; font-size: 20px"
           >{{ $route.path === '/audios' ? 'Audio' : title }}</p>
           <div
-          style="
+            class="content-header-bar"
+            :class="{ 'is-end': $route.path === '/tools' }"
+            style="
               display: flex;
               align-items: center;
               gap: 20px;
@@ -1976,6 +1979,10 @@ newPhoto: null,
   visibility: hidden;
   pointer-events: none;
   user-select: none;
+}
+
+.content-header-bar.is-end {
+  margin-left: auto;
 }
 
 .header-photo-controls, .mobile-photo-controls, .controls {
