@@ -73,9 +73,9 @@
               v-for="file in (activeModule.files || [])"
               :key="file.name"
               :href="file.url || '#'"
-              :target="file.url ? '_blank' : '_self'"
               class="file-row"
               style="text-decoration: none; color: inherit;"
+              @click="downloadFile($event, file)"
             >
               <span class="file-ico">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
@@ -514,6 +514,26 @@ export default {
     this.stopSlides();
   },
   methods: {
+    async downloadFile(e, file) {
+      if (!file.url) return;
+      e.preventDefault();
+      try {
+        const res = await fetch(file.url);
+        if (!res.ok) throw new Error("Network error");
+        const blob = await res.blob();
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = file.name || "archivo";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+      } catch (err) {
+        // Fallback en caso de CORS o error
+        window.open(file.url, "_blank");
+      }
+    },
     onResize() {
       this.isDesktop = window.innerWidth >= 960;
     },
