@@ -1208,7 +1208,7 @@ export default {
   .scroller.videos { grid-template-columns: repeat(4, 1fr); }
   .mod-card, .vid-card { width: auto; }
   .mod-art { height: 140px; }
-  .vid-art { height: 132px; }
+  .vid-art { height: 176px; }
   .mod-title, .vid-title { font-size: 14px; }
   .player { align-items: center; }
   .player-screen { height: 260px; }
