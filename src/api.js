@@ -40,6 +40,7 @@ class API {
     Agenda,
     Birthdays,
     RankProgress,
+    University,
   }) {
     this.Profile = new Profile();
     this.Password = new Password();
@@ -67,6 +68,7 @@ class API {
     this.Birthdays = new Birthdays();
     this.RankProgress = new RankProgress();
     this.SavingsBonus = new SavingsBonus();
+    this.University = new University();
   }
 
   register(data) {
@@ -401,6 +403,12 @@ class RankProgress {
   }
 }
 
+class University {
+  GET() {
+    return axios.get('/app/university');
+  }
+}
+
 export default new API({
   Profile,
   Password,
@@ -427,4 +435,5 @@ export default new API({
   Birthdays,
   RankProgress,
   SavingsBonus,
+  University,
 });

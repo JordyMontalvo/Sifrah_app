@@ -36,11 +36,14 @@
             </div>
             <article
               v-for="(video, index) in activeModule.videos"
-              :key="video.title"
+              :key="video.id || video.title || index"
               class="lesson"
               :class="statusOf(video, index)"
+              @click="playLesson(video, activeModule)"
+              style="cursor: pointer;"
             >
               <span class="lesson-thumb" :class="'theme-' + (video.theme || activeModule.theme)">
+                <img v-if="video.thumbnail" :src="video.thumbnail" class="thumb-img-cover" alt="" />
                 <span class="play-btn"></span>
                 <span class="duration">{{ video.duration }}</span>
               </span>
@@ -64,9 +67,16 @@
           <section class="materials">
             <div class="block-head">
               <h3>Material complementario</h3>
-              <span class="count-label">{{ activeModule.files.length }} archivos</span>
+              <span class="count-label">{{ (activeModule.files || []).length }} archivos</span>
             </div>
-            <div v-for="file in activeModule.files" :key="file.name" class="file-row">
+            <a
+              v-for="file in (activeModule.files || [])"
+              :key="file.name"
+              :href="file.url || '#'"
+              :target="file.url ? '_blank' : '_self'"
+              class="file-row"
+              style="text-decoration: none; color: inherit;"
+            >
               <span class="file-ico">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
                   <path d="M7 3.5h7l5 5V20a1.5 1.5 0 0 1-1.5 1.5h-10.5A1.5 1.5 0 0 1 5.5 20V5A1.5 1.5 0 0 1 7 3.5z" />
@@ -84,7 +94,7 @@
                   <path d="M5 19h14" />
                 </svg>
               </span>
-            </div>
+            </a>
           </section>
         </div>
       </div>
@@ -167,17 +177,18 @@
         </div>
       </section>
 
-      <button v-if="!query" type="button" class="continue" @click="openVideo(continueVideo)">
+      <button v-if="!query && continueModule && continueVideo" type="button" class="continue" @click="playLesson(continueVideo, continueModule)">
         <span class="continue-kicker">Continúa aprendiendo</span>
         <span class="continue-body">
           <span class="thumb theme-speaker">
+            <img v-if="continueVideo.thumbnail" :src="continueVideo.thumbnail" class="thumb-img-cover" alt="" />
             <span class="play-btn"></span>
             <span class="duration">{{ continueVideo.duration }}</span>
           </span>
           <span class="continue-info">
             <span class="continue-mod">{{ continueModule.badge }}</span>
             <strong>{{ continueModule.title }}</strong>
-            <span class="continue-meta">Video {{ continueIndex + 1 }} de {{ continueModule.videos.length }} · {{ continueVideo.title }}</span>
+            <span class="continue-meta">Video {{ continueIndex + 1 }} de {{ (continueModule.videos || []).length }} · {{ continueVideo.title }}</span>
             <span class="progress">
               <span class="progress-track"><span class="progress-fill" style="width: 35%"></span></span>
               <span class="progress-pct">35%</span>
@@ -237,15 +248,16 @@
             </svg>
           </button>
         </div>
-        <div class="scroller videos" :class="{ 'is-expanded': expandedRows[mod.id] || isDesktop }">
+        <div class="scroller videos" :class="{ 'is-expanded': expandedRows[mod.id || mod.badge] || isDesktop }">
           <button
             v-for="(video, index) in shownVideos(mod)"
-            :key="mod.id + '-' + index"
+            :key="(mod.id || mod.badge) + '-' + index"
             type="button"
             class="vid-card"
-            @click="openVideo(video, mod)"
+            @click="playLesson(video, mod)"
           >
             <span class="vid-art" :class="'theme-' + (video.theme || mod.theme)">
+              <img v-if="video.thumbnail" :src="video.thumbnail" class="thumb-img-cover" alt="" />
               <span class="play-btn"></span>
               <span class="duration">{{ video.duration }}</span>
             </span>
@@ -256,6 +268,45 @@
 
       <p v-if="query && !filteredModules.length" class="empty">Sin resultados para «{{ query }}».</p>
       </template>
+
+      <!-- Video Player Modal -->
+      <div v-if="playerOpen && activeVideo" class="player" @click.self="closePlayer">
+        <div class="player-card">
+          <button type="button" class="player-close" @click="closePlayer">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4">
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
+          <div class="player-screen" :class="'theme-' + (activeVideo.theme || (activeModule && activeModule.theme) || 'sunset')">
+            <video
+              v-if="isDirectVideo(activeVideo.videoUrl)"
+              :src="activeVideo.videoUrl"
+              :poster="activeVideo.thumbnail"
+              controls
+              autoplay
+              playsinline
+              class="player-video-el"
+            ></video>
+            <iframe
+              v-else-if="activeVideo.videoUrl"
+              :src="getEmbedUrl(activeVideo.videoUrl)"
+              frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen
+              class="player-video-el"
+            ></iframe>
+            <div v-else class="empty-video-msg">
+              <span class="play-btn lg"></span>
+              <p style="margin-top: 40px; font-weight: 700; font-size: 13px;">Video en preparación</p>
+            </div>
+          </div>
+          <p class="player-mod">{{ activeModule ? activeModule.badge : 'Universidad SIFRAH' }}</p>
+          <h3>{{ activeVideo.title }}</h3>
+          <p class="player-meta">{{ activeVideo.duration }} · Clase</p>
+          <p class="player-note">{{ activeVideo.desc || 'Clase disponible en Universidad SIFRAH.' }}</p>
+        </div>
+      </div>
     </div>
   </App>
 </template>
@@ -365,6 +416,7 @@ export default {
       touchX: 0,
       slideTimer: null,
       detailOpen: false,
+      playerOpen: false,
       activeVideo: null,
       activeModule: null,
       slides: [
@@ -406,10 +458,11 @@ export default {
       return this.slides[this.slideIndex];
     },
     continueModule() {
-      return this.modules[3];
+      return (this.modules && this.modules.length > 3 ? this.modules[3] : (this.modules && this.modules[0])) || null;
     },
     continueVideo() {
-      return this.continueModule.videos[1];
+      if (!this.continueModule || !this.continueModule.videos || !this.continueModule.videos.length) return null;
+      return this.continueModule.videos[1] || this.continueModule.videos[0];
     },
     continueIndex() {
       return 1;
@@ -439,6 +492,16 @@ export default {
       this.$store.commit("SET_PHOTO", data.photo);
       this.$store.commit("SET_TREE", data.tree);
     } catch (e) {}
+
+    try {
+      const uniRes = await api.University.GET();
+      if (uniRes.data && uniRes.data.modules && uniRes.data.modules.length > 0) {
+        this.modules = uniRes.data.modules;
+      }
+    } catch (e) {
+      console.warn("Could not fetch university modules:", e);
+    }
+
     this.loading = false;
   },
   mounted() {
@@ -553,11 +616,64 @@ export default {
     pad(n) {
       return String(n).padStart(2, "0");
     },
+    playLesson(video, mod) {
+      this.activeVideo = video;
+      this.activeModule = mod;
+      this.playerOpen = true;
+    },
+    closePlayer() {
+      this.playerOpen = false;
+    },
+    isDirectVideo(url) {
+      if (!url) return false;
+      return (
+        url.endsWith(".mp4") ||
+        url.endsWith(".webm") ||
+        url.endsWith(".m4v") ||
+        url.includes("b-cdn.net") ||
+        url.includes("storage.bunnycdn.com")
+      );
+    },
+    getEmbedUrl(url) {
+      if (!url) return "";
+      const ytMatch = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([\w-]{11})/);
+      if (ytMatch) {
+        return `https://www.youtube.com/embed/${ytMatch[1]}?autoplay=1`;
+      }
+      const vmMatch = url.match(/vimeo\.com\/(?:channels\/(?:\w+\/)?|groups\/(?:[^\/]*)\/videos\/|album\/(?:\d+)\/video\/|)(\d+)(?:$|\/|\?)/);
+      if (vmMatch) {
+        return `https://player.vimeo.com/video/${vmMatch[1]}?autoplay=1`;
+      }
+      return url;
+    },
   },
 };
 </script>
 
 <style scoped>
+.thumb-img-cover {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: inherit;
+  position: absolute;
+  inset: 0;
+}
+.player-video-el {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 14px;
+}
+.empty-video-msg {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  position: relative;
+}
 .uni {
   color: #161616;
   padding: 4px 0 12px;
