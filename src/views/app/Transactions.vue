@@ -138,10 +138,9 @@
                   <span class="tx-person" v-html="highlight(txPersonName(tx))"></span>
                 </div>
 
-                <!-- Chips de detalle: Nivel / Gen, Porcentaje, PR -->
+                <!-- Chips de detalle: Nivel / Gen, PR -->
                 <div class="tx-meta-chips" v-if="hasMeta(tx)">
                   <span class="tx-chip tx-chip--level" v-if="txLevelLabel(tx)" v-html="highlight(txLevelLabel(tx))"></span>
-                  <span class="tx-chip tx-chip--pct" v-if="txPercentageLabel(tx)" v-html="highlight(txPercentageLabel(tx))"></span>
                   <span class="tx-chip tx-chip--pr" v-if="txPRLabel(tx)" v-html="highlight(txPRLabel(tx))"></span>
                 </div>
 
@@ -241,11 +240,6 @@
                 <span class="tx-modal-pill pill-level">{{ txLevelLabel(selectedTx) }}</span>
               </div>
 
-              <!-- Porcentaje aplicado -->
-              <div class="tx-modal-item" v-if="txPercentageLabel(selectedTx)">
-                <span class="tx-modal-label">Porcentaje aplicado</span>
-                <span class="tx-modal-pill pill-pct">{{ txPercentageLabel(selectedTx) }}</span>
-              </div>
 
               <!-- PR -->
               <div class="tx-modal-item" v-if="selectedTx.pr != null && selectedTx.pr !== ''">
@@ -461,7 +455,7 @@ export default {
       return `PR ${pr.toFixed(0)}`;
     },
     hasMeta(tx) {
-      return !!(this.txLevelLabel(tx) || this.txPercentageLabel(tx) || this.txPRLabel(tx));
+      return !!(this.txLevelLabel(tx) || this.txPRLabel(tx));
     },
     txFallbackDesc(tx) {
       if (!tx) return "";
