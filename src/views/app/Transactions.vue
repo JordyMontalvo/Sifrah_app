@@ -91,10 +91,10 @@
             <span class="cycle-count-text">{{ search ? cycle.filteredItems.length : cycle.items.length }} movimientos</span>
           </div>
 
-          <!-- Balance neto + chevron -->
+          <!-- Total ingresos + chevron -->
           <div class="cycle-right">
             <span class="cycle-net" :class="cycleNetClass(cycle)">
-              {{ cycleNet(cycle) >= 0 ? '+' : '' }}{{ cycleNet(cycle).toFixed(2) }}
+              +{{ cycleIncome(cycle).toFixed(2) }}
             </span>
             <svg
               class="chevron"
@@ -295,7 +295,7 @@ export default {
     },
     cycleNetClass(cycle) {
       if (this.cycleAllVirtual(cycle)) return "net-pending";
-      return this.cycleNet(cycle) >= 0 ? "net-pos" : "net-neg";
+      return "net-pos";
     },
     showPerson(tx) {
       return tx.user_name && !NO_PERSON_OPS.has(tx.name);
@@ -314,6 +314,9 @@ export default {
     },
     cycleNet(cycle) {
       return this.cycleItems(cycle).reduce((s, t) => s + (t.type === "in" ? 1 : -1) * Number(t.value || 0), 0);
+    },
+    cycleIncome(cycle) {
+      return this.cycleItems(cycle).reduce((s, t) => t.type === "in" ? s + Number(t.value || 0) : s, 0);
     },
   },
   filters: {
