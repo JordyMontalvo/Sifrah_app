@@ -117,6 +117,7 @@
               :key="ti"
               class="tx-row"
               :class="{ 'tx-row--pending': isVirtual(tx) }"
+              @click="openDetail(tx, cycle)"
             >
               <!-- Fecha -->
               <div class="tx-date">
@@ -127,7 +128,29 @@
               <!-- Info -->
               <div class="tx-info">
                 <span class="tx-name" v-html="highlight(opLabel(tx.name))"></span>
-                <span class="tx-person" v-if="showPerson(tx)" v-html="highlight(tx.user_name)"></span>
+
+                <!-- Persona que originó el bono -->
+                <div class="tx-person-row" v-if="txPersonName(tx)">
+                  <svg class="tx-person-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                    <circle cx="12" cy="7" r="4" />
+                  </svg>
+                  <span class="tx-person" v-html="highlight(txPersonName(tx))"></span>
+                </div>
+
+                <!-- Chips de detalle: Nivel / Gen, Porcentaje, PR -->
+                <div class="tx-meta-chips" v-if="hasMeta(tx)">
+                  <span class="tx-chip tx-chip--level" v-if="txLevelLabel(tx)" v-html="highlight(txLevelLabel(tx))"></span>
+                  <span class="tx-chip tx-chip--pct" v-if="txPercentageLabel(tx)" v-html="highlight(txPercentageLabel(tx))"></span>
+                  <span class="tx-chip tx-chip--pr" v-if="txPRLabel(tx)" v-html="highlight(txPRLabel(tx))"></span>
+                </div>
+
+                <!-- Fallback descripción para otros tipos de movimientos -->
+                <span
+                  class="tx-desc"
+                  v-else-if="txFallbackDesc(tx)"
+                  v-html="highlight(txFallbackDesc(tx))"
+                ></span>
               </div>
 
               <!-- Monto (pill) -->
@@ -157,6 +180,101 @@
         </transition>
       </div>
     </div>
+
+    <!-- Modal Detalle del Movimiento -->
+    <transition name="modal-fade">
+      <div
+        v-if="selectedTx"
+        class="tx-modal-overlay"
+        @click.self="closeDetail"
+      >
+        <div class="tx-modal-card">
+          <div class="tx-modal-header">
+            <div class="tx-modal-title-wrap">
+              <span class="tx-modal-badge" :class="selectedTx.type === 'in' ? 'badge-in' : 'badge-out'">
+                {{ selectedTx.type === 'in' ? 'Ingreso' : 'Egreso' }}
+              </span>
+              <h3 class="tx-modal-title">{{ opLabel(selectedTx.name) }}</h3>
+            </div>
+            <button class="tx-modal-close" @click="closeDetail" aria-label="Cerrar">✕</button>
+          </div>
+
+          <div class="tx-modal-amount-box" :class="selectedTx.type === 'in' ? 'amount-in' : 'amount-out'">
+            <span class="tx-modal-amount-sign">{{ selectedTx.type === 'in' ? '+' : '-' }}</span>
+            <span class="tx-modal-amount-currency">S/</span>
+            <span class="tx-modal-amount-val">{{ Number(selectedTx.value || 0).toFixed(2) }}</span>
+          </div>
+
+          <div class="tx-modal-body">
+            <!-- Periodo / Ciclo -->
+            <div class="tx-modal-item" v-if="selectedTxCycleLabel">
+              <span class="tx-modal-label">Ciclo / Periodo</span>
+              <span class="tx-modal-val font-semibold">{{ selectedTxCycleLabel }}</span>
+            </div>
+
+            <!-- Fecha -->
+            <div class="tx-modal-item">
+              <span class="tx-modal-label">Fecha</span>
+              <span class="tx-modal-val">{{ formatFullDate(selectedTx.date) }}</span>
+            </div>
+
+            <!-- Detalle de origen de la comisión -->
+            <template v-if="isCommissionTx(selectedTx)">
+              <div class="tx-modal-divider"></div>
+              <div class="tx-modal-section-title">Detalle de la comisión</div>
+
+              <!-- Persona que originó -->
+              <div class="tx-modal-item" v-if="txPersonName(selectedTx)">
+                <span class="tx-modal-label">Afiliado / Origen</span>
+                <span class="tx-modal-val font-semibold">{{ txPersonName(selectedTx) }}</span>
+              </div>
+
+              <!-- DNI -->
+              <div class="tx-modal-item" v-if="selectedTx.affiliate_dni">
+                <span class="tx-modal-label">DNI</span>
+                <span class="tx-modal-val">{{ selectedTx.affiliate_dni }}</span>
+              </div>
+
+              <!-- Nivel / Generación -->
+              <div class="tx-modal-item" v-if="txLevelLabel(selectedTx)">
+                <span class="tx-modal-label">{{ isGenerational(selectedTx) ? 'Generación VIP' : 'Nivel' }}</span>
+                <span class="tx-modal-pill pill-level">{{ txLevelLabel(selectedTx) }}</span>
+              </div>
+
+              <!-- Porcentaje aplicado -->
+              <div class="tx-modal-item" v-if="txPercentageLabel(selectedTx)">
+                <span class="tx-modal-label">Porcentaje aplicado</span>
+                <span class="tx-modal-pill pill-pct">{{ txPercentageLabel(selectedTx) }}</span>
+              </div>
+
+              <!-- PR -->
+              <div class="tx-modal-item" v-if="selectedTx.pr != null && selectedTx.pr !== ''">
+                <span class="tx-modal-label">Puntos Reconsumo (PR)</span>
+                <span class="tx-modal-val">{{ Number(selectedTx.pr).toFixed(0) }} pts</span>
+              </div>
+            </template>
+
+            <!-- Descripción adicional si existe -->
+            <div class="tx-modal-item" v-if="selectedTx.desc">
+              <span class="tx-modal-label">Descripción</span>
+              <span class="tx-modal-val">{{ selectedTx.desc }}</span>
+            </div>
+
+            <!-- Disponibilidad si es virtual -->
+            <div class="tx-modal-item" v-if="isVirtual(selectedTx)">
+              <span class="tx-modal-label">Disponibilidad</span>
+              <span class="tx-modal-badge badge-pending">Saldo no disponible (virtual)</span>
+            </div>
+          </div>
+
+          <div class="tx-modal-footer">
+            <button class="tx-modal-btn-close" @click="closeDetail">
+              Entendido
+            </button>
+          </div>
+        </div>
+      </div>
+    </transition>
   </App>
 </template>
 
@@ -178,6 +296,9 @@ const OP_LABELS = {
   "business-vip-register": "Bono Registro Empresarial",
   "collect": "Retiro",
   "residual": "Bono Residual",
+  "residual bonus": "Bono Residual",
+  "generational bonus vip": "Bono Generacional VIP",
+  "generational bonus": "Bono Generacional",
   "objetive": "Bono Logro",
   "points": "Bono Compras",
   "affiliation": "Afiliación con saldo",
@@ -186,9 +307,14 @@ const OP_LABELS = {
   "migration bonus": "Bono por migración",
   "wallet transfer": "Monedero brillante",
   "remaining": "Pago Ganancia",
-  "closed bonus": "Bono cierre",
+  "closed bonus": "Bono Cierre",
   "activation bonnus promo": "Bono compra promoción",
   "closed reset": "Descuento por cierre",
+  "bono ahorro sifrah": "Bono Ahorro Sifrah",
+  "savings bonus": "Bono Ahorro Sifrah",
+  "bono logro rango": "Bono Logro de Rango",
+  "bono mantenimiento rango": "Bono Mantenimiento de Rango",
+  "excedent bonus": "Bono Excedente",
 };
 
 const MONTHS = ["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"];
@@ -201,11 +327,20 @@ export default {
       cycles: [],
       title: "Movimientos",
       search: "",
+      selectedTx: null,
+      selectedCycle: null,
     };
   },
   computed: {
     session() {
       return this.$store.state.session;
+    },
+    selectedTxCycleLabel() {
+      if (!this.selectedTx) return "";
+      if (this.selectedTx.period_label) return this.selectedTx.period_label;
+      if (this.selectedTx.period_key) return this.selectedTx.period_key;
+      if (this.selectedCycle && this.selectedCycle.label) return this.selectedCycle.label;
+      return "";
     },
     filteredCycles() {
       if (!this.search.trim()) return this.cycles;
@@ -213,10 +348,26 @@ export default {
       return this.cycles
         .map(cycle => {
           const filtered = cycle.items.filter(tx => {
-            const op     = (OP_LABELS[tx.name] || tx.name || '').toLowerCase();
-            const person = (tx.user_name || '').toLowerCase();
+            const op1    = (OP_LABELS[tx.name] || '').toLowerCase();
+            const op2    = (tx.name || '').toLowerCase();
+            const person = (this.txPersonName(tx) || '').toLowerCase();
             const period = (cycle.label || '').toLowerCase();
-            return op.includes(q) || person.includes(q) || period.includes(q);
+            const lvl    = (this.txLevelLabel(tx) || '').toLowerCase();
+            const pct    = (this.txPercentageLabel(tx) || '').toLowerCase();
+            const pr     = (this.txPRLabel(tx) || '').toLowerCase();
+            const desc   = (tx.desc || '').toLowerCase();
+            const dni    = (tx.affiliate_dni || '').toLowerCase();
+            return (
+              op1.includes(q) ||
+              op2.includes(q) ||
+              person.includes(q) ||
+              period.includes(q) ||
+              lvl.includes(q) ||
+              pct.includes(q) ||
+              pr.includes(q) ||
+              desc.includes(q) ||
+              dni.includes(q)
+            );
           });
           return { ...cycle, filteredItems: filtered, expanded: filtered.length > 0 };
         })
@@ -249,6 +400,102 @@ export default {
     if (this.cycles.length) this.$set(this.cycles[0], "expanded", true);
   },
   methods: {
+    openDetail(tx, cycle) {
+      this.selectedTx = tx;
+      this.selectedCycle = cycle;
+    },
+    closeDetail() {
+      this.selectedTx = null;
+      this.selectedCycle = null;
+    },
+    txPersonName(tx) {
+      if (!tx) return "";
+      if (tx.affiliate_name && String(tx.affiliate_name).trim()) return String(tx.affiliate_name).trim();
+      if (tx.user_name && String(tx.user_name).trim() && !NO_PERSON_OPS.has(tx.name)) {
+        return String(tx.user_name).trim();
+      }
+      if (tx.desc && tx.desc.includes(" - ")) {
+        const parts = tx.desc.split(" - ");
+        if (parts.length > 1 && parts[1].trim()) return parts[1].trim();
+      }
+      return "";
+    },
+    isGenerational(tx) {
+      if (!tx || !tx.name) return false;
+      return String(tx.name).toLowerCase().includes("generational");
+    },
+    txLevelLabel(tx) {
+      if (!tx) return "";
+      if (tx.level != null && tx.level !== "") {
+        const lvl = Number(tx.level);
+        if (this.isGenerational(tx)) return `Gen. VIP ${lvl}`;
+        return `Nivel ${lvl}`;
+      }
+      if (tx.desc) {
+        const mGen = tx.desc.match(/G(\d+)/i);
+        if (mGen) return `Gen. VIP ${mGen[1]}`;
+        const mLvl = tx.desc.match(/nivel\s+(\d+)/i);
+        if (mLvl) return `Nivel ${mLvl[1]}`;
+      }
+      return "";
+    },
+    txPercentageLabel(tx) {
+      if (!tx) return "";
+      if (tx.percentage != null && tx.percentage !== "") {
+        const p = Number(tx.percentage);
+        if (Number.isFinite(p) && p > 0) {
+          const val = p > 1 ? p : p * 100;
+          return (val % 1 === 0 ? val.toFixed(0) : val.toFixed(2)) + "%";
+        }
+      }
+      if (tx.desc) {
+        const m = tx.desc.match(/(\d+(?:\.\d+)?)\s*%/);
+        if (m) return `${m[1]}%`;
+      }
+      return "";
+    },
+    txPRLabel(tx) {
+      if (!tx || tx.pr == null || tx.pr === "") return "";
+      const pr = Number(tx.pr);
+      if (!Number.isFinite(pr) || pr <= 0) return "";
+      return `PR ${pr.toFixed(0)}`;
+    },
+    hasMeta(tx) {
+      return !!(this.txLevelLabel(tx) || this.txPercentageLabel(tx) || this.txPRLabel(tx));
+    },
+    txFallbackDesc(tx) {
+      if (!tx) return "";
+      if (this.hasMeta(tx)) return "";
+      if (tx.desc && tx.desc !== tx.name && tx.desc !== this.opLabel(tx.name)) {
+        return tx.desc;
+      }
+      return "";
+    },
+    isCommissionTx(tx) {
+      if (!tx || !tx.name) return false;
+      const n = String(tx.name).toLowerCase();
+      return (
+        n.includes("residual") ||
+        n.includes("generational") ||
+        n.includes("closed") ||
+        n.includes("affiliation") ||
+        n.includes("ahorro") ||
+        n.includes("bonus") ||
+        !!this.txPersonName(tx)
+      );
+    },
+    formatFullDate(val) {
+      if (!val) return "—";
+      const d = new Date(val);
+      if (Number.isNaN(d.getTime())) return "—";
+      return d.toLocaleDateString("es-PE", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+    },
     buildCycles(txs) {
       const map = new Map();
       for (const tx of txs) {
@@ -298,7 +545,7 @@ export default {
       return "net-pos";
     },
     showPerson(tx) {
-      return tx.user_name && !NO_PERSON_OPS.has(tx.name);
+      return !!this.txPersonName(tx);
     },
     opLabel(name) {
       return OP_LABELS[name] || name || "";
@@ -590,8 +837,11 @@ export default {
   padding: 12px 16px;
   border-top: 1px solid #f5f5f5;
   transition: background 0.15s;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
 }
-.tx-row:active { background: #fafafa; }
+.tx-row:hover { background: #fafafa; }
+.tx-row:active { background: #f5f5f5; }
 
 /* Saldo no disponible: la fila completa queda desvanecida */
 .tx-row--pending .tx-day,
@@ -601,6 +851,12 @@ export default {
 .tx-row--pending .tx-month,
 .tx-row--pending .tx-person {
   color: #d4d4d4;
+}
+.tx-row--pending .tx-chip {
+  opacity: 0.55;
+}
+.tx-row--pending .tx-desc {
+  color: #ccc;
 }
 .tx-row--pending .tx-amount-pill {
   background: #f3f3f3;
@@ -653,9 +909,56 @@ export default {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+.tx-person-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+}
+.tx-person-icon {
+  width: 12px;
+  height: 12px;
+  color: #888;
+  flex-shrink: 0;
+}
 .tx-person {
+  font-size: 12.5px;
+  font-weight: 500;
+  color: #4a5568;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.tx-meta-chips {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-wrap: wrap;
+  margin-top: 2px;
+}
+.tx-chip {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 6px;
+  letter-spacing: 0.2px;
+  line-height: 1.3;
+}
+.tx-chip--level {
+  background: #e0f2fe;
+  color: #0369a1;
+}
+.tx-chip--pct {
+  background: #fef3c7;
+  color: #92400e;
+}
+.tx-chip--pr {
+  background: #f1f5f9;
+  color: #475569;
+}
+.tx-desc {
   font-size: 12px;
-  color: #999;
+  color: #718096;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -725,5 +1028,179 @@ export default {
   border-radius: 3px;
   padding: 0 2px;
   font-weight: 700;
+}
+
+/* ── Modal Detalle Movimiento ── */
+.tx-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(4px);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  -webkit-tap-highlight-color: transparent;
+}
+.tx-modal-card {
+  background: #fff;
+  border-radius: 20px;
+  max-width: 440px;
+  width: 100%;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  animation: modalPop 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+  max-height: 90vh;
+}
+@keyframes modalPop {
+  0%   { transform: scale(0.94); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+.tx-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 20px 14px;
+  border-bottom: 1px solid #f0f0f0;
+}
+.tx-modal-title-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+.tx-modal-title {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 800;
+  color: #111;
+  line-height: 1.25;
+}
+.tx-modal-badge {
+  display: inline-block;
+  align-self: flex-start;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+.badge-in { background: #e8f5e9; color: #2e7d32; }
+.badge-out { background: #ffebee; color: #c62828; }
+.badge-pending { background: #f3f4f6; color: #6b7280; }
+
+.tx-modal-close {
+  background: #f5f5f5;
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  font-size: 15px;
+  font-weight: 700;
+  color: #666;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s;
+  flex-shrink: 0;
+}
+.tx-modal-close:hover { background: #eee; }
+
+.tx-modal-amount-box {
+  padding: 16px 20px;
+  background: #fafafa;
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 4px;
+}
+.amount-in { color: #2e7d32; }
+.amount-out { color: #c62828; }
+.tx-modal-amount-sign { font-size: 26px; font-weight: 800; }
+.tx-modal-amount-currency { font-size: 18px; font-weight: 700; }
+.tx-modal-amount-val { font-size: 32px; font-weight: 800; letter-spacing: -0.5px; }
+
+.tx-modal-body {
+  padding: 16px 20px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.tx-modal-divider {
+  height: 1px;
+  background: #f0f0f0;
+  margin: 4px 0;
+}
+.tx-modal-section-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: #999;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 2px;
+}
+.tx-modal-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  font-size: 13.5px;
+}
+.tx-modal-label {
+  color: #718096;
+  font-weight: 500;
+  flex-shrink: 0;
+}
+.tx-modal-val {
+  color: #1a202c;
+  text-align: right;
+  word-break: break-word;
+}
+.font-semibold { font-weight: 700; }
+
+.tx-modal-pill {
+  font-size: 12px;
+  font-weight: 700;
+  padding: 3px 9px;
+  border-radius: 8px;
+}
+.pill-level { background: #e0f2fe; color: #0369a1; }
+.pill-pct { background: #fef3c7; color: #92400e; }
+
+.tx-modal-footer {
+  padding: 14px 20px 18px;
+  border-top: 1px solid #f0f0f0;
+}
+.tx-modal-btn-close {
+  width: 100%;
+  padding: 12px;
+  background: #e91e63;
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+.tx-modal-btn-close:active { opacity: 0.85; }
+
+/* Modal fade transition */
+.modal-fade-enter-active,
+.modal-fade-leave-active {
+  transition: opacity 0.2s ease;
+}
+.modal-fade-enter,
+.modal-fade-leave-to {
+  opacity: 0;
 }
 </style>
