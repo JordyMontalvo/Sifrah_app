@@ -1246,6 +1246,8 @@ export default {
   height: 72px;
   border-radius: 12px;
   flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
 }
 .lesson-body { flex: 1; min-width: 0; }
 .lesson-no {
