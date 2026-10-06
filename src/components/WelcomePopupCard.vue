@@ -7,27 +7,36 @@
     <h2 class="wpc-title" v-html="titleHtml"></h2>
     <p v-if="message" class="wpc-message">{{ message }}</p>
 
-    <div v-if="video" class="wpc-video" :class="{ playing: playing }">
-      <video
-        ref="player"
-        :src="video"
-        playsinline
-        @timeupdate="onTime"
-        @loadedmetadata="onMeta"
-        @ended="playing = false"
-        @click="togglePlay"
-      ></video>
-      <button v-if="!playing" class="wpc-play" type="button" aria-label="Reproducir" @click="togglePlay">
-        <span>▶</span>
-      </button>
-      <div class="wpc-badge"><span>▶</span> Video de bienvenida</div>
-      <div class="wpc-bar">
-        <button type="button" class="wpc-bar-play" @click="togglePlay">{{ playing ? "❚❚" : "▶" }}</button>
-        <span>{{ timeLabel }}</span>
-        <i></i>
-        <span class="wpc-vol">🔊</span>
-        <span class="wpc-full">⛶</span>
-      </div>
+    <div v-if="video" class="wpc-video" :class="{ playing: playing, 'is-embed': !!embedSrc }">
+      <iframe
+        v-if="embedSrc"
+        :src="embedSrc"
+        title="Video de bienvenida"
+        allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
+        allowfullscreen
+      ></iframe>
+      <template v-else>
+        <video
+          ref="player"
+          :src="video"
+          playsinline
+          @timeupdate="onTime"
+          @loadedmetadata="onMeta"
+          @ended="playing = false"
+          @click="togglePlay"
+        ></video>
+        <button v-if="!playing" class="wpc-play" type="button" aria-label="Reproducir" @click="togglePlay">
+          <span>▶</span>
+        </button>
+        <div class="wpc-badge"><span>▶</span> Video de bienvenida</div>
+        <div class="wpc-bar">
+          <button type="button" class="wpc-bar-play" @click="togglePlay">{{ playing ? "❚❚" : "▶" }}</button>
+          <span>{{ timeLabel }}</span>
+          <i></i>
+          <span class="wpc-vol">🔊</span>
+          <span class="wpc-full">⛶</span>
+        </div>
+      </template>
     </div>
 
     <div v-if="footerText" class="wpc-note">
@@ -55,6 +64,15 @@
 </template>
 
 <script>
+function embedVideoUrl(value) {
+  const url = String(value || "").trim();
+  const youtube = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|shorts\/|v\/|watch\?v=|watch\?.+&v=))([\w-]{11})/);
+  if (youtube) return "https://www.youtube.com/embed/" + youtube[1];
+  const vimeo = url.match(/vimeo\.com\/(?:video\/)?(\d+)/);
+  if (vimeo) return "https://player.vimeo.com/video/" + vimeo[1];
+  return "";
+}
+
 function escapeHtml(value) {
   return String(value || "")
     .replace(/&/g, "&amp;")
@@ -88,6 +106,9 @@ export default {
     },
     footerHtml() {
       return escapeHtml(this.footerText).replace(/lo esencial/gi, "<b class=\"wpc-pink\">lo esencial</b>");
+    },
+    embedSrc() {
+      return embedVideoUrl(this.video);
     },
     timeLabel() {
       const fmt = (s) => {
@@ -197,12 +218,14 @@ export default {
   background: #1f2937;
   aspect-ratio: 16 / 9;
 }
-.wpc-video video {
+.wpc-video video,
+.wpc-video iframe {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
-  background: linear-gradient(135deg, #7c3aed, #ec4899 55%, #f59e0b);
+  border: 0;
+  background: #111;
 }
 .wpc-play {
   position: absolute;
