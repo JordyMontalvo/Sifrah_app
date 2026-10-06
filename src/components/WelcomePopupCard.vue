@@ -26,7 +26,7 @@
           @click="togglePlay"
         ></video>
         <button v-if="!playing" class="wpc-play" type="button" aria-label="Reproducir" @click="togglePlay">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6.5v11l9-5.5-9-5.5z" fill="currentColor"/></svg>
+          <svg viewBox="7 4 13 16" aria-hidden="true"><path d="M8 5v14l11-7L8 5z" fill="currentColor"/></svg>
         </button>
         <div class="wpc-bar">
           <button type="button" class="wpc-bar-play" @click="togglePlay">{{ playing ? "❚❚" : "▶" }}</button>
@@ -254,9 +254,9 @@ export default {
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
 }
 .wpc-play svg {
-  width: 36px;
-  height: 36px;
-  margin-left: 3px;
+  width: 46px;
+  height: 46px;
+  margin-left: 4px;
 }
 .wpc-badge {
   position: absolute;
