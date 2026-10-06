@@ -8,7 +8,7 @@
     <article class="legal-card">
       <p class="legal-kicker">{{ kicker }}</p>
       <h1>{{ title }}</h1>
-      <p class="legal-updated">Última actualización: 5 de septiembre de 2026</p>
+      <p class="legal-updated">Última actualización: {{ updated }}</p>
       <slot />
     </article>
 
@@ -26,6 +26,7 @@ export default {
     title: { type: String, required: true },
     otherTo: { type: String, default: "" },
     otherLabel: { type: String, default: "" },
+    updated: { type: String, default: "5 de septiembre de 2026" },
   },
   methods: {
     goBack() {

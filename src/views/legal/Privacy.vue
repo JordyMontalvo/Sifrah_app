@@ -3,7 +3,10 @@
     title="Política de privacidad"
     other-to="/terminos"
     other-label="Ver términos y condiciones →"
+    :updated="updated"
   >
+    <div v-if="html" class="legal-html" v-html="html"></div>
+    <div v-else>
     <p>
       Esta política explica qué datos personales trata SIFRAH, para qué los usa y
       cómo puedes ejercer tus derechos. Aplica al sitio web y a la aplicación.
@@ -60,14 +63,35 @@
       Para preguntas sobre privacidad, usa el soporte de SIFRAH dentro de la app o
       los canales oficiales publicados en la plataforma.
     </p>
+    </div>
   </LegalLayout>
 </template>
 
 <script>
 import LegalLayout from "./LegalLayout.vue";
+import api from "@/api";
+
+function formatLegalDate(value) {
+  const date = new Date(value);
+  if (isNaN(date.getTime())) return "5 de septiembre de 2026";
+  const months = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
+  return date.getDate() + " de " + months[date.getMonth()] + " de " + date.getFullYear();
+}
 
 export default {
   name: "Privacy",
   components: { LegalLayout },
+  data() {
+    return { html: "", updated: "5 de septiembre de 2026" };
+  },
+  async created() {
+    try {
+      const { data } = await api.Legal.GET("privacy");
+      const doc = data && data.document;
+      if (!doc || !doc.html) return;
+      this.html = doc.html;
+      if (doc.updatedAt) this.updated = formatLegalDate(doc.updatedAt);
+    } catch (e) {}
+  },
 };
 </script>

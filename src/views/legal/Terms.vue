@@ -3,7 +3,10 @@
     title="Términos y condiciones"
     other-to="/privacidad"
     other-label="Ver política de privacidad →"
+    :updated="updated"
   >
+    <div v-if="html" class="legal-html" v-html="html"></div>
+    <div v-else>
     <p>
       Estos términos regulan el uso de la plataforma SIFRAH (sitio web y aplicación),
       incluyendo registro, afiliación, compras, red, retiros y servicios asociados.
@@ -59,14 +62,35 @@
       Si tienes dudas sobre estos términos, escríbenos por los canales de soporte
       de SIFRAH publicados en la aplicación.
     </p>
+    </div>
   </LegalLayout>
 </template>
 
 <script>
 import LegalLayout from "./LegalLayout.vue";
+import api from "@/api";
+
+function formatLegalDate(value) {
+  const date = new Date(value);
+  if (isNaN(date.getTime())) return "5 de septiembre de 2026";
+  const months = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
+  return date.getDate() + " de " + months[date.getMonth()] + " de " + date.getFullYear();
+}
 
 export default {
   name: "Terms",
   components: { LegalLayout },
+  data() {
+    return { html: "", updated: "5 de septiembre de 2026" };
+  },
+  async created() {
+    try {
+      const { data } = await api.Legal.GET("terms");
+      const doc = data && data.document;
+      if (!doc || !doc.html) return;
+      this.html = doc.html;
+      if (doc.updatedAt) this.updated = formatLegalDate(doc.updatedAt);
+    } catch (e) {}
+  },
 };
 </script>

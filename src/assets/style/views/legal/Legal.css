@@ -81,9 +81,15 @@
   margin: 0 0 12px;
 }
 
-.legal-card ul {
+.legal-card ul,
+.legal-card ol {
   margin: 0 0 12px;
   padding-left: 18px;
+}
+
+.legal-html a {
+  color: #e91e63;
+  font-weight: 700;
 }
 
 .legal-foot {

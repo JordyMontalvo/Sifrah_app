@@ -41,6 +41,7 @@ class API {
     Birthdays,
     RankProgress,
     University,
+    Legal,
   }) {
     this.Profile = new Profile();
     this.Password = new Password();
@@ -69,6 +70,7 @@ class API {
     this.RankProgress = new RankProgress();
     this.SavingsBonus = new SavingsBonus();
     this.University = new University();
+    this.Legal = new Legal();
   }
 
   register(data) {
@@ -409,6 +411,12 @@ class University {
   }
 }
 
+class Legal {
+  GET(doc) {
+    return axios.get(`/app/legal?doc=${encodeURIComponent(doc)}`);
+  }
+}
+
 export default new API({
   Profile,
   Password,
@@ -436,4 +444,5 @@ export default new API({
   RankProgress,
   SavingsBonus,
   University,
+  Legal,
 });
