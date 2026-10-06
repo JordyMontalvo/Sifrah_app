@@ -144,13 +144,14 @@
       </div>
 
       <section
-        v-if="!query"
+        v-if="!query && currentSlide"
         class="hero"
-        :class="'theme-' + currentSlide.theme"
+        :class="currentSlide.image ? 'has-image' : ('theme-' + (currentSlide.theme || 'sunset'))"
+        :style="heroStyle(currentSlide)"
         @touchstart.passive="onHeroStart"
         @touchend="onHeroEnd"
       >
-        <div class="hero-sky" aria-hidden="true">
+        <div v-if="!currentSlide.image" class="hero-sky" aria-hidden="true">
           <span v-if="currentSlide.theme === 'sunset'" class="hero-sun"></span>
           <span class="hero-mark">
             <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.2">
@@ -169,19 +170,19 @@
             <path d="M112 100c10 4 16 14 14 24l-16-6-4-18h6z" fill="#111827" />
           </svg>
         </div>
-        <div class="hero-copy">
-          <span class="hero-kicker">{{ currentSlide.kicker }}</span>
-          <h2>{{ currentSlide.title }}</h2>
-          <p>{{ currentSlide.text }}</p>
-          <button type="button" class="hero-cta" @click="onSlideCta">
+        <div v-if="!currentSlide.hideText" class="hero-copy">
+          <span v-if="currentSlide.kicker" class="hero-kicker">{{ currentSlide.kicker }}</span>
+          <h2 v-if="currentSlide.title">{{ currentSlide.title }}</h2>
+          <p v-if="currentSlide.text">{{ currentSlide.text }}</p>
+          <button v-if="currentSlide.cta" type="button" class="hero-cta" @click="onSlideCta">
             <span class="play-ico"></span>
             {{ currentSlide.cta }}
           </button>
         </div>
-        <div class="hero-dots">
+        <div v-if="slides.length > 1" class="hero-dots">
           <button
             v-for="(slide, index) in slides"
-            :key="slide.title"
+            :key="slide.id || index"
             type="button"
             :class="{ on: index === slideIndex }"
             :aria-label="'Diapositiva ' + (index + 1)"
@@ -443,28 +444,46 @@ export default {
       activeModule: null,
       slides: [
         {
+          id: "slide_1",
           kicker: "Bienvenido a",
           title: "Universidad SIFRAH",
           text: "Da el primer paso en tu formación.",
           cta: "Ver video de bienvenida",
           theme: "sunset",
           action: "welcome",
+          image: "",
+          link: "",
+          moduleId: "",
+          videoId: "",
+          hideText: false,
         },
         {
+          id: "slide_2",
           kicker: "Sigue tu ruta",
           title: "Plan de compensación",
           text: "Entiende cómo funciona el residual.",
           cta: "Continuar módulo 3",
           theme: "chart",
           action: "continue",
+          image: "",
+          link: "",
+          moduleId: "",
+          videoId: "",
+          hideText: false,
         },
         {
+          id: "slide_3",
           kicker: "Empieza por aquí",
           title: "Cinco módulos",
           text: "De la bienvenida a tu activación.",
           cta: "Ver módulos",
           theme: "city",
           action: "modules",
+          image: "",
+          link: "",
+          moduleId: "",
+          videoId: "",
+          hideText: false,
         },
       ],
     };
@@ -477,7 +496,7 @@ export default {
       return "Universidad SIFRAH";
     },
     currentSlide() {
-      return this.slides[this.slideIndex];
+      return this.slides[this.slideIndex] || this.slides[0] || null;
     },
     continueModule() {
       return (this.modules && this.modules.length > 3 ? this.modules[3] : (this.modules && this.modules[0])) || null;
@@ -520,6 +539,23 @@ export default {
       if (uniRes.data && uniRes.data.modules && uniRes.data.modules.length > 0) {
         this.modules = uniRes.data.modules;
       }
+      if (uniRes.data && Array.isArray(uniRes.data.banners)) {
+        this.slides = uniRes.data.banners.map((slide, index) => ({
+          id: slide.id || "slide_" + (index + 1),
+          kicker: slide.kicker || "",
+          title: slide.title || "",
+          text: slide.text || "",
+          cta: slide.buttonText || slide.cta || "",
+          theme: slide.theme || "sunset",
+          action: slide.action || "modules",
+          image: slide.image || "",
+          link: slide.link || "",
+          moduleId: slide.moduleId || "",
+          videoId: slide.videoId || "",
+          hideText: !!slide.hideText,
+        }));
+        this.slideIndex = 0;
+      }
     } catch (e) {
       console.warn("Could not fetch university modules:", e);
     }
@@ -561,6 +597,7 @@ export default {
     },
     startSlides() {
       this.stopSlides();
+      if (!this.slides || this.slides.length < 2) return;
       this.slideTimer = setInterval(() => {
         this.slideIndex = (this.slideIndex + 1) % this.slides.length;
       }, 6500);
@@ -581,12 +618,46 @@ export default {
       const next = dx < 0 ? this.slideIndex + 1 : this.slideIndex - 1;
       this.goSlide((next + this.slides.length) % this.slides.length);
     },
+    heroStyle(slide) {
+      if (!slide || !slide.image) return null;
+      const image = "url(" + slide.image + ")";
+      const overlay = slide.hideText
+        ? image
+        : "linear-gradient(90deg, rgba(15,23,42,.72) 0%, rgba(15,23,42,.28) 58%, rgba(15,23,42,.05) 100%), " + image;
+      return {
+        backgroundImage: overlay,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      };
+    },
     onSlideCta() {
-      if (this.currentSlide.action === "continue") {
+      const slide = this.currentSlide;
+      if (!slide) return;
+      if (slide.action === "link" && slide.link) {
+        if (slide.link.charAt(0) === "/") {
+          this.$router.push(slide.link);
+        } else {
+          window.open(slide.link, "_blank", "noopener");
+        }
+        return;
+      }
+      if (slide.action === "video") {
+        const mod = this.modules.find((item) => String(item._id || item.id) === String(slide.moduleId));
+        const video = mod && (mod.videos || []).find((item) => String(item.id) === String(slide.videoId));
+        if (video && mod) {
+          this.playLesson(video, mod);
+          return;
+        }
+        if (mod && mod.videos && mod.videos[0]) {
+          this.playLesson(mod.videos[0], mod);
+        }
+        return;
+      }
+      if (slide.action === "continue") {
         this.openVideo(this.continueVideo, this.continueModule);
         return;
       }
-      if (this.currentSlide.action === "modules") {
+      if (slide.action === "modules") {
         this.scrollToModule(0);
         return;
       }
@@ -787,7 +858,9 @@ export default {
   border-radius: 18px;
   color: #fff;
   margin-bottom: 14px;
+  background-color: #1a1024;
 }
+.hero.has-image { background-repeat: no-repeat; }
 .theme-sunset { background: linear-gradient(115deg, #4a1268 0%, #c2185b 46%, #ff8a3d 100%); }
 .theme-chart { background: linear-gradient(145deg, #6a1b4d 0%, #e91e63 55%, #ff80ab 100%); }
 .theme-city { background: linear-gradient(160deg, #12082a 0%, #311b92 42%, #ff6d00 100%); }
