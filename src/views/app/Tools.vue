@@ -1156,7 +1156,7 @@ export default {
   z-index: 3000;
   background: rgba(0,0,0,.55);
   display: flex;
-  align-items: flex-end;
+  align-items: flex-start;
   justify-content: center;
   padding: 16px;
 }
