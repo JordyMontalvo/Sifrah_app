@@ -26,7 +26,7 @@
           @click="togglePlay"
         ></video>
         <button v-if="!playing" class="wpc-play" type="button" aria-label="Reproducir" @click="togglePlay">
-          <span>▶</span>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6.5v11l9-5.5-9-5.5z" fill="currentColor"/></svg>
         </button>
         <div class="wpc-bar">
           <button type="button" class="wpc-bar-play" @click="togglePlay">{{ playing ? "❚❚" : "▶" }}</button>
@@ -46,8 +46,7 @@
 
     <div v-if="footerText" class="wpc-note">
       <span class="wpc-icon">
-        <img v-if="icon" :src="icon" alt="" />
-        <svg v-else viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
           <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/>
           <path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/>
           <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/>
@@ -58,9 +57,11 @@
     </div>
 
     <button v-if="primaryText" class="wpc-primary" type="button" @click="$emit('primary')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
         <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/>
         <path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/>
+        <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/>
+        <path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/>
       </svg>
       {{ primaryText }}
     </button>
@@ -236,19 +237,27 @@ export default {
 }
 .wpc-play {
   position: absolute;
-  inset: 0;
-  margin: auto;
-  width: 64px;
-  height: 64px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 82px;
+  height: 82px;
   border: 0;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.92);
+  background: rgba(255, 255, 255, 0.95);
   color: #e91e63;
-  font-size: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
   cursor: pointer;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
 }
-.wpc-play span { display: block; margin-left: 3px; }
+.wpc-play svg {
+  width: 36px;
+  height: 36px;
+  margin-left: 3px;
+}
 .wpc-badge {
   position: absolute;
   top: 12px;
@@ -329,11 +338,14 @@ export default {
 .wpc-primary, .wpc-secondary {
   width: 100%;
   border-radius: 999px;
-  padding: 13px 12px;
-  font-weight: 800;
+  padding: 13px 16px;
+  font-family: "Segoe UI", "Inter", "Open Sans", sans-serif;
+  font-weight: 600;
+  font-size: 15px;
+  letter-spacing: 0.01em;
+  -webkit-font-smoothing: antialiased;
   margin-top: 8px;
   cursor: pointer;
-  font-size: 0.98rem;
 }
 .wpc-primary {
   background: #e91e63;
