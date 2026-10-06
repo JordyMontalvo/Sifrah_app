@@ -42,6 +42,7 @@ class API {
     RankProgress,
     University,
     Legal,
+    Popups,
   }) {
     this.Profile = new Profile();
     this.Password = new Password();
@@ -71,6 +72,7 @@ class API {
     this.SavingsBonus = new SavingsBonus();
     this.University = new University();
     this.Legal = new Legal();
+    this.Popups = new Popups();
   }
 
   register(data) {
@@ -417,6 +419,15 @@ class Legal {
   }
 }
 
+class Popups {
+  GET(session) {
+    return axios.get(`/app/popups?session=${session}`);
+  }
+  POST(session, payload) {
+    return axios.post(`/app/popups?session=${session}`, payload);
+  }
+}
+
 export default new API({
   Profile,
   Password,
@@ -445,4 +456,5 @@ export default new API({
   SavingsBonus,
   University,
   Legal,
+  Popups,
 });

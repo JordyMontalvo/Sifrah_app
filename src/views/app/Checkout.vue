@@ -768,7 +768,7 @@
           </div>
           <div class="modal-actions">
             <button @click="goToDashboard" class="dashboard-btn">
-              Ir al Dashboard
+              {{ confirmedWasAffiliation ? 'Gracias por su compra / Ir al menú inicial' : 'Ir al Dashboard' }}
             </button>
           </div>
         </div>
@@ -797,6 +797,7 @@ export default {
       selectedPickupPoint: '',
       pay_method: "",
       showConfirmation: false,
+      confirmedWasAffiliation: false,
       orderNumber: '',
       /** Totales congelados al confirmar (el carrito se vacía y finalTotal pasaría a 0) */
       confirmedOrderTotal: null,
@@ -1448,9 +1449,11 @@ export default {
       this.showConfirmation = false;
       this.confirmedOrderTotal = null;
       this.confirmedCartPoints = null;
-      // Limpiar estado de afiliación al ir al dashboard
+      const goAffiliationHome = this.confirmedWasAffiliation && !this.$store.state.affiliated;
+      this.confirmedWasAffiliation = false;
       this.$store.commit('clearAffiliationCheckout');
-      this.$router.push('/dashboard');
+      if (goAffiliationHome) this.$router.push('/affiliation');
+      else this.$router.push('/dashboard');
     },
 
     async refreshWalletFromServer(session) {
@@ -1888,6 +1891,7 @@ export default {
           this.orderNumber = data.orderNumber || data.id || 'N/A';
           this.activationSuccess = true;
           this.showConfirmation = true;
+          this.confirmedWasAffiliation = true;
           await this.refreshWalletFromServer(session);
           this.$store.commit('setCartItems', []); // Limpiar el carrito en el store
           this.$store.commit('clearAffiliationCheckout'); // Limpiar el estado de afiliación

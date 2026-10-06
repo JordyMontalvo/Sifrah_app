@@ -1040,6 +1040,7 @@
 
     <a v-if="!isMobile" :href="wsp || $store.state.wsp_pe" target="_blank" class="wsp fab fa-whatsapp"></a>
     
+    <SystemPopups :session="session" />
     <!-- Panel de Debug (solo visible en desarrollo o cuando se habilite) -->
     <DebugPanel />
   </div>
@@ -1050,13 +1051,14 @@ import api from "@/api";
 import lib from "@/lib";
 import { Capacitor } from '@capacitor/core';
 import { PushNotifications } from '@capacitor/push-notifications';
+import SystemPopups from "@/components/SystemPopups.vue";
 
 
 const ROOT = process.env.VUE_APP_ROOT;
 console.log({ ROOT });
 
 export default {
-  components: { },
+  components: { SystemPopups },
   props: {
     session: String,
     office_id: String,
