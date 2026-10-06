@@ -11,10 +11,23 @@
           {{ activeModule.badge }}
         </button>
 
-        <div class="detail-hero" :class="'theme-' + activeModule.theme">
-          <span class="pill">{{ activeModule.badge }}</span>
-          <h2>{{ activeModule.title }}</h2>
-          <p>{{ activeModule.lead }}</p>
+        <div
+          class="detail-hero"
+          :class="[!activeModule.banner ? ('theme-' + activeModule.theme) : 'has-custom-banner']"
+          :style="activeModule.banner ? {
+            backgroundImage: activeModule.hideBannerText
+              ? 'url(' + activeModule.banner + ')'
+              : 'linear-gradient(to right, rgba(15, 23, 42, 0.75) 0%, rgba(15, 23, 42, 0.45) 60%, rgba(15, 23, 42, 0.2) 100%), url(' + activeModule.banner + ')',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat'
+          } : {}"
+        >
+          <template v-if="!activeModule.hideBannerText">
+            <span class="pill">{{ activeModule.badge }}</span>
+            <h2>{{ activeModule.title }}</h2>
+            <p>{{ activeModule.lead }}</p>
+          </template>
         </div>
 
         <section class="progress-card">
@@ -218,7 +231,16 @@
             class="mod-card"
             @click="openModule(mod)"
           >
-            <span class="mod-art" :class="'theme-' + mod.theme">
+            <span
+              class="mod-art"
+              :class="[!mod.banner ? ('theme-' + mod.theme) : 'has-custom-banner']"
+              :style="mod.banner ? {
+                backgroundImage: 'linear-gradient(to top, rgba(15, 23, 42, 0.75) 0%, rgba(15, 23, 42, 0.2) 100%), url(' + mod.banner + ')',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat'
+              } : {}"
+            >
               <span class="pill">{{ mod.badge }}</span>
               <span class="mod-count">{{ mod.videos.length }} videos</span>
             </span>
@@ -1222,6 +1244,14 @@ export default {
   font-size: 13px;
   line-height: 1.35;
   max-width: 230px;
+}
+.detail-hero.has-custom-banner h2,
+.detail-hero.has-custom-banner p {
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
+}
+.mod-art.has-custom-banner {
+  background-size: cover;
+  background-position: center;
 }
 .progress-card {
   background: #fff5f8;
