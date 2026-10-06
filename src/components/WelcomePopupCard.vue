@@ -28,7 +28,6 @@
         <button v-if="!playing" class="wpc-play" type="button" aria-label="Reproducir" @click="togglePlay">
           <span>▶</span>
         </button>
-        <div class="wpc-badge"><span>▶</span> Video de bienvenida</div>
         <div class="wpc-bar">
           <button type="button" class="wpc-bar-play" @click="togglePlay">{{ playing ? "❚❚" : "▶" }}</button>
           <span>{{ timeLabel }}</span>
@@ -37,6 +36,12 @@
           <span class="wpc-full">⛶</span>
         </div>
       </template>
+      <div class="wpc-badge">
+        <span>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 7v10l9-5-9-5z" fill="currentColor"/></svg>
+        </span>
+        Video de bienvenida
+      </div>
     </div>
 
     <div v-if="footerText" class="wpc-note">
@@ -220,6 +225,8 @@ export default {
 }
 .wpc-video video,
 .wpc-video iframe {
+  position: relative;
+  z-index: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -244,28 +251,36 @@ export default {
 .wpc-play span { display: block; margin-left: 3px; }
 .wpc-badge {
   position: absolute;
-  top: 10px;
-  left: 10px;
+  top: 12px;
+  left: 12px;
+  z-index: 2;
+  pointer-events: none;
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  background: rgba(15, 23, 42, 0.72);
+  gap: 8px;
+  background: rgba(17, 24, 39, 0.62);
   color: #fff;
   border-radius: 999px;
-  padding: 5px 10px;
-  font-size: 12px;
-  font-weight: 700;
+  padding: 4px 12px 4px 4px;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1;
 }
 .wpc-badge span {
-  width: 16px;
-  height: 16px;
+  width: 22px;
+  height: 22px;
   border-radius: 50%;
   background: #fff;
   color: #e91e63;
-  font-size: 9px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
+}
+.wpc-badge svg {
+  width: 12px;
+  height: 12px;
+  margin-left: 1px;
 }
 .wpc-bar {
   position: absolute;
