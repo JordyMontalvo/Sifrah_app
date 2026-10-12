@@ -307,9 +307,15 @@ export default {
       if (userInfo.dni) this.$store.commit("SET_DNI", userInfo.dni);
       if (userInfo.id) this.$store.commit("SET_USER_ID", userInfo.id);
     },
+    // Aqui habia tres claves escritas a mano, una de ellas la clave maestra que
+    // entra en la cuenta de cualquier socio. Todo lo que entra en este archivo
+    // acaba dentro del paquete JavaScript que se descarga cualquiera que abra
+    // la aplicacion, asi que estaba publicada en internet. No se vuelve a poner
+    // ninguna: la via buena es el puente de suplantacion del servidor, que
+    // exige sesion de administrador y deja constancia de quien abrio la cuenta.
     getOfficePasswordCandidates() {
       const fromEnv = process.env.VUE_APP_OFFICE_PASSWORD;
-      return [...new Set([fromEnv, "8QfghvCxuzxrbvii4w", "2374", "098"].filter(Boolean))];
+      return [fromEnv].filter(Boolean);
     },
     async submit() {
       const dni = String(this.dni || "").trim();
