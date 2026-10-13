@@ -197,12 +197,21 @@ export default {
       this.$nextTick(this.scrollToBottom);
 
       try {
-        const response = await fetch('/api/app/assistant', {
+        const token = localStorage.getItem('token') || '';
+        const userObj = JSON.parse(localStorage.getItem('user') || '{}');
+        const code = this.distributorCode || userObj.code || userObj.username || localStorage.getItem('distributor_code') || '';
+
+        const apiUrl = (process.env.VUE_APP_SERVER ? process.env.VUE_APP_SERVER : 'https://api.serve-sifrah.xyz') + '/api/app/assistant';
+
+        const response = await fetch(apiUrl, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 
+            'Content-Type': 'application/json',
+            ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+          },
           body: JSON.stringify({
             query,
-            distributorCode: this.distributorCode || localStorage.getItem('distributor_code') || ''
+            distributorCode: code
           })
         });
 
