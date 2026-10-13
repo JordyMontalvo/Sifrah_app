@@ -355,6 +355,12 @@ class SharedStore {
   GET(userId) {
     return axios.get(`/public/shared-store/${userId}`);
   }
+  paymentMethods() {
+    return axios.get("/public/store-checkout");
+  }
+  checkout(payload) {
+    return axios.post("/public/store-checkout", payload);
+  }
 }
 
 class Materials {

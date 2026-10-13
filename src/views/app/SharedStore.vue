@@ -317,8 +317,8 @@
               </div>
               
               <div class="cart-actions">
-                <button class="pay-btn" @click="contactOwner" :disabled="cartItems.length === 0">
-                  Contactar para Comprar
+                <button class="pay-btn" @click="goToCheckout" :disabled="cartItems.length === 0">
+                  Continuar compra
                 </button>
                 <button class="view-detail-btn" @click="openCartDetailModal">
                   Ver detalle
@@ -446,8 +446,8 @@
           </div>
           
           <div class="cart-detail-actions">
-            <button class="go-to-pay-btn" @click="contactOwner" :disabled="cartItems.length === 0">
-              Contactar para Comprar
+            <button class="go-to-pay-btn" @click="goToCheckout" :disabled="cartItems.length === 0">
+              Continuar compra
             </button>
             <button class="add-more-products-btn" @click="closeCartDetailModal">
               <i class="fas fa-plus"></i>
@@ -671,26 +671,18 @@ export default {
       this.selectedCategories = [];
     },
 
-    contactOwner() {
-      if (this.cartItems.length === 0) return;
-      
-      // Generar mensaje de WhatsApp con los productos del carrito
-      let message = `¡Hola! Me interesa comprar los siguientes productos de tu tienda Sifrah:\n\n`;
-      
-      this.cartItems.forEach((item, index) => {
-        message += `${index + 1}. ${item.name} - Cantidad: ${item.total} - S/ ${(this.getProductPrice(item) * item.total).toFixed(2)}\n`;
-      });
-      
-      message += `\nTotal: S/ ${this.cartTotal.toFixed(2)}`;
-      message += `\nPuntos: ${this.cartPoints}`;
-      
-      // Aquí deberías tener el número de WhatsApp del dueño de la tienda
-      // Por ahora usaremos un número genérico
-      const phoneNumber = "51999999999"; // Reemplazar con el número real del dueño
-      const encodedMessage = encodeURIComponent(message);
-      const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
-      
-      window.open(whatsappUrl, '_blank');
+    goToCheckout() {
+      if (this.cartItems.length === 0 || !this.ownerId) return;
+      const items = this.cartItems.map((item) => ({
+        id: item.id,
+        name: item.name,
+        img: item.img || "",
+        total: item.total,
+        price: this.getProductPrice(item),
+        points: Number(item.points) || 0,
+      }));
+      sessionStorage.setItem("sifrah_store_cart_" + this.ownerId, JSON.stringify(items));
+      this.$router.push("/tienda/" + this.ownerId + "/checkout");
     }
   },
   async created() {
