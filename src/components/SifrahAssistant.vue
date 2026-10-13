@@ -201,19 +201,46 @@ export default {
         const userObj = JSON.parse(localStorage.getItem('user') || '{}');
         const code = this.distributorCode || userObj.code || userObj.username || localStorage.getItem('distributor_code') || '';
 
-        const apiUrl = (process.env.VUE_APP_SERVER ? process.env.VUE_APP_SERVER : 'https://api.serve-sifrah.xyz') + '/api/app/assistant';
+        // Preparar historial conversacional para dar memoria al bot
+        const history = this.messages
+          .filter(m => m.text && !m.isEmergency)
+          .slice(-6)
+          .map(m => ({
+            role: m.sender === 'user' ? 'user' : 'model',
+            text: m.text
+          }));
 
-        const response = await fetch(apiUrl, {
-          method: 'POST',
-          headers: { 
-            'Content-Type': 'application/json',
-            ...(token ? { 'Authorization': `Bearer ${token}` } : {})
-          },
-          body: JSON.stringify({
-            query,
-            distributorCode: code
-          })
-        });
+        let apiUrl = (process.env.VUE_APP_SERVER ? process.env.VUE_APP_SERVER : 'https://api.serve-sifrah.xyz') + '/api/app/assistant';
+
+        let response;
+        try {
+          response = await fetch(apiUrl, {
+            method: 'POST',
+            headers: { 
+              'Content-Type': 'application/json',
+              ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+            },
+            body: JSON.stringify({
+              query,
+              distributorCode: code,
+              history
+            })
+          });
+        } catch (fetchErr) {
+          // Si falló por CORS o red a api.serve-sifrah.xyz, reintentar por ruta relativa local
+          response = await fetch('/api/app/assistant', {
+            method: 'POST',
+            headers: { 
+              'Content-Type': 'application/json',
+              ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+            },
+            body: JSON.stringify({
+              query,
+              distributorCode: code,
+              history
+            })
+          });
+        }
 
         const resData = await response.json();
 
