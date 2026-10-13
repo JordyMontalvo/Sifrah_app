@@ -464,6 +464,15 @@
 import api from "@/api";
 import { mockSharedStoreData } from "@/mocks/sharedStoreMock";
 
+function isPromotionProduct(product) {
+  if (!product) return false;
+  return (
+    product.is_promotion === true ||
+    product.catalog_type === "promotion" ||
+    product.type === "Promoción"
+  );
+}
+
 export default {
   data() {
     return {
@@ -706,7 +715,9 @@ export default {
         }
 
         // Cargar datos del API
-        this.products = data.products ? data.products.map((a) => ({ ...a, total: 0 })) : [];
+        this.products = data.products
+          ? data.products.filter((a) => !isPromotionProduct(a)).map((a) => ({ ...a, total: 0 }))
+          : [];
         this.ownerName = data.ownerName || "Sifrah";
         
         if (data.activationBanners) {
