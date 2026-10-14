@@ -40,7 +40,6 @@
                   <div class="cart-item-quantity">{{ item.total }} Unid.</div>
                   <div class="cart-item-name">{{ item.name }}</div>
                   <div class="cart-item-price">S/ {{ Number(item.price).toFixed(2) }}</div>
-                  <div class="cart-item-points">{{ item.points }} pts</div>
                 </div>
               </div>
               <div v-if="zone && delivery.department === 'lima'" class="cart-item delivery-item">

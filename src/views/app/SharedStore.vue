@@ -158,7 +158,6 @@
                   <div class="cart-info-left">
                     <div class="cart-price-info">
                       <span class="total-price">Monto: S/ {{ cartTotal.toFixed(2) }}</span>
-                      <span class="total-items">Puntos: {{ cartPoints }} pts</span>
                     </div>
                   </div>
                   <button @click="openCartDetailModal" class="cart-square-btn">
@@ -183,11 +182,6 @@
                     @click="openProductModal(product)"
                   >
                     <div class="card-corner"></div>
-                    
-                    <div class="points-badge">
-                      <i class="fas fa-star"></i>
-                      {{ product.points }} pts
-                    </div>
                     
                     <div class="product-image-container">
                       <img
@@ -270,7 +264,6 @@
                     <h4>{{ item.name }}</h4>
                     <div class="cart-item-details">
                       <span class="cart-item-price">S/ {{ getProductPrice(item) }}</span>
-                      <span class="cart-item-points">{{ item.points }}pts</span>
                     </div>
                   </div>
                   <div class="cart-item-controls">
@@ -304,10 +297,6 @@
                   <div class="summary-row">
                     <span>Total productos:</span>
                     <span class="summary-value">{{ cartItemsTotal }} items</span>
-                  </div>
-                  <div class="summary-row">
-                    <span>Puntos:</span>
-                    <span>{{ cartPoints.toFixed(2) }}</span>
                   </div>
                   <div class="summary-row total-row">
                     <span>Total:</span>
@@ -361,7 +350,6 @@
           <div class="product-modal-right">
             <div class="product-modal-info">
               <div class="modal-product-price">S/ {{ getProductPrice(selectedProduct) }}</div>
-              <div class="modal-product-points">{{ selectedProduct.points }} pts</div>
               
               <div class="product-description">
                 <h4>Descripción:</h4>
@@ -399,7 +387,6 @@
                 <h4>{{ item.name }}</h4>
                 <div class="cart-detail-item-details">
                   <span class="cart-detail-item-price">S/ {{ getProductPrice(item) }}</span>
-                  <span class="cart-detail-item-points">{{ item.points }}pts</span>
                 </div>
               </div>
               <div class="cart-detail-item-controls">
@@ -433,10 +420,6 @@
               <div class="summary-row">
                 <span>Total productos:</span>
                 <span class="summary-value">{{ cartItemsTotal }} items</span>
-              </div>
-              <div class="summary-row">
-                <span>Puntos:</span>
-                <span>{{ cartPoints.toFixed(2) }}</span>
               </div>
               <div class="summary-row total-row">
                 <span>Total:</span>
@@ -773,4 +756,7 @@ export default {
   font-size: 1.1rem
   margin-top: -10px
   margin-bottom: 20px
+
+.shared-store-public-view .points-badge
+  display: none !important
 </style>
