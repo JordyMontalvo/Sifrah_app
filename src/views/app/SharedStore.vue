@@ -203,7 +203,7 @@
                         {{ product.subdescription || '\u00a0' }}
                       </div>
                       <div class="product-catalog-price">
-                        Precio Socio: <span class="price-amount">S/ {{ getProductPrice(product) }}</span>
+                        Precio: <span class="price-amount">S/ {{ getProductPrice(product) }}</span>
                       </div>
                     </div>
                     
@@ -559,7 +559,11 @@ export default {
   },
   methods: {
     getProductPrice(product) {
-      return product.price_socio || product.price || 0;
+      if (!product) return 0;
+      if (Number(product.public_price) > 0) {
+        return Number(product.public_price);
+      }
+      return Number(product.price_socio || product.price || 0);
     },
 
     getProductDescription(product) {
