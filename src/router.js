@@ -41,6 +41,7 @@ import Resume from './views/app/Resume.vue'
 import frontales from './views/app/frontales.vue'
 import Checkout from './views/app/Checkout.vue'
 import SharedStore from './views/app/SharedStore.vue'
+import StoreCheckout from './views/app/StoreCheckout.vue'
 import ShareStore from './views/app/ShareStore.vue'
 import Audios from './views/app/Audios.vue'
 import Libros from './views/app/Libros.vue'
@@ -61,6 +62,11 @@ Vue.use(Router)
 const routes = [
   // ⭐ RUTAS PÚBLICAS PRIMERO (antes del catch-all)
   // Ruta pública para tienda compartida - NO REQUIERE AUTENTICACIÓN
+  {
+    path: '/tienda/:userId/checkout',
+    component: StoreCheckout,
+    meta: { public: true, requiresAuth: false }
+  },
   {
     path: '/tienda/:userId',
     component: SharedStore,

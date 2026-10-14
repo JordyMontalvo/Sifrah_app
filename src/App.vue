@@ -2,18 +2,20 @@
   <div id="app">
     <AppInitializer>
       <router-view/>
+      <!-- <SifrahAssistant /> -->
     </AppInitializer>
-
   </div>
 </template>
 
 <script>
 import AppInitializer from '@/components/AppInitializer.vue'
+import SifrahAssistant from '@/components/SifrahAssistant.vue'
 
 export default {
   name: 'App',
   components: {
-    AppInitializer
+    AppInitializer,
+    SifrahAssistant
   },
 };
 
