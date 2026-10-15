@@ -41,6 +41,7 @@ import Resume from './views/app/Resume.vue'
 import frontales from './views/app/frontales.vue'
 import Checkout from './views/app/Checkout.vue'
 import SharedStore from './views/app/SharedStore.vue'
+import SharedStoreProduct from './views/app/SharedStoreProduct.vue'
 import StoreCheckout from './views/app/StoreCheckout.vue'
 import ShareStore from './views/app/ShareStore.vue'
 import Audios from './views/app/Audios.vue'
@@ -65,6 +66,11 @@ const routes = [
   {
     path: '/tienda/:userId/checkout',
     component: StoreCheckout,
+    meta: { public: true, requiresAuth: false }
+  },
+  {
+    path: '/tienda/:userId/producto/:productId',
+    component: SharedStoreProduct,
     meta: { public: true, requiresAuth: false }
   },
   {

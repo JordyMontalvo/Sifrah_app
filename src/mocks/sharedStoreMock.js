@@ -39,6 +39,10 @@ export const mockSharedStoreData = {
     }
   ],
   ownerName: "Usuario Demo",
+  ownerFirstName: "Usuario",
+  ownerLastName: "Demo",
+  ownerFullName: "Usuario Demo",
+  ownerPhoto: null,
   activationBanners: {
     left: "",
     centerTop: "",

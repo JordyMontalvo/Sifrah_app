@@ -1,5 +1,14 @@
 <template>
   <div class="shared-store-public-view" v-cloak>
+    <!-- Barra superior con logo SIFRAH y datos del socio distribuidor -->
+    <SharedStoreHeader
+      :ownerName="ownerFirstName"
+      :ownerLastName="ownerLastName"
+      :ownerFullName="ownerFullName"
+      :ownerPhoto="ownerPhoto"
+      :ownerId="ownerId"
+    />
+
     <!-- Loading overlay -->
     <div v-if="loading || !products || products.length === 0" class="loading-overlay">
       <div class="loading-container">
@@ -197,7 +206,7 @@
                         {{ product.subdescription || '\u00a0' }}
                       </div>
                       <div class="product-catalog-price">
-                        Precio: <span class="price-amount">S/ {{ getProductPrice(product) }}</span>
+                        Precio: <span class="price-amount">S/ {{ Number(getProductPrice(product)).toFixed(2) }}</span>
                       </div>
                     </div>
                     
@@ -349,11 +358,22 @@
           
           <div class="product-modal-right">
             <div class="product-modal-info">
-              <div class="modal-product-price">S/ {{ getProductPrice(selectedProduct) }}</div>
+              <div class="modal-product-price">S/ {{ Number(getProductPrice(selectedProduct)).toFixed(2) }}</div>
               
               <div class="product-description">
                 <h4>Descripción:</h4>
                 <p>{{ getProductDescription(selectedProduct) }}</p>
+              </div>
+
+              <div class="modal-actions-box" style="margin-top: 16px;">
+                <button
+                  type="button"
+                  @click="goToProductPage(selectedProduct)"
+                  class="btn-visit-product-page"
+                  style="display: inline-flex; align-items: center; gap: 8px; background: #00ae62; color: #fff; padding: 10px 18px; border-radius: 8px; font-weight: 700; border: none; cursor: pointer;"
+                >
+                  <i class="fas fa-external-link-alt"></i> Ver página del producto
+                </button>
               </div>
             </div>
           </div>
@@ -444,6 +464,7 @@
 </template>
 
 <script>
+import SharedStoreHeader from "@/components/SharedStoreHeader.vue";
 import api from "@/api";
 import { mockSharedStoreData } from "@/mocks/sharedStoreMock";
 
@@ -457,6 +478,9 @@ function isPromotionProduct(product) {
 }
 
 export default {
+  components: {
+    SharedStoreHeader
+  },
   data() {
     return {
       loading: true,
@@ -476,6 +500,10 @@ export default {
       },
       ownerId: null,
       ownerName: "Sifrah",
+      ownerFirstName: "",
+      ownerLastName: "",
+      ownerFullName: "",
+      ownerPhoto: null,
       useMockData: false, // Flag para saber si estamos usando datos mock
     };
   },
@@ -553,6 +581,35 @@ export default {
       return product.description || product.subdescription || "Sin descripción disponible";
     },
 
+    loadCartFromSession() {
+      if (!this.ownerId) return;
+      try {
+        const raw = sessionStorage.getItem("sifrah_store_cart_" + this.ownerId);
+        if (raw) {
+          this.cartItems = JSON.parse(raw);
+        }
+      } catch (e) {
+        console.error("Error reading cart from sessionStorage:", e);
+      }
+    },
+
+    saveCartToSession() {
+      if (!this.ownerId) return;
+      try {
+        const items = this.cartItems.map((item) => ({
+          id: item.id,
+          name: item.name,
+          img: item.img || "",
+          total: item.total,
+          price: this.getProductPrice(item),
+          points: Number(item.points) || 0,
+        }));
+        sessionStorage.setItem("sifrah_store_cart_" + this.ownerId, JSON.stringify(items));
+      } catch (e) {
+        console.error("Error saving cart to sessionStorage:", e);
+      }
+    },
+
     getProductQuantity(product) {
       const cartItem = this.cartItems.find(item => item.id === product.id);
       return cartItem ? cartItem.total : 0;
@@ -571,6 +628,7 @@ export default {
           total: 1
         });
       }
+      this.saveCartToSession();
     },
 
     decreaseQuantity(product) {
@@ -583,6 +641,7 @@ export default {
           const index = this.cartItems.indexOf(existingItem);
           this.cartItems.splice(index, 1);
         }
+        this.saveCartToSession();
       }
     },
 
@@ -591,17 +650,30 @@ export default {
       
       if (existingItem && existingItem.total < 10) {
         existingItem.total++;
+        this.saveCartToSession();
       }
     },
 
     removeFromCart(index) {
       this.cartItems.splice(index, 1);
+      this.saveCartToSession();
     },
 
     openProductModal(product) {
-      this.selectedProduct = product;
-      this.imageLoaded = false;
-      document.body.classList.add('modal-open');
+      if (this.ownerId && product && product.id) {
+        this.saveCartToSession();
+        this.$router.push(`/tienda/${this.ownerId}/producto/${product.id}`);
+      } else {
+        this.selectedProduct = product;
+        this.imageLoaded = false;
+        document.body.classList.add('modal-open');
+      }
+    },
+
+    goToProductPage(product) {
+      if (!this.ownerId || !product || !product.id) return;
+      this.saveCartToSession();
+      this.$router.push(`/tienda/${this.ownerId}/producto/${product.id}`);
     },
 
     closeProductModal() {
@@ -685,6 +757,8 @@ export default {
         return;
       }
 
+      this.loadCartFromSession();
+
       try {
         // Intentar llamar al API
         const { data } = await api.SharedStore.GET(this.ownerId);
@@ -697,7 +771,11 @@ export default {
         this.products = data.products
           ? data.products.filter((a) => !isPromotionProduct(a)).map((a) => ({ ...a, total: 0 }))
           : [];
-        this.ownerName = data.ownerName || "Sifrah";
+        this.ownerName = data.ownerName || data.ownerFullName || "Sifrah";
+        this.ownerFirstName = data.ownerFirstName || data.ownerName || "";
+        this.ownerLastName = data.ownerLastName || "";
+        this.ownerFullName = data.ownerFullName || `${this.ownerFirstName} ${this.ownerLastName}`.trim();
+        this.ownerPhoto = data.ownerPhoto || null;
         
         if (data.activationBanners) {
           this.activationBanners = data.activationBanners;
@@ -710,6 +788,10 @@ export default {
         const mockData = mockSharedStoreData;
         this.products = mockData.products.map((a) => ({ ...a, total: 0 }));
         this.ownerName = mockData.ownerName;
+        this.ownerFirstName = mockData.ownerFirstName || "";
+        this.ownerLastName = mockData.ownerLastName || "";
+        this.ownerFullName = mockData.ownerFullName || mockData.ownerName;
+        this.ownerPhoto = mockData.ownerPhoto || null;
         this.activationBanners = mockData.activationBanners;
         
         // Mostrar mensaje informativo
