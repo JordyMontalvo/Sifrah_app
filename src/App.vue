@@ -2,7 +2,7 @@
   <div id="app">
     <AppInitializer>
       <router-view/>
-      <!-- <SifrahAssistant /> -->
+      <SifrahAssistant />
     </AppInitializer>
   </div>
 </template>
