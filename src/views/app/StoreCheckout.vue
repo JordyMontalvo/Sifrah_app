@@ -800,12 +800,162 @@ export default {
 
 <style lang="stylus" scoped>
 @import '../../assets/style/views/app/Checkout.styl'
+
 .store-checkout-page
   background #f7f7f8
   min-height 100vh
   padding 12px 0 40px
+
 .error-message
   color #be123c
   font-weight 600
   margin 10px 0
+
+.pickup-form
+  margin-top 30px
+  padding 35px
+  position relative
+  overflow hidden
+  background white
+  border-radius 0 0 12px 12px
+  box-shadow 0 4px 20px rgba(0,0,0,0.08)
+
+  @media (max-width: 768px)
+    padding 20px
+    margin-top 20px
+
+  .form-section
+    margin-bottom 30px
+
+    h4
+      color #e91e63 !important
+      font-size 1.3rem
+      font-weight 700
+      margin-bottom 25px
+      padding 15px 20px
+      background #e91e6333
+      border-radius 12px
+      border-left 4px solid #e91e63
+      position relative
+
+  .form-row
+    display grid
+    grid-template-columns 1fr 1fr
+    gap 20px
+    margin-bottom 20px
+
+    @media (max-width: 768px)
+      display flex
+      flex-direction column
+      gap 15px
+      margin-bottom 15px
+
+  .form-group
+    margin-bottom 20px
+
+    label
+      display block
+      margin-bottom 8px
+      font-weight 600
+      color #333 !important
+      font-size 0.95rem
+
+    .input-with-icon
+      position relative
+
+      input
+        width 100%
+        min-width 200px
+        padding 20px 48px 20px 18px
+        border 2px solid #e8e8e8
+        border-radius 12px
+        font-size 1rem
+        transition all 0.3s cubic-bezier(0.4, 0, 0.2, 1)
+        color #333 !important
+        background linear-gradient(135deg, #ffffff 0%, #fafafa 100%)
+        box-shadow 0 2px 8px rgba(0,0,0,0.08)
+
+        @media (max-width: 768px)
+          min-width auto
+          padding 14px 40px 14px 16px
+          font-size 0.9rem
+          border-radius 8px
+
+        &:hover
+          border-color #e91e63
+          box-shadow 0 4px 16px rgba(233, 30, 99, 0.15)
+          transform translateY(-1px)
+
+        &:focus
+          outline none
+          border-color #e91e63
+          box-shadow 0 6px 24px rgba(233, 30, 99, 0.2)
+          transform translateY(-2px)
+          background-color #fff
+
+      i
+        position absolute
+        right 18px
+        top 50%
+        transform translateY(-50%)
+        color #666
+        font-size 1.1rem
+        pointer-events none
+        transition all 0.3s ease
+
+        @media (max-width: 768px)
+          font-size 0.9rem
+          right 14px
+
+  .pickup-section
+    margin-top 10px
+    margin-bottom 30px
+
+    h4
+      color #e91e63 !important
+      font-size 1.3rem
+      font-weight 700
+      margin-bottom 20px !important
+      padding 15px 20px
+      background #e91e6333
+      border-radius 12px
+      border-left 4px solid #e91e63
+      position relative
+
+  .pickup-select
+    width 100%
+    padding 18px 45px 18px 18px
+    border 2px solid #e8e8e8
+    border-radius 12px
+    font-size 1rem
+    color #333 !important
+    font-weight 500
+    transition all 0.3s cubic-bezier(0.4, 0, 0.2, 1)
+    background #ffffff
+    margin-top 15px
+    box-sizing border-box
+    cursor pointer
+    appearance none
+    -webkit-appearance none
+    background-image url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23e91e63' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6,9 12,15 18,9'%3E%3C/polyline%3E%3C/svg%3E")
+    background-repeat no-repeat
+    background-position right 18px center
+    background-size 16px
+    box-shadow 0 2px 8px rgba(0,0,0,0.06)
+
+    @media (max-width: 768px)
+      padding 14px 40px 14px 15px
+      font-size 0.95rem
+      border-radius 10px
+
+    &:hover
+      border-color #e91e63
+      box-shadow 0 4px 16px rgba(233, 30, 99, 0.15)
+      transform translateY(-1px)
+
+    &:focus
+      outline none
+      border-color #e91e63
+      box-shadow 0 6px 24px rgba(233, 30, 99, 0.2)
+      transform translateY(-2px)
 </style>
