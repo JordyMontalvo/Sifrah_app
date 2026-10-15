@@ -769,7 +769,7 @@ export default {
 
         // Cargar datos del API
         this.products = data.products
-          ? data.products.filter((a) => !isPromotionProduct(a)).map((a) => ({ ...a, total: 0 }))
+          ? data.products.filter((a) => !isPromotionProduct(a) && a.visible_shared_store !== false).map((a) => ({ ...a, total: 0 }))
           : [];
         this.ownerName = data.ownerName || data.ownerFullName || "Sifrah";
         this.ownerFirstName = data.ownerFirstName || data.ownerName || "";

@@ -131,6 +131,30 @@
               </div>
             </transition>
 
+            <!-- Opciones para compartir producto -->
+            <div class="product-share-container">
+              <span class="product-share-title"><i class="fas fa-share-alt"></i> Compartir este producto:</span>
+              <div class="product-share-actions">
+                <button
+                  type="button"
+                  @click="shareOnWhatsApp"
+                  class="btn-share-item btn-share-whatsapp"
+                >
+                  <i class="fab fa-whatsapp"></i>
+                  <span>WhatsApp</span>
+                </button>
+                <button
+                  type="button"
+                  @click="copyProductLink"
+                  class="btn-share-item btn-share-copy"
+                  :class="{ copied: linkCopied }"
+                >
+                  <i :class="linkCopied ? 'fas fa-check' : 'fas fa-link'"></i>
+                  <span>{{ linkCopied ? '¡Copiado!' : 'Copiar enlace' }}</span>
+                </button>
+              </div>
+            </div>
+
             <!-- Descripción detallada -->
             <div class="product-description-block">
               <h3>Descripción del producto</h3>
@@ -140,6 +164,37 @@
             </div>
           </div>
         </div>
+
+        <!-- Sección de Productos Relacionados -->
+        <section v-if="relatedProducts.length > 0" class="related-products-section">
+          <div class="related-header">
+            <h2 class="related-title">Productos Relacionados</h2>
+            <p class="related-subtitle">Otros productos recomendados de la tienda</p>
+          </div>
+
+          <div class="related-grid">
+            <div
+              v-for="rel in relatedProducts"
+              :key="rel.id"
+              class="related-card"
+              @click="goToRelated(rel.id)"
+            >
+              <div class="related-img-box">
+                <img :src="rel.img" :alt="rel.name" class="related-img" />
+                <span v-if="rel.type" class="related-badge">{{ rel.type }}</span>
+              </div>
+              <div class="related-body">
+                <h3 class="related-name">{{ rel.name }}</h3>
+                <div class="related-price-row">
+                  <span class="related-price">S/ {{ getProductPrice(rel).toFixed(2) }}</span>
+                  <span class="btn-related-view">
+                    Ver <i class="fas fa-arrow-right"></i>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
       </div>
     </main>
 
@@ -197,7 +252,9 @@ export default {
       ownerFirstName: "",
       ownerLastName: "",
       ownerFullName: "",
-      ownerPhoto: null
+      ownerPhoto: null,
+      allProducts: [],
+      linkCopied: false
     };
   },
   computed: {
@@ -209,6 +266,22 @@ export default {
         (sum, item) => sum + this.getProductPrice(item) * (item.total || 0),
         0
       );
+    },
+    relatedProducts() {
+      if (!this.product || !this.allProducts.length) return [];
+      const others = this.allProducts.filter(
+        (p) => String(p.id) !== String(this.product.id) && p.visible_shared_store !== false
+      );
+      const sameCategory = others.filter((p) => p.type && p.type === this.product.type);
+      const otherCategory = others.filter((p) => !p.type || p.type !== this.product.type);
+      return [...sameCategory, ...otherCategory].slice(0, 4);
+    }
+  },
+  watch: {
+    "$route.params.productId"(newId) {
+      if (newId) {
+        this.selectProductById(newId);
+      }
     }
   },
   methods: {
@@ -219,6 +292,40 @@ export default {
     getProductDescription(prod) {
       if (!prod) return "";
       return prod.description || prod.subdescription || "Producto de nutrición y bienestar Sifrah.";
+    },
+    productShareUrl() {
+      const baseUrl = window.location.origin;
+      return `${baseUrl}/tienda/${this.ownerId}/producto/${this.product ? this.product.id : ""}`;
+    },
+    shareOnWhatsApp() {
+      if (!this.product) return;
+      const url = this.productShareUrl();
+      const text = encodeURIComponent(
+        `¡Mira este producto en Sifrah! ${this.product.name} (S/ ${this.getProductPrice(this.product).toFixed(2)}): ${url}`
+      );
+      window.open(`https://wa.me/?text=${text}`, "_blank");
+    },
+    async copyProductLink() {
+      try {
+        await navigator.clipboard.writeText(this.productShareUrl());
+        this.linkCopied = true;
+        setTimeout(() => {
+          this.linkCopied = false;
+        }, 3000);
+      } catch (err) {
+        console.error("Error al copiar enlace:", err);
+      }
+    },
+    goToRelated(productId) {
+      if (String(productId) === String(this.$route.params.productId)) return;
+      this.$router.push(`/tienda/${this.ownerId}/producto/${productId}`);
+    },
+    selectProductById(productId) {
+      this.product =
+        this.allProducts.find((p) => String(p.id) === String(productId)) || null;
+      this.quantity = 1;
+      this.imageLoaded = false;
+      window.scrollTo({ top: 0, behavior: "smooth" });
     },
     loadCartFromSession() {
       if (!this.ownerId) return;
@@ -307,9 +414,10 @@ export default {
         this.ownerPhoto = data.ownerPhoto || null;
 
         const allProducts = data.products
-          ? data.products.filter(p => !isPromotionProduct(p))
+          ? data.products.filter(p => !isPromotionProduct(p) && p.visible_shared_store !== false)
           : [];
 
+        this.allProducts = allProducts;
         this.product = allProducts.find(p => String(p.id) === String(productId)) || null;
       } else {
         throw new Error((data && data.msg) || "Error al cargar datos");
@@ -323,8 +431,11 @@ export default {
       this.ownerFullName = mock.ownerFullName || mock.ownerName;
       this.ownerPhoto = mock.ownerPhoto || null;
 
-      const mockProducts = mock.products || [];
-      this.product = mockProducts.find(p => String(p.id) === String(productId)) || mockProducts[0] || null;
+      const mockProducts = (mock.products || []).filter(
+        (p) => !isPromotionProduct(p) && p.visible_shared_store !== false
+      );
+      this.allProducts = mockProducts;
+      this.product = mockProducts.find(p => String(p.id) === String(productId)) || null;
     } finally {
       this.loading = false;
     }
@@ -845,5 +956,200 @@ export default {
     flex: 1;
     justify-content: center;
   }
+}
+
+/* Share product styling */
+.product-share-container {
+  margin-top: 20px;
+  padding: 14px 18px;
+  background: #f1f5f9;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.product-share-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #475569;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.product-share-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.btn-share-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s ease;
+}
+
+.btn-share-whatsapp {
+  background: #25d366;
+  color: #ffffff;
+}
+
+.btn-share-whatsapp:hover {
+  background: #1ebd5a;
+  transform: translateY(-1px);
+}
+
+.btn-share-copy {
+  background: #ffffff;
+  color: #334155;
+  border: 1px solid #cbd5e1;
+}
+
+.btn-share-copy:hover {
+  background: #f8fafc;
+  border-color: #94a3b8;
+}
+
+.btn-share-copy.copied {
+  background: #00ae62;
+  color: #ffffff;
+  border-color: #00ae62;
+}
+
+/* Related products section */
+.related-products-section {
+  margin-top: 40px;
+}
+
+.related-header {
+  margin-bottom: 20px;
+}
+
+.related-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 4px 0;
+}
+
+.related-subtitle {
+  font-size: 14px;
+  color: #64748b;
+  margin: 0;
+}
+
+.related-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+.related-card {
+  background: #ffffff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+  border: 1px solid #f1f5f9;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.related-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+}
+
+.related-img-box {
+  position: relative;
+  width: 100%;
+  height: 180px;
+  background: #f8fafc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.related-img {
+  max-width: 85%;
+  max-height: 85%;
+  object-fit: contain;
+  transition: transform 0.3s ease;
+}
+
+.related-card:hover .related-img {
+  transform: scale(1.05);
+}
+
+.related-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: rgba(0, 174, 98, 0.9);
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 6px;
+  text-transform: uppercase;
+}
+
+.related-body {
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  justify-content: space-between;
+}
+
+.related-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0 0 10px 0;
+  line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.related-price-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto;
+  padding-top: 8px;
+  border-top: 1px solid #f1f5f9;
+}
+
+.related-price {
+  font-size: 16px;
+  font-weight: 700;
+  color: #00ae62;
+}
+
+.btn-related-view {
+  font-size: 12px;
+  font-weight: 600;
+  color: #64748b;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: color 0.15s ease;
+}
+
+.related-card:hover .btn-related-view {
+  color: #00ae62;
 }
 </style>

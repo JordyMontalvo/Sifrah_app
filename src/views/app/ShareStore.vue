@@ -85,6 +85,85 @@
           </div>
         </div>
 
+        <!-- Compartir Productos Individuales -->
+        <div class="share-products-section">
+          <div class="section-header-row">
+            <div>
+              <div class="section-badge"><i class="fas fa-boxes"></i> Productos Habilitados</div>
+              <h3>Compartir Productos Individuales</h3>
+              <p class="section-desc">Comparte enlaces directos a productos específicos de tu tienda externa</p>
+            </div>
+            <div class="product-search-box" v-if="products.length > 2">
+              <i class="fas fa-search"></i>
+              <input
+                type="text"
+                v-model="productSearch"
+                placeholder="Buscar producto..."
+                class="product-search-input"
+              />
+            </div>
+          </div>
+
+          <div v-if="productsLoading" class="products-loading-state">
+            <Spinner :size="30" :color="'#086eb6'" />
+            <span style="margin-left: 10px;">Cargando productos disponibles...</span>
+          </div>
+
+          <div v-else-if="filteredProducts.length === 0" class="no-products-state">
+            <i class="fas fa-box-open"></i>
+            <p v-if="products.length === 0">No hay productos habilitados para la tienda externa en este momento.</p>
+            <p v-else>No se encontraron productos que coincidan con la búsqueda.</p>
+          </div>
+
+          <div v-else class="share-products-grid">
+            <div
+              v-for="prod in filteredProducts"
+              :key="prod.id"
+              class="share-product-card"
+            >
+              <div class="prod-card-thumb">
+                <img :src="prod.img" :alt="prod.name" />
+                <span v-if="prod.type" class="prod-type-tag">{{ prod.type }}</span>
+              </div>
+              <div class="prod-card-details">
+                <h4 class="prod-name" :title="prod.name">{{ prod.name }}</h4>
+                <div class="prod-price-row">
+                  <span class="prod-price">S/ {{ getProductPrice(prod).toFixed(2) }}</span>
+                </div>
+                <div class="prod-card-actions">
+                  <button
+                    type="button"
+                    @click="shareProductOnWhatsApp(prod)"
+                    class="btn-prod-share whatsapp"
+                    title="Compartir por WhatsApp"
+                  >
+                    <i class="fab fa-whatsapp"></i>
+                    <span>WhatsApp</span>
+                  </button>
+                  <button
+                    type="button"
+                    @click="copyProductLink(prod)"
+                    class="btn-prod-share copy"
+                    :class="{ copied: copiedProductId === prod.id }"
+                    title="Copiar enlace del producto"
+                  >
+                    <i :class="copiedProductId === prod.id ? 'fas fa-check' : 'fas fa-copy'"></i>
+                    <span>{{ copiedProductId === prod.id ? 'Copiado' : 'Copiar' }}</span>
+                  </button>
+                  <button
+                    type="button"
+                    @click="openProductPreview(prod)"
+                    class="btn-prod-share preview"
+                    title="Ver producto"
+                  >
+                    <i class="fas fa-external-link-alt"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- Preview de la tienda -->
         <div class="store-preview-section">
           <div class="preview-header">
@@ -169,6 +248,10 @@ export default {
       loading: true,
       linkCopied: false,
       userId: null,
+      products: [],
+      productsLoading: false,
+      productSearch: "",
+      copiedProductId: null,
     };
   },
   computed: {
@@ -185,9 +268,78 @@ export default {
     },
     shareMessage() {
       return `¡Visita mi tienda Sifrah! Encuentra productos increíbles: ${this.shareUrl}`;
-    }
+    },
+    filteredProducts() {
+      if (!this.products) return [];
+      const q = (this.productSearch || "").trim().toLowerCase();
+      if (!q) return this.products;
+      return this.products.filter(
+        (p) =>
+          (p.name && p.name.toLowerCase().includes(q)) ||
+          (p.type && p.type.toLowerCase().includes(q)) ||
+          (p.code && p.code.toLowerCase().includes(q))
+      );
+    },
   },
   methods: {
+    async loadStoreProducts() {
+      if (!this.userId) return;
+      this.productsLoading = true;
+      try {
+        const { data } = await api.SharedStore.GET(this.userId);
+        if (data && data.products) {
+          this.products = data.products.filter(
+            (p) =>
+              p.is_promotion !== true &&
+              p.catalog_type !== "promotion" &&
+              p.type !== "Promoción" &&
+              p.visible_shared_store !== false
+          );
+        }
+      } catch (err) {
+        console.error("Error loading products for share options:", err);
+      } finally {
+        this.productsLoading = false;
+      }
+    },
+
+    getProductShareUrl(product) {
+      const baseUrl = window.location.origin;
+      return `${baseUrl}/tienda/${this.userId}/producto/${product.id}`;
+    },
+
+    getProductPrice(prod) {
+      return Number(prod.price_socio || prod.price || 0);
+    },
+
+    shareProductOnWhatsApp(product) {
+      const url = this.getProductShareUrl(product);
+      const text = encodeURIComponent(
+        `¡Hola! Te recomiendo este producto de mi tienda Sifrah: *${product.name}* (S/ ${this.getProductPrice(product).toFixed(2)}). Míralo aquí: ${url}`
+      );
+      window.open(`https://wa.me/?text=${text}`, "_blank");
+    },
+
+    async copyProductLink(product) {
+      const url = this.getProductShareUrl(product);
+      try {
+        await navigator.clipboard.writeText(url);
+        this.copiedProductId = product.id;
+        if (this.$toast && typeof this.$toast.success === "function") {
+          this.$toast.success("¡Link del producto copiado!");
+        }
+        setTimeout(() => {
+          this.copiedProductId = null;
+        }, 3000);
+      } catch (err) {
+        console.error("Error al copiar enlace del producto:", err);
+      }
+    },
+
+    openProductPreview(product) {
+      window.open(this.getProductShareUrl(product), "_blank");
+    },
+
     async copyLink() {
       try {
         await navigator.clipboard.writeText(this.shareUrl);
@@ -270,6 +422,7 @@ export default {
       // Obtener el ID del usuario (asumiendo que viene en la respuesta)
       // Si no viene, podrías usar el session ID o hacer otra llamada al API
       this.userId = data.userId || this.session;
+      await this.loadStoreProducts();
     } catch (error) {
       console.error('Error loading share store data:', error);
       this.loading = false;
@@ -586,6 +739,193 @@ export default {
     
     strong
       color: #333
+
+.share-products-section
+  background: white
+  border-radius: 15px
+  padding: 30px
+  margin-bottom: 40px
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1)
+
+  .section-header-row
+    display: flex
+    justify-content: space-between
+    align-items: flex-start
+    margin-bottom: 25px
+    flex-wrap: wrap
+    gap: 15px
+
+  .section-badge
+    display: inline-flex
+    align-items: center
+    gap: 6px
+    background: #e6fffa
+    color: #047481
+    font-size: 0.8rem
+    font-weight: 700
+    padding: 4px 10px
+    border-radius: 20px
+    margin-bottom: 8px
+
+  h3
+    font-size: 1.5rem
+    color: #333
+    margin: 0 0 6px 0
+
+  .section-desc
+    color: #666
+    font-size: 0.95rem
+    margin: 0
+
+  .product-search-box
+    display: flex
+    align-items: center
+    background: #f7fafc
+    border: 1px solid #e2e8f0
+    border-radius: 8px
+    padding: 8px 14px
+    gap: 10px
+    min-width: 260px
+
+    i
+      color: #a0aec0
+
+    .product-search-input
+      border: none
+      background: transparent
+      outline: none
+      font-size: 0.9rem
+      width: 100%
+
+  .products-loading-state, .no-products-state
+    text-align: center
+    padding: 40px 20px
+    color: #718096
+
+    i
+      font-size: 2.5rem
+      margin-bottom: 12px
+      opacity: 0.6
+      display: block
+
+    p
+      margin: 0
+
+  .share-products-grid
+    display: grid
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr))
+    gap: 20px
+
+  .share-product-card
+    border: 1px solid #edf2f7
+    border-radius: 12px
+    overflow: hidden
+    display: flex
+    flex-direction: column
+    background: #ffffff
+    transition: transform 0.2s, box-shadow 0.2s
+
+    &:hover
+      transform: translateY(-4px)
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08)
+
+  .prod-card-thumb
+    position: relative
+    height: 160px
+    background: #f8fafc
+    display: flex
+    align-items: center
+    justify-content: center
+    padding: 10px
+
+    img
+      max-width: 90%
+      max-height: 90%
+      object-fit: contain
+
+    .prod-type-tag
+      position: absolute
+      top: 8px
+      left: 8px
+      background: #00ae62
+      color: white
+      font-size: 0.7rem
+      font-weight: 700
+      padding: 2px 8px
+      border-radius: 4px
+      text-transform: uppercase
+
+  .prod-card-details
+    padding: 15px
+    display: flex
+    flex-direction: column
+    flex: 1
+    justify-content: space-between
+
+  .prod-name
+    font-size: 0.95rem
+    font-weight: 600
+    color: #2d3748
+    margin: 0 0 8px 0
+    line-height: 1.3
+    display: -webkit-box
+    -webkit-line-clamp: 2
+    -webkit-box-orient: vertical
+    overflow: hidden
+
+  .prod-price-row
+    margin-bottom: 12px
+
+  .prod-price
+    font-size: 1.15rem
+    font-weight: 700
+    color: #00ae62
+
+  .prod-card-actions
+    display: flex
+    gap: 8px
+
+  .btn-prod-share
+    border: none
+    padding: 8px 10px
+    border-radius: 6px
+    cursor: pointer
+    font-size: 0.8rem
+    font-weight: 600
+    display: inline-flex
+    align-items: center
+    justify-content: center
+    gap: 5px
+    transition: all 0.2s
+
+    &.whatsapp
+      background: #25d366
+      color: white
+      flex: 1
+
+      &:hover
+        background: #1ebd5a
+
+    &.copy
+      background: #edf2f7
+      color: #4a5568
+      flex: 1
+
+      &:hover
+        background: #e2e8f0
+
+      &.copied
+        background: #00ae62
+        color: white
+
+    &.preview
+      background: #edf2f7
+      color: #718096
+      width: 36px
+
+      &:hover
+        background: #e2e8f0
+        color: #2b6cb0
 
 // Responsive
 @media (max-width: 768px)
