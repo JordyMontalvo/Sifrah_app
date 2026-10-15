@@ -1,5 +1,5 @@
 <template>
-  <header class="shared-store-topbar">
+  <header class="shared-store-topbar" :class="{ 'theme-dark': isDark }">
     <div class="topbar-inner">
       <!-- Izquierda: Logo SIFRAH -->
       <router-link :to="homeLink" class="topbar-brand" title="Ir a la tienda">
@@ -9,7 +9,7 @@
       <!-- Derecha: Información del socio (Nombres, apellidos y foto) -->
       <div class="topbar-partner" :title="fullName">
         <div class="partner-meta">
-          <span class="partner-tag">Tu Distribuidor</span>
+          <span v-if="!isDark" class="partner-tag">Tu Distribuidor</span>
           <span class="partner-name">{{ fullName }}</span>
         </div>
         <div class="partner-avatar-wrapper">
@@ -52,6 +52,10 @@ export default {
     ownerId: {
       type: [String, Number],
       default: ""
+    },
+    dark: {
+      type: Boolean,
+      default: true
     }
   },
   data() {
@@ -65,6 +69,9 @@ export default {
     }
   },
   computed: {
+    isDark() {
+      return this.dark !== false;
+    },
     homeLink() {
       return this.ownerId ? `/tienda/${this.ownerId}` : "/";
     },
@@ -121,10 +128,18 @@ export default {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   z-index: 10005;
   box-sizing: border-box;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+/* Versión oscura (aprobada en diseño oficial) */
+.shared-store-topbar.theme-dark {
+  background-color: #161a22;
+  border-bottom: 1px solid #232832;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
 }
 
 .topbar-inner {
-  max-width: 1360px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 10px 24px;
   display: flex;
@@ -149,11 +164,16 @@ export default {
 }
 
 .topbar-logo {
-  height: 42px;
+  height: 38px;
   width: auto;
-  max-width: 170px;
+  max-width: 160px;
   object-fit: contain;
   display: block;
+  transition: filter 0.2s ease;
+}
+
+.theme-dark .topbar-logo {
+  filter: brightness(0) invert(1);
 }
 
 /* Socio a la derecha */
@@ -191,12 +211,19 @@ export default {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 220px;
+  max-width: 240px;
+}
+
+.theme-dark .partner-name {
+  color: #ffffff;
+  font-weight: 500;
+  font-size: 13px;
+  letter-spacing: 0.2px;
 }
 
 .partner-avatar-wrapper {
-  width: 42px;
-  height: 42px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   overflow: hidden;
   flex-shrink: 0;
@@ -206,6 +233,11 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: border-color 0.2s ease;
+}
+
+.theme-dark .partner-avatar-wrapper {
+  border-color: #ffffff;
 }
 
 .partner-avatar-img {
@@ -223,7 +255,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 800;
   letter-spacing: 0.5px;
   user-select: none;
@@ -236,22 +268,18 @@ export default {
   }
 
   .topbar-logo {
-    height: 36px;
-    max-width: 140px;
+    height: 32px;
+    max-width: 130px;
   }
 
   .partner-avatar-wrapper {
-    width: 38px;
-    height: 38px;
+    width: 36px;
+    height: 36px;
   }
 
   .partner-name {
-    font-size: 13px;
-    max-width: 160px;
-  }
-
-  .partner-tag {
-    font-size: 10px;
+    font-size: 12px;
+    max-width: 150px;
   }
 }
 
@@ -261,27 +289,22 @@ export default {
   }
 
   .topbar-logo {
-    height: 32px;
-    max-width: 120px;
+    height: 28px;
+    max-width: 110px;
   }
 
   .partner-avatar-wrapper {
-    width: 34px;
-    height: 34px;
+    width: 32px;
+    height: 32px;
   }
 
   .partner-avatar-fallback {
-    font-size: 12px;
+    font-size: 11px;
   }
 
   .partner-name {
-    font-size: 12px;
-    max-width: 125px;
-  }
-
-  .partner-tag {
-    font-size: 9px;
-    letter-spacing: 0.3px;
+    font-size: 11px;
+    max-width: 120px;
   }
 }
 </style>

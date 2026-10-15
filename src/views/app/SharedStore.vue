@@ -460,11 +460,18 @@
         </div>
       </div>
     </div>
+
+    <!-- Pie de página aprobado con WhatsApp, Redes y Formas de pago -->
+    <SharedStoreFooter
+      :whatsappPhone="ownerPhone"
+      :ownerName="ownerFullName"
+    />
   </div>
 </template>
 
 <script>
 import SharedStoreHeader from "@/components/SharedStoreHeader.vue";
+import SharedStoreFooter from "@/components/SharedStoreFooter.vue";
 import api from "@/api";
 import { mockSharedStoreData } from "@/mocks/sharedStoreMock";
 
@@ -479,7 +486,8 @@ function isPromotionProduct(product) {
 
 export default {
   components: {
-    SharedStoreHeader
+    SharedStoreHeader,
+    SharedStoreFooter
   },
   data() {
     return {
@@ -504,6 +512,8 @@ export default {
       ownerLastName: "",
       ownerFullName: "",
       ownerPhoto: null,
+      ownerPhone: "",
+
       useMockData: false, // Flag para saber si estamos usando datos mock
     };
   },
@@ -776,6 +786,7 @@ export default {
         this.ownerLastName = data.ownerLastName || "";
         this.ownerFullName = data.ownerFullName || `${this.ownerFirstName} ${this.ownerLastName}`.trim();
         this.ownerPhoto = data.ownerPhoto || null;
+        this.ownerPhone = data.ownerPhone || data.phone || "";
         
         if (data.activationBanners) {
           this.activationBanners = data.activationBanners;
