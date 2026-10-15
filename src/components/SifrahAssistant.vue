@@ -50,7 +50,7 @@
             <path d="M533.69,228.15c7.68-3,15.36-2,20.78-7.49s5.15-12.89,7.35-20.66c4.17,7.11,2.58,15.16,8.38,20.61s13.26,4.37,20.44,7.63c-7.13,3.5-15.1,2.46-20.59,7.83s-4.31,13.52-7.79,20.73c-3.26-7.19-2.14-14.84-7.67-20.36S541.38,231.83,533.69,228.15Z"/>
             <path d="M610.6,252.08c-6,1.72-10.3,4.08-11,10.32-.06.5-.75.93-1.14,1.39-.45-.39-1.25-.73-1.3-1.17-.74-6.34-4.85-9.06-11.18-10.32,6.77-1.69,10.92-5.52,12.12-12.82C599.78,246.41,603.32,250.86,610.6,252.08Z"/>
           </svg>
-          <span class="greeting-text">Hola, {{ userName }} 👋</span>
+          <span class="greeting-text">{{ greetingPillText }}</span>
         </div>
         <button class="greeting-action-btn" aria-label="Abrir conversación">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
@@ -262,6 +262,8 @@
 </template>
 
 <script>
+import api from '@/api';
+
 export default {
   name: 'SifrahAssistant',
   props: {
@@ -280,6 +282,7 @@ export default {
       touchStartX: 0,
       touchEndX: 0,
       greetingAutoCloseTimer: null,
+      lastUserKey: '',
       messages: [],
       initialOptions: [
         {
@@ -299,31 +302,37 @@ export default {
   },
   computed: {
     userName() {
-      // 1. Vuex store
+      // 1. Vuex store state.name (fuente reactiva principal)
       const storeName = this.$store ? this.$store.state.name : null;
-      if (storeName && typeof storeName === 'string') {
-        const first = storeName.trim().split(' ')[0];
-        if (first) return this.capitalize(first);
-      }
+      const fromStore = this.extractFirstName(storeName);
+      if (fromStore) return fromStore;
 
-      // 2. LocalStorage name
-      const localName = localStorage.getItem('name');
-      if (localName) {
-        const first = localName.trim().split(' ')[0];
-        if (first) return this.capitalize(first);
-      }
+      // 2. LocalStorage 'name'
+      const localName = typeof window !== 'undefined' ? localStorage.getItem('name') : null;
+      const fromLocal = this.extractFirstName(localName);
+      if (fromLocal) return fromLocal;
 
-      // 3. Objeto user
+      // 3. Posible objeto user en localStorage si existiera
       try {
         const userObj = JSON.parse(localStorage.getItem('user') || '{}');
-        const candidate = userObj.name || userObj.names || userObj.username;
-        if (candidate) {
-          const first = candidate.trim().split(' ')[0];
-          if (first) return this.capitalize(first);
-        }
+        const candidate = userObj.name || userObj.names || userObj.firstName || userObj.first_name;
+        const fromObj = this.extractFirstName(candidate);
+        if (fromObj) return fromObj;
       } catch (e) {}
 
-      return 'Jesús';
+      return '';
+    },
+    userDni() {
+      return (this.$store && this.$store.state.dni) || (typeof window !== 'undefined' ? localStorage.getItem('dni') : '') || '';
+    },
+    userSession() {
+      return (this.$store && this.$store.state.session) || (typeof window !== 'undefined' ? localStorage.getItem('session') : '') || '';
+    },
+    greetingPillText() {
+      if (this.userName) {
+        return `Hola, ${this.userName} 👋`;
+      }
+      return '¡Hola! 👋';
     },
     userRank() {
       const storeRank = this.$store ? (this.$store.state.historicalRankLabel || this.$store.state.rank) : null;
@@ -350,15 +359,33 @@ export default {
   },
   watch: {
     '$route.path'() {
-      // Cerrar paneles en cambio de ruta
+      // Cerrar paneles en cambio de ruta y sincronizar usuario activo
       this.isGreetingOpen = false;
       this.isChatOpen = false;
+      this.syncUserState();
+    },
+    '$store.state.dni'() {
+      this.syncUserState();
+    },
+    '$store.state.session'() {
+      this.syncUserState();
+    },
+    '$store.state.name'() {
+      this.syncUserState();
+    },
+    userName() {
+      this.syncUserState();
     }
   },
   created() {
     this.checkMobileViewport();
     window.addEventListener('resize', this.checkMobileViewport);
+    this.lastUserKey = this.getUserKey();
     this.setupInitialGreeting();
+  },
+  mounted() {
+    this.syncUserState();
+    this.ensureUserProfile();
   },
   beforeDestroy() {
     window.removeEventListener('resize', this.checkMobileViewport);
@@ -368,25 +395,118 @@ export default {
     checkMobileViewport() {
       this.isMobile = typeof window !== 'undefined' ? window.innerWidth <= 768 : false;
     },
-    capitalize(str) {
-      if (!str) return '';
-      return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+    getUserKey() {
+      const dni = this.userDni || '';
+      const session = this.userSession || '';
+      const name = this.userName || '';
+      return `${dni}__${session}__${name}`;
+    },
+    syncUserState(force = false) {
+      const currentKey = this.getUserKey();
+
+      if (!this.lastUserKey) {
+        this.lastUserKey = currentKey;
+        this.refreshGreetingMessage();
+        return;
+      }
+
+      if (force || this.lastUserKey !== currentKey) {
+        // Detectamos cambio de usuario (por DNI, sesión o nombre)
+        this.lastUserKey = currentKey;
+        this.resetChatForNewUser();
+      } else {
+        this.refreshGreetingMessage();
+      }
+    },
+    extractFirstName(rawName) {
+      if (!rawName || typeof rawName !== 'string') return '';
+      // Eliminar anotaciones entre paréntesis, ej. "(Eliminado)", "(Socio)"
+      let clean = rawName.replace(/\(.*?\)/g, '').trim();
+      if (!clean) return '';
+      // Si el valor recibido incluye formato de correo, extraer el nombre previo a la arroba
+      if (clean.includes('@')) {
+        clean = clean.split('@')[0].replace(/[._-]/g, ' ').trim();
+      }
+      // Eliminar títulos comunes iniciales
+      clean = clean.replace(/^(sr\.|sra\.|srta\.|don\.|doña\.)\s+/i, '').trim();
+      // Extraer únicamente la primera palabra (primer nombre del usuario)
+      const firstWord = clean.split(/\s+/)[0];
+      if (!firstWord) return '';
+      // Normalizar: Primera letra mayúscula, resto minúsculas, respetando tildes
+      const formatted = firstWord.charAt(0).toUpperCase() + firstWord.slice(1).toLowerCase();
+      // Palabras del sistema que no son nombres de socios
+      const lower = formatted.toLowerCase();
+      if (lower === 'sifrah' || lower === 'admin' || lower === 'administrador') return '';
+      return formatted;
+    },
+    buildGreetingText(name) {
+      const firstName = name || this.userName;
+      if (firstName) {
+        return `Hola, ${firstName} 👋\nTe saluda SIFRAH.\n¿En qué puedo ayudarte hoy?`;
+      }
+      return `¡Hola! 👋\nTe saluda SIFRAH.\n¿En qué puedo ayudarte hoy?`;
     },
     setupInitialGreeting() {
       this.messages = [
         {
           sender: 'bot',
-          text: `Hola, ${this.userName} 👋\nTe saluda SIFRAH.\n¿En qué puedo ayudarte hoy?`,
+          text: this.buildGreetingText(this.userName),
           products: [],
           time: this.getCurrentTime()
         }
       ];
+    },
+    refreshGreetingMessage(name) {
+      const targetName = name || this.userName;
+      const greetingText = this.buildGreetingText(targetName);
+
+      if (!this.messages || this.messages.length === 0) {
+        this.setupInitialGreeting();
+        return;
+      }
+
+      // Si la conversación solo contiene el mensaje de bienvenida inicial del bot,
+      // actualizarlo en tiempo real con el primer nombre del usuario conectado
+      if (this.messages.length === 1 && this.messages[0].sender === 'bot') {
+        this.messages[0].text = greetingText;
+      }
+    },
+    resetChatForNewUser() {
+      this.messages = [];
+      this.isChatOpen = false;
+      this.isGreetingOpen = false;
+      this.clearGreetingTimer();
+      this.setupInitialGreeting();
+    },
+    async ensureUserProfile() {
+      try {
+        const storeName = this.$store ? this.$store.state.name : null;
+        if (storeName && storeName.trim()) return;
+
+        const session = (this.$store && this.$store.state.session) || (typeof window !== 'undefined' ? localStorage.getItem('session') : null);
+        if (!session) return;
+
+        const { data } = await api.Afiliation.GET(session);
+        if (data && !data.error && data.name) {
+          if (this.$store) {
+            this.$store.commit('SET_NAME', data.name);
+            if (data.lastName) this.$store.commit('SET_LAST_NAME', data.lastName);
+          }
+          if (typeof window !== 'undefined') {
+            localStorage.setItem('name', data.name);
+          }
+          this.syncUserState();
+        }
+      } catch (err) {
+        console.warn('SifrahAssistant: error verificando perfil de usuario', err);
+      }
     },
     getCurrentTime() {
       const now = new Date();
       return now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     },
     openGreeting() {
+      this.syncUserState();
       this.isGreetingOpen = true;
       this.startGreetingTimer();
     },
@@ -408,6 +528,7 @@ export default {
       }
     },
     openChat() {
+      this.syncUserState();
       this.clearGreetingTimer();
       this.isGreetingOpen = false;
       this.isChatOpen = true;
@@ -492,6 +613,9 @@ export default {
     handleSelectOption(option) {
       if (this.isLoading) return;
 
+      const userSalute = this.userName ? `, ${this.userName}` : '';
+      const claroSalute = this.userName ? `Claro, ${this.userName}.` : '¡Claro!';
+
       if (option.type === 'products') {
         this.messages.push({
           sender: 'user',
@@ -506,7 +630,7 @@ export default {
           this.isLoading = false;
           this.messages.push({
             sender: 'bot',
-            text: `🌿 ¡Excelente, ${this.userName}! En Sifrah contamos con suplementos nutricionales y productos de bienestar de la más alta calidad formulados para potenciar tu salud y generar puntos para tu negocio:\n\n` +
+            text: `🌿 ¡Excelente${userSalute}! En Sifrah contamos con suplementos nutricionales y productos de bienestar de la más alta calidad formulados para potenciar tu salud y generar puntos para tu negocio:\n\n` +
               `• **Colágeno Hidrolizado (Rejuvenece):** Regenera articulaciones, cartílagos, piel y cabello.\n` +
               `• **Salud Digestiva (Regenera T):** Alivio natural para gastritis, reflujo y acidez estomacal.\n` +
               `• **Línea Antioxidante y Energía:** Fórmulas para vitalidad celular y desintoxicación.\n\n` +
@@ -532,7 +656,7 @@ export default {
           const currentRank = this.userRank || 'Activo';
           this.messages.push({
             sender: 'bot',
-            text: `Claro, ${this.userName}. Revisemos tu avance y lo que te falta para tu próximo rango.\n\n` +
+            text: `${claroSalute} Revisemos tu avance y lo que te falta para tu próximo rango.\n\n` +
               `💎 **Tu Rango:** ${currentRank}\n` +
               `🎯 **Objetivo inmediato:** Calificar y maximizar el cierre mensual.\n\n` +
               `📋 **Requisitos clave que debes cuidar:**\n` +
@@ -560,7 +684,7 @@ export default {
           this.isLoading = false;
           this.messages.push({
             sender: 'bot',
-            text: `🚀 ¡Con todo gusto, ${this.userName}! Aquí tienes 3 estrategias clave para multiplicar tus resultados en Sifrah:\n\n` +
+            text: `🚀 ¡Con todo gusto${userSalute}! Aquí tienes 3 estrategias clave para multiplicar tus resultados en Sifrah:\n\n` +
               `🛍️ **1. Comparte tu Tienda Virtual:**\n` +
               `Tienes un enlace exclusivo para venta directa. Tus clientes compran y los puntos se acreditan a tu código.\n\n` +
               `👥 **2. Enfoque en Frontales Activos:**\n` +
@@ -605,10 +729,16 @@ export default {
         const history = this.messages
           .filter(m => m.text && !m.isEmergency)
           .slice(-6)
-          .map(m => ({
-            role: m.sender === 'user' ? 'user' : 'model',
-            text: m.text
-          }));
+          .map(m => {
+            let text = m.text;
+            if (m.sender === 'bot' && text && text.includes('Te saluda SIFRAH')) {
+              text = this.buildGreetingText(this.userName);
+            }
+            return {
+              role: m.sender === 'user' ? 'user' : 'model',
+              text
+            };
+          });
 
         let apiUrl = (process.env.VUE_APP_SERVER ? process.env.VUE_APP_SERVER : 'https://api.serve-sifrah.xyz') + '/api/app/assistant';
 
@@ -623,6 +753,7 @@ export default {
             body: JSON.stringify({
               query,
               distributorCode: code,
+              userName: this.userName,
               history
             })
           });
@@ -637,6 +768,7 @@ export default {
             body: JSON.stringify({
               query,
               distributorCode: code,
+              userName: this.userName,
               history
             })
           });
@@ -673,11 +805,12 @@ export default {
     handleLocalFallback(query) {
       const q = query.toLowerCase();
       let replyText = '';
+      const userSalute = this.userName ? `, ${this.userName}` : '';
 
       if (q.includes('rango') || q.includes('puntos') || q.includes('calificar')) {
-        replyText = `Claro, ${this.userName}. Para calificar a tu próximo rango, asegúrate de cumplir con tu reconsumo mínimo (120 o 160 pts) y tus líneas activas de este ciclo.`;
+        replyText = `Claro${userSalute}. Para calificar a tu próximo rango, asegúrate de cumplir con tu reconsumo mínimo (120 o 160 pts) y tus líneas activas de este ciclo.`;
       } else if (q.includes('negocio') || q.includes('impulsar') || q.includes('afiliar')) {
-        replyText = `¡Excelente iniciativa, ${this.userName}! Recuerda compartir tu enlace de Tienda Virtual y apoyar a tus directos en sus activaciones mensuales.`;
+        replyText = `¡Excelente iniciativa${userSalute}! Recuerda compartir tu enlace de Tienda Virtual y apoyar a tus directos en sus activaciones mensuales.`;
       } else {
         replyText = `Entiendo tu consulta sobre "${query}". En Sifrah promovemos el bienestar integral y una nutrición balanceada. Si deseas una recomendación de suplementos, cuéntame más sobre tus objetivos o molestias.`;
       }
