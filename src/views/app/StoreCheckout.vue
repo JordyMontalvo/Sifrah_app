@@ -42,7 +42,7 @@
                   <div class="cart-item-price">S/ {{ Number(item.price).toFixed(2) }}</div>
                 </div>
               </div>
-              <div v-if="zone && delivery.department === 'lima'" class="cart-item delivery-item">
+              <div v-if="deliveryMethod === 'delivery' && zone && delivery.department === 'lima'" class="cart-item delivery-item">
                 <div class="delivery-item-icon">🚚</div>
                 <div class="cart-item-details">
                   <div class="cart-item-quantity">Delivery</div>
@@ -52,7 +52,7 @@
             </div>
             <div class="order-summary">
               <div class="summary-row"><span>Subtotal:</span><span>S/ {{ goodsTotal.toFixed(2) }}</span></div>
-              <div v-if="zone && delivery.department === 'lima'" class="summary-row delivery-row">
+              <div v-if="deliveryMethod === 'delivery' && zone && delivery.department === 'lima'" class="summary-row delivery-row">
                 <span>🚚 Delivery:</span><span>S/ {{ Number(zone.price).toFixed(2) }}</span>
               </div>
               <div class="summary-row total"><span>Total:</span><span>S/ {{ grandTotal.toFixed(2) }}</span></div>
@@ -76,37 +76,56 @@
               <div class="delivery-options">
                 <div class="delivery-header"><h3>Opciones de Despacho</h3></div>
                 <div class="delivery-content">
-                  <div class="delivery-description"><p>El envío es a domicilio. No hay recojo en tienda.</p></div>
+                  <div class="delivery-description"><p>Elije tu método de despacho preferido.</p></div>
                   <div class="delivery-methods">
-                    <button type="button" class="delivery-method active">Delivery</button>
+                    <button
+                      type="button"
+                      @click="selectDeliveryMethod('pickup')"
+                      :class="['delivery-method', { active: deliveryMethod === 'pickup' }]"
+                    >
+                      Retira tu Compra
+                    </button>
+                    <button
+                      type="button"
+                      @click="selectDeliveryMethod('delivery')"
+                      :class="['delivery-method', { active: deliveryMethod === 'delivery' }]"
+                    >
+                      Delivery
+                    </button>
                   </div>
                 </div>
-                <div class="delivery-form">
+
+                <!-- Formulario de Delivery -->
+                <div v-if="deliveryMethod === 'delivery'" class="delivery-form">
                   <div class="form-section">
                     <h4>Información del Receptor</h4>
                     <div class="form-row">
                       <div class="form-group">
                         <label>Nombre Receptor</label>
-                        <div class="input-with-icon"><input v-model="buyer.name" type="text" placeholder="Nombre Completo" @input="onlyLetters" /></div>
+                        <div class="input-with-icon"><input v-model="buyer.name" type="text" placeholder="Nombre Completo" @input="onlyLetters" /><i class="fas fa-user"></i></div>
                       </div>
                       <div class="form-group">
                         <label>Nro. de Documento</label>
-                        <div class="input-with-icon"><input v-model="buyer.document" type="text" placeholder="Nro. de Documento" maxlength="8" @input="onlyDigits('document', 8)" /></div>
+                        <div class="input-with-icon"><input v-model="buyer.document" type="text" placeholder="Nro. de Documento" maxlength="8" @input="onlyDigits('document', 8)" /><i class="fas fa-list"></i></div>
                       </div>
                     </div>
                     <div class="form-row">
                       <div class="form-group">
                         <label>Celular Receptor</label>
-                        <div class="input-with-icon"><input v-model="buyer.phone" type="tel" placeholder="Celular Receptor" maxlength="9" @input="onlyDigits('phone', 9)" /></div>
+                        <div class="input-with-icon"><input v-model="buyer.phone" type="tel" placeholder="Celular Receptor" maxlength="9" @input="onlyDigits('phone', 9)" /><i class="fas fa-phone"></i></div>
                       </div>
                       <div class="form-group">
                         <label>Correo</label>
-                        <div class="input-with-icon"><input v-model="buyer.email" type="email" placeholder="Correo (opcional)" /></div>
+                        <div class="input-with-icon"><input v-model="buyer.email" type="email" placeholder="Correo (opcional)" /><i class="fas fa-envelope"></i></div>
                       </div>
                     </div>
+                  </div>
+
+                  <div class="form-section">
+                    <h4>Ubicación de Entrega</h4>
                     <div class="form-group">
                       <label>Dirección</label>
-                      <div class="input-with-icon"><input v-model="delivery.address" type="text" placeholder="Calle, número, referencia" /></div>
+                      <div class="input-with-icon"><input v-model="delivery.address" type="text" placeholder="Calle, número, referencia" /><i class="fas fa-map-marker-alt"></i></div>
                     </div>
                     <div class="form-row">
                       <div class="form-group">
@@ -140,7 +159,100 @@
                           <option v-for="agency in agencies" :key="agency.agency_code" :value="agency.agency_code">{{ agency.agency_name }}</option>
                         </select>
                       </div>
-                      <div class="delivery-note"><p>El costo de envío varía según la agencia y destino. Consulta directamente con la agencia seleccionada.</p></div>
+                      <div class="delivery-note"><p>💡 El costo de envío varía según la agencia y destino. Consulta directamente con la agencia seleccionada.</p></div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Formulario de Pickup -->
+                <div v-if="deliveryMethod === 'pickup'" class="pickup-form">
+                  <div class="form-section">
+                    <h4>Información de Quien Retira</h4>
+                    <div class="form-row">
+                      <div class="form-group">
+                        <label>Nombre Receptor</label>
+                        <div class="input-with-icon"><input v-model="buyer.name" type="text" placeholder="Nombre Completo" @input="onlyLetters" /><i class="fas fa-user"></i></div>
+                      </div>
+                      <div class="form-group">
+                        <label>Nro. de Documento</label>
+                        <div class="input-with-icon"><input v-model="buyer.document" type="text" placeholder="Nro. de Documento" maxlength="8" @input="onlyDigits('document', 8)" /><i class="fas fa-list"></i></div>
+                      </div>
+                    </div>
+                    <div class="form-row">
+                      <div class="form-group">
+                        <label>Celular Receptor</label>
+                        <div class="input-with-icon"><input v-model="buyer.phone" type="tel" placeholder="Celular Receptor" maxlength="9" @input="onlyDigits('phone', 9)" /><i class="fas fa-phone"></i></div>
+                      </div>
+                      <div class="form-group">
+                        <label>Correo</label>
+                        <div class="input-with-icon"><input v-model="buyer.email" type="email" placeholder="Correo (opcional)" /><i class="fas fa-envelope"></i></div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="pickup-section">
+                    <h4>Seleccione el PDE</h4>
+                    <select v-model="selectedPickupPoint" class="pickup-select">
+                      <option value="">Selecciona un punto de entrega</option>
+                      <option v-for="office in offices" :key="office.id" :value="office.id">
+                        {{ office.name }}
+                        <span v-if="office.googleMapsUrl" class="maps-indicator" title="Tiene Google Maps">
+                          <i class="fas fa-map-marker-alt"></i>
+                        </span>
+                      </option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Ubicación e información de la oficina -->
+              <div v-if="selectedPickupPoint && deliveryMethod === 'pickup'" class="map-and-location-container">
+                <div class="section-header">
+                  <h3>Ubicación en mapa</h3>
+                </div>
+
+                <div class="map-location-vertical">
+                  <div class="map-section">
+                    <div class="map-container map-link-only">
+                      <div class="map-info">
+                        <div class="map-location-label">Ubicación en Mapa:</div>
+                        <a
+                          v-if="officeMapUrl"
+                          :href="officeMapUrl"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          class="map-link"
+                        >
+                          {{ officeMapUrl }}
+                        </a>
+                        <span v-else class="office-value">No disponible</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="office-info-section">
+                    <div class="office-header">
+                      <h4>{{ selectedOffice ? selectedOffice.name : 'Oficina' }}</h4>
+                    </div>
+
+                    <div class="office-details">
+                      <div class="office-item">
+                        <span class="office-label">Dirección:</span>
+                        <span class="office-value">{{ selectedOffice ? (selectedOffice.address || 'No disponible') : 'No disponible' }}</span>
+                      </div>
+
+                      <div class="office-item">
+                        <span class="office-label">Teléfono:</span>
+                        <span class="office-value">
+                          {{ selectedOffice && selectedOffice.phone ? selectedOffice.phone : 'No disponible' }}
+                          <i class="fab fa-whatsapp whatsapp-icon" v-if="selectedOffice && selectedOffice.phone && selectedOffice.phone !== 'No disponible'"></i>
+                        </span>
+                      </div>
+
+                      <div class="office-item" v-if="selectedOffice && selectedOffice.horario && selectedOffice.id !== 'central'">
+                        <span class="office-label">Horario:</span>
+                        <span class="office-value">{{ selectedOffice.horario }}</span>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -301,6 +413,9 @@ export default {
       items: [],
       ownerId: "",
       buyer: { name: "", document: "", phone: "", email: "" },
+      deliveryMethod: "delivery",
+      offices: [],
+      selectedPickupPoint: "",
       delivery: { address: "", department: "", province: "", district: "", agency: "" },
       proof: { type: "boleta", document: "", ruc: "", razonSocial: "", direccionFiscal: "" },
       voucherFile2: null,
@@ -330,11 +445,21 @@ export default {
     needsAgency() {
       return !!this.delivery.department && this.delivery.department !== "lima";
     },
+    selectedOffice() {
+      if (!this.selectedPickupPoint) return null;
+      return this.offices.find((office) => office.id == this.selectedPickupPoint) || null;
+    },
+    officeMapUrl() {
+      if (!this.selectedOffice || !this.selectedOffice.googleMapsUrl) return "";
+      return this.selectedOffice.googleMapsUrl;
+    },
     goodsTotal() {
       return this.items.reduce((sum, item) => sum + Number(item.price || 0) * Number(item.total || 0), 0);
     },
     deliveryPrice() {
-      if (this.delivery.department === "lima" && this.zone) return Number(this.zone.price) || 0;
+      if (this.deliveryMethod === "delivery" && this.delivery.department === "lima" && this.zone) {
+        return Number(this.zone.price) || 0;
+      }
       return 0;
     },
     grandTotal() {
@@ -386,9 +511,17 @@ export default {
       try {
         const { data } = await api.SharedStore.paymentMethods();
         this.paymentMethods = (data && data.paymentMethods) || [];
+        if (data && data.offices) {
+          this.offices = data.offices;
+        }
       } catch (e) {
         this.paymentMethods = [];
+        this.offices = [];
       }
+    },
+    selectDeliveryMethod(method) {
+      this.deliveryMethod = method;
+      this.error = "";
     },
     async onDepartment() {
       this.delivery.province = "";
@@ -442,17 +575,25 @@ export default {
     },
     nextFromDelivery() {
       this.error = "";
-      if (this.buyer.name.trim().length < 3) return (this.error = "Escribe el nombre de quien recibe.");
+      if (this.buyer.name.trim().length < 3) {
+        return (this.error = this.deliveryMethod === "pickup" ? "Escribe el nombre de quien retira." : "Escribe el nombre de quien recibe.");
+      }
       if (!/^\d{8}$/.test(this.buyer.document)) return (this.error = "El DNI debe tener 8 dígitos.");
       if (!/^\d{9}$/.test(this.buyer.phone)) return (this.error = "El celular debe tener 9 dígitos.");
-      if (this.delivery.address.trim().length < 5) return (this.error = "Escribe la dirección de entrega.");
-      if (!this.delivery.department || !this.delivery.province || !this.delivery.district) {
-        return (this.error = "Completa departamento, provincia y distrito.");
+
+      if (this.deliveryMethod === "pickup") {
+        if (!this.selectedPickupPoint) return (this.error = "Selecciona un punto de entrega.");
+      } else {
+        if (this.delivery.address.trim().length < 5) return (this.error = "Escribe la dirección de entrega.");
+        if (!this.delivery.department || !this.delivery.province || !this.delivery.district) {
+          return (this.error = "Completa departamento, provincia y distrito.");
+        }
+        if (this.delivery.department === "lima" && !this.zone) {
+          return (this.error = "Ese distrito no tiene cobertura de delivery.");
+        }
+        if (this.needsAgency && !this.delivery.agency) return (this.error = "Selecciona la agencia de transporte.");
       }
-      if (this.delivery.department === "lima" && !this.zone) {
-        return (this.error = "Ese distrito no tiene cobertura de delivery.");
-      }
-      if (this.needsAgency && !this.delivery.agency) return (this.error = "Selecciona la agencia de transporte.");
+
       if (!this.proof.document) this.proof.document = this.buyer.document;
       this.step = 2;
       window.scrollTo(0, 0);
@@ -522,6 +663,8 @@ export default {
         buyer: this.buyer,
         delivery: this.delivery,
         proof: this.proof,
+        shipping_method: this.deliveryMethod,
+        office_id: this.deliveryMethod === "pickup" ? this.selectedPickupPoint : "",
         ...extra,
       };
     },
