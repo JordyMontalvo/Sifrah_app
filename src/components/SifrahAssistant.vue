@@ -1,5 +1,5 @@
 <template>
-  <div v-if="shouldShow" class="sifrah-assistant-wrapper">
+  <div v-if="shouldShow" class="sifrah-assistant-wrapper" :class="{ 'on-shared-store': isSharedStore }">
     <!-- PANEL 01: Pestaña flotante discreta ("Siempre a mano") -->
     <transition name="slide-tab">
       <div 
@@ -355,6 +355,9 @@ export default {
     shouldShow() {
       // Requisito estricto: Solo en la versión móvil y dentro de la aplicación
       return this.isMobile && !this.isAuthRoute;
+    },
+    isSharedStore() {
+      return (this.$route.path || "").startsWith("/tienda/");
     }
   },
   watch: {
@@ -955,6 +958,26 @@ export default {
   display: flex;
   flex-direction: column;
   overflow: hidden;
+}
+
+.sifrah-assistant-wrapper.on-shared-store .chat-fullscreen-modal {
+  top: var(--shared-store-topbar-height, 58px);
+  height: calc(100vh - var(--shared-store-topbar-height, 58px));
+  height: calc(100dvh - var(--shared-store-topbar-height, 58px));
+}
+
+@media (max-width: 768px) {
+  .sifrah-assistant-wrapper.on-shared-store .chat-fullscreen-modal {
+    top: var(--shared-store-topbar-height, 52px);
+    height: calc(100dvh - var(--shared-store-topbar-height, 52px));
+  }
+}
+
+@media (max-width: 480px) {
+  .sifrah-assistant-wrapper.on-shared-store .chat-fullscreen-modal {
+    top: var(--shared-store-topbar-height, 48px);
+    height: calc(100dvh - var(--shared-store-topbar-height, 48px));
+  }
 }
 
 /* Header */

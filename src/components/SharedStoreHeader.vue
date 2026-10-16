@@ -126,7 +126,7 @@ export default {
   background-color: #ffffff;
   border-bottom: 1px solid #e5e7eb;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  z-index: 10005;
+  z-index: 100050;
   box-sizing: border-box;
   transition: background-color 0.2s ease, border-color 0.2s ease;
 }
@@ -139,9 +139,10 @@ export default {
 }
 
 .topbar-inner {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 10px 24px;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 10px 28px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -264,7 +265,7 @@ export default {
 /* Responsive */
 @media (max-width: 768px) {
   .topbar-inner {
-    padding: 8px 16px;
+    padding: 8px 18px;
   }
 
   .topbar-logo {
@@ -285,7 +286,7 @@ export default {
 
 @media (max-width: 480px) {
   .topbar-inner {
-    padding: 8px 12px;
+    padding: 8px 14px;
   }
 
   .topbar-logo {

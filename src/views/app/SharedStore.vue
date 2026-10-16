@@ -30,13 +30,6 @@
     
     <!-- Contenido principal -->
     <div class="tienda-sifrah-container" :class="{ 'content-loading': loading || !products || products.length === 0 }">
-      <!-- Header con título y barra de puntos -->
-      <div class="store-header">
-        <!-- Título principal de la tienda -->
-        <h1 class="store-title">Tienda Sifrah</h1>
-        <p class="store-subtitle">Distribuidor: {{ ownerName }}</p>
-      </div>
-      
       <!-- Sistema de banners con Grid -->
       <div class="banners-grid-wrapper">
         <!-- Banner izquierda -->
@@ -177,13 +170,6 @@
 
                 <!-- Grid de productos -->
                 <div class="products-catalog-grid">
-                  <div class="products-count-indicator" v-if="products && products.length > 0">
-                    <span>Mostrando {{ filteredCatalogProducts.length }} de {{ products.length }} productos</span>
-                    <span v-if="searchTerm || (selectedCategories.length > 0 && !selectedCategories.includes('Todos'))" class="filter-active">
-                      (filtros activos)
-                    </span>
-                  </div>
-                  
                   <div 
                     v-for="(product, i) in filteredCatalogProducts" 
                     :key="product.id || i"
@@ -840,6 +826,7 @@ export default {
 
 // Estilos adicionales específicos para la vista pública
 .shared-store-public-view
+  --shared-store-topbar-height: 58px
   min-height: 100vh
   background: #f5f5f5
 
@@ -852,4 +839,46 @@ export default {
 
 .shared-store-public-view .points-badge
   display: none !important
+
+.shared-store-public-view .cart-detail-interface
+  top: var(--shared-store-topbar-height)
+  height: calc(100% - var(--shared-store-topbar-height))
+  z-index: 10000
+
+.shared-store-public-view .cart-detail-interface-content
+  height: 100%
+  max-height: 100%
+
+body.modal-open header.shared-store-topbar
+  display: block !important
+  visibility: visible !important
+  opacity: 1 !important
+  pointer-events: auto !important
+  z-index: 100050 !important
+  position: sticky !important
+  top: 0 !important
+
+@media (max-width: 768px)
+  .shared-store-public-view
+    --shared-store-topbar-height: 52px
+
+  .shared-store-public-view .cart-detail-interface
+  body.modal-open .shared-store-public-view .cart-detail-interface
+    top: var(--shared-store-topbar-height) !important
+    right: 0 !important
+    bottom: 0 !important
+    left: 0 !important
+    width: 100% !important
+    height: calc(100dvh - var(--shared-store-topbar-height)) !important
+    min-height: 0 !important
+    z-index: 10000 !important
+
+  .shared-store-public-view .cart-detail-interface-content
+    height: 100% !important
+    min-height: 0 !important
+    max-height: 100% !important
+
+@media (max-width: 480px)
+  .shared-store-public-view
+    --shared-store-topbar-height: 48px
 </style>

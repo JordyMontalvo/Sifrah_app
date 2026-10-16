@@ -49,6 +49,7 @@
             <!-- Imagen principal con flechas de navegación -->
             <div class="main-image-wrapper">
               <button
+                v-if="hasMultipleImages"
                 type="button"
                 class="gallery-arrow arrow-prev"
                 @click="prevImage"
@@ -72,6 +73,7 @@
               </div>
 
               <button
+                v-if="hasMultipleImages"
                 type="button"
                 class="gallery-arrow arrow-next"
                 @click="nextImage"
@@ -82,8 +84,7 @@
               </button>
             </div>
 
-            <!-- 3 Miniaturas seleccionables -->
-            <div class="thumbnails-row">
+            <div v-if="hasMultipleImages" class="thumbnails-row">
               <button
                 v-for="(imgSrc, idx) in productThumbnails"
                 :key="idx"
@@ -92,15 +93,14 @@
                 :class="{ active: currentImageIndex === idx }"
                 @click="selectImage(idx)"
               >
-                <img :src="imgSrc" :alt="product.name + " miniatura " + (idx + 1)" class="thumbnail-img" />
+                <img :src="imgSrc" :alt="(product.name || 'Producto') + ' miniatura ' + (idx + 1)" class="thumbnail-img" />
               </button>
             </div>
 
-            <!-- Indicadores de puntos (dots) -->
-            <div class="gallery-dots-row">
+            <div v-if="hasMultipleImages" class="gallery-dots-row">
               <span
                 v-for="(dot, idx) in productThumbnails"
-                :key=""dot-" + idx"
+                :key="'dot-' + idx"
                 class="gallery-dot"
                 :class="{ active: currentImageIndex === idx }"
                 @click="selectImage(idx)"
@@ -411,33 +411,24 @@ export default {
     },
     productThumbnails() {
       if (!this.product) return [];
-      const img1 = this.product.img;
-      const extraImages = Array.isArray(this.product.images)
-        ? this.product.images.filter(Boolean)
-        : [];
-
-      const list = [img1, ...extraImages].filter(Boolean);
-
-      // Si tiene al menos 3 imágenes reales, usar las primeras 3
-      if (list.length >= 3) {
-        return list.slice(0, 3);
-      }
-      // Si tiene solo 1 o 2 imágenes, completar hasta 3 miniaturas para cumplir el diseño aprobado
-      if (list.length === 2) {
-        return [list[0], list[1], list[0]];
-      }
-      if (list.length === 1) {
-        return [list[0], list[0], list[0]];
-      }
-      return [
-        "https://via.placeholder.com/400x400?text=Sifrah",
-        "https://via.placeholder.com/400x400?text=Sifrah",
-        "https://via.placeholder.com/400x400?text=Sifrah"
-      ];
+      const seen = new Set();
+      const list = [];
+      const extras = Array.isArray(this.product.images) ? this.product.images : [];
+      [this.product.img, ...extras].forEach((src) => {
+        if (!src || typeof src !== "string") return;
+        const key = src.trim();
+        if (!key || seen.has(key)) return;
+        seen.add(key);
+        list.push(key);
+      });
+      return list;
+    },
+    hasMultipleImages() {
+      return this.productThumbnails.length > 1;
     },
     activeImage() {
       const thumbs = this.productThumbnails;
-      if (!thumbs.length) return "";
+      if (!thumbs.length) return "https://via.placeholder.com/400x400?text=Sifrah";
       const idx = Math.max(0, Math.min(this.currentImageIndex, thumbs.length - 1));
       return thumbs[idx];
     },
