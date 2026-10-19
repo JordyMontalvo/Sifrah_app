@@ -303,6 +303,7 @@ const OP_LABELS = {
   "remaining": "Pago Ganancia",
   "closed bonus": "Bono Cierre",
   "activation bonnus promo": "Bono compra promoción",
+  "shared store margin": "Ganancia tienda compartida",
   "closed reset": "Descuento por cierre",
   "bono ahorro sifrah": "Bono Ahorro Sifrah",
   "savings bonus": "Bono Ahorro Sifrah",
