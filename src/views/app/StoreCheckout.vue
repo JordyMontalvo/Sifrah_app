@@ -257,12 +257,12 @@
           <!-- ========================================== -->
           <div v-if="step === 1" class="step-content step-dispatch">
             <!-- Banner rosa superior -->
-            <div class="step-banner banner-pink">
-              <div class="banner-text">
-                <h2>Paso 1: Despacho</h2>
-                <p>Selecciona cómo y dónde deseas recibir tu pedido.</p>
+            <div class="sifrah-step-banner sifrah-banner-pink">
+              <div class="sifrah-banner-content">
+                <h2 class="sifrah-banner-title">Paso 1: Despacho</h2>
+                <p class="sifrah-banner-subtitle">Selecciona cómo y dónde deseas recibir tu pedido.</p>
               </div>
-              <div class="banner-watermark">
+              <div class="sifrah-banner-watermark">
                 <i class="fas fa-truck"></i>
               </div>
             </div>
@@ -330,7 +330,7 @@
                 <select v-model="selectedPickupPoint" class="pickup-select">
                   <option value="" disabled>Selecciona una sede de recojo</option>
                   <option v-for="office in offices" :key="office.id" :value="office.id">
-                    {{ office.name }}
+                    {{ office.name }} - {{ hasOfficeAddress(office) ? office.address : 'Dirección no disponible' }}
                   </option>
                 </select>
                 <i class="fas fa-chevron-down select-arrow-icon"></i>
@@ -343,7 +343,9 @@
                     <i class="fas fa-map-marker-alt"></i>
                     <span>Dirección:</span>
                   </div>
-                  <div class="row-value">{{ currentOffice.address || 'Jr. Wiracocha 205' }}</div>
+                  <div class="row-value" :class="{ 'text-not-available': !hasOfficeAddress(currentOffice) }">
+                    {{ hasOfficeAddress(currentOffice) ? currentOffice.address : 'No disponible' }}
+                  </div>
                 </div>
 
                 <div class="info-row">
@@ -352,8 +354,10 @@
                     <span>Teléfono:</span>
                   </div>
                   <div class="row-value phone-val">
-                    <span>{{ currentOffice.phone || '959 141 444' }}</span>
+                    <span v-if="hasOfficePhone(currentOffice)">{{ currentOffice.phone }}</span>
+                    <span v-else class="text-not-available">No disponible</span>
                     <a
+                      v-if="hasOfficePhone(currentOffice)"
                       :href="officeWhatsAppUrl"
                       target="_blank"
                       rel="noopener noreferrer"
@@ -370,7 +374,9 @@
                     <i class="far fa-clock"></i>
                     <span>Horario:</span>
                   </div>
-                  <div class="row-value">{{ currentOffice.schedule || 'Lunes a Sábado: 9:00 a.m. – 6:00 p.m.' }}</div>
+                  <div class="row-value" :class="{ 'text-not-available': !hasOfficeSchedule(currentOffice) }">
+                    {{ hasOfficeSchedule(currentOffice) ? currentOffice.schedule : 'No disponible' }}
+                  </div>
                 </div>
 
                 <div class="info-row">
@@ -380,13 +386,15 @@
                   </div>
                   <div class="row-value">
                     <a
-                      :href="currentOffice.googleMapsUrl || 'https://maps.google.com'"
+                      v-if="officeMapUrl(currentOffice)"
+                      :href="officeMapUrl(currentOffice)"
                       target="_blank"
                       rel="noopener noreferrer"
                       class="maps-link"
                     >
                       <i class="fas fa-external-link-alt"></i> Ver en Google Maps
                     </a>
+                    <span v-else class="text-not-available">No disponible</span>
                   </div>
                 </div>
               </div>
@@ -460,12 +468,12 @@
           <!-- ========================================== -->
           <div v-if="step === 2" class="step-content step-billing">
             <!-- Banner fucsia sólido superior -->
-            <div class="step-banner banner-fuchsia">
-              <div class="banner-text">
-                <h2>Paso 2: Facturación</h2>
-                <p>Completa tus datos para generar tu comprobante.</p>
+            <div class="sifrah-step-banner sifrah-banner-fuchsia">
+              <div class="sifrah-banner-content">
+                <h2 class="sifrah-banner-title">Paso 2: Facturación</h2>
+                <p class="sifrah-banner-subtitle">Completa tus datos para generar tu comprobante.</p>
               </div>
-              <div class="banner-watermark">
+              <div class="sifrah-banner-watermark">
                 <i class="fas fa-file-invoice"></i>
               </div>
             </div>
@@ -498,11 +506,11 @@
               <div class="form-grid-two">
                 <div class="form-field">
                   <label>Tipo de documento</label>
-                  <select v-model="buyer.documentType">
-                    <option value="DNI">DNI</option>
+                  <select v-model="buyer.documentType" @change="onBuyerDocTypeChange">
+                    <option value="DNI">DNI (8 dígitos)</option>
                     <option value="CE">Carnet de Extranjería</option>
                     <option value="PASAPORTE">Pasaporte</option>
-                    <option value="RUC">RUC</option>
+                    <option value="RUC">RUC (11 dígitos)</option>
                   </select>
                 </div>
 
@@ -512,9 +520,9 @@
                     <input
                       v-model="buyer.document"
                       type="text"
-                      placeholder="Número de documento"
-                      maxlength="11"
-                      @input="onlyDigits('document', 11)"
+                      :placeholder="documentPlaceholder"
+                      :maxlength="documentMaxLength"
+                      @input="onBuyerDocumentInput"
                     />
                     <i class="fas fa-list-ol"></i>
                   </div>
@@ -523,14 +531,14 @@
 
               <div class="form-grid-two">
                 <div class="form-field">
-                  <label>Celular</label>
+                  <label>Celular (Perú)</label>
                   <div class="input-icon-box">
                     <input
                       v-model="buyer.phone"
                       type="tel"
-                      placeholder="Número de celular"
+                      placeholder="9XXXXXXXX (9 dígitos)"
                       maxlength="9"
-                      @input="onlyDigits('phone', 9)"
+                      @input="onBuyerPhoneInput"
                     />
                     <i class="fas fa-phone-alt"></i>
                   </div>
@@ -539,7 +547,7 @@
                 <div class="form-field">
                   <label>Correo electrónico (opcional)</label>
                   <div class="input-icon-box">
-                    <input v-model="buyer.email" type="email" placeholder="Correo electrónico" />
+                    <input v-model="buyer.email" type="email" placeholder="correo@ejemplo.com" />
                     <i class="fas fa-envelope"></i>
                   </div>
                 </div>
@@ -599,8 +607,8 @@
               <div v-if="proof.type === 'factura'" class="factura-fields-box">
                 <div class="form-grid-two">
                   <div class="form-field">
-                    <label>RUC (11 dígitos)</label>
-                    <input v-model="proof.ruc" type="text" placeholder="20XXXXXXXXX" maxlength="11" @input="onlyProofDigits" />
+                    <label>RUC (11 dígitos - Perú)</label>
+                    <input v-model="proof.ruc" type="text" placeholder="20XXXXXXXXX (11 dígitos)" maxlength="11" @input="onlyProofDigits" />
                   </div>
                   <div class="form-field">
                     <label>Razón Social</label>
@@ -634,19 +642,44 @@
 
               <!-- Campos del receptor si está activo -->
               <div v-if="receiver.isDifferent" class="receiver-form-box">
+                <div class="form-field">
+                  <label>Nombre de quien recibe/retira</label>
+                  <input
+                    v-model="receiver.name"
+                    type="text"
+                    placeholder="Nombres y apellidos completos"
+                    @input="onReceiverNameInput"
+                  />
+                </div>
                 <div class="form-grid-two">
                   <div class="form-field">
-                    <label>Nombre de quien recibe/retira</label>
-                    <input v-model="receiver.name" type="text" placeholder="Nombre completo" />
+                    <label>Tipo de documento</label>
+                    <select v-model="receiver.documentType" @change="onReceiverDocTypeChange">
+                      <option value="DNI">DNI (8 dígitos)</option>
+                      <option value="CE">Carnet de Extranjería</option>
+                      <option value="PASAPORTE">Pasaporte</option>
+                    </select>
                   </div>
                   <div class="form-field">
-                    <label>Nro. de Documento (DNI/CE)</label>
-                    <input v-model="receiver.document" type="text" placeholder="Documento" maxlength="11" />
+                    <label>Nro. de Documento</label>
+                    <input
+                      v-model="receiver.document"
+                      type="text"
+                      :placeholder="receiverDocPlaceholder"
+                      :maxlength="receiverDocMaxLength"
+                      @input="onReceiverDocumentInput"
+                    />
                   </div>
                 </div>
                 <div class="form-field">
-                  <label>Celular de contacto</label>
-                  <input v-model="receiver.phone" type="tel" placeholder="Número de celular" maxlength="9" />
+                  <label>Celular de contacto (Perú)</label>
+                  <input
+                    v-model="receiver.phone"
+                    type="tel"
+                    placeholder="9XXXXXXXX (9 dígitos)"
+                    maxlength="9"
+                    @input="onReceiverPhoneInput"
+                  />
                 </div>
               </div>
             </div>
@@ -667,12 +700,12 @@
           <!-- ========================================== -->
           <div v-if="step === 3" class="step-content step-payment">
             <!-- Banner fucsia sólido superior -->
-            <div class="step-banner banner-fuchsia">
-              <div class="banner-text">
-                <h2>Paso 3: Pago</h2>
-                <p>Selecciona tu método de pago y completa la información.</p>
+            <div class="sifrah-step-banner sifrah-banner-fuchsia">
+              <div class="sifrah-banner-content">
+                <h2 class="sifrah-banner-title">Paso 3: Pago</h2>
+                <p class="sifrah-banner-subtitle">Selecciona tu método de pago y completa la información.</p>
               </div>
-              <div class="banner-watermark">
+              <div class="sifrah-banner-watermark">
                 <i class="fas fa-credit-card"></i>
               </div>
             </div>
@@ -742,20 +775,25 @@
 
                 <div class="preview-item">
                   <div class="item-label">Dirección</div>
-                  <div class="item-val">{{ deliveryMethod === 'pickup' ? (currentOffice && currentOffice.address) : delivery.address }}</div>
+                  <div class="item-val" :class="{ 'text-not-available': deliveryMethod === 'pickup' && !hasOfficeAddress(currentOffice) }">
+                    {{ deliveryMethod === 'pickup' ? (hasOfficeAddress(currentOffice) ? currentOffice.address : 'No disponible') : delivery.address }}
+                  </div>
                 </div>
 
                 <div v-if="deliveryMethod === 'pickup'" class="preview-item">
                   <div class="item-label"><i class="fas fa-phone-alt"></i> Teléfono</div>
                   <div class="item-val phone-val">
-                    <span>{{ (currentOffice && currentOffice.phone) || '959 141 444' }}</span>
-                    <i class="fab fa-whatsapp green-wa"></i>
+                    <span v-if="hasOfficePhone(currentOffice)">{{ currentOffice.phone }}</span>
+                    <span v-else class="text-not-available">No disponible</span>
+                    <i v-if="hasOfficePhone(currentOffice)" class="fab fa-whatsapp green-wa"></i>
                   </div>
                 </div>
 
                 <div v-if="deliveryMethod === 'pickup'" class="preview-item">
                   <div class="item-label"><i class="far fa-clock"></i> Horario</div>
-                  <div class="item-val">{{ (currentOffice && currentOffice.schedule) || 'Lunes a Sábado: 9:00 a.m. – 6:00 p.m.' }}</div>
+                  <div class="item-val" :class="{ 'text-not-available': !hasOfficeSchedule(currentOffice) }">
+                    {{ hasOfficeSchedule(currentOffice) ? currentOffice.schedule : 'No disponible' }}
+                  </div>
                 </div>
 
                 <div v-if="deliveryMethod === 'pickup'" class="preview-item">
@@ -944,7 +982,12 @@
                 <i class="fas fa-hand-holding-usd"></i>
                 <div class="store-pay-text">
                   <h4>Pagarás directamente en la sede</h4>
-                  <p>Al retirar tu pedido en la sede de <strong>{{ (currentOffice && currentOffice.name) || 'Sifrah' }}</strong>, podrás abonar en caja en efectivo o con tarjeta.</p>
+                  <p>
+                    Al retirar tu pedido en la sede de <strong>{{ (currentOffice && currentOffice.name) || 'Sifrah' }}</strong>
+                    <span v-if="hasOfficeAddress(currentOffice)"> ({{ currentOffice.address }})</span>
+                    <span v-else> (Dirección no disponible)</span>,
+                    podrás abonar en caja en efectivo o con tarjeta.
+                  </p>
                 </div>
               </div>
 
@@ -1073,6 +1116,7 @@ export default {
       receiver: {
         isDifferent: false,
         name: "",
+        documentType: "DNI",
         document: "",
         phone: ""
       },
@@ -1158,13 +1202,34 @@ export default {
       }
       return "S";
     },
+    documentMaxLength() {
+      if (this.buyer.documentType === "DNI") return 8;
+      if (this.buyer.documentType === "RUC") return 11;
+      if (this.buyer.documentType === "CE") return 12;
+      return 12;
+    },
+    documentPlaceholder() {
+      if (this.buyer.documentType === "DNI") return "8 dígitos numéricos";
+      if (this.buyer.documentType === "RUC") return "11 dígitos numéricos";
+      if (this.buyer.documentType === "CE") return "Nro. de carnet de extranjería";
+      return "Nro. de pasaporte";
+    },
+    receiverDocMaxLength() {
+      if (this.receiver.documentType === "DNI") return 8;
+      return 12;
+    },
+    receiverDocPlaceholder() {
+      if (this.receiver.documentType === "DNI") return "8 dígitos numéricos";
+      if (this.receiver.documentType === "CE") return "Nro. de carnet";
+      return "Nro. de pasaporte";
+    },
     currentOffice() {
       if (!this.selectedPickupPoint) return this.offices[0] || null;
       return this.offices.find((o) => String(o.id) === String(this.selectedPickupPoint)) || this.offices[0] || null;
     },
     officeWhatsAppUrl() {
-      if (!this.currentOffice) return "#";
-      const cleanPhone = String(this.currentOffice.phone || "959141444").replace(/\D/g, "");
+      if (!this.currentOffice || !this.hasOfficePhone(this.currentOffice)) return "#";
+      const cleanPhone = String(this.currentOffice.phone).replace(/\D/g, "");
       const msg = encodeURIComponent(
         `Hola, me gustaría coordinar el retiro de mi compra de Sifrah en la sede ${this.currentOffice.name || ""}.`
       );
@@ -1324,6 +1389,58 @@ export default {
         this.zone = null;
       }
     },
+    hasOfficeAddress(office) {
+      return Boolean(office && office.address && String(office.address).trim().length > 0 && String(office.address).trim() !== "-");
+    },
+    hasOfficePhone(office) {
+      return Boolean(office && office.phone && String(office.phone).trim().length > 0 && String(office.phone).trim() !== "-");
+    },
+    hasOfficeSchedule(office) {
+      return Boolean(office && office.schedule && String(office.schedule).trim().length > 0 && String(office.schedule).trim() !== "-");
+    },
+    officeMapUrl(office) {
+      if (!office) return null;
+      if (office.googleMapsUrl && String(office.googleMapsUrl).trim().length > 0) {
+        return String(office.googleMapsUrl).trim();
+      }
+      if (this.hasOfficeAddress(office)) {
+        return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(office.address + ', Peru')}`;
+      }
+      return null;
+    },
+    onBuyerDocTypeChange() {
+      this.buyer.document = "";
+      this.error = "";
+    },
+    onBuyerDocumentInput(event) {
+      const val = event.target.value;
+      if (this.buyer.documentType === "DNI" || this.buyer.documentType === "RUC") {
+        this.buyer.document = val.replace(/\D/g, "").slice(0, this.documentMaxLength);
+      } else {
+        this.buyer.document = val.replace(/[^a-zA-Z0-9]/g, "").toUpperCase().slice(0, 12);
+      }
+    },
+    onBuyerPhoneInput(event) {
+      this.buyer.phone = event.target.value.replace(/\D/g, "").slice(0, 9);
+    },
+    onReceiverDocTypeChange() {
+      this.receiver.document = "";
+      this.error = "";
+    },
+    onReceiverDocumentInput(event) {
+      const val = event.target.value;
+      if (this.receiver.documentType === "DNI") {
+        this.receiver.document = val.replace(/\D/g, "").slice(0, 8);
+      } else {
+        this.receiver.document = val.replace(/[^a-zA-Z0-9]/g, "").toUpperCase().slice(0, 12);
+      }
+    },
+    onReceiverPhoneInput(event) {
+      this.receiver.phone = event.target.value.replace(/\D/g, "").slice(0, 9);
+    },
+    onReceiverNameInput(event) {
+      this.receiver.name = event.target.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]/g, "");
+    },
     onlyLetters(event) {
       this.buyer.name = event.target.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]/g, "");
     },
@@ -1368,45 +1485,96 @@ export default {
     },
     nextFromProof() {
       this.error = "";
-      if (!this.buyer.name.trim()) {
+      if (!this.buyer.name || this.buyer.name.trim().length < 2) {
         this.error = "Escribe el nombre del comprador.";
         return;
       }
-      if (!this.buyer.lastName.trim()) {
+      if (!this.buyer.lastName || this.buyer.lastName.trim().length < 2) {
         this.error = "Escribe los apellidos del comprador.";
         return;
       }
-      if (!this.buyer.document.trim()) {
+      if (!this.buyer.document || !this.buyer.document.trim()) {
         this.error = "Escribe el número de documento del comprador.";
         return;
       }
-      if (this.buyer.documentType === "DNI" && !/^\d{8}$/.test(this.buyer.document)) {
-        this.error = "El DNI debe tener exactamente 8 dígitos.";
-        return;
+
+      // Validaciones de documento según normativa Perú
+      if (this.buyer.documentType === "DNI") {
+        if (!/^\d{8}$/.test(this.buyer.document)) {
+          this.error = "El DNI del comprador debe tener exactamente 8 dígitos numéricos.";
+          return;
+        }
+      } else if (this.buyer.documentType === "RUC") {
+        if (!/^\d{11}$/.test(this.buyer.document)) {
+          this.error = "El RUC del comprador debe tener exactamente 11 dígitos numéricos.";
+          return;
+        }
+      } else if (this.buyer.documentType === "CE") {
+        if (!/^[A-Za-z0-9]{8,12}$/.test(this.buyer.document)) {
+          this.error = "El Carnet de Extranjería debe tener entre 8 y 12 caracteres alfanuméricos.";
+          return;
+        }
+      } else if (this.buyer.documentType === "PASAPORTE") {
+        if (!/^[A-Za-z0-9]{6,12}$/.test(this.buyer.document)) {
+          this.error = "El Pasaporte debe tener entre 6 y 12 caracteres.";
+          return;
+        }
       }
-      if (!/^\d{9}$/.test(this.buyer.phone)) {
-        this.error = "El celular debe tener 9 dígitos.";
+
+      // Validación de celular (Perú: 9 dígitos iniciando con 9)
+      if (!/^9\d{8}$/.test(this.buyer.phone)) {
+        this.error = "El celular debe tener 9 dígitos y comenzar con 9 (ej. 9XXXXXXXX).";
         return;
       }
 
+      // Validación de correo si fue ingresado
+      if (this.buyer.email && this.buyer.email.trim()) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(this.buyer.email.trim())) {
+          this.error = "El correo electrónico ingresado no tiene un formato válido.";
+          return;
+        }
+      }
+
+      // Factura
       if (this.proof.type === "factura") {
         if (!/^\d{11}$/.test(this.proof.ruc)) {
-          this.error = "El RUC de la factura debe tener 11 dígitos.";
+          this.error = "El RUC de la factura debe tener exactamente 11 dígitos numéricos.";
           return;
         }
-        if (this.proof.razonSocial.trim().length < 3) {
-          this.error = "Escribe la Razón Social de la empresa.";
+        if (!this.proof.razonSocial || this.proof.razonSocial.trim().length < 3) {
+          this.error = "Escribe la Razón Social de la empresa para la factura.";
+          return;
+        }
+        if (!this.proof.direccionFiscal || this.proof.direccionFiscal.trim().length < 4) {
+          this.error = "Escribe la Dirección Fiscal registrada en SUNAT para la factura.";
           return;
         }
       }
 
+      // Receptor alternativo
       if (this.receiver.isDifferent) {
-        if (!this.receiver.name.trim()) {
-          this.error = "Escribe el nombre de la persona que recibe o retira.";
+        if (!this.receiver.name || this.receiver.name.trim().length < 3) {
+          this.error = "Escribe el nombre completo de la persona que recibe o retira.";
           return;
         }
-        if (!this.receiver.document.trim()) {
+        if (!this.receiver.document || !this.receiver.document.trim()) {
           this.error = "Escribe el documento de la persona que recibe o retira.";
+          return;
+        }
+        if (this.receiver.documentType === "DNI") {
+          if (!/^\d{8}$/.test(this.receiver.document)) {
+            this.error = "El DNI de la persona que recibe o retira debe tener exactamente 8 dígitos.";
+            return;
+          }
+        } else {
+          if (!/^[A-Za-z0-9]{8,12}$/.test(this.receiver.document)) {
+            this.error = "El documento de la persona que recibe o retira debe tener entre 8 y 12 caracteres.";
+            return;
+          }
+        }
+        if (this.receiver.phone && !/^9\d{8}$/.test(this.receiver.phone)) {
+          this.error = "El celular de la persona que recibe debe tener 9 dígitos y comenzar con 9 (ej. 9XXXXXXXX).";
           return;
         }
       }
@@ -2095,8 +2263,8 @@ export default {
   margin-bottom: 20px;
 }
 
-/* Banners de Paso */
-.step-banner {
+/* Banners superiores de cada paso (Aislados contra colisiones globales) */
+.sifrah-step-banner {
   border-radius: 14px;
   padding: 22px 28px;
   display: flex;
@@ -2105,53 +2273,80 @@ export default {
   margin-bottom: 24px;
   position: relative;
   overflow: hidden;
+  box-sizing: border-box;
 }
 
-.banner-pink {
-  background-color: #fff0f5;
-  color: #111827;
+.sifrah-banner-content {
+  background: transparent !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+  backdrop-filter: none !important;
+  text-align: left !important;
+  white-space: normal !important;
+  position: relative;
+  z-index: 2;
 }
 
-.banner-pink .banner-text h2 {
+.sifrah-banner-pink {
+  background-color: #fff0f5 !important;
+  color: #111827 !important;
+  border: 1px solid #ffd6e7;
+}
+
+.sifrah-banner-pink .sifrah-banner-title {
   font-size: 22px;
   font-weight: 800;
-  color: #111827;
+  color: #111827 !important;
   margin: 0 0 4px 0;
+  line-height: 1.2;
 }
 
-.banner-pink .banner-text p {
+.sifrah-banner-pink .sifrah-banner-subtitle {
   font-size: 14px;
-  color: #64748b;
+  color: #64748b !important;
   margin: 0;
+  line-height: 1.4;
 }
 
-.banner-pink .banner-watermark i {
+.sifrah-banner-pink .sifrah-banner-watermark i {
   font-size: 48px;
-  color: #fbcfe8;
-  opacity: 0.8;
+  color: #fbcfe8 !important;
+  opacity: 0.85;
 }
 
-.banner-fuchsia {
-  background-color: #e60064;
-  color: #ffffff;
+.sifrah-banner-fuchsia {
+  background-color: #e60064 !important;
+  background: #e60064 !important;
+  color: #ffffff !important;
+  border: none !important;
+  box-shadow: 0 4px 16px rgba(230, 0, 100, 0.22);
 }
 
-.banner-fuchsia .banner-text h2 {
+.sifrah-banner-fuchsia .sifrah-banner-title {
   font-size: 22px;
   font-weight: 800;
-  color: #ffffff;
+  color: #ffffff !important;
   margin: 0 0 4px 0;
+  line-height: 1.2;
 }
 
-.banner-fuchsia .banner-text p {
+.sifrah-banner-fuchsia .sifrah-banner-subtitle {
   font-size: 14px;
-  color: rgba(255, 255, 255, 0.9);
+  color: rgba(255, 255, 255, 0.95) !important;
   margin: 0;
+  line-height: 1.4;
 }
 
-.banner-fuchsia .banner-watermark i {
-  font-size: 42px;
-  color: rgba(255, 255, 255, 0.9);
+.sifrah-banner-fuchsia .sifrah-banner-watermark i {
+  font-size: 44px;
+  color: rgba(255, 255, 255, 0.85) !important;
+}
+
+.text-not-available {
+  color: #94a3b8 !important;
+  font-style: italic;
 }
 
 /* Bloques de Formulario */
@@ -3250,10 +3445,6 @@ export default {
 /* ========================================== */
 /* Responsive & Mobile Specifics              */
 /* ========================================== */
-.desktop-only {
-  display: block;
-}
-
 .mobile-only {
   display: none !important;
 }
