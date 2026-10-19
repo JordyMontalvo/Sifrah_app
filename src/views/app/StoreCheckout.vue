@@ -900,8 +900,8 @@
                 </button>
               </div>
 
-              <!-- Formulario de Transferencia / Depósito / Yape / Plin -->
-              <div v-if="payMethod === 'bank' || payMethod === 'yape' || payMethod === 'plin'" class="payment-fields-container">
+              <!-- 1. Formulario de Transferencia / Depósito -->
+              <div v-if="payMethod === 'bank'" class="payment-fields-container">
                 <!-- Fila de Campos: Banco, Nro de Operación, Fecha -->
                 <div class="form-grid-three">
                   <div class="form-field">
@@ -909,7 +909,7 @@
                     <div class="bank-select-container">
                       <select v-model="selectedBank" class="bank-select">
                         <option value="" disabled>Seleccionar banco</option>
-                        <option v-for="method in paymentMethods" :key="method.id" :value="method.id">
+                        <option v-for="method in bankPaymentMethods" :key="method.id" :value="method.id">
                           {{ method.name }}
                         </option>
                       </select>
@@ -939,7 +939,7 @@
                 <!-- Detalle de cuentas bancarias de la empresa / socio -->
                 <div v-if="selectedMethod" class="bank-account-info-box">
                   <div class="bank-info-header">
-                    <i class="fas fa-info-circle"></i> Datos de depósito para <strong>{{ selectedMethod.name }}</strong>:
+                    <i class="fas fa-university"></i> Datos de depósito para <strong>{{ selectedMethod.name }}</strong>:
                   </div>
                   <div class="bank-info-content">
                     <p v-if="selectedMethod.titular"><strong>Titular:</strong> {{ selectedMethod.titular }}</p>
@@ -948,14 +948,14 @@
                   </div>
                 </div>
 
-                <!-- Subida de comprobante (Caja con borde punteado fucsia) -->
+                <!-- Subida de comprobante bancario -->
                 <div class="voucher-upload-dashed-box">
                   <div class="upload-left-content">
                     <div class="upload-icon-fuchsia">
                       <i class="fas fa-cloud-upload-alt"></i>
                     </div>
                     <div class="upload-texts">
-                      <span class="upload-main-title">Sube tu comprobante de pago (JPG, PNG o PDF)</span>
+                      <span class="upload-main-title">Sube tu comprobante de transferencia (JPG, PNG o PDF)</span>
                       <span class="upload-subtitle">Tamaño máximo 5 MB</span>
                     </div>
                   </div>
@@ -977,7 +977,181 @@
                 </div>
               </div>
 
-              <!-- Formulario para Pago en Tienda -->
+              <!-- 2. Formulario de Yape (Exclusivo, sin selector de banco) -->
+              <div v-if="payMethod === 'yape'" class="payment-fields-container yape-plin-container">
+                <div class="wallet-info-card yape-card">
+                  <div class="wallet-card-header">
+                    <div class="wallet-badge-pill yape-pill">
+                      <img src="@/assets/img/yape.png" alt="Yape" class="wallet-badge-img" />
+                      <span>Paga con Yape</span>
+                    </div>
+                    <span class="wallet-instant-tag"><i class="fas fa-bolt"></i> Acreditación rápida</span>
+                  </div>
+                  
+                  <div class="wallet-card-body">
+                    <div class="wallet-data-col">
+                      <div class="wallet-data-item">
+                        <span class="data-label">Titular de la cuenta:</span>
+                        <strong class="data-val">{{ walletTitular }}</strong>
+                      </div>
+                      <div class="wallet-data-item">
+                        <span class="data-label">Número de Celular Yape:</span>
+                        <div class="data-phone-val">
+                          <strong class="phone-number">{{ walletPhoneFormatted }}</strong>
+                          <button type="button" class="btn-copy-mini" @click="copyToClipboard(walletPhone)">
+                            <i class="far" :class="copiedPhone ? 'fa-check-circle' : 'fa-copy'"></i>
+                            {{ copiedPhone ? '¡Copiado!' : 'Copiar' }}
+                          </button>
+                        </div>
+                      </div>
+                      <div class="wallet-data-item">
+                        <span class="data-label">Monto exacto a transferir:</span>
+                        <strong class="data-val price-fuchsia">S/ {{ grandTotal.toFixed(2) }}</strong>
+                      </div>
+                    </div>
+
+                    <div class="wallet-qr-col">
+                      <div class="qr-frame">
+                        <img :src="yapeQrImage" alt="QR Yape" class="qr-img" />
+                        <span class="qr-scan-hint"><i class="fas fa-qrcode"></i> Escanea con tu App Yape</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-grid-two wallet-inputs-grid">
+                  <div class="form-field">
+                    <label>Número de operación Yape (opcional)</label>
+                    <input
+                      v-model="voucherNumber"
+                      type="text"
+                      placeholder="Ej. 12345678"
+                      @input="onlyVoucherNumber('voucherNumber', $event)"
+                    />
+                  </div>
+                  <div class="form-field">
+                    <label>Fecha de pago</label>
+                    <input v-model="paymentDate" type="date" />
+                  </div>
+                </div>
+
+                <!-- Subida de comprobante Yape -->
+                <div class="voucher-upload-dashed-box">
+                  <div class="upload-left-content">
+                    <div class="upload-icon-fuchsia">
+                      <i class="fas fa-cloud-upload-alt"></i>
+                    </div>
+                    <div class="upload-texts">
+                      <span class="upload-main-title">Sube tu captura de pantalla de Yape (JPG o PNG)</span>
+                      <span class="upload-subtitle">Tamaño máximo 5 MB</span>
+                    </div>
+                  </div>
+                  
+                  <div class="upload-action-box">
+                    <label class="btn-select-file-fuchsia">
+                      <input type="file" accept="image/*" @change="onVoucher" class="file-hidden-input" />
+                      <span>{{ voucherFile ? 'Cambiar captura' : 'Adjuntar captura' }}</span>
+                    </label>
+                  </div>
+                </div>
+
+                <!-- Preview del comprobante Yape -->
+                <div v-if="voucherPreview" class="voucher-preview-wrapper">
+                  <span class="preview-tag"><i class="fas fa-check-circle"></i> Captura de Yape adjuntada:</span>
+                  <div class="preview-img-box">
+                    <img :src="voucherPreview" alt="Captura Yape" />
+                  </div>
+                </div>
+              </div>
+
+              <!-- 3. Formulario de Plin (Exclusivo, sin selector de banco) -->
+              <div v-if="payMethod === 'plin'" class="payment-fields-container yape-plin-container">
+                <div class="wallet-info-card plin-card">
+                  <div class="wallet-card-header">
+                    <div class="wallet-badge-pill plin-pill">
+                      <img src="@/assets/img/plin.png" alt="Plin" class="wallet-badge-img" />
+                      <span>Paga con Plin</span>
+                    </div>
+                    <span class="wallet-instant-tag"><i class="fas fa-bolt"></i> Acreditación rápida</span>
+                  </div>
+                  
+                  <div class="wallet-card-body">
+                    <div class="wallet-data-col">
+                      <div class="wallet-data-item">
+                        <span class="data-label">Titular de la cuenta:</span>
+                        <strong class="data-val">{{ walletTitular }}</strong>
+                      </div>
+                      <div class="wallet-data-item">
+                        <span class="data-label">Número de Celular Plin:</span>
+                        <div class="data-phone-val">
+                          <strong class="phone-number">{{ walletPhoneFormatted }}</strong>
+                          <button type="button" class="btn-copy-mini" @click="copyToClipboard(walletPhone)">
+                            <i class="far" :class="copiedPhone ? 'fa-check-circle' : 'fa-copy'"></i>
+                            {{ copiedPhone ? '¡Copiado!' : 'Copiar' }}
+                          </button>
+                        </div>
+                      </div>
+                      <div class="wallet-data-item">
+                        <span class="data-label">Monto exacto a transferir:</span>
+                        <strong class="data-val price-fuchsia">S/ {{ grandTotal.toFixed(2) }}</strong>
+                      </div>
+                    </div>
+
+                    <div class="wallet-qr-col">
+                      <div class="qr-frame">
+                        <img :src="plinQrImage" alt="QR Plin" class="qr-img" />
+                        <span class="qr-scan-hint"><i class="fas fa-qrcode"></i> Escanea con tu App Plin o de tu banco</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-grid-two wallet-inputs-grid">
+                  <div class="form-field">
+                    <label>Número de operación Plin (opcional)</label>
+                    <input
+                      v-model="voucherNumber"
+                      type="text"
+                      placeholder="Ej. 12345678"
+                      @input="onlyVoucherNumber('voucherNumber', $event)"
+                    />
+                  </div>
+                  <div class="form-field">
+                    <label>Fecha de pago</label>
+                    <input v-model="paymentDate" type="date" />
+                  </div>
+                </div>
+
+                <!-- Subida de comprobante Plin -->
+                <div class="voucher-upload-dashed-box">
+                  <div class="upload-left-content">
+                    <div class="upload-icon-fuchsia">
+                      <i class="fas fa-cloud-upload-alt"></i>
+                    </div>
+                    <div class="upload-texts">
+                      <span class="upload-main-title">Sube tu captura de pantalla de Plin (JPG o PNG)</span>
+                      <span class="upload-subtitle">Tamaño máximo 5 MB</span>
+                    </div>
+                  </div>
+                  
+                  <div class="upload-action-box">
+                    <label class="btn-select-file-fuchsia">
+                      <input type="file" accept="image/*" @change="onVoucher" class="file-hidden-input" />
+                      <span>{{ voucherFile ? 'Cambiar captura' : 'Adjuntar captura' }}</span>
+                    </label>
+                  </div>
+                </div>
+
+                <!-- Preview del comprobante Plin -->
+                <div v-if="voucherPreview" class="voucher-preview-wrapper">
+                  <span class="preview-tag"><i class="fas fa-check-circle"></i> Captura de Plin adjuntada:</span>
+                  <div class="preview-img-box">
+                    <img :src="voucherPreview" alt="Captura Plin" />
+                  </div>
+                </div>
+              </div>
+
+              <!-- 4. Formulario para Pago en Tienda -->
               <div v-if="payMethod === 'cash'" class="store-pay-info-box">
                 <i class="fas fa-hand-holding-usd"></i>
                 <div class="store-pay-text">
@@ -991,16 +1165,37 @@
                 </div>
               </div>
 
-              <!-- Formulario para Izipay -->
-              <div v-if="payMethod === 'credit-card'" class="izipay-container">
+              <!-- 5. Formulario para Izipay (Aislado con v-show para proteger el DOM de Krypton) -->
+              <div v-show="payMethod === 'credit-card'" class="izipay-container">
+                <div class="izipay-header-banner">
+                  <div class="izipay-badge">
+                    <i class="fas fa-shield-alt"></i> Pasarela segura Izipay
+                  </div>
+                  <span class="izipay-sub">Visa, Mastercard, Diners y American Express</span>
+                </div>
+
                 <div v-if="izipayLoading" class="izipay-loading-box">
                   <div class="spinner-small"></div>
-                  <span>Iniciando pasarela segura Izipay...</span>
+                  <span>Conectando con la pasarela segura Izipay...</span>
                 </div>
+
                 <div v-if="izipayError" class="izipay-error-msg">
-                  <i class="fas fa-exclamation-triangle"></i> {{ izipayError }}
+                  <div class="err-text">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <span>{{ izipayError }}</span>
+                  </div>
+                  <button type="button" class="btn-retry-izipay" @click="reloadIzipay">
+                    <i class="fas fa-redo"></i> Reintentar
+                  </button>
                 </div>
-                <div class="kr-embedded" :kr-form-token="izipayToken"></div>
+
+                <div class="kr-embedded" :kr-form-token="izipayToken">
+                  <div class="kr-pan"></div>
+                  <div class="kr-expiry"></div>
+                  <div class="kr-security-code"></div>
+                  <button class="kr-payment-button"></button>
+                  <div class="kr-form-error"></div>
+                </div>
               </div>
             </div>
 
@@ -1010,6 +1205,7 @@
                 <i class="fas fa-arrow-left"></i> Regresar
               </button>
               <button
+                v-if="payMethod !== 'credit-card'"
                 type="button"
                 class="btn-action-next-fuchsia btn-confirm-pay"
                 @click="openConfirmModal"
@@ -1167,6 +1363,14 @@ export default {
       izipayError: "",
       izipayToken: "",
 
+      // Billeteras Digitales (Yape / Plin)
+      walletTitular: "SIFRAH CORP S.A.C.",
+      walletPhone: "959141444",
+      walletPhoneFormatted: "959 141 444",
+      yapeQrImage: "https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=0002010102115303604540500.005802PE5915SIFRAH%20CORP%20SAC6004LIMA621107079591414446304",
+      plinQrImage: "https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=0002010102115303604540500.005802PE5915SIFRAH%20CORP%20SAC6004LIMA621107079591414446304",
+      copiedPhone: false,
+
       defaultProductImg: "https://via.placeholder.com/150x150?text=Sifrah"
     };
   },
@@ -1235,8 +1439,21 @@ export default {
       );
       return `https://wa.me/51${cleanPhone}?text=${msg}`;
     },
+    bankPaymentMethods() {
+      if (!this.paymentMethods || !this.paymentMethods.length) return [];
+      return this.paymentMethods.filter((m) => {
+        const name = String(m.name || "").toLowerCase().trim();
+        const type = String(m.type || "").toLowerCase().trim();
+        return name !== "efectivo" && type !== "cash" && !name.includes("efectivo");
+      });
+    },
     selectedMethod() {
-      return this.paymentMethods.find((m) => String(m.id) === String(this.selectedBank)) || null;
+      if (!this.selectedBank) return this.bankPaymentMethods[0] || null;
+      return (
+        this.bankPaymentMethods.find((m) => String(m.id) === String(this.selectedBank)) ||
+        this.bankPaymentMethods[0] ||
+        null
+      );
     },
     currentBankName() {
       return (this.selectedMethod && this.selectedMethod.name) || "";
@@ -1327,8 +1544,8 @@ export default {
             this.selectedPickupPoint = this.offices[0].id;
           }
         }
-        if (this.paymentMethods.length && !this.selectedBank) {
-          this.selectedBank = this.paymentMethods[0].id;
+        if (this.bankPaymentMethods.length && !this.selectedBank) {
+          this.selectedBank = this.bankPaymentMethods[0].id;
         }
       } catch (e) {
         this.paymentMethods = [];
@@ -1602,8 +1819,34 @@ export default {
       this.payMethod = method;
       this.error = "";
       if (method === "credit-card") {
-        this.initIzipay();
+        this.$nextTick(() => {
+          this.initIzipay();
+        });
+      } else if (method === "bank") {
+        if (!this.selectedBank && this.bankPaymentMethods.length) {
+          this.selectedBank = this.bankPaymentMethods[0].id;
+        }
       }
+    },
+    copyToClipboard(text) {
+      if (navigator && navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text);
+        this.copiedPhone = true;
+        setTimeout(() => {
+          this.copiedPhone = false;
+        }, 2000);
+      }
+    },
+    resetIzipay() {
+      this.izipayToken = "";
+      this.izipayLoading = false;
+      this.izipayError = "";
+    },
+    reloadIzipay() {
+      this.resetIzipay();
+      this.$nextTick(() => {
+        this.initIzipay();
+      });
     },
     onVoucher(event) {
       const file = event.target.files && event.target.files[0];
@@ -1643,11 +1886,19 @@ export default {
     openConfirmModal() {
       this.error = "";
       if (this.payMethod === "bank" || this.payMethod === "yape" || this.payMethod === "plin") {
-        if (!this.selectedMethod && this.paymentMethods.length) {
-          this.selectedBank = this.paymentMethods[0].id;
+        if (this.payMethod === "bank") {
+          if (!this.selectedBank && this.bankPaymentMethods.length) {
+            this.selectedBank = this.bankPaymentMethods[0].id;
+          }
         }
         if (!this.voucherFile) {
-          this.error = "Por favor adjunta tu comprobante de pago.";
+          if (this.payMethod === "yape") {
+            this.error = "Por favor adjunta la captura de tu pago por Yape.";
+          } else if (this.payMethod === "plin") {
+            this.error = "Por favor adjunta la captura de tu pago por Plin.";
+          } else {
+            this.error = "Por favor adjunta tu comprobante de transferencia bancaria.";
+          }
           return;
         }
       }
@@ -1686,8 +1937,8 @@ export default {
           shipping_method: this.deliveryMethod,
           office_id: this.deliveryMethod === "pickup" ? this.selectedPickupPoint : "",
           pay_method: this.payMethod,
-          bank: this.currentBankName,
-          bank_info: this.selectedMethod,
+          bank: this.payMethod === "bank" ? this.currentBankName : (this.payMethod === "yape" ? "Yape" : (this.payMethod === "plin" ? "Plin" : "")),
+          bank_info: this.payMethod === "bank" ? this.selectedMethod : null,
           voucher: voucherUrl,
           voucher_number: this.voucherNumber.trim(),
           payment_date: this.paymentDate
@@ -1715,24 +1966,38 @@ export default {
       window.scrollTo({ top: 0, behavior: "smooth" });
     },
     async initIzipay() {
-      if (this.izipayToken || this.izipayLoading || this.grandTotal <= 0) return;
+      if (this.izipayLoading || this.grandTotal <= 0) return;
+      
+      // Si ya hay token generado para esta compra, re-adjuntamos formulario
+      if (this.izipayToken && window.KR) {
+        await this.attachIzipay();
+        return;
+      }
+
       this.izipayLoading = true;
       this.izipayError = "";
       try {
+        const orderId = `TIENDA-${Date.now()}`;
+        const email = this.buyer.email || "cliente@sifrah.com";
+        const customerName = this.buyer.name || "Cliente";
+
         const response = await axios.post("/app/izipay-token", {
           amount: this.grandTotal,
-          email: this.buyer.email || "cliente@sifrah.com",
-          orderId: "TIENDA-" + Date.now()
+          email,
+          orderId,
+          customerName
         });
+
         if (response.data && response.data.formToken) {
           this.izipayToken = response.data.formToken;
           await this.loadIzipayAssets();
           await this.attachIzipay();
         } else {
-          this.izipayError = "No se pudo generar el formulario de tarjeta.";
+          this.izipayError = "No se pudo generar el formulario seguro de tarjeta.";
         }
       } catch (e) {
-        this.izipayError = "Error al conectar con la pasarela de pago.";
+        console.error("Error al inicializar Izipay:", e);
+        this.izipayError = "Ocurrió un error al cargar la pasarela de pago. Haz clic en reintentar.";
       } finally {
         this.izipayLoading = false;
       }
@@ -1770,24 +2035,33 @@ export default {
     async attachIzipay() {
       await this.$nextTick();
       if (!window.KR || !this.izipayToken) return;
-      const form = document.querySelector(".checkout-layout-container .kr-embedded");
-      if (!form) return;
-      if (typeof window.KR.setFormConfig === "function") {
-        await window.KR.setFormConfig({ formToken: this.izipayToken });
-      }
-      if (typeof window.KR.onSubmit === "function") {
-        window.KR.onSubmit(this.onIzipaySuccess.bind(this));
-      }
-      if (typeof window.KR.attachForm === "function") {
-        await window.KR.attachForm(form);
+      try {
+        const form = document.querySelector(".izipay-container .kr-embedded");
+        if (typeof window.KR.setFormConfig === "function") {
+          await window.KR.setFormConfig({ formToken: this.izipayToken });
+        }
+        if (typeof window.KR.onSubmit === "function") {
+          window.KR.onSubmit(this.onIzipaySuccess.bind(this));
+        }
+        if (typeof window.KR.attachForm === "function" && form) {
+          await window.KR.attachForm(form);
+        }
+      } catch (err) {
+        console.error("Error al adjuntar formulario Izipay:", err);
       }
     },
-    async onIzipaySuccess(response) {
-      if (response && response.clientAnswer && response.clientAnswer.orderStatus === "PAID") {
-        await this.submitFinalOrder();
-      } else {
-        this.error = "El pago con tarjeta no se completó satisfactoriamente.";
+    async onIzipaySuccess(event) {
+      try {
+        if (event && event.clientAnswer && event.clientAnswer.orderStatus === "PAID") {
+          await this.submitFinalOrder();
+        } else {
+          this.error = "El pago con tarjeta no se completó satisfactoriamente.";
+        }
+      } catch (err) {
+        console.error("Error en confirmación Izipay:", err);
+        this.error = "Error al procesar la confirmación del pago.";
       }
+      return false; // Previene envío nativo o recarga en Krypton
     }
   }
 };
@@ -3011,6 +3285,286 @@ export default {
 .bank-info-content p {
   margin: 3px 0;
   color: #475569;
+}
+
+/* ========================================== */
+/* Billeteras Digitales (Yape y Plin)         */
+/* ========================================== */
+.yape-plin-container {
+  margin-top: 18px;
+}
+
+.wallet-info-card {
+  border-radius: 14px;
+  padding: 22px 24px;
+  margin-bottom: 22px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+}
+
+.wallet-info-card.yape-card {
+  border-left: 5px solid #731384;
+}
+
+.wallet-info-card.plin-card {
+  border-left: 5px solid #00a4e4;
+}
+
+.wallet-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.wallet-badge-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 14px;
+  border-radius: 30px;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.wallet-badge-pill.yape-pill {
+  background: #fbf2fd;
+  color: #731384;
+}
+
+.wallet-badge-pill.plin-pill {
+  background: #eef8fe;
+  color: #0077b6;
+}
+
+.wallet-badge-img {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+}
+
+.wallet-instant-tag {
+  font-size: 13px;
+  font-weight: 600;
+  color: #10b981;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.wallet-card-body {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 24px;
+  align-items: center;
+}
+
+@media (max-width: 640px) {
+  .wallet-card-body {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+}
+
+.wallet-data-col {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.wallet-data-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.wallet-data-item .data-label {
+  font-size: 13px;
+  color: #64748b;
+}
+
+.wallet-data-item .data-val {
+  font-size: 16px;
+  color: #1e293b;
+  font-weight: 700;
+}
+
+.data-phone-val {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+@media (max-width: 640px) {
+  .data-phone-val {
+    justify-content: center;
+  }
+}
+
+.phone-number {
+  font-size: 20px;
+  color: #12161c;
+  letter-spacing: 1px;
+}
+
+.btn-copy-mini {
+  background: #f8fafc;
+  border: 1px solid #cbd5e1;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  color: #475569;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  transition: all 0.2s;
+}
+
+.btn-copy-mini:hover {
+  background: #e2e8f0;
+  color: #1e293b;
+}
+
+.wallet-qr-col {
+  display: flex;
+  justify-content: center;
+}
+
+.qr-frame {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 10px;
+  background: #f8fafc;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+}
+
+.qr-img {
+  width: 135px;
+  height: 135px;
+  object-fit: contain;
+  border-radius: 8px;
+  background: #ffffff;
+  padding: 4px;
+}
+
+.qr-scan-hint {
+  font-size: 11px;
+  color: #64748b;
+  font-weight: 600;
+  text-align: center;
+}
+
+.wallet-inputs-grid {
+  margin-bottom: 18px;
+}
+
+/* ========================================== */
+/* Pasarela Izipay Mejorada                   */
+/* ========================================== */
+.izipay-container {
+  margin-top: 18px;
+  padding: 24px;
+  background: #ffffff;
+  border-radius: 14px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+}
+
+.izipay-container[style*="display: none"] {
+  display: none !important;
+}
+
+.izipay-header-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid #f1f5f9;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.izipay-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.izipay-badge i {
+  color: #10b981;
+}
+
+.izipay-sub {
+  font-size: 13px;
+  color: #64748b;
+}
+
+.izipay-loading-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 28px;
+  color: #64748b;
+  font-size: 14px;
+}
+
+.izipay-error-msg {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 18px;
+  background: #fef2f2;
+  border: 1px solid #fee2e2;
+  border-radius: 8px;
+  color: #b91c1c;
+  font-size: 14px;
+  margin-bottom: 16px;
+}
+
+.izipay-error-msg .err-text {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-retry-izipay {
+  background: #b91c1c;
+  color: #ffffff;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: opacity 0.2s;
+}
+
+.btn-retry-izipay:hover {
+  opacity: 0.9;
+}
+
+.kr-embedded {
+  min-height: 120px;
+}
+
+.kr-embedded .kr-payment-button {
+  margin-top: 14px;
 }
 
 /* Caja de subida con borde punteado fucsia */
