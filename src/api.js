@@ -36,6 +36,7 @@ class API {
     SharedStore,
     Materials,
     Audios,
+    Live,
     Books,
     Agenda,
     Birthdays,
@@ -65,6 +66,7 @@ class API {
     this.SharedStore = new SharedStore();
     this.Materials = new Materials();
     this.Audios = new Audios();
+    this.Live = new Live();
     this.Books = new Books();
     this.Agenda = new Agenda();
     this.Birthdays = new Birthdays();
@@ -375,6 +377,13 @@ class Audios {
   }
 }
 
+class Live {
+  // Estado de audio en vivo: { live, upcoming, azuracast, server_time }
+  GET() {
+    return axios.get('/app/live');
+  }
+}
+
 class Books {
   GET() {
     return axios.get('/app/books');
@@ -455,6 +464,7 @@ export default new API({
   SharedStore,
   Materials,
   Audios,
+  Live,
   Books,
   Agenda,
   Birthdays,

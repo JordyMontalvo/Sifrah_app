@@ -16,6 +16,51 @@
       <p class="header-subtitle">Escucha y aprende en minutos</p>
     </header>
 
+    <!-- Secciones: Biblioteca | En vivo -->
+    <div class="section-tabs" role="tablist">
+      <button
+        id="audios-tab-biblioteca"
+        role="tab"
+        :aria-selected="section === 'biblioteca'"
+        :class="['section-tab', { active: section === 'biblioteca' }]"
+        @click="section = 'biblioteca'"
+      >
+        Biblioteca
+      </button>
+      <button
+        id="audios-tab-en-vivo"
+        role="tab"
+        :aria-selected="section === 'en-vivo'"
+        :class="['section-tab', { active: section === 'en-vivo' }]"
+        @click="section = 'en-vivo'"
+      >
+        <span v-if="liveState.live" class="section-tab__dot"></span>
+        En vivo
+      </button>
+    </div>
+
+    <!-- Aviso no intrusivo si empieza una emision mientras navega la biblioteca -->
+    <button
+      v-if="section === 'biblioteca' && liveState.live"
+      id="audios-live-banner"
+      class="live-banner"
+      @click="section = 'en-vivo'"
+    >
+      <span class="live-banner__dot"></span> Estamos en vivo · <strong>Escuchar</strong>
+    </button>
+
+    <LiveAudioPlayer
+      v-show="section === 'en-vivo'"
+      ref="livePlayer"
+      :live="liveState.live"
+      :upcoming="liveState.upcoming"
+      :azuracast="liveState.azuracast"
+      :status-error="liveStatusError"
+      @play="onLivePlay"
+      @retry="fetchLive"
+    />
+
+    <div v-show="section === 'biblioteca'">
     <!-- Search Bar -->
     <div class="search-container">
       <div class="search-box">
@@ -106,6 +151,8 @@
         </div>
       </div>
     </div>
+    </div>
+    <!-- /Biblioteca -->
 
     <!-- Hidden Audio Player -->
     <audio 
@@ -123,14 +170,24 @@
 
 <script>
 import App from "@/views/layouts/App";
+import LiveAudioPlayer from "@/components/LiveAudioPlayer";
 import api from "@/api";
+
+// Cada cuanto se refresca el estado de la transmision en vivo.
+const LIVE_POLL_MS = 30000;
 
 export default {
   components: {
-    App
+    App,
+    LiveAudioPlayer
   },
   data() {
     return {
+      // Seccion visible: 'biblioteca' | 'en-vivo'
+      section: "biblioteca",
+      liveState: { live: null, upcoming: [], azuracast: {} },
+      liveStatusError: false,
+      livePollTimer: null,
       searchQuery: "",
       activeTab: "Todos",
       activeCategory: "Todos",
@@ -240,6 +297,8 @@ export default {
       if (this.isPlaying) {
         player.pause();
       } else {
+        // Nunca reproducir biblioteca y transmision en vivo a la vez.
+        if (this.$refs.livePlayer) this.$refs.livePlayer.stop();
         player.play().catch(e => {
           console.error("Playback error:", e);
           this.onPlaybackError();
@@ -299,10 +358,50 @@ export default {
     },
     handleNavigationClick() {
       // Logic for navigation clicks if needed
+    },
+    async fetchLive() {
+      try {
+        const res = await api.Live.GET();
+        const data = res.data || {};
+        if (data.error) throw new Error(data.msg || "live status error");
+        this.liveState = {
+          live: data.live || null,
+          upcoming: data.upcoming || [],
+          azuracast: data.azuracast || {},
+        };
+        this.liveStatusError = false;
+        return true;
+      } catch (err) {
+        console.error("Error fetching live status:", err);
+        // No se asume "fuera del aire": se muestra el aviso de conexion.
+        this.liveStatusError = true;
+        return false;
+      }
+    },
+    // Al empezar la transmision en vivo se pausa el audio de biblioteca.
+    onLivePlay() {
+      if (this.isPlaying && this.$refs.audioPlayer) {
+        this.$refs.audioPlayer.pause();
+        this.isPlaying = false;
+      }
     }
   },
   async created() {
-    await this.fetchAudios();
+    const [, liveOk] = await Promise.all([this.fetchAudios(), this.fetchLive()]);
+
+    // Regla de apertura (solo al entrar): con transmision activa -> En vivo,
+    // sin transmision -> Biblioteca. ?tab=en-vivo (enlace del calendario) fuerza En vivo.
+    // Despues el socio cambia de pestana libremente; el sondeo no lo mueve de vista.
+    if (this.$route.query.tab === "en-vivo") {
+      this.section = "en-vivo";
+    } else if (liveOk && this.liveState.live) {
+      this.section = "en-vivo";
+    }
+
+    this.livePollTimer = setInterval(this.fetchLive, LIVE_POLL_MS);
+  },
+  beforeDestroy() {
+    clearInterval(this.livePollTimer);
   }
 };
 </script>
