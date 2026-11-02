@@ -347,7 +347,7 @@ export default {
     async loadFlyers() {
       try {
         this.loadingFlyers = true;
-        console.log('Cargando flyers con sesión:', this.session);
+        console.log('Cargando flyers, sesión presente:', !!this.session);
         const { data } = await api.Flyers.GET(this.session);
         
         console.log('Respuesta completa de la API:', data);

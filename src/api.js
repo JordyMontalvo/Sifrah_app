@@ -81,7 +81,10 @@ class API {
     return axios.post("/auth/register", data);
   }
   registerNotificationToken(data) {
-    return axios.post("/notifications/register", data);
+    // Con sesión, el servidor identifica al usuario por ella (el dni del body se ignora).
+    const session = localStorage.getItem("session");
+    const config = session ? { headers: { Authorization: `Bearer ${session}` } } : undefined;
+    return axios.post("/notifications/register", data, config);
   }
   login(data) {
     return axios.post("/auth/login", data);

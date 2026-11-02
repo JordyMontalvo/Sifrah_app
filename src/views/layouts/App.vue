@@ -1430,7 +1430,7 @@ newPhoto: null,
         // para no perder el evento 'registration' si llega antes de que se añada el listener
 
         PushNotifications.addListener('registration', (token) => {
-          console.log('Push registration success, token: ' + token.value);
+          console.log('Push registration success, token: ' + String(token.value).substring(0, 10) + '...');
           this.fcmToken = token.value;
           
           // Enviar el token al backend de Sifrah
