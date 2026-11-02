@@ -427,11 +427,11 @@ router.beforeEach(async (to, from, next) => {
     requiresAffiliation,
     requiresNoAuth,
     storeState: {
-      session: store.state.session,
+      session: !!store.state.session,
       affiliated: store.state.affiliated
     },
     localStorage: {
-      session: localStorage.getItem('session'),
+      session: !!localStorage.getItem('session'),
       affiliated: localStorage.getItem('affiliated')
     }
   })
