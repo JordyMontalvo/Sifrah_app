@@ -484,7 +484,8 @@ export default {
     formatCoins(value) {
       const n = Number(value);
       const safe = Number.isFinite(n) ? Math.max(0, Math.round(n * 100) / 100) : 0;
-      return safe.toLocaleString("es-PE", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      const digits = Number.isInteger(safe) ? 0 : 2;
+      return safe.toLocaleString("es-PE", { minimumFractionDigits: digits, maximumFractionDigits: digits });
     },
     showProductDetail(product) {
       Swal.fire({
