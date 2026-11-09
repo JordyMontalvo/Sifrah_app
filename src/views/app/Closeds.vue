@@ -213,7 +213,7 @@
           </div>
 
           <!-- Agrupado por nivel (afiliaciones / residuales) -->
-          <template v-if="activeTab === 'affiliations' || activeTab === 'residual'">
+          <template v-if="isLevelTab">
             <div v-if="!groupedLevels.length" class="cm-no-rows">
               No hay movimientos de este tipo en el periodo.
             </div>
@@ -307,7 +307,7 @@
             <div class="cm-detail-footer-bar">
               <button type="button" class="cm-btn-export" @click="downloadDetail">
                 <i class="fas fa-file-excel"></i>
-                Descargar detalle de {{ activeTab === 'affiliations' ? 'afiliaciones' : 'residuales' }} (Excel)
+                Descargar detalle de {{ activeTab === 'affiliations' ? 'afiliaciones' : activeTab === 'generational' ? 'bono generacional' : 'residuales' }} (Excel)
               </button>
               <label class="cm-search">
                 <input
@@ -411,6 +411,12 @@ export default {
           count: (d.residual && d.residual.rows && d.residual.rows.length) || 0,
         },
         {
+          key: "generational",
+          label: "Bono Generacional",
+          icon: "fas fa-users",
+          count: (d.generational && d.generational.rows && d.generational.rows.length) || 0,
+        },
+        {
           key: "rank_start",
           label: "Bono Logro",
           icon: "fas fa-flag",
@@ -430,6 +436,9 @@ export default {
         },
       ];
     },
+    isLevelTab() {
+      return ["affiliations", "residual", "generational"].includes(this.activeTab);
+    },
     activeDetail() {
       if (!this.report) return { total: 0, rows: [] };
       return this.report.details[this.activeTab] || { total: 0, rows: [] };
@@ -442,7 +451,11 @@ export default {
         },
         residual: {
           title: "Detalle de Residuales",
-          subtitle: "Residual y generacional VIP del cierre",
+          subtitle: "Residuales del cierre",
+        },
+        generational: {
+          title: "Detalle de Bono Generacional",
+          subtitle: "Generacional VIP del cierre",
         },
         rank_start: {
           title: "Bono Logro",
@@ -472,7 +485,7 @@ export default {
       });
     },
     groupedLevels() {
-      if (this.activeTab !== "affiliations" && this.activeTab !== "residual") return [];
+      if (!this.isLevelTab) return [];
 
       // Afiliaciones: igual al diseño — Niveles 1…6 y grupo 7 a 9
       if (this.activeTab === "affiliations") {
@@ -546,7 +559,7 @@ export default {
       return Object.values(map).sort((a, b) => a.level - b.level);
     },
     simpleRows() {
-      if (this.activeTab === "affiliations" || this.activeTab === "residual") return [];
+      if (this.isLevelTab) return [];
       return this.filteredRows;
     },
     personalReconsumoPts() {
@@ -642,7 +655,7 @@ export default {
       if (!this.report) return;
       const rows = this.filteredRows;
       const isAff = this.activeTab === "affiliations";
-      const isRes = this.activeTab === "residual";
+      const isRes = this.activeTab === "residual" || this.activeTab === "generational";
       let headers;
       if (isAff) {
         headers = [
@@ -1040,7 +1053,7 @@ export default {
           doc.text("Persona / DNI", M + 70, y);
           doc.text("Nivel", M + contentW * 0.55, y);
           doc.text("Comisión", pageW - M - 4, y, { align: "right" });
-        } else if (tab.key === "residual") {
+        } else if (tab.key === "residual" || tab.key === "generational") {
           doc.text("Persona / DNI", M + 4, y);
           doc.text("Nivel", M + contentW * 0.5, y);
           doc.text("Comisión", pageW - M - 4, y, { align: "right" });
@@ -1074,7 +1087,7 @@ export default {
             doc.text(`S/ ${this.money(r.amount)}`, pageW - M - 4, y, {
               align: "right",
             });
-          } else if (tab.key === "residual") {
+          } else if (tab.key === "residual" || tab.key === "generational") {
             const who = `${r.name || "—"}${r.dni ? " · " + r.dni : ""}`;
             doc.text(doc.splitTextToSize(who, contentW * 0.45)[0], M + 4, y);
             doc.text(
