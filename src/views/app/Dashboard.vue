@@ -534,8 +534,9 @@ export default {
     },
     formatSavingsBalance() {
       const n = Number(this.sifrahBalance);
-      const safe = Number.isFinite(n) ? Math.max(0, Math.round(n)) : 0;
-      return safe.toLocaleString("es-PE");
+      // Saldo exacto con 2 decimales (mismo formato que la tienda de Bono Ahorro)
+      const safe = Number.isFinite(n) ? Math.max(0, Math.round(n * 100) / 100) : 0;
+      return safe.toLocaleString("es-PE", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     },
     userPlan() {
       if (!this.plans) return null;
