@@ -349,7 +349,9 @@ export default {
         path === '/welcome' ||
         path === '/sudo-login' ||
         path === '/remember' ||
-        path === '/reset-password'
+        path === '/reset-password' ||
+        path === '/libro-de-reclamaciones' ||
+        path === '/reclamaciones'
       );
     },
     shouldShow() {

@@ -12,6 +12,7 @@ import Remember from './views/auth/Remember.vue'
 import ResetPassword from './views/auth/ResetPassword.vue'
 import Terms from './views/legal/Terms.vue'
 import Privacy from './views/legal/Privacy.vue'
+import LibroReclamaciones from './views/legal/LibroReclamaciones.vue'
 // Aux
 import Logout from './views/auxi/Logout.vue'
 // import Verify from './views/auxi/Verify.vue'
@@ -141,6 +142,13 @@ const routes = [
     path: '/privacidad',
     alias: '/privacy',
     component: Privacy,
+    meta: { public: true }
+  },
+  {
+    // Libro de Reclamaciones: enlace público y permanente, sin iniciar sesión
+    path: '/libro-de-reclamaciones',
+    alias: '/reclamaciones',
+    component: LibroReclamaciones,
     meta: { public: true }
   },
   // Aux
